@@ -62,7 +62,7 @@
                     Click="exitFullScreenButton_Click"
                     Style="{DynamicResource fullScreenButtonStyle}"
                     Visibility="Collapsed">
-                    <Image Source="/images/gui/exitfullscreen.png" />
+                    <Image Source="/Images/GUI/exitfullscreen.png" />
                 </Button>
                 <Button
                     x:Name="closeApplictionButton"
@@ -72,7 +72,7 @@
                     Command="Close"
                     Style="{DynamicResource fullScreenButtonStyle}"
                     Visibility="Collapsed">
-                    <Image Source="/images/gui/delete.png" />
+                    <Image Source="/Images/GUI/delete.png" />
                 </Button>
             </StackPanel>
             <Menu DockPanel.Dock="Top">
@@ -256,7 +256,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Save"
                         ToolTipService.ShowOnDisabled="True">
-                        <Image Source="images\gui\save.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/save.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Button
                         x:Name="saveAsButton"
@@ -264,7 +264,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Save As"
                         ToolTipService.ShowOnDisabled="True">
-                        <Image Source="images\gui\saveas.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/saveas.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Button
                         x:Name="openButton"
@@ -272,7 +272,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Open"
                         ToolTipService.ShowOnDisabled="True">
-                        <Image Source="images\gui\open.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/open.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Separator />
                     <Button
@@ -282,7 +282,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Undo"
                         ToolTipService.ShowOnDisabled="True">
-                        <local:AutoGreyableImage Source="images\gui\undo.png" Style="{StaticResource ToolbarImage}" />
+                        <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/undo.png" />
                     </Button>
                     <Button
                         x:Name="redoButton"
@@ -291,7 +291,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Redo"
                         ToolTipService.ShowOnDisabled="True">
-                        <local:AutoGreyableImage Source="images\gui\redo.png" Style="{StaticResource ToolbarImage}" />
+                        <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/redo.png" />
                     </Button>
                     <Separator />
                     <Button
@@ -300,7 +300,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Zoom out"
                         ToolTipService.ShowOnDisabled="True">
-                        <local:AutoGreyableImage Source="images\gui\zoomout.png" Style="{StaticResource ToolbarImage}" />
+                        <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/zoomout.png" />
                     </Button>
                     <Button
                         x:Name="zoominButton"
@@ -308,7 +308,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Zoom in"
                         ToolTipService.ShowOnDisabled="True">
-                        <local:AutoGreyableImage Source="images\gui\zoomin.png" Style="{StaticResource ToolbarImage}" />
+                        <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/zoomin.png" />
                     </Button>
                     <Separator />
                     <Button
@@ -318,7 +318,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Cut"
                         ToolTipService.ShowOnDisabled="True">
-                        <local:AutoGreyableImage Source="images\gui\cut.png" Style="{StaticResource ToolbarImage}" />
+                        <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/cut.png" />
                     </Button>
                     <Button
                         x:Name="copyButton"
@@ -327,7 +327,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Copy"
                         ToolTipService.ShowOnDisabled="True">
-                        <local:AutoGreyableImage Source="images\gui\copy.png" Style="{StaticResource ToolbarImage}" />
+                        <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/copy.png" />
                     </Button>
                     <Button
                         x:Name="pasteButton"
@@ -335,7 +335,7 @@
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Paste"
                         ToolTipService.ShowOnDisabled="True">
-                        <Image Source="images\gui\paste.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/paste.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Separator />
                     <!--  // TODO: Fix theme bug here  -->
@@ -379,7 +379,7 @@
                         IsThreeState="False"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Bold">
-                        <Image Source="images\gui\bold.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/bold.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <!--<ToggleButton IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}" x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding Path=InputItalic}" Style="{StaticResource ToolbarToggleButton}">-->
                     <ToggleButton
@@ -388,7 +388,7 @@
                         IsThreeState="False"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Italic">
-                        <Image Source="images\gui\italic.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/italic.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <ToggleButton
                         x:Name="underlineToggleButton"
@@ -396,7 +396,7 @@
                         IsThreeState="False"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Underline">
-                        <Image Source="images\gui\underline.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/underline.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <Separator />
                     <ToggleButton
@@ -405,7 +405,7 @@
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Show/Hide Underbar"
                         Unchecked="UnderbarToggleCheckChanged">
-                        <Image Source="images\gui\underbar.png" Style="{StaticResource ToolbarImage}" />
+                        <Image Source="/Images/GUI/underbar.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <!--
                     <Separator/>

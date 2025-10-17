@@ -16,7 +16,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/brackets.png" />
+                <Image Source="/Images/Mathbuttons/brackets.png" />
             </Button>
             <Button
                 x:Name="decoratedEquationButton"
@@ -24,7 +24,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/decoratedEquation.png" />
+                <Image Source="/Images/Mathbuttons/decoratedEquation.png" />
             </Button>
             <Button
                 x:Name="sumsProductsButton"
@@ -32,7 +32,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/sumproduct.png" />
+                <Image Source="/Images/Mathbuttons/sumproduct.png" />
             </Button>
             <Button
                 x:Name="integralsButton"
@@ -40,7 +40,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/integrals.png" />
+                <Image Source="/Images/Mathbuttons/integrals.png" />
             </Button>
             <Button
                 x:Name="subAndSuperButton"
@@ -48,7 +48,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/subsuper.png" />
+                <Image Source="/Images/Mathbuttons/subsuper.png" />
             </Button>
             <Button
                 x:Name="divAndRootsButton"
@@ -56,7 +56,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/divroot.png" />
+                <Image Source="/Images/Mathbuttons/divroot.png" />
             </Button>
             <Button
                 x:Name="arrowEquationButton"
@@ -64,7 +64,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/arrowEquation.png" />
+                <Image Source="/Images/Mathbuttons/arrowEquation.png" />
             </Button>
             <Button
                 x:Name="compositeButton"
@@ -72,7 +72,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/composite.png" />
+                <Image Source="/Images/Mathbuttons/composite.png" />
             </Button>
             <Button
                 x:Name="decoratedCharacterButton"
@@ -80,7 +80,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/decoratedCharacter.png" />
+                <Image Source="/Images/Mathbuttons/decoratedCharacter.png" />
             </Button>
             <Button
                 x:Name="matrixButton"
@@ -88,7 +88,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/matrix.png" />
+                <Image Source="/Images/Mathbuttons/matrix.png" />
             </Button>
             <Button
                 x:Name="boxButton"
@@ -96,7 +96,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/boxes.png" />
+                <Image Source="/Images/Mathbuttons/boxes.png" />
             </Button>
         </StackPanel>
     </Canvas>

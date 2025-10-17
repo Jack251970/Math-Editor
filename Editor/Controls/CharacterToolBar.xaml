@@ -16,7 +16,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/symbols.png" />
+                <Image Source="/Images/Mathbuttons/symbols.png" />
             </Button>
             <Button
                 x:Name="greekCapitalButton"
@@ -24,7 +24,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/greekcapital.png" />
+                <Image Source="/Images/Mathbuttons/greekcapital.png" />
             </Button>
             <Button
                 x:Name="greekSmallButton"
@@ -32,7 +32,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/greeksmall.png" />
+                <Image Source="/Images/Mathbuttons/greeksmall.png" />
             </Button>
             <Button
                 x:Name="arrowsButton"
@@ -40,7 +40,7 @@
                 GotFocus="toolBarButton_GotFocus"
                 MouseEnter="toolBarButton_MouseEnter"
                 Style="{StaticResource ToolbarButtonStyle}">
-                <Image Source="images/mathbuttons/arrows.png" />
+                <Image Source="/Images/Mathbuttons/arrows.png" />
             </Button>
         </StackPanel>
     </Canvas>

@@ -13,7 +13,7 @@
                 <ui:XamlControlsResources />
 
                 <!--  Main  -->
-                <ResourceDictionary Source="MainDictionary.xaml" />
+                <ResourceDictionary Source="/Styles/MainDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

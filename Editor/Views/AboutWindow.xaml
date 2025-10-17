@@ -28,7 +28,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 RenderOptions.BitmapScalingMode="HighQuality"
-                Source="app_icon.png" />
+                Source="/images/icon.png" />
         </Grid>
         <Label
             Name="versionLabel"
