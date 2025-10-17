@@ -63,31 +63,31 @@ public sealed class FontFactory
         switch (ft)
         {
             case FontType.STIXGeneral:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXGeneral");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXGeneral");
             case FontType.STIXIntegralsD:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXIntegralsD");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsD");
             case FontType.STIXIntegralsSm:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXIntegralsSm");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsSm");
             case FontType.STIXIntegralsUp:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXIntegralsUp");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUp");
             case FontType.STIXIntegralsUpD:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXIntegralsUpD");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpD");
             case FontType.STIXIntegralsUpSm:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXIntegralsUpSm");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpSm");
             case FontType.STIXNonUnicode:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXNonUnicode");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXNonUnicode");
             case FontType.STIXSizeFiveSym:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXSizeFiveSym");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFiveSym");
             case FontType.STIXSizeFourSym:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXSizeFourSym");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFourSym");
             case FontType.STIXSizeOneSym:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXSizeOneSym");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeOneSym");
             case FontType.STIXSizeThreeSym:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXSizeThreeSym");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeThreeSym");
             case FontType.STIXSizeTwoSym:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXSizeTwoSym");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeTwoSym");
             case FontType.STIXVariants:
-                return new FontFamily(new Uri("pack://application:,,,/STIX/"), "./#STIXVariants");
+                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXVariants");
             case FontType.Arial:
                 return new FontFamily("Arial");
             case FontType.ArialBlack:
