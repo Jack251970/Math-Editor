@@ -338,12 +338,13 @@
                         <Image Source="/Images/GUI/paste.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Separator />
-                    <!--  // TODO: Fix theme bug here  -->
                     <ComboBox
                         Name="equationFontCombo"
                         Width="100"
+                        VerticalAlignment="Center"
                         DropDownClosed="EquationFontCombo_DropDownClosed"
-                        SelectedIndex="0">
+                        SelectedIndex="0"
+                        Style="{StaticResource DefaultComboBoxStyle}">
                         <ComboBoxItem Tag="STIXGeneral">STIX</ComboBoxItem>
                         <ComboBoxItem Tag="Arial">Arial</ComboBoxItem>
                         <ComboBoxItem Tag="ArialBlack">Arial Black</ComboBoxItem>
@@ -368,8 +369,10 @@
                     <ComboBox
                         Name="editorModeCombo"
                         Width="100"
+                        VerticalAlignment="Center"
                         DropDownClosed="EditorModeCombo_DropDownClosed"
-                        SelectedIndex="1">
+                        SelectedIndex="1"
+                        Style="{StaticResource DefaultComboBoxStyle}">
                         <ComboBoxItem Content="Math" Tag="Math" />
                         <ComboBoxItem Content="Text" Tag="Text" />
                     </ComboBox>
