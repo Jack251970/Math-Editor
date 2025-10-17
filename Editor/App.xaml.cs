@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Editor
 {
@@ -7,6 +8,14 @@ namespace Editor
     /// </summary>
     public partial class App : Application
     {
+        [STAThread]
+        public static void Main()
+        {
+            var application = new App();
+            application.InitializeComponent();
+            application.Run();
+        }
+
         //protected override void OnStartup(StartupEventArgs e)
         //{
         //    try

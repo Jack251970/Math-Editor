@@ -1,20 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows10.0.22000.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SignAssembly>false</SignAssembly>
+    <StartupObject>Editor.App</StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>app_icon.ico</ApplicationIcon>
-    <Company>Math Editor Team</Company>
-    <Product>Math Editor</Product>
-    <Version>2.0.0.0</Version>
-    <Copyright>Copyright ©  2012-2021</Copyright>
-    <PackageId>MathEditor</PackageId>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Math Editor</Title>
+    <Description>An equation editor for creating mathematical and scientific documents.</Description>
+    <Company>Jack251970</Company>
+    <Product>Math Editor</Product>
+    <Copyright>Copyright @ 2025 Jack251970</Copyright>
+    <Authors>Jack251970</Authors>
+    <Version>1.0.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
   
   <ItemGroup>
     <Resource Include="images\**\*.png" />
