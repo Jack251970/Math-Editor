@@ -44,7 +44,7 @@ namespace Editor
             root.Add(new XAttribute("fileVersion", fileVersion));
             root.Add(new XAttribute("appVersion", Assembly.GetEntryAssembly().GetName().Version));
             textManager.OptimizeForSave(this);
-            root.Add(textManager.Serialize());
+            root.Add(textManager.Serialize(true));
             root.Add(ActiveChild.Serialize());
             xDoc.Add(root);
             xDoc.Save(stream);
@@ -164,7 +164,7 @@ namespace Editor
             data.SetImage(temp.Image);
             XElement rootElement = new XElement(this.GetType().Name);
             rootElement.Add(new XElement("SessionId", sessionString));
-            rootElement.Add(textManager.Serialize());
+            rootElement.Add(textManager.Serialize(true));
             rootElement.Add(new XElement("payload", temp.XElement));
             MathEditorData med = new MathEditorData { XmlString = rootElement.ToString() };
             data.SetData(med);

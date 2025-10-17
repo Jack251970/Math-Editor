@@ -32,7 +32,7 @@ namespace Editor
             TextBrushString = bc.ConvertToString(brush);
         }
 
-        public XElement Serialize()
+        public XElement Serialize(bool forceBlackBrush = false)
         {
             XElement thisElement = new XElement(GetType().Name);
             thisElement.Add(new XElement("FontSize", FontSize),
@@ -40,7 +40,8 @@ namespace Editor
                              new XElement("FontStyle", FontStyle),
                              new XElement("Underline", UseUnderline),
                              new XElement("FontWeight", FontWeight),
-                             new XElement("Brush", TextBrushString));
+                             new XElement("Brush", forceBlackBrush ?
+                                new BrushConverter().ConvertToString(Brushes.Black) : TextBrushString));
             return thisElement;
         }
 

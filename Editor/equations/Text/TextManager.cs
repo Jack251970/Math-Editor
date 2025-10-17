@@ -54,13 +54,13 @@ namespace Editor
             formattingList = formattingListBeforeSave;
         }
 
-        public XElement Serialize()
+        public XElement Serialize(bool forceBlackBrush = false)
         {
             XElement thisElement = new XElement(GetType().Name);
             XElement children = new XElement("Formats");
             foreach (TextFormat tf in formattingList)
             {
-                children.Add(tf.Serialize());
+                children.Add(tf.Serialize(forceBlackBrush));
             }
             thisElement.Add(children);
             return thisElement;
@@ -308,14 +308,14 @@ namespace Editor
             return tf.Index;
         }
 
-        public FormattedText GetFormattedText(string text, List<int> formats)
+        public FormattedText GetFormattedText(string text, List<int> formats, bool forceBlackBrush = false)
         {
             FormattedText formattedText = new FormattedText(text,
                                                             CultureInfo.InvariantCulture,
                                                             FlowDirection.LeftToRight,
                                                             formattingList[formats[0]].TypeFace,
                                                             formattingList[formats[0]].FontSize,
-                                                            formattingList[formats[0]].TextBrush);
+                                                            forceBlackBrush ? Brushes.Black : formattingList[formats[0]].TextBrush);
             for (int i = 0; i < formats.Count; i++)
             {
                 FormatText(formats, formattedText, i);
