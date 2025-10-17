@@ -100,6 +100,12 @@ namespace Editor
             : base(parent)
         {
             CalculateSize();
+            ThemeManager.Current.ActualApplicationThemeChanged += ThemeManager_ActualApplicationThemeChanged;
+        }
+
+        private void ThemeManager_ActualApplicationThemeChanged(ThemeManager sender, object args)
+        {
+            ModifySolidBrush();
         }
 
         void SetCaretIndex(int index)
@@ -806,6 +812,17 @@ namespace Editor
             {
                 TextFormatAction tfa = new TextFormatAction(this, startIndex, oldFormats, formats.GetRange(startIndex, count).ToArray());
                 UndoManager.AddUndoAction(tfa);
+            }
+        }
+
+        private void ModifySolidBrush()
+        {
+            int startIndex = 0;
+            int count = formats.Count;
+            for (int i = startIndex; i < startIndex + count; i++)
+            {
+                formats[i] = textManager.GetFormatIdForNewSolidBrush(formats[i], (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                    Brushes.Black : Brushes.White));
             }
         }
 

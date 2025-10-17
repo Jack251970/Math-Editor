@@ -198,6 +198,28 @@ namespace Editor
             return tf.Index;
         }
 
+        public int GetFormatIdForNewSolidBrush(int oldId, SolidColorBrush brush)
+        {
+            TextFormat oldFormat = formattingList[oldId];
+
+            TextFormat tf = formattingList.Where(x =>
+            {
+                return x.FontSize == oldFormat.FontSize &&
+                       x.FontType == oldFormat.FontType &&
+                       x.FontStyle == oldFormat.FontStyle &&
+                       x.UseUnderline == oldFormat.UseUnderline &&
+                       Color.AreClose(x.TextBrush.Color, brush.Color) &&
+                       x.FontWeight == oldFormat.FontWeight;
+
+            }).FirstOrDefault();
+            if (tf == null)
+            {
+                tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, brush, oldFormat.UseUnderline);
+                AddToList(tf);
+            }
+            return tf.Index;
+        }
+
         public int GetFormatIdForNewSize(int oldId, double newSize)
         {
             TextFormat oldFormat = formattingList[oldId];
