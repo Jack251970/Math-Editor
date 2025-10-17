@@ -64,7 +64,6 @@ namespace Editor
         double height;
         double fontSize = 20;
         double fontFactor = 1;
-        Pen boxPen = new Pen(Brushes.Black, 1);
         public int SelectionStartIndex { get; set; }
         public int SelectedItems { get; set; } //this is a directed value (as on a real line!!)
 
@@ -87,7 +86,6 @@ namespace Editor
             }
             debugBrush = new SolidColorBrush(Color.FromArgb(100, r, g, b));
             debugBrush.Freeze();
-            boxPen.Freeze();
         }
 
         public virtual bool ConsumeMouseClick(Point mousePoint) { return false; }
