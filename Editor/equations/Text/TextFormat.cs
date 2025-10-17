@@ -2,11 +2,14 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
+using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
     public sealed class TextFormat
     {
+        private static readonly string ThemeAwareTextBrushString = new BrushConverter().ConvertToString(Brushes.Transparent);
+
         public double FontSize { get; private set; }
         public FontType FontType { get; private set; }
         public FontFamily FontFamily { get; private set; }
@@ -32,7 +35,7 @@ namespace Editor
             TextBrushString = bc.ConvertToString(brush);
         }
 
-        public XElement Serialize(bool forceBlackBrush = false)
+        public XElement Serialize(bool themeAwareBrush = false)
         {
             XElement thisElement = new XElement(GetType().Name);
             thisElement.Add(new XElement("FontSize", FontSize),
@@ -40,8 +43,8 @@ namespace Editor
                              new XElement("FontStyle", FontStyle),
                              new XElement("Underline", UseUnderline),
                              new XElement("FontWeight", FontWeight),
-                             new XElement("Brush", forceBlackBrush ?
-                                new BrushConverter().ConvertToString(Brushes.Black) : TextBrushString));
+                             new XElement("Brush", themeAwareBrush ?
+                                 ThemeAwareTextBrushString : TextBrushString));
             return thisElement;
         }
 
@@ -52,7 +55,17 @@ namespace Editor
             FontStyle fontStyle = xe.Element("FontStyle").Value == "Italic" ? FontStyles.Italic : FontStyles.Normal;
             FontWeight fontWeight = xe.Element("FontWeight").Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;
             BrushConverter bc = new BrushConverter();
-            SolidColorBrush brush = (SolidColorBrush)bc.ConvertFrom(xe.Element("Brush").Value);
+            var brushString = xe.Element("Brush").Value;
+            SolidColorBrush brush;
+            if (string.Equals(brushString, ThemeAwareTextBrushString, StringComparison.OrdinalIgnoreCase))
+            {
+                brush = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                    Brushes.Black : Brushes.White;
+            }
+            else
+            {
+                brush = (SolidColorBrush)bc.ConvertFrom(brushString);
+            }
             bool useUnderline = Convert.ToBoolean(xe.Element("Underline").Value);
             return new TextFormat(fontSize, fontType, fontStyle, fontWeight, brush, useUnderline);
         }

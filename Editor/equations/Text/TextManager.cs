@@ -54,13 +54,13 @@ namespace Editor
             formattingList = formattingListBeforeSave;
         }
 
-        public XElement Serialize(bool forceBlackBrush = false)
+        public XElement Serialize(bool themeAwareBrush = false)
         {
             XElement thisElement = new XElement(GetType().Name);
             XElement children = new XElement("Formats");
             foreach (TextFormat tf in formattingList)
             {
-                children.Add(tf.Serialize(forceBlackBrush));
+                children.Add(tf.Serialize(themeAwareBrush));
             }
             thisElement.Add(children);
             return thisElement;
