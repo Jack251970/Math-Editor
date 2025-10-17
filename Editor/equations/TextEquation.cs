@@ -100,6 +100,7 @@ namespace Editor
             : base(parent)
         {
             CalculateSize();
+            // TODO: Find correct way to unsubscribe this event
             ThemeManager.Current.ActualApplicationThemeChanged += ThemeManager_ActualApplicationThemeChanged;
         }
 
