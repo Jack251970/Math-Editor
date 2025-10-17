@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Media;
+using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
     public static class PenManager
     {
-        static Dictionary<double, Pen> bevelPens = new Dictionary<double, Pen>();
-        static Dictionary<double, Pen> miterPens = new Dictionary<double, Pen>();
-        static Dictionary<double, Pen> roundPens = new Dictionary<double, Pen>();
-        static Dictionary<double, Pen> whitePens = new Dictionary<double, Pen>();
+        static Dictionary<(double, ApplicationTheme), Pen> bevelPens = [];
+        static Dictionary<(double, ApplicationTheme), Pen> miterPens = [];
+        static Dictionary<(double, ApplicationTheme), Pen> roundPens = [];
 
-        static object bevelLock = new object();
-        static object miterLock = new object();
-        static object roundLock = new object();
-
-        static object whiteLock = new object();
-
-        public static Pen GetWhitePen(double thickness)
-        {
-            return GetPen(whiteLock, whitePens, thickness, PenLineJoin.Miter, Brushes.White);
-        }
+        static readonly object bevelLock = new();
+        static readonly object miterLock = new object();
+        static readonly object roundLock = new object();
 
         public static Pen GetPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
         {
@@ -38,19 +31,25 @@ namespace Editor
             }
         }
 
-        static Pen GetPen(object lockObj, Dictionary<double, Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush brush = null)
+        static Pen GetPen(object lockObj, Dictionary<(double, ApplicationTheme), Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush brush = null)
         {
             lock (lockObj)
             {
                 thickness = Math.Round(thickness, 1);
-                if (!penDictionary.ContainsKey(thickness))
+                var key = (thickness, ThemeManager.Current.ActualApplicationTheme);
+                if (!penDictionary.TryGetValue(key, out var value))
                 {
-                    Pen pen = new Pen(brush ?? Brushes.Black, thickness);
-                    pen.LineJoin = lineJoin;
+                    var pen = new Pen(brush ??
+                        (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                            Brushes.Black : Brushes.White), thickness)
+                    {
+                        LineJoin = lineJoin
+                    };
                     pen.Freeze();
-                    penDictionary.Add(thickness, pen);
+                    value = pen;
+                    penDictionary.Add(key, value);
                 }
-                return penDictionary[thickness];
+                return value;
             }
         }
     }
