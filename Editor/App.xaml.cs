@@ -16,6 +16,11 @@ namespace Editor
             application.Run();
         }
 
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            Current.MainWindow = new MainWindow();
+            Current.MainWindow.Show();
+        }
         //protected override void OnStartup(StartupEventArgs e)
         //{
         //    try
