@@ -33,7 +33,7 @@ public sealed class FontFactory
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight)
     {
         return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-            Brushes.White : Brushes.White));
+            Brushes.Black : Brushes.White));
     }
 
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, Brush brush)

@@ -24,7 +24,7 @@ namespace Editor
             PathFigure fig = new PathFigure(startPoint, new[] { segment }, true);
             geometry.Figures.Add(fig);
             dc.DrawGeometry((ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                Brushes.White : Brushes.White), null, geometry);
+                Brushes.Black : Brushes.White), null, geometry);
         }
     }
 }

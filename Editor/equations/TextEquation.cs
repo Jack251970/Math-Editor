@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
@@ -415,7 +416,8 @@ namespace Editor
                 }
                 catch
                 {
-                    int formatId = textManager.GetFormatId(FontSize, fontType, FontStyles.Normal, FontWeights.Normal, Brushes.Black, false);
+                    int formatId = textManager.GetFormatId(FontSize, fontType, FontStyles.Normal, FontWeights.Normal, (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                        Brushes.Black : Brushes.White), false);
                     for (int i = 0; i < text.Length; i++)
                     {
                         formats[i] = formatId;
@@ -499,7 +501,8 @@ namespace Editor
                 formats.Clear();
                 modes.Clear();
                 decorations.Clear();
-                int formatId = textManager.GetFormatId(FontSize, fontType, FontStyles.Normal, FontWeights.Normal, Brushes.Black, false);
+                int formatId = textManager.GetFormatId(FontSize, fontType, FontStyles.Normal, FontWeights.Normal, (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                    Brushes.Black : Brushes.White), false);
                 for (int i = 0; i < textData.Length; i++)
                 {
                     formats.Add(formatId);
@@ -595,7 +598,8 @@ namespace Editor
             }
 
             int formatId = textManager.GetFormatId(FontSize, fontType, style, InputBold ? FontWeights.Bold : FontWeights.Normal,
-                                                   Brushes.Black, InputUnderline);
+                (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                Brushes.Black : Brushes.White), InputUnderline);
             int[] tempFormats = new int[text.Length];
             EditorMode[] tempModes = new EditorMode[text.Length];
             for (int i = 0; i < text.Length; i++)
@@ -1049,7 +1053,8 @@ namespace Editor
             else
             {
                 int formatId = textManager.GetFormatId(FontSize, fontType, InputItalic ? FontStyles.Italic : FontStyles.Normal, InputBold ? FontWeights.Bold : FontWeights.Normal,
-                                                   Brushes.Black, InputUnderline);
+                    (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                    Brushes.Black : Brushes.White), InputUnderline);
                 var ft = textManager.GetFormattedText("d", formatId);
                 //hm.TopExtra = Math.Min(ft.Baseline * .30, ft.TopExtra());
                 topExtra = ft.Baseline * .26;
