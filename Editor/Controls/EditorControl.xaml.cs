@@ -43,7 +43,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     public event EventHandler ZoomChanged = (x, y) => { };
 
-    public bool Dirty { get; set; }
+    public bool Dirty { get; set; } = false;
 
     EquationRoot equationRoot;
     Caret vCaret = new Caret(false);
@@ -437,9 +437,15 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void ChangeFormat(string operation, string argument, bool applied)
     {
-        equationRoot.ModifySelection(operation, argument, applied, true);
-        AdjustView();
-        Dirty = true;
+        if (Application.Current?.MainWindow is MainWindow win)
+        {
+            equationRoot.ModifySelection(operation, argument, applied, true);
+            AdjustView();
+            if (win.IsInialized)
+            {
+                Dirty = true;
+            }
+        }
     }
 
     public void Clear()

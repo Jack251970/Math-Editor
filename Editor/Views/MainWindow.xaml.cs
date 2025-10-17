@@ -19,7 +19,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     string currentLocalFile = "";
     static string meExtension = "med";
     static string meFileFilter = "Math Editor File (*." + meExtension + ")|*." + meExtension;
-
+    public bool IsInialized { get; private set; } = false;
 
     public MainWindow()
     {
@@ -84,6 +84,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         ChangeEditorMode();
         ChangeEditorFont();
         editor.Focus();
+
+        IsInialized = true;
     }
 
     void editor_SelectionUnavailable(object sender, EventArgs e)
