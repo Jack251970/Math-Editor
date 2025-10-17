@@ -10,7 +10,7 @@ namespace Editor
         RowContainer mainEquation;
         StaticSign sign;
         RowContainer superEquation;
-        RowContainer subEquation;        
+        RowContainer subEquation;
         double HGap { get { return FontSize * .06; } }
         double SubMinus = 0;
         double SuperMinus = 0;
@@ -53,7 +53,7 @@ namespace Editor
         }
 
         protected override void CalculateWidth()
-        {            
+        {
             if (sign.Symbol.ToString().ToLower().Contains("integral"))
             {
                 SubMinus = sign.OverhangTrailing;
@@ -66,7 +66,7 @@ namespace Editor
         {
             Height = Math.Max(sign.Height * .5 + subEquation.Height + superEquation.Height, mainEquation.Height);
         }
-        
+
         public override double RefY
         {
             get
@@ -87,7 +87,7 @@ namespace Editor
                 superEquation.Bottom = sign.Top + sign.Height * .2;
             }
         }
-        
+
         public override bool ConsumeMouseClick(System.Windows.Point mousePoint)
         {
             if (mainEquation.Bounds.Contains(mousePoint))
@@ -98,7 +98,7 @@ namespace Editor
             {
                 ActiveChild = superEquation;
             }
-            else 
+            else
             {
                 ActiveChild = subEquation;
             }
@@ -130,7 +130,7 @@ namespace Editor
                 if (ActiveChild == superEquation)
                 {
                     ActiveChild = mainEquation;
-                    return true;    
+                    return true;
                 }
                 else if (ActiveChild == mainEquation)
                 {

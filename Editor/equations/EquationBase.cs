@@ -10,7 +10,7 @@ namespace Editor
     public abstract class EquationBase : EquationBox
     {
         protected static TextManager textManager = new TextManager();
-        
+
         static protected double lineFactor = 0.06;
         public virtual bool ApplySymbolGap { get; set; }
 
@@ -120,7 +120,7 @@ namespace Editor
         }
         public virtual void SelectAll() { }
         public virtual string GetSelectedText() { return string.Empty; }
-      
+
         public virtual void DrawEquation(DrawingContext dc)
         {
             if (ShowNesting)

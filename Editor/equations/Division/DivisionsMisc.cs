@@ -4,7 +4,7 @@
     {
         public DivRegularSmall(EquationContainer parent)
             : base(parent, true)
-        {            
+        {
         }
     }
 
@@ -30,7 +30,7 @@
     {
         public DivSlantedSmall(EquationContainer parent)
             : base(parent, true)
-        {            
+        {
         }
     }
 
@@ -38,8 +38,8 @@
     {
         public DivHorizSmall(EquationContainer parent)
             : base(parent, true)
-        {           
+        {
         }
-    }   
+    }
 
 }

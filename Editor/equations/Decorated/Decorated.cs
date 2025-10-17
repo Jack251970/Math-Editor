@@ -8,11 +8,11 @@ namespace Editor
         RowContainer rowContainer;
         DecorationDrawing decoration;
         DecorationType decorationType;
-        Position decorationPosition;   
+        Position decorationPosition;
 
         public Decorated(EquationContainer parent, DecorationType decorationType, Position decorationPosition)
             : base(parent)
-        {            
+        {
             ActiveChild = rowContainer = new RowContainer(this);
             this.decorationType = decorationType;
             this.decorationPosition = decorationPosition;
@@ -42,8 +42,8 @@ namespace Editor
         {
             rowContainer.DeSerialize(xElement.Element(rowContainer.GetType().Name));
             CalculateSize();
-        }       
-               
+        }
+
         public override double Top
         {
             get { return base.Top; }
@@ -75,7 +75,7 @@ namespace Editor
             else
             {
                 rowContainer.Top = Top;
-                decoration.Bottom = Bottom;                
+                decoration.Bottom = Bottom;
             }
         }
 
@@ -93,7 +93,7 @@ namespace Editor
                 }
             }
         }
-        
+
         protected override void CalculateHeight()
         {
             if (decorationPosition == Position.Bottom)

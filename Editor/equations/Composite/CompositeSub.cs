@@ -6,7 +6,7 @@ using System.Xml.Linq;
 namespace Editor
 {
     public sealed class CompositeSub : CompositeBase
-    {        
+    {
         RowContainer bottomRowContainer;
 
         public CompositeSub(EquationContainer parent)
@@ -18,7 +18,7 @@ namespace Editor
             bottomRowContainer.ApplySymbolGap = false;
             childEquations.AddRange(new EquationBase[] { mainRowContainer, bottomRowContainer });
         }
-                
+
         public override XElement Serialize()
         {
             XElement thisElement = new XElement(GetType().Name);
@@ -39,7 +39,7 @@ namespace Editor
             get { return base.Left; }
             set
             {
-                base.Left = value;                
+                base.Left = value;
                 mainRowContainer.Left = Left;
                 bottomRowContainer.Left = mainRowContainer.Right;
             }

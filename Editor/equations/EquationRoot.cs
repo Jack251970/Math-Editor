@@ -26,7 +26,7 @@ namespace Editor
             this.vCaret = vCaret;
             this.hCaret = hCaret;
             ActiveChild = new RowContainer(this, 0.3);
-            childEquations.Add(ActiveChild);            
+            childEquations.Add(ActiveChild);
             ActiveChild.Location = Location = new Point(15, 15);
             AdjustCarets();
         }
@@ -72,7 +72,7 @@ namespace Editor
             {
                 fileVersionAttribute = root.Attributes("fileVersion").FirstOrDefault();
                 appVersionAttribute = root.Attributes("appVersion").FirstOrDefault();
-            }            
+            }
             string appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
             if (fileVersionAttribute == null || fileVersionAttribute.Value != fileVersion)
             {
@@ -102,7 +102,7 @@ namespace Editor
             {
                 IsSelecting = true;
                 ActiveChild.StartSelection();
-                ActiveChild.HandleMouseDrag(mousePoint);                
+                ActiveChild.HandleMouseDrag(mousePoint);
             }
             else
             {
@@ -123,9 +123,9 @@ namespace Editor
                 IsSelecting = true;
             }
         }
-                
+
         public void HandleUserCommand(CommandDetails commandDetails)
-        {            
+        {
             if (commandDetails.CommandType == CommandType.Text)
             {
                 ConsumeText(commandDetails.UnicodeString); //ConsumeText() will call DeSelect() itself. No worries here
@@ -144,7 +144,7 @@ namespace Editor
                 }
                 CalculateSize();
                 AdjustCarets();
-                DeSelect();                
+                DeSelect();
             }
         }
 
@@ -215,7 +215,7 @@ namespace Editor
                 {
                     if (Clipboard.ContainsData(typeof(MathEditorData).FullName))
                     {
-                        data = Clipboard.GetData(typeof(MathEditorData).FullName) as MathEditorData;                        
+                        data = Clipboard.GetData(typeof(MathEditorData).FullName) as MathEditorData;
                         break;
                     }
                     else if (Clipboard.ContainsText())
@@ -243,7 +243,7 @@ namespace Editor
                     success = true;
                 }
             }
-            catch 
+            catch
             {
                 success = false;
             }
@@ -291,7 +291,7 @@ namespace Editor
                 {
                     dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
                 }
-                ActiveChild.DrawEquation(dc);                
+                ActiveChild.DrawEquation(dc);
             }
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)), (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
             bitmap.Render(dv);
@@ -355,11 +355,11 @@ namespace Editor
                 }
                 else
                 {
-                    ActiveChild.ConsumeKey(key);                    
+                    ActiveChild.ConsumeKey(key);
                 }
                 CalculateSize();
                 AdjustCarets();
-                DeSelect();                
+                DeSelect();
             }
             return result;
         }
@@ -372,7 +372,7 @@ namespace Editor
                 CalculateSize();
                 AdjustCarets();
                 DeSelect();
-            }            
+            }
         }
 
         protected override void CalculateWidth()
@@ -387,7 +387,7 @@ namespace Editor
 
         public void ZoomOut(int difference)
         {
-            FontSize -= difference;            
+            FontSize -= difference;
         }
 
         public void ZoomIn(int difference)
@@ -408,7 +408,7 @@ namespace Editor
             get { return base.FontSize; }
             set
             {
-                base.FontSize = value;                
+                base.FontSize = value;
                 AdjustCarets();
             }
         }

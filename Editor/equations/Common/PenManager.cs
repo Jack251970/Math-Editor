@@ -38,7 +38,7 @@ namespace Editor
             }
         }
 
-        static Pen GetPen(object lockObj, Dictionary<double, Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush brush=null)
+        static Pen GetPen(object lockObj, Dictionary<double, Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush brush = null)
         {
             lock (lockObj)
             {

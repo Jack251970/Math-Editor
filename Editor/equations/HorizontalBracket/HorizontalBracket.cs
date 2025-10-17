@@ -18,7 +18,7 @@ namespace Editor
             bracketSign = new HorizontalBracketSign(this, signType);
             childEquations.Add(topEquation);
             childEquations.Add(bracketSign);
-            childEquations.Add(bottomEquation);            
+            childEquations.Add(bottomEquation);
         }
 
         public override XElement Serialize()
@@ -66,13 +66,13 @@ namespace Editor
         {
             topEquation.Top = Top;
             bracketSign.Top = topEquation.Bottom;
-            bottomEquation.Top = bracketSign.Bottom;            
+            bottomEquation.Top = bracketSign.Bottom;
         }
 
         protected override void CalculateWidth()
         {
             Width = Math.Max(topEquation.Width, bottomEquation.Width) + FontSize * .6;
-            bracketSign.Width = Width - FontSize * .2;            
+            bracketSign.Width = Width - FontSize * .2;
         }
 
         protected override void CalculateHeight()

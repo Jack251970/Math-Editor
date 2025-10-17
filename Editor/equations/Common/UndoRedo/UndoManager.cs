@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Editor
-{   
+{
     public static class UndoManager
     {
         public static bool DisableAddingActions { get; set; }
@@ -24,7 +22,7 @@ namespace Editor
                 CanRedo(null, new UndoEventArgs(false));
             }
         }
-        
+
         public static void Undo()
         {
             if (undoStack.Count > 0)
@@ -41,7 +39,7 @@ namespace Editor
                 {
                     CanUndo(null, new UndoEventArgs(false));
                 }
-                CanRedo(null, new UndoEventArgs(true));                    
+                CanRedo(null, new UndoEventArgs(true));
             }
         }
 
@@ -61,7 +59,7 @@ namespace Editor
                 {
                     CanRedo(null, new UndoEventArgs(false));
                 }
-                CanUndo(null, new UndoEventArgs(true));                    
+                CanUndo(null, new UndoEventArgs(true));
             }
         }
 

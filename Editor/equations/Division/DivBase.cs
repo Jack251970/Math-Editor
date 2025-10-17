@@ -13,7 +13,7 @@ namespace Editor
         protected DivBase(EquationContainer parent, bool isSmall = false)
             : base(parent)
         {
-            if (isSmall) 
+            if (isSmall)
             {
                 SubLevel++;
             }
@@ -26,7 +26,7 @@ namespace Editor
                 topEquation.ApplySymbolGap = false;
                 bottomEquation.ApplySymbolGap = false;
             }
-            childEquations.AddRange(new EquationBase[] { topEquation, bottomEquation});
+            childEquations.AddRange(new EquationBase[] { topEquation, bottomEquation });
         }
 
         public override XElement Serialize()
@@ -42,7 +42,7 @@ namespace Editor
             topEquation.DeSerialize(xElement.Elements().First());
             bottomEquation.DeSerialize(xElement.Elements().Last());
             CalculateSize();
-        }       
+        }
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
@@ -57,7 +57,7 @@ namespace Editor
                 ActiveChild = topEquation;
                 ActiveChild.ConsumeMouseClick(mousePoint);
                 return true;
-            } 
+            }
             return false;
         }
 

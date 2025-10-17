@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -19,7 +18,7 @@ namespace Editor
                 fontFamilies.Add(ft, CreateFontFamily(ft));
             }
         }
-        
+
         public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize)
         {
             return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, FontWeights.Normal);
@@ -29,7 +28,7 @@ namespace Editor
         {
             return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, fontWeight);
         }
-        
+
         public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight)
         {
             return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, Brushes.Black);
@@ -96,9 +95,9 @@ namespace Editor
                 case FontType.ComicSansMS:
                     return new FontFamily("Comic Sans MS");
                 case FontType.Courier:
-                    return new FontFamily("Courier");      
+                    return new FontFamily("Courier");
                 case FontType.CourierNew:
-                    return new FontFamily("Courier New");   
+                    return new FontFamily("Courier New");
                 case FontType.Georgia:
                     return new FontFamily("Georgia");
                 case FontType.Impact:
@@ -128,7 +127,7 @@ namespace Editor
                 case FontType.Webdings:
                     return new FontFamily("Webdings");
                 case FontType.Wingdings:
-                    return new FontFamily("Wingdings");                
+                    return new FontFamily("Wingdings");
             }
             return new FontFamily("Segoe UI");
         }
@@ -136,6 +135,6 @@ namespace Editor
         public static Typeface GetTypeface(FontType fontType, FontStyle fontStyle, FontWeight fontWeight)
         {
             return new Typeface(GetFontFamily(fontType), fontStyle, fontWeight, FontStretches.Normal, GetFontFamily(FontType.STIXGeneral));
-        }        
+        }
     }
 }

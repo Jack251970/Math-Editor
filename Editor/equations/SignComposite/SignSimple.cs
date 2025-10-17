@@ -6,14 +6,14 @@ namespace Editor
     class SignSimple : EquationContainer
     {
         protected RowContainer mainEquation;
-        protected StaticSign sign;            
+        protected StaticSign sign;
 
         public SignSimple(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(parent)
         {
             ActiveChild = mainEquation = new RowContainer(this);
-            sign = new StaticSign(this, symbol, useUpright);  
-            childEquations.AddRange(new EquationBase[] {mainEquation, sign});            
+            sign = new StaticSign(this, symbol, useUpright);
+            childEquations.AddRange(new EquationBase[] { mainEquation, sign });
         }
 
         public override XElement Serialize()
@@ -22,7 +22,7 @@ namespace Editor
             XElement parameters = new XElement("parameters");
             parameters.Add(new XElement(sign.Symbol.GetType().Name, sign.Symbol));
             parameters.Add(new XElement(typeof(bool).FullName, sign.UseItalicIntegralSign));
-            thisElement.Add(parameters);            
+            thisElement.Add(parameters);
             thisElement.Add(mainEquation.Serialize());
             return thisElement;
         }
@@ -32,7 +32,7 @@ namespace Editor
             mainEquation.DeSerialize(xElement.Element(mainEquation.GetType().Name));
             CalculateSize();
         }
-        
+
         protected override void CalculateWidth()
         {
             Width = sign.Width + mainEquation.Width;
@@ -53,7 +53,7 @@ namespace Editor
                 mainEquation.MidY = MidY;
             }
         }
-        
+
         public override double Left
         {
             get { return base.Left; }

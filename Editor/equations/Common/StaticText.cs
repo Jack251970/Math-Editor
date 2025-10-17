@@ -5,7 +5,7 @@ namespace Editor
 {
     public class StaticText : EquationBase
     {
-        protected string Text { get; set; }        
+        protected string Text { get; set; }
         protected FontType FontType { get; set; }
         protected double FontSizeFactor = 1;
         protected FontWeight FontWeight = FontWeights.Normal;
@@ -16,7 +16,7 @@ namespace Editor
         FormattedText formattedText;
 
         public StaticText(EquationContainer parent)
-            :base(parent)
+            : base(parent)
         {
             IsStatic = true;
         }
@@ -36,7 +36,7 @@ namespace Editor
             set
             {
                 base.FontSize = value;
-                ReformatSign();            
+                ReformatSign();
             }
         }
 

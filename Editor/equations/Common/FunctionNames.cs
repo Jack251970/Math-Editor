@@ -11,7 +11,7 @@ namespace Editor
             names.AddRange(new string[] {  "arccos", "arcsin", "arctan", "arg", "cos", "cosh", "cot", "coth",
                                            "cov", "csc", "curl", "deg", "det", "dim", "div", "erf", "exp", "gcd", "glb", "grad", "hom", "lm",
                                            "inf", "int", "ker", "lg", "lim", "ln", "log", "lub", "max",
-                                           "min", "mod", "Pr", "Re", "rot", "sec", "sgn", "sin", "sinh", "sup", "tan", "tanh", "var",                                           
+                                           "min", "mod", "Pr", "Re", "rot", "sec", "sgn", "sin", "sinh", "sup", "tan", "tanh", "var",
                                         });
         }
 

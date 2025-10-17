@@ -1,11 +1,11 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor
@@ -47,7 +47,7 @@ namespace Editor
         public event EventHandler ZoomChanged = (x, y) => { };
 
         public bool Dirty { get; set; }
-        
+
         EquationRoot equationRoot;
         Caret vCaret = new Caret(false);
         Caret hCaret = new Caret(true);
@@ -56,7 +56,7 @@ namespace Editor
         static double rootFontSize = rootFontBaseSize;
         double fontSize = rootFontBaseSize;
 
-        public static double RootFontSize 
+        public static double RootFontSize
         {
             get { return rootFontSize; }
         }
@@ -83,7 +83,7 @@ namespace Editor
         private void OnWindowClosing(object sender, global::System.ComponentModel.CancelEventArgs e) => Dispose();
 
         public void SetFontSizePercentage(int percentage)
-        {            
+        {
             equationRoot.FontSize = fontSize * percentage / 100;
             rootFontSize = equationRoot.FontSize;
             AdjustView();
@@ -226,7 +226,7 @@ namespace Editor
             equationRoot.RemoveSelection(true);
             InvalidateVisual();
         }
-        
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);

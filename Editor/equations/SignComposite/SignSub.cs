@@ -19,14 +19,14 @@ namespace Editor
 
         public SignSub(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(parent)
-        {   
+        {
             ActiveChild = mainEquation = new RowContainer(this);
             this.SubLevel++;
             subEquation = new RowContainer(this);
-            subEquation.ApplySymbolGap = false;            
+            subEquation.ApplySymbolGap = false;
             sign = new StaticSign(this, symbol, useUpright);
             subEquation.FontFactor = SubFontFactor;
-            childEquations.AddRange(new EquationBase[] { mainEquation, sign, subEquation });            
+            childEquations.AddRange(new EquationBase[] { mainEquation, sign, subEquation });
         }
 
         public override XElement Serialize()
@@ -50,7 +50,7 @@ namespace Editor
         }
 
         protected override void CalculateWidth()
-        {            
+        {
             if (sign.Symbol.ToString().ToLower().Contains("integral"))
             {
                 LeftMinus = sign.OverhangTrailing;
@@ -96,7 +96,7 @@ namespace Editor
                 subEquation.Top = sign.Bottom - SubOverlap;
             }
         }
-        
+
         public override bool ConsumeMouseClick(System.Windows.Point mousePoint)
         {
             if (subEquation.Bounds.Contains(mousePoint))

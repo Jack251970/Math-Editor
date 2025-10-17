@@ -7,7 +7,7 @@ namespace Editor
     {
         protected RowContainer insideEquation = null;
         protected RadicalSign radicalSign;
-        protected double ExtraHeight 
+        protected double ExtraHeight
         {
             get { return FontSize * .15; }
         }
@@ -19,7 +19,7 @@ namespace Editor
 
         public SquareRoot(EquationContainer parent)
             : base(parent)
-        {            
+        {
             radicalSign = new RadicalSign(this);
             ActiveChild = insideEquation = new RowContainer(this);
             childEquations.Add(insideEquation);
@@ -29,13 +29,13 @@ namespace Editor
         public override XElement Serialize()
         {
             XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(insideEquation.Serialize());            
+            thisElement.Add(insideEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            insideEquation.DeSerialize(xElement.Elements().First());            
+            insideEquation.DeSerialize(xElement.Elements().First());
             CalculateSize();
         }
 

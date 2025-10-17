@@ -80,7 +80,7 @@ namespace Editor
             set
             {
                 MidSpace = value * 0.5;
-                base.FontSize = value;                
+                base.FontSize = value;
             }
         }
 

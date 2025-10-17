@@ -18,7 +18,7 @@ namespace Editor
             dc.DrawText(text, new Point(topLeft.X - padding, topLeft.Y - topExtra));
         }
 
-        public static void DrawText (this FormattedText ft, DrawingContext dc, Point topLeft)
+        public static void DrawText(this FormattedText ft, DrawingContext dc, Point topLeft)
         {
             if (ft.Text.Length > 0)
             {
@@ -52,7 +52,7 @@ namespace Editor
 
         public static void DrawTextRightAligned(this FormattedText text, DrawingContext dc, Point topRight)
         {
-           dc.DrawText(text, new Point(topRight.X - text.GetFullWidth(), topRight.Y));
+            dc.DrawText(text, new Point(topRight.X - text.GetFullWidth(), topRight.Y));
         }
 
 
@@ -74,7 +74,7 @@ namespace Editor
         {
             double descent = text.Height - text.Baseline + text.OverhangAfter;
             double topExtra = text.Baseline - text.Extent + descent;
-            dc.DrawText(text, new Point(bottomCenter.X - text.OverhangLeading - text.GetFullWidth()/2, bottomCenter.Y - topExtra - text.Extent));
+            dc.DrawText(text, new Point(bottomCenter.X - text.OverhangLeading - text.GetFullWidth() / 2, bottomCenter.Y - topExtra - text.Extent));
         }
 
         public static void DrawTextTopCenterAligned(this FormattedText text, DrawingContext dc, Point topCenter)
@@ -95,7 +95,7 @@ namespace Editor
         {
             if (ft.Text.Length > 0)
             {
-                if (char.IsWhiteSpace(ft.Text[0]) && char.IsWhiteSpace(ft.Text[ft.Text.Length-1]))
+                if (char.IsWhiteSpace(ft.Text[0]) && char.IsWhiteSpace(ft.Text[ft.Text.Length - 1]))
                 {
                     return ft.WidthIncludingTrailingWhitespace;
                 }
@@ -135,7 +135,7 @@ namespace Editor
         //}
         //return width;
         */
-        
+
         public static double Descent(this FormattedText ft)
         {
             return ft.Height - ft.Baseline + ft.OverhangAfter;
@@ -155,7 +155,7 @@ namespace Editor
                 if (char.IsWhiteSpace(ft.Text[ft.Text.Length - 1]))
                 {
                     return ft.WidthIncludingTrailingWhitespace;
-                }                
+                }
                 else
                 {
                     return ft.WidthIncludingTrailingWhitespace - ft.OverhangTrailing;
@@ -165,6 +165,6 @@ namespace Editor
             {
                 return 0;
             }
-        }  
+        }
     }
 }

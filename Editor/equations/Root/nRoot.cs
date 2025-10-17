@@ -10,10 +10,10 @@ namespace Editor
         protected RowContainer insideEquation = null;
         RowContainer nthRootEquation = null;
         protected RadicalSign radicalSign;
-        protected double ExtraHeight { get { return FontSize * .15; }}
+        protected double ExtraHeight { get { return FontSize * .15; } }
 
         double HGap { get { return FontSize * .5; } }
-        double LeftPadding { get { return FontSize * .1; } }       
+        double LeftPadding { get { return FontSize * .1; } }
 
         public nRoot(EquationContainer parent)
             : base(parent)
@@ -73,7 +73,7 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            Width = Math.Max(nthRootEquation.Width + HGap, radicalSign.Width) + insideEquation.Width + LeftPadding;            
+            Width = Math.Max(nthRootEquation.Width + HGap, radicalSign.Width) + insideEquation.Width + LeftPadding;
         }
 
         protected override void CalculateHeight()
@@ -108,7 +108,7 @@ namespace Editor
             get { return base.Left; }
             set
             {
-                base.Left = value;                
+                base.Left = value;
                 if (nthRootEquation.Width + HGap > radicalSign.Width)
                 {
                     nthRootEquation.Left = Left + LeftPadding;

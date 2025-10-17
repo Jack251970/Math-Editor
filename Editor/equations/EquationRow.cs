@@ -127,28 +127,28 @@ namespace Editor
                 TextEquation lastEquation = (TextEquation)childEquations[otherIndex];
                 List<EquationBase> equations = new List<EquationBase>();
                 RowRemoveAction action = new RowRemoveAction(this)
-                                         {
-                                             ActiveEquation = ActiveChild,
-                                             HeadTextEquation = firstEquation,
-                                             TailTextEquation = lastEquation,
-                                             SelectionStartIndex = SelectionStartIndex,
-                                             SelectedItems = SelectedItems,
-                                             FirstTextCaretIndex = firstEquation.CaretIndex,
-                                             LastTextCaretIndex = lastEquation.CaretIndex,
-                                             FirstTextSelectionIndex = firstEquation.SelectionStartIndex,
-                                             LastTextSelectionIndex = lastEquation.SelectionStartIndex,
-                                             FirstTextSelectedItems = firstEquation.SelectedItems,
-                                             LastTextSelectedItems = lastEquation.SelectedItems,
-                                             FirstText = firstEquation.Text,
-                                             LastText = lastEquation.Text,
-                                             FirstFormats = firstEquation.GetFormats(),
-                                             LastFormats = lastEquation.GetFormats(),
-                                             FirstModes = firstEquation.GetModes(),
-                                             LastModes = lastEquation.GetModes(),
-                                             FirstDecorations = firstEquation.GetDecorations(),
-                                             LastDecorations = lastEquation.GetDecorations(),
-                                             Equations = equations
-                                         };
+                {
+                    ActiveEquation = ActiveChild,
+                    HeadTextEquation = firstEquation,
+                    TailTextEquation = lastEquation,
+                    SelectionStartIndex = SelectionStartIndex,
+                    SelectedItems = SelectedItems,
+                    FirstTextCaretIndex = firstEquation.CaretIndex,
+                    LastTextCaretIndex = lastEquation.CaretIndex,
+                    FirstTextSelectionIndex = firstEquation.SelectionStartIndex,
+                    LastTextSelectionIndex = lastEquation.SelectionStartIndex,
+                    FirstTextSelectedItems = firstEquation.SelectedItems,
+                    LastTextSelectedItems = lastEquation.SelectedItems,
+                    FirstText = firstEquation.Text,
+                    LastText = lastEquation.Text,
+                    FirstFormats = firstEquation.GetFormats(),
+                    LastFormats = lastEquation.GetFormats(),
+                    FirstModes = firstEquation.GetModes(),
+                    LastModes = lastEquation.GetModes(),
+                    FirstDecorations = firstEquation.GetDecorations(),
+                    LastDecorations = lastEquation.GetDecorations(),
+                    Equations = equations
+                };
                 firstEquation.RemoveSelection(false);
                 lastEquation.RemoveSelection(false);
                 firstEquation.Merge(lastEquation);
@@ -335,7 +335,7 @@ namespace Editor
                         FirstNewFormats = ((TextEquation)newChildren.First()).GetFormats(),
                         LastNewFormats = ((TextEquation)newChildren.Last()).GetFormats(),
                         FirstNewModes = ((TextEquation)newChildren.First()).GetModes(),
-                        LastNewModes = ((TextEquation)newChildren.Last()).GetModes(),                                                
+                        LastNewModes = ((TextEquation)newChildren.Last()).GetModes(),
                         FirstNewDecorations = ((TextEquation)newChildren.First()).GetDecorations(),
                         LastNewDecorations = ((TextEquation)newChildren.Last()).GetDecorations(),
                         Equations = newChildren
@@ -625,10 +625,10 @@ namespace Editor
                     EquationBase newText = ActiveChild.Split(this);
                     int caretIndex = ((TextEquation)ActiveChild).TextLength;
                     AddChild(newEquation);
-                    AddChild(newText);                    
+                    AddChild(newText);
                     newEquation.CalculateSize();
                     ActiveChild = newEquation;
-                    CalculateSize();                    
+                    CalculateSize();
                     UndoManager.AddUndoAction(new RowAction(this, ActiveChild, (TextEquation)newText, childEquations.IndexOf(ActiveChild), caretIndex));
                 }
             }
@@ -840,8 +840,9 @@ namespace Editor
                 {
                     if (childEquations[childEquations.IndexOf(ActiveChild) + 1] == deleteable)
                     {
-                        UndoManager.AddUndoAction(new RowAction(this, deleteable, (TextEquation)childEquations[childEquations.IndexOf(deleteable) + 1], 
-                                                                childEquations.IndexOf(deleteable), TextLength) { UndoFlag = false});
+                        UndoManager.AddUndoAction(new RowAction(this, deleteable, (TextEquation)childEquations[childEquations.IndexOf(deleteable) + 1],
+                                                                childEquations.IndexOf(deleteable), TextLength)
+                        { UndoFlag = false });
                         childEquations.Remove(deleteable);
                         deleteable = null;
                         ((TextEquation)ActiveChild).Merge((TextEquation)childEquations[childEquations.IndexOf(ActiveChild) + 1]);
@@ -1159,10 +1160,10 @@ namespace Editor
         {
             RowRemoveAction rowAction = action as RowRemoveAction;
             rowAction.HeadTextEquation.ResetTextEquation(rowAction.FirstTextCaretIndex, rowAction.FirstTextSelectionIndex,
-                                                         rowAction.FirstTextSelectedItems, rowAction.FirstText, rowAction.FirstFormats, 
+                                                         rowAction.FirstTextSelectedItems, rowAction.FirstText, rowAction.FirstFormats,
                                                          rowAction.FirstModes, rowAction.FirstDecorations);
             rowAction.TailTextEquation.ResetTextEquation(rowAction.LastTextCaretIndex, rowAction.LastTextSelectionIndex,
-                                                         rowAction.LastTextSelectedItems, rowAction.LastText, 
+                                                         rowAction.LastTextSelectedItems, rowAction.LastText,
                                                          rowAction.LastFormats, rowAction.LastModes, rowAction.LastDecorations);
             if (rowAction.UndoFlag)
             {
@@ -1174,7 +1175,7 @@ namespace Editor
                 }
                 SelectedItems = rowAction.SelectedItems;
                 SelectionStartIndex = rowAction.SelectionStartIndex;
-                IsSelecting = true;                               
+                IsSelecting = true;
             }
             else
             {
@@ -1188,7 +1189,7 @@ namespace Editor
                 }
                 ActiveChild = rowAction.HeadTextEquation;
                 this.SelectedItems = 0;
-                IsSelecting = false; 
+                IsSelecting = false;
             }
         }
 

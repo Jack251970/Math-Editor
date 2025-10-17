@@ -1,58 +1,68 @@
-﻿<Window x:Class="Editor.AboutWindow"
+﻿<Window
+    x:Class="Editor.AboutWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    ui:WindowHelper.UseModernWindowStyle="True"
-    ui:WindowHelper.SystemBackdropType="Mica"
-    ui:TitleBar.Height="36"
     Title="About Math Editor"
-    Height="262" 
-    Width="436" 
-    ResizeMode="NoResize" 
-    WindowStartupLocation="CenterOwner" 
+    Width="436"
+    Height="262"
+    ui:TitleBar.Height="36"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner"
     WindowStyle="SingleBorderWindow">
     <Grid Name="MainGrid" Margin="15">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Width="80">
             <Image
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 RenderOptions.BitmapScalingMode="HighQuality"
-                Source="app_icon.png"/>
+                Source="app_icon.png" />
         </Grid>
         <Label
-            Grid.Column="1" 
-            Name="versionLabel" 
-            Content="Math Editor v.1.0.0.0"
+            Name="versionLabel"
+            Grid.Column="1"
             VerticalAlignment="Center"
-            FontFamily="Arial" 
-            FontSize="14"/>
+            Content="Math Editor v.1.0.0.0"
+            FontFamily="Arial"
+            FontSize="14" />
         <Grid
             Grid.Row="1"
             Grid.ColumnSpan="2"
             Width="{Binding ElementName=MainGrid, Path=ActualWidth}">
-            <StackPanel
-                Orientation="Horizontal"
-                HorizontalAlignment="Center">
-                <Label VerticalAlignment="Center" FontFamily="Arial" Content="Math Editor is a product from the&#160;"/>
-                <ui:HyperlinkButton Padding="0" VerticalAlignment="Center" FontFamily="Arial" NavigateUri="http://www.MathiVersity.com" Content="MathiVersity"/>
-                <Label VerticalAlignment="Center" FontFamily="Arial" Content="&#160;Project"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Label
+                    VerticalAlignment="Center"
+                    Content="Math Editor is a product from the&#160;"
+                    FontFamily="Arial" />
+                <ui:HyperlinkButton
+                    Padding="0"
+                    VerticalAlignment="Center"
+                    Content="MathiVersity"
+                    FontFamily="Arial"
+                    NavigateUri="http://www.MathiVersity.com" />
+                <Label
+                    VerticalAlignment="Center"
+                    Content="&#160;Project"
+                    FontFamily="Arial" />
             </StackPanel>
         </Grid>
-        <Label 
-            Grid.Row="2" 
-            Grid.ColumnSpan="2" 
+        <Label
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="0 15 0 0"
             HorizontalAlignment="Left"
-            Margin="0,15,0,0"
-            Content="Copyright &#169; MathiVersity 2012-2013."/>
+            Content="Copyright &#169; MathiVersity 2012-2013." />
     </Grid>
 </Window>

@@ -19,7 +19,7 @@ namespace Editor
         {
             get
             {
-                if (arrowType == ArrowType.SmallRightLeftHarpoon || arrowType == ArrowType.RightSmallLeftHarpoon || 
+                if (arrowType == ArrowType.SmallRightLeftHarpoon || arrowType == ArrowType.RightSmallLeftHarpoon ||
                     arrowType == ArrowType.RightLeftHarpoon)
                 {
                     return FontSize * .2;

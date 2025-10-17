@@ -6,12 +6,12 @@
         {
             CompositeBase equation = null;
             switch (position)
-            {                
+            {
                 case Position.Bottom:
-                    equation = new CompositeBottom(equationParent);                    
+                    equation = new CompositeBottom(equationParent);
                     break;
                 case Position.Top:
-                    equation = new CompositeTop(equationParent);                    
+                    equation = new CompositeTop(equationParent);
                     break;
                 case Position.BottomAndTop:
                     equation = new CompositeBottomTop(equationParent);

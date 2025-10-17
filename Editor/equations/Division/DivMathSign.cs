@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace Editor
 {
-    public sealed class DivMathSign: EquationBase
+    public sealed class DivMathSign : EquationBase
     {
         public bool IsInverted { get; set; }
 
@@ -25,7 +25,7 @@ namespace Editor
                 Width = FontSize * .25 + Height * .03;
             }
         }
-        
+
 
         public override void DrawEquation(DrawingContext dc)
         {
@@ -34,7 +34,7 @@ namespace Editor
             Point pathFigureStart;
             if (IsInverted)
             {
-                pathFigureStart = new Point(ParentEquation.Right, Bottom - StandardRoundPen.Thickness /2);
+                pathFigureStart = new Point(ParentEquation.Right, Bottom - StandardRoundPen.Thickness / 2);
                 line = new LineSegment(new Point(Left, Bottom - StandardRoundPen.Thickness / 2), true);
                 arc = new ArcSegment(Location, new Size(Width * 4.5, Height), 0, false, SweepDirection.Counterclockwise, true);
             }
@@ -46,7 +46,7 @@ namespace Editor
             }
             PathGeometry pathGeometry = new PathGeometry();
             PathFigure pathFigure = new PathFigure(pathFigureStart, new PathSegment[] { line, arc }, false);
-            pathGeometry.Figures.Add(pathFigure);            
+            pathGeometry.Figures.Add(pathFigure);
             dc.DrawGeometry(null, StandardRoundPen, pathGeometry);
         }
     }

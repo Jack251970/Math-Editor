@@ -8,7 +8,7 @@ namespace Editor
     {
         protected RowContainer insideEquation = null;
         protected DivMathSign divMathSign;
-        protected double ExtraHeight 
+        protected double ExtraHeight
         {
             get { return FontSize * .3; }
         }
@@ -27,7 +27,7 @@ namespace Editor
             : base(parent)
         {
             divMathSign = new DivMathSign(this);
-            ActiveChild = insideEquation = new RowContainer(this);            
+            ActiveChild = insideEquation = new RowContainer(this);
             childEquations.Add(insideEquation);
             childEquations.Add(divMathSign);
         }
@@ -35,13 +35,13 @@ namespace Editor
         public override XElement Serialize()
         {
             XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(insideEquation.Serialize());            
+            thisElement.Add(insideEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            insideEquation.DeSerialize(xElement.Elements().First());            
+            insideEquation.DeSerialize(xElement.Elements().First());
             CalculateSize();
         }
 
@@ -75,7 +75,7 @@ namespace Editor
         protected override void CalculateHeight()
         {
             divMathSign.Height = insideEquation.FirstRow.Height + ExtraHeight;
-            Height = Math.Max(insideEquation.Height + ExtraHeight, divMathSign.Height);            
+            Height = Math.Max(insideEquation.Height + ExtraHeight, divMathSign.Height);
         }
 
         public override double Left

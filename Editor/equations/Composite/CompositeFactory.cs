@@ -6,7 +6,7 @@
         {
             EquationBase equation = null;
             switch (position)
-            {                
+            {
                 case Position.Bottom:
                     equation = new CompositeBottom(equationParent);
                     break;
@@ -15,7 +15,7 @@
                     break;
                 case Position.BottomAndTop:
                     equation = new CompositeBottomTop(equationParent);
-                    break;                
+                    break;
             }
             return equation;
         }

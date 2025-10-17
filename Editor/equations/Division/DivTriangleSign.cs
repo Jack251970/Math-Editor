@@ -20,7 +20,7 @@ namespace Editor
             set
             {
                 base.Height = value;
-                Width = FontSize * .25 + Height * .06;                
+                Width = FontSize * .25 + Height * .06;
             }
         }
 
@@ -38,7 +38,7 @@ namespace Editor
 
         public override void DrawEquation(DrawingContext dc)
         {
-            dc.DrawPolyline(new Point(ParentEquation.Right, Bottom), new PointCollection{new Point(Left, Bottom), new Point(Right, Top)}, StandardRoundPen);
+            dc.DrawPolyline(new Point(ParentEquation.Right, Bottom), new PointCollection { new Point(Left, Bottom), new Point(Right, Top) }, StandardRoundPen);
         }
     }
 }

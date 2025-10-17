@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +19,7 @@ namespace Editor
         //Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>> fontCache = new Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>>();
         ObservableCollection<UnicodeListItem> recentList = new ObservableCollection<UnicodeListItem>();
         ObservableCollection<UnicodeListItem> allList = new ObservableCollection<UnicodeListItem>();
-        
+
         public UnicodeSelectorWindow(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
@@ -32,7 +31,7 @@ namespace Editor
             recentListBox.FontSize = 16;
             //List<string> names = Enum.GetNames(typeof(FontType)).ToList();
             //names.Sort();
-            recentListBox.ItemsSource = recentList;            
+            recentListBox.ItemsSource = recentList;
             //fontBox.ItemsSource = names;
             //fontBox.SelectedIndex = 0;
             SetupCategories();
@@ -58,8 +57,8 @@ namespace Editor
             SetupCategory("Currency Symbols & Phonetic Extensions", 0x1D80, 0x1DBF); //Phonetic Extensions Supplement
             SetupCategory("Latin Extended", 0x1E00, 0x1EFF); //Latin Extended Additional
             SetupCategory("Punctuation & Diacritical Marks", 0x20D0, 0x20FF); //Combining Diacritical Marks for Symbols
-            SetupCategory("Letterlike Symbols", 0x2100, 0x214F);            
-            SetupCategory("Arrows", 0x2190, 0x21FF);            
+            SetupCategory("Letterlike Symbols", 0x2100, 0x214F);
+            SetupCategory("Arrows", 0x2190, 0x21FF);
             SetupCategory("Miscellaneous", 0x2300, 0x23FF); //Miscellaneous Technical
             SetupCategory("Miscellaneous", 0x2400, 0x243F); //Control Pictures
             SetupCategory("Enclosed Alphanumerics", 0x2460, 0x24FF);
@@ -77,7 +76,7 @@ namespace Editor
 
             categories.Add("All", allList);
             categoryBox.ItemsSource = categories.Keys;
-            categoryBox.SelectedIndex = 0;            
+            categoryBox.SelectedIndex = 0;
         }
 
         private void SetupCategory(string categoryName, int start, int end)
@@ -108,7 +107,7 @@ namespace Editor
         }
 
         private static bool TypefaceContainsCharacter(Typeface typeface, char characterToCheck)
-        {   
+        {
             ushort glyphIndex;
             int unicodeValue = Convert.ToUInt16(characterToCheck);
             GlyphTypeface glyph;
@@ -126,7 +125,7 @@ namespace Editor
         }
 
         private void categoryBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {            
+        {
             symbolListBox.ItemsSource = categories[(string)categoryBox.SelectedValue];
             symbolListBox.SelectedIndex = 0;
         }
@@ -239,7 +238,7 @@ namespace Editor
             }
         }
 
-        
+
 
         private void characterListBox_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -251,12 +250,12 @@ namespace Editor
             else
             {
                 NativeMethods.doubleClickTimer.Enabled = true;
-            }            
+            }
         }
     }
 
     public sealed class UnicodeListItem
-    {        
+    {
         public int CodePoint { get; set; }
         public string UnicodeText { get; set; }
     }

@@ -11,7 +11,7 @@
 
         public TextAction(ISupportsUndo executor)
             : base(executor)
-        {            
+        {
         }
 
         public TextAction(ISupportsUndo executor, int index, string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations)

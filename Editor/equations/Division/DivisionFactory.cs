@@ -25,7 +25,7 @@
                     break;
                 case DivisionType.DivHorizSmall:
                     equation = new DivHorizSmall(equationParent);
-                    break;                
+                    break;
 
                 case DivisionType.DivMath:
                     equation = new DivMath(equationParent);
@@ -33,13 +33,13 @@
                 case DivisionType.DivMathWithTop:
                     equation = new DivMathWithTop(equationParent);
                     break;
-                
+
                 case DivisionType.DivSlanted:
                     equation = new DivSlanted(equationParent);
-                    break;  
+                    break;
                 case DivisionType.DivSlantedSmall:
                     equation = new DivSlantedSmall(equationParent);
-                    break;  
+                    break;
 
                 case DivisionType.DivMathInverted:
                     equation = new DivMathInverted(equationParent);
@@ -52,7 +52,7 @@
                     break;
                 case DivisionType.DivTriangleExpanding:
                     equation = new DivTriangle(equationParent, false);
-                    break;                
+                    break;
             }
             return equation;
         }

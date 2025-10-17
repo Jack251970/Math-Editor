@@ -8,7 +8,7 @@ namespace Editor
 
         public Sub(EquationRow parent, Position position)
             : base(parent, position)
-        {   
+        {
             ActiveChild = rowContainer = new RowContainer(this);
             childEquations.Add(rowContainer);
             if (SubLevel == 1)
@@ -18,7 +18,7 @@ namespace Editor
             else if (SubLevel == 2)
             {
                 rowContainer.FontFactor = SubSubFontFactor;
-            }            
+            }
         }
 
         public override XElement Serialize()

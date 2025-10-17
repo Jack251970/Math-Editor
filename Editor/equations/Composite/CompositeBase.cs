@@ -11,7 +11,7 @@
             : base(parent)
         {
             ActiveChild = mainRowContainer = new RowContainer(this);
-            DetermineBottomGap();           
+            DetermineBottomGap();
         }
 
         private void DetermineBottomGap()

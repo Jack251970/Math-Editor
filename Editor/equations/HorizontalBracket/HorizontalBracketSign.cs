@@ -18,7 +18,7 @@ namespace Editor
         }
 
         public override void DrawEquation(DrawingContext dc)
-        {   
+        {
             switch (SignType)
             {
                 case HorizontalBracketSignType.TopCurly:
@@ -40,7 +40,7 @@ namespace Editor
         {
             PointCollection points = new PointCollection
             {
-                new Point(Left, Top), 
+                new Point(Left, Top),
                 new Point(Right, Top),
                 new Point(Right, Bottom),
                 new Point(Right - ThinLineThickness, Bottom),
@@ -55,7 +55,7 @@ namespace Editor
         {
             PointCollection points = new PointCollection
             {
-                new Point(Left, Top), 
+                new Point(Left, Top),
                 new Point(Left + ThinLineThickness, Top),
                 new Point(Left + ThinLineThickness, Bottom - LineThickness),
                 new Point(Right - ThinLineThickness, Bottom - LineThickness),

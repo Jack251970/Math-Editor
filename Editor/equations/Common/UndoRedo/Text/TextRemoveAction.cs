@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Editor
+﻿namespace Editor
 {
     public sealed class TextRemoveAction : EquationAction
     {
@@ -17,7 +12,7 @@ namespace Editor
         public int ParentSelectionStartIndex { get; set; }
 
         public TextRemoveAction(ISupportsUndo executor, int index, string text, int selectionStartIndex,
-                                int selectionCout, int parentSelectionStartIndex, int[] formats, EditorMode[] modes, 
+                                int selectionCout, int parentSelectionStartIndex, int[] formats, EditorMode[] modes,
                                 CharacterDecorationInfo[] decorations)
             : base(executor)
         {
@@ -30,6 +25,6 @@ namespace Editor
             SelectionCount = selectionCout;
             ParentSelectionStartIndex = parentSelectionStartIndex;
         }
-    }    
+    }
 }
 

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Editor
-{   
+{
     public sealed class RowContainerPasteAction : EquationAction
     {
         public int SelectionStartIndex { get; set; }
@@ -13,7 +10,7 @@ namespace Editor
         public EquationBase ActiveEquation { get; set; }
         public int ActiveEquationSelectionIndex { get; set; }
         public int ActiveEquationSelectedItems { get; set; }
-        
+
         public TextEquation ActiveTextInChildRow { get; set; }
         public int CaretIndexOfActiveText { get; set; }
         public int SelectionStartIndexOfTextEquation { get; set; }

@@ -12,7 +12,7 @@ namespace Editor
             bracketSign = new BracketSign(this, leftBracketType);
             bracketSign2 = new BracketSign(this, rightBracketType);
             childEquations.AddRange(new EquationBase[] { insideEq, bracketSign, bracketSign2 });
-        }     
+        }
 
         public override XElement Serialize()
         {

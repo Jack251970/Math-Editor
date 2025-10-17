@@ -4,7 +4,7 @@ namespace Editor
 {
     public sealed class Super : SubSuperBase
     {
-        RowContainer rowContainer;       
+        RowContainer rowContainer;
 
         public Super(EquationRow parent, Position position)
             : base(parent, position)
@@ -18,7 +18,7 @@ namespace Editor
             else if (SubLevel == 2)
             {
                 rowContainer.FontFactor = SubSubFontFactor;
-            }            
+            }
         }
 
         public override XElement Serialize()
@@ -39,7 +39,7 @@ namespace Editor
 
         protected override void CalculateHeight()
         {
-           Height = rowContainer.Height + Buddy.RefY - SuperOverlap;
+            Height = rowContainer.Height + Buddy.RefY - SuperOverlap;
         }
 
         public override double Top
@@ -63,7 +63,7 @@ namespace Editor
             set
             {
                 base.Left = value;
-                rowContainer.Left = this.Left + Padding;                
+                rowContainer.Left = this.Left + Padding;
             }
         }
 

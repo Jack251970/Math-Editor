@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Editor
 {
@@ -25,10 +22,10 @@ namespace Editor
         public CharacterDecorationInfo[] FirstNewDecorations { get; set; }
 
         public string LastNewText { get; set; }
-        public int[] LastNewFormats { get; set; }                
-        public EditorMode[] LastNewModes { get; set; }        
+        public int[] LastNewFormats { get; set; }
+        public EditorMode[] LastNewModes { get; set; }
         public CharacterDecorationInfo[] LastNewDecorations { get; set; }
-        
+
         public List<EquationBase> Equations { get; set; }
 
         public EquationRowPasteAction(ISupportsUndo executor)

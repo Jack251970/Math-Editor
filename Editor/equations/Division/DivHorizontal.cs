@@ -15,15 +15,15 @@ namespace Editor
         }
 
         public DivHorizontal(EquationContainer parent, bool isSmall)
-            : base (parent, isSmall)
-        {  
+            : base(parent, isSmall)
+        {
         }
-        
+
         public override void DrawEquation(DrawingContext dc)
         {
             base.DrawEquation(dc);
-            dc.DrawLine(StandardPen, new Point(bottomEquation.Left - ExtraWidth/10, Top), new Point(topEquation.Right + ExtraWidth/10, Bottom));   
-        }     
+            dc.DrawLine(StandardPen, new Point(bottomEquation.Left - ExtraWidth / 10, Top), new Point(topEquation.Right + ExtraWidth / 10, Bottom));
+        }
 
         public override double Left
         {
@@ -62,14 +62,14 @@ namespace Editor
 
 
         protected override void CalculateWidth()
-        {            
+        {
             Width = topEquation.Width + bottomEquation.Width + ExtraWidth;
             AdjustHorizontal();
         }
 
         protected override void CalculateHeight()
-        {            
-            Height = Math.Max(topEquation.Height , bottomEquation.Height);            
+        {
+            Height = Math.Max(topEquation.Height, bottomEquation.Height);
         }
 
         public override bool ConsumeKey(Key key)

@@ -16,8 +16,8 @@ namespace Editor
     public enum HAlignment { Left, Center, Right }
     public enum VAlignment { Center, Top, Bottom }
 
-    public enum Position 
-    { 
+    public enum Position
+    {
         None, Middle, Top, Bottom, Left, Right, Sub, Super, SubAndSuper, BottomAndTop,
         TopLeft, BottomLeft, TopRight, BottomRight, Over
     }
@@ -25,9 +25,9 @@ namespace Editor
     public enum CharacterDecorationType
     {
         None,
-        StrikeThrough, DoubleStrikeThrough, VStrikeThrough, 
-        VDoubleStrikeThrough, Cross, LeftCross, RightCross,     
-        LeftUprightCross, RightUprightCross,        
+        StrikeThrough, DoubleStrikeThrough, VStrikeThrough,
+        VDoubleStrikeThrough, Cross, LeftCross, RightCross,
+        LeftUprightCross, RightUprightCross,
         Unicode,
     }
 
@@ -50,11 +50,11 @@ namespace Editor
     //    BottomRightHarpoon, BottomLeftHarpoon,
     //}
 
-    public enum DivisionType 
-    { 
-        DivRegular, DivDoubleBar, DivTripleBar, 
-        DivMath, DivMathWithTop, 
-        DivHoriz, DivSlanted, 
+    public enum DivisionType
+    {
+        DivRegular, DivDoubleBar, DivTripleBar,
+        DivMath, DivMathWithTop,
+        DivHoriz, DivSlanted,
         DivRegularSmall, DivHorizSmall, DivSlantedSmall,
         DivMathInverted, DivInvertedWithBottom,
         DivTriangleFixed, DivTriangleExpanding
@@ -72,7 +72,7 @@ namespace Editor
     {
         Tilde, Hat, Parenthesis, Tortoise, RightArrow, LeftArrow, DoubleArrow, RightHarpoonUpBarb, LeftHarpoonUpBarb,
         RightHarpoonDownBarb, LeftHarpoonDownBarb, Bar, DoubleBar, StrikeThrough, Cross, RightCross, LeftCross,
-    }    
+    }
 
     public enum SignCompositeSymbol
     {
@@ -122,6 +122,6 @@ namespace Editor
 
     public enum EditorMode
     {
-        Math, Text, 
+        Math, Text,
     }
 }

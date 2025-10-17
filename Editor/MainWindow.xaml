@@ -1,159 +1,349 @@
 ﻿<Window
+    x:Class="Editor.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Editor"
     xmlns:trace="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    ui:WindowHelper.UseModernWindowStyle="True"
-    ui:WindowHelper.SystemBackdropType="Mica"
-    ui:TitleBar.Height="36"
-    x:Class="Editor.MainWindow"
     Title="MainWindow"
-    Height="550" Width="928"
-    WindowStartupLocation="CenterScreen"
-    Loaded="Window_Loaded"
+    Width="928"
+    Height="550"
+    ui:TitleBar.Height="36"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
+    Closing="Window_Closing"
     GotFocus="Window_GotFocus"
-    TextInput="Window_TextInput"
     KeyDown="Window_KeyDown"
     KeyUp="Window_KeyUp"
-    Closing="Window_Closing">
+    Loaded="Window_Loaded"
+    TextInput="Window_TextInput"
+    WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <local:EditorModeToBoolConverter x:Key="editorModeToBoolconverter" />
         <local:EditorModeToVisibilityConverter x:Key="editorModeToVisibilityconverter" />
         <Style x:Key="ToolbarButton" TargetType="Button">
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
         </Style>
         <Style x:Key="ToolbarToggleButton" TargetType="ToggleButton">
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
         </Style>
         <Style x:Key="ToolbarImage" TargetType="Image">
-            <Setter Property="Width" Value="24"/>
-            <Setter Property="Height" Value="24"/>
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
         </Style>
     </Window.Resources>
     <Window.CommandBindings>
-        <CommandBinding Command="Close"	        Executed="CloseCommandHandler"/>
-        <CommandBinding Command="Open"          Executed="OpenCommandHandler"/>
-        <CommandBinding Command="Save"          Executed="SaveCommandHandler"/>
-        <CommandBinding Command="SaveAs"        Executed="SaveAsCommandHandler"/>
-        <CommandBinding Command="Cut"           Executed="CutCommandHandler"/>
-        <CommandBinding Command="Copy"          Executed="CopyCommandHandler"/>
-        <CommandBinding Command="Paste"         Executed="PasteCommandHandler"/>
-        <CommandBinding Command="SelectAll"     Executed="SelectAllCommandHandler"/>
-        <CommandBinding Command="Print"         Executed="PrintCommandHandler"/>
-        <CommandBinding Command="Undo"          Executed="UndoCommandHandler"/>
-        <CommandBinding Command="Redo"          Executed="RedoCommandHandler"/>
-        <CommandBinding Command="New"           Executed="NewCommandHandler"/>
+        <CommandBinding Command="Close" Executed="CloseCommandHandler" />
+        <CommandBinding Command="Open" Executed="OpenCommandHandler" />
+        <CommandBinding Command="Save" Executed="SaveCommandHandler" />
+        <CommandBinding Command="SaveAs" Executed="SaveAsCommandHandler" />
+        <CommandBinding Command="Cut" Executed="CutCommandHandler" />
+        <CommandBinding Command="Copy" Executed="CopyCommandHandler" />
+        <CommandBinding Command="Paste" Executed="PasteCommandHandler" />
+        <CommandBinding Command="SelectAll" Executed="SelectAllCommandHandler" />
+        <CommandBinding Command="Print" Executed="PrintCommandHandler" />
+        <CommandBinding Command="Undo" Executed="UndoCommandHandler" />
+        <CommandBinding Command="Redo" Executed="RedoCommandHandler" />
+        <CommandBinding Command="New" Executed="NewCommandHandler" />
     </Window.CommandBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
         <Grid DockPanel.Dock="Top">
-            <StackPanel Panel.ZIndex="10" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="exitFullScreenButton" Visibility="Collapsed" Width="22" Height="22" Style="{DynamicResource fullScreenButtonStyle}" Click="exitFullScreenButton_Click">
-                    <Image Source="/images/gui/exitfullscreen.png"/>
+            <StackPanel
+                HorizontalAlignment="Right"
+                Panel.ZIndex="10"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="exitFullScreenButton"
+                    Width="22"
+                    Height="22"
+                    Click="exitFullScreenButton_Click"
+                    Style="{DynamicResource fullScreenButtonStyle}"
+                    Visibility="Collapsed">
+                    <Image Source="/images/gui/exitfullscreen.png" />
                 </Button>
-                <Button x:Name="closeApplictionButton" Visibility="Collapsed" Margin="5,0" Width="22" Height="22" Style="{DynamicResource fullScreenButtonStyle}" Command="Close">
-                    <Image Source="/images/gui/delete.png"/>
+                <Button
+                    x:Name="closeApplictionButton"
+                    Width="22"
+                    Height="22"
+                    Margin="5 0"
+                    Command="Close"
+                    Style="{DynamicResource fullScreenButtonStyle}"
+                    Visibility="Collapsed">
+                    <Image Source="/images/gui/delete.png" />
                 </Button>
             </StackPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem x:Name="fileMenuItem" Header="_File">
-                    <MenuItem x:Name="newMenuItem" Header="_New" Command="New"/>
-                    <MenuItem x:Name="openMenuItem" Header="_Open" Command="Open"/>
-                    <MenuItem x:Name="saveMenuItem" Header="_Save" Command="Save"/>
-                    <MenuItem x:Name="saveAsMenuItem" Header="Save _As" Command="SaveAs"/>
+                    <MenuItem
+                        x:Name="newMenuItem"
+                        Command="New"
+                        Header="_New" />
+                    <MenuItem
+                        x:Name="openMenuItem"
+                        Command="Open"
+                        Header="_Open" />
+                    <MenuItem
+                        x:Name="saveMenuItem"
+                        Command="Save"
+                        Header="_Save" />
+                    <MenuItem
+                        x:Name="saveAsMenuItem"
+                        Command="SaveAs"
+                        Header="Save _As" />
                     <MenuItem x:Name="exportMenuItem" Header="_Export">
-                        <MenuItem Header="_PNG" Click="exportMenuItem_Click" Tag="png"/>
-                        <MenuItem Header="_JPG" Click="exportMenuItem_Click" Tag="jpg"/>
-                        <MenuItem Header="_GIF" Click="exportMenuItem_Click" Tag="gif"/>
-                        <MenuItem Header="_BMP" Click="exportMenuItem_Click" Tag="bmp"/>
-                        <MenuItem Header="_TIFF" Click="exportMenuItem_Click" Tag="tif"/>
-                        <MenuItem Header="_WMP" Click="exportMenuItem_Click" Tag="wdp"/>
+                        <MenuItem
+                            Click="exportMenuItem_Click"
+                            Header="_PNG"
+                            Tag="png" />
+                        <MenuItem
+                            Click="exportMenuItem_Click"
+                            Header="_JPG"
+                            Tag="jpg" />
+                        <MenuItem
+                            Click="exportMenuItem_Click"
+                            Header="_GIF"
+                            Tag="gif" />
+                        <MenuItem
+                            Click="exportMenuItem_Click"
+                            Header="_BMP"
+                            Tag="bmp" />
+                        <MenuItem
+                            Click="exportMenuItem_Click"
+                            Header="_TIFF"
+                            Tag="tif" />
+                        <MenuItem
+                            Click="exportMenuItem_Click"
+                            Header="_WMP"
+                            Tag="wdp" />
                     </MenuItem>
                     <!--<MenuItem x:Name="printMenuItem" Header="_Print" Command="Print"/>-->
-                    <MenuItem x:Name="exitMenuItem" Header="E_xit" Command="Close"/>
+                    <MenuItem
+                        x:Name="exitMenuItem"
+                        Command="Close"
+                        Header="E_xit" />
                 </MenuItem>
                 <MenuItem x:Name="editMenuItem" Header="_Edit">
-                    <MenuItem x:Name="cutMenuItem" Header="C_ut" Command="Cut" IsEnabled="False" />
-                    <MenuItem x:Name="copyMenuItem" Header="_Copy" Command="Copy" IsEnabled="False"/>
-                    <MenuItem x:Name="pasteMenuItem" Header="_Paste" Command="Paste"/>
-                    <MenuItem x:Name="selectAllMenuItem" Header="Select _All" Command="SelectAll"/>
-                    <MenuItem x:Name="deleteMenuItem" Header="_Delete" Click="deleteMenuItem_Click" IsEnabled="False"/>
+                    <MenuItem
+                        x:Name="cutMenuItem"
+                        Command="Cut"
+                        Header="C_ut"
+                        IsEnabled="False" />
+                    <MenuItem
+                        x:Name="copyMenuItem"
+                        Command="Copy"
+                        Header="_Copy"
+                        IsEnabled="False" />
+                    <MenuItem
+                        x:Name="pasteMenuItem"
+                        Command="Paste"
+                        Header="_Paste" />
+                    <MenuItem
+                        x:Name="selectAllMenuItem"
+                        Command="SelectAll"
+                        Header="Select _All" />
+                    <MenuItem
+                        x:Name="deleteMenuItem"
+                        Click="deleteMenuItem_Click"
+                        Header="_Delete"
+                        IsEnabled="False" />
                 </MenuItem>
                 <MenuItem x:Name="insertMenuItem" Header="_Insert">
-                    <MenuItem x:Name="symbolMenuItem" Header="_Symbol" Click="symbolMenuItem_Click"/>
-                    <MenuItem x:Name="codePointMenuItem" Header="_Unicode Value" Click="codePointMenuItem_Click"/>
+                    <MenuItem
+                        x:Name="symbolMenuItem"
+                        Click="symbolMenuItem_Click"
+                        Header="_Symbol" />
+                    <MenuItem
+                        x:Name="codePointMenuItem"
+                        Click="codePointMenuItem_Click"
+                        Header="_Unicode Value" />
                 </MenuItem>
                 <MenuItem x:Name="viewMenuItem" Header="_View">
-                    <MenuItem x:Name="fullScreenMenuItem" Header="_Full Screen" Click="fullScreenMenuItem_Click"/>
+                    <MenuItem
+                        x:Name="fullScreenMenuItem"
+                        Click="fullScreenMenuItem_Click"
+                        Header="_Full Screen" />
                     <MenuItem Header="_Zoom">
-                        <MenuItem Header="25%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="50%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="75%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="100%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="150%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="200%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="250%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="300%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="400%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Header="500%" Click="ZoomMenuItem_Click" IsCheckable="True"/>
-                        <MenuItem Name="customZoomMenu" Header="_Custom" Click="CustomZoomMenuItem_Click" IsCheckable="True"/>
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="25%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="50%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="75%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="100%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="150%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="200%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="250%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="300%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="400%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Click="ZoomMenuItem_Click"
+                            Header="500%"
+                            IsCheckable="True" />
+                        <MenuItem
+                            Name="customZoomMenu"
+                            Click="CustomZoomMenuItem_Click"
+                            Header="_Custom"
+                            IsCheckable="True" />
                     </MenuItem>
-                    <MenuItem x:Name="showNestingMenuItem" Header="Show Nesting" Click="showNestingMenuItem_Click"/>
+                    <MenuItem
+                        x:Name="showNestingMenuItem"
+                        Click="showNestingMenuItem_Click"
+                        Header="Show Nesting" />
                 </MenuItem>
                 <MenuItem x:Name="toolsMenuItem" Header="_Tools">
-                    <MenuItem x:Name="settingsMenuItem" Header="_Settings" Click="settingsMenuItem_Click"/>
+                    <MenuItem
+                        x:Name="settingsMenuItem"
+                        Click="settingsMenuItem_Click"
+                        Header="_Settings" />
                 </MenuItem>
                 <MenuItem x:Name="helpMenuItem" Header="_Help">
-                    <MenuItem x:Name="contentsMenuItem" Header="_Contents" Click="contentsMenuItem_Click"/>
-                    <MenuItem x:Name="fbMenuItem" Header="_Facebook Page" Click="fbMenuItem_Click"/>
+                    <MenuItem
+                        x:Name="contentsMenuItem"
+                        Click="contentsMenuItem_Click"
+                        Header="_Contents" />
+                    <MenuItem
+                        x:Name="fbMenuItem"
+                        Click="fbMenuItem_Click"
+                        Header="_Facebook Page" />
                     <!--<MenuItem x:Name="videoMenuItem" Header="_Video (YouTube)" Click="videoMenuItem_Click"></MenuItem>-->
                     <Separator />
-                    <MenuItem x:Name="aboutMenuItem" Header="_About" Click="aboutMenuItem_Click"/>
+                    <MenuItem
+                        x:Name="aboutMenuItem"
+                        Click="aboutMenuItem_Click"
+                        Header="_About" />
                 </MenuItem>
             </Menu>
         </Grid>
-        <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="0,2,0,4">
+        <Grid
+            Margin="0 2 0 4"
+            HorizontalAlignment="Stretch"
+            DockPanel.Dock="Top">
             <ToolBarTray IsLocked="True">
-                <ToolBar Band="0" BandIndex="1" Loaded="ToolBar_Loaded">
-                    <Button x:Name="saveButton" Command="Save" ToolTip="Save" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <Image Source="images\gui\save.png" Style="{StaticResource ToolbarImage}"/>
+                <ToolBar
+                    Band="0"
+                    BandIndex="1"
+                    Loaded="ToolBar_Loaded">
+                    <Button
+                        x:Name="saveButton"
+                        Command="Save"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Save"
+                        ToolTipService.ShowOnDisabled="True">
+                        <Image Source="images\gui\save.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Button x:Name="saveAsButton" Command="SaveAs" ToolTip="Save As" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <Image Source="images\gui\saveas.png" Style="{StaticResource ToolbarImage}"/>
+                    <Button
+                        x:Name="saveAsButton"
+                        Command="SaveAs"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Save As"
+                        ToolTipService.ShowOnDisabled="True">
+                        <Image Source="images\gui\saveas.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Button x:Name="openButton" Command="Open" ToolTip="Open" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <Image Source="images\gui\open.png" Style="{StaticResource ToolbarImage}"/>
+                    <Button
+                        x:Name="openButton"
+                        Command="Open"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Open"
+                        ToolTipService.ShowOnDisabled="True">
+                        <Image Source="images\gui\open.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Separator/>
-                    <Button x:Name="undoButton" Command="Undo" ToolTip="Undo" IsEnabled="False" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <local:AutoGreyableImage Source="images\gui\undo.png" Style="{StaticResource ToolbarImage}"/>
+                    <Separator />
+                    <Button
+                        x:Name="undoButton"
+                        Command="Undo"
+                        IsEnabled="False"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Undo"
+                        ToolTipService.ShowOnDisabled="True">
+                        <local:AutoGreyableImage Source="images\gui\undo.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Button x:Name="redoButton" Command="Redo" ToolTip="Redo" IsEnabled="False" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <local:AutoGreyableImage Source="images\gui\redo.png" Style="{StaticResource ToolbarImage}"/>
+                    <Button
+                        x:Name="redoButton"
+                        Command="Redo"
+                        IsEnabled="False"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Redo"
+                        ToolTipService.ShowOnDisabled="True">
+                        <local:AutoGreyableImage Source="images\gui\redo.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Separator/>
-                    <Button x:Name="zoomoutButton" Command="DecreaseZoom" ToolTip="Zoom out" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <local:AutoGreyableImage Source="images\gui\zoomout.png" Style="{StaticResource ToolbarImage}"/>
+                    <Separator />
+                    <Button
+                        x:Name="zoomoutButton"
+                        Command="DecreaseZoom"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Zoom out"
+                        ToolTipService.ShowOnDisabled="True">
+                        <local:AutoGreyableImage Source="images\gui\zoomout.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Button x:Name="zoominButton" Command="IncreaseZoom" ToolTip="Zoom in" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <local:AutoGreyableImage Source="images\gui\zoomin.png" Style="{StaticResource ToolbarImage}"/>
+                    <Button
+                        x:Name="zoominButton"
+                        Command="IncreaseZoom"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Zoom in"
+                        ToolTipService.ShowOnDisabled="True">
+                        <local:AutoGreyableImage Source="images\gui\zoomin.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Separator/>
-                    <Button x:Name="cutButton" Command="Cut" ToolTip="Cut" IsEnabled="False" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <local:AutoGreyableImage Source="images\gui\cut.png" Style="{StaticResource ToolbarImage}"/>
+                    <Separator />
+                    <Button
+                        x:Name="cutButton"
+                        Command="Cut"
+                        IsEnabled="False"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Cut"
+                        ToolTipService.ShowOnDisabled="True">
+                        <local:AutoGreyableImage Source="images\gui\cut.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Button x:Name="copyButton" Command="Copy" ToolTip="Copy" IsEnabled="False" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <local:AutoGreyableImage Source="images\gui\copy.png" Style="{StaticResource ToolbarImage}"/>
+                    <Button
+                        x:Name="copyButton"
+                        Command="Copy"
+                        IsEnabled="False"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Copy"
+                        ToolTipService.ShowOnDisabled="True">
+                        <local:AutoGreyableImage Source="images\gui\copy.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Button x:Name="pasteButton" Command="Paste" ToolTip="Paste" ToolTipService.ShowOnDisabled="True" Style="{StaticResource ToolbarButton}">
-                        <Image Source="images\gui\paste.png" Style="{StaticResource ToolbarImage}"/>
+                    <Button
+                        x:Name="pasteButton"
+                        Command="Paste"
+                        Style="{StaticResource ToolbarButton}"
+                        ToolTip="Paste"
+                        ToolTipService.ShowOnDisabled="True">
+                        <Image Source="images\gui\paste.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
-                    <Separator/>
-                    <!-- // TODO: Fix theme bug here -->
-                    <ComboBox Name="equationFontCombo" Width="100" DropDownClosed="EquationFontCombo_DropDownClosed" SelectedIndex="0">
+                    <Separator />
+                    <!--  // TODO: Fix theme bug here  -->
+                    <ComboBox
+                        Name="equationFontCombo"
+                        Width="100"
+                        DropDownClosed="EquationFontCombo_DropDownClosed"
+                        SelectedIndex="0">
                         <ComboBoxItem Tag="STIXGeneral">STIX</ComboBoxItem>
                         <ComboBoxItem Tag="Arial">Arial</ComboBoxItem>
                         <ComboBoxItem Tag="ArialBlack">Arial Black</ComboBoxItem>
@@ -174,24 +364,48 @@
                         <ComboBoxItem Tag="Webdings">Webdings</ComboBoxItem>
                         <ComboBoxItem Tag="Wingdings">Wingdings</ComboBoxItem>
                     </ComboBox>
-                    <Separator/>
-                    <ComboBox Name="editorModeCombo" Width="100" DropDownClosed="EditorModeCombo_DropDownClosed" SelectedIndex="1">
-                        <ComboBoxItem Tag="Math" Content="Math"/>
-                        <ComboBoxItem Tag="Text" Content="Text"/>
+                    <Separator />
+                    <ComboBox
+                        Name="editorModeCombo"
+                        Width="100"
+                        DropDownClosed="EditorModeCombo_DropDownClosed"
+                        SelectedIndex="1">
+                        <ComboBoxItem Content="Math" Tag="Math" />
+                        <ComboBoxItem Content="Text" Tag="Text" />
                     </ComboBox>
-                    <ToggleButton x:Name="boldToggleButton" IsThreeState="False" ToolTip="Bold" IsChecked="{Binding Path=InputBold}" Style="{StaticResource ToolbarToggleButton}">
-                        <Image Source="images\gui\bold.png" Style="{StaticResource ToolbarImage}"/>
+                    <ToggleButton
+                        x:Name="boldToggleButton"
+                        IsChecked="{Binding Path=InputBold}"
+                        IsThreeState="False"
+                        Style="{StaticResource ToolbarToggleButton}"
+                        ToolTip="Bold">
+                        <Image Source="images\gui\bold.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <!--<ToggleButton IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}" x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding Path=InputItalic}" Style="{StaticResource ToolbarToggleButton}">-->
-                    <ToggleButton x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding Path=InputItalic}" Style="{StaticResource ToolbarToggleButton}">
-                        <Image Source="images\gui\italic.png" Style="{StaticResource ToolbarImage}"/>
+                    <ToggleButton
+                        x:Name="italicToggleButton"
+                        IsChecked="{Binding Path=InputItalic}"
+                        IsThreeState="False"
+                        Style="{StaticResource ToolbarToggleButton}"
+                        ToolTip="Italic">
+                        <Image Source="images\gui\italic.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
-                    <ToggleButton x:Name="underlineToggleButton" IsThreeState="False" ToolTip="Underline" IsChecked="{Binding Path=InputUnderline}" Style="{StaticResource ToolbarToggleButton}">
-                        <Image Source="images\gui\underline.png" Style="{StaticResource ToolbarImage}"/>
+                    <ToggleButton
+                        x:Name="underlineToggleButton"
+                        IsChecked="{Binding Path=InputUnderline}"
+                        IsThreeState="False"
+                        Style="{StaticResource ToolbarToggleButton}"
+                        ToolTip="Underline">
+                        <Image Source="images\gui\underline.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
-                    <Separator/>
-                    <ToggleButton x:Name="underbarToggle" ToolTip="Show/Hide Underbar" Unchecked="UnderbarToggleCheckChanged" Checked="UnderbarToggleCheckChanged" Style="{StaticResource ToolbarToggleButton}">
-                        <Image Source="images\gui\underbar.png" Style="{StaticResource ToolbarImage}"/>
+                    <Separator />
+                    <ToggleButton
+                        x:Name="underbarToggle"
+                        Checked="UnderbarToggleCheckChanged"
+                        Style="{StaticResource ToolbarToggleButton}"
+                        ToolTip="Show/Hide Underbar"
+                        Unchecked="UnderbarToggleCheckChanged">
+                        <Image Source="images\gui\underbar.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <!--
                     <Separator/>
@@ -203,21 +417,46 @@
                 </ToolBar>
             </ToolBarTray>
         </Grid>
-        <StackPanel DockPanel.Dock="Top" DockPanel.ZIndex="100" Orientation="Vertical">
-            <local:CharacterToolBar x:Name="characterToolBar" Padding="0,4" Panel.ZIndex="100"/>
-            <local:EquationToolBar x:Name="equationToolBar" Padding="0,6" Panel.ZIndex="99"/>
-            <local:HistoryToolBar x:Name="historyToolBar" BorderBrush="#FFB6B6B6" BorderThickness="0,0,0,1"/>
+        <StackPanel
+            DockPanel.Dock="Top"
+            DockPanel.ZIndex="100"
+            Orientation="Vertical">
+            <local:CharacterToolBar
+                x:Name="characterToolBar"
+                Padding="0 4"
+                Panel.ZIndex="100" />
+            <local:EquationToolBar
+                x:Name="equationToolBar"
+                Padding="0 6"
+                Panel.ZIndex="99" />
+            <local:HistoryToolBar
+                x:Name="historyToolBar"
+                BorderBrush="#FFB6B6B6"
+                BorderThickness="0 0 0 1" />
         </StackPanel>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Label Name="statusBarLeftLabel" Height="25"/>
-            <Label Grid.Column="1" Name="statusBarRightLabel" Height="25" HorizontalAlignment="Right"/>
+            <Label Name="statusBarLeftLabel" Height="25" />
+            <Label
+                Name="statusBarRightLabel"
+                Grid.Column="1"
+                Height="25"
+                HorizontalAlignment="Right" />
         </Grid>
-        <ScrollViewer x:Name="scrollViwer" FocusVisualStyle="{x:Null}" Focusable="True" ScrollChanged="scrollViwer_ScrollChanged" HorizontalScrollBarVisibility="Auto">
-            <local:EditorControl Background="Transparent" x:Name="editor" Focusable="True"  FocusVisualStyle="{x:Null}"/>
+        <ScrollViewer
+            x:Name="scrollViwer"
+            FocusVisualStyle="{x:Null}"
+            Focusable="True"
+            HorizontalScrollBarVisibility="Auto"
+            ScrollChanged="scrollViwer_ScrollChanged">
+            <local:EditorControl
+                x:Name="editor"
+                Background="Transparent"
+                FocusVisualStyle="{x:Null}"
+                Focusable="True" />
         </ScrollViewer>
     </DockPanel>
 </Window>

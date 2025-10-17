@@ -6,9 +6,9 @@ using System.Xml.Linq;
 
 namespace Editor
 {
-    public sealed class CompositeSubSuper: CompositeBase
+    public sealed class CompositeSubSuper : CompositeBase
     {
-        RowContainer superRow;        
+        RowContainer superRow;
         RowContainer subRow;
 
         public CompositeSubSuper(EquationContainer parent)
@@ -17,7 +17,7 @@ namespace Editor
             SubLevel++;
             subRow = new RowContainer(this);
             superRow = new RowContainer(this);
-            superRow.FontFactor     = subRow.FontFactor     = SubFontFactor;
+            superRow.FontFactor = subRow.FontFactor = SubFontFactor;
             superRow.ApplySymbolGap = subRow.ApplySymbolGap = false;
             childEquations.AddRange(new EquationBase[] { mainRowContainer, subRow, superRow });
         }
@@ -38,8 +38,8 @@ namespace Editor
             subRow.DeSerialize(elementArray[1]);
             superRow.DeSerialize(elementArray[2]);
             CalculateSize();
-        }         
-        
+        }
+
         public override double Left
         {
             get { return base.Left; }
@@ -110,7 +110,7 @@ namespace Editor
             {
                 CalculateSize();
                 return true;
-            }            
+            }
             if (key == Key.Down)
             {
                 if (ActiveChild == mainRowContainer)

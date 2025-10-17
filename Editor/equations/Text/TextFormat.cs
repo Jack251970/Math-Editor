@@ -40,7 +40,7 @@ namespace Editor
                              new XElement("FontStyle", FontStyle),
                              new XElement("Underline", UseUnderline),
                              new XElement("FontWeight", FontWeight),
-                             new XElement("Brush", TextBrushString));                             
+                             new XElement("Brush", TextBrushString));
             return thisElement;
         }
 
@@ -49,7 +49,7 @@ namespace Editor
             double fontSize = double.Parse(xe.Element("FontSize").Value);
             FontType fontType = (FontType)Enum.Parse(typeof(FontType), xe.Element("FontType").Value);
             FontStyle fontStyle = xe.Element("FontStyle").Value == "Italic" ? FontStyles.Italic : FontStyles.Normal;
-            FontWeight fontWeight = xe.Element("FontWeight").Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;                      
+            FontWeight fontWeight = xe.Element("FontWeight").Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;
             BrushConverter bc = new BrushConverter();
             SolidColorBrush brush = (SolidColorBrush)bc.ConvertFrom(xe.Element("Brush").Value);
             bool useUnderline = Convert.ToBoolean(xe.Element("Underline").Value);

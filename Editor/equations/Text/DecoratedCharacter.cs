@@ -8,13 +8,13 @@ namespace Editor
         List<CharacterDecorationInfo> decorations = new List<CharacterDecorationInfo>();
         FormattedText charFt;
         public TextEquation Previous { get; set; }
-        public TextEquation Next     { get; set; }
+        public TextEquation Next { get; set; }
 
         public DecoratedCharacter(EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
             : base(parent)
         {
             this.Previous = previous;
-            this.charFt = textManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);            
+            this.charFt = textManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
             previous.ConsumeKey(System.Windows.Input.Key.Back);
             Height = FontSize;
             decorations.Add(new CharacterDecorationInfo() { DecorationType = cdt, Position = position, UnicodeString = sign });

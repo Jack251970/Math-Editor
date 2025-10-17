@@ -9,7 +9,7 @@ namespace Editor
         BoxType boxType;
         RowContainer insideEq = null;
         double paddingFactor = 0.2;
-        double Padding { get { return FontSize * paddingFactor;} }
+        double Padding { get { return FontSize * paddingFactor; } }
         double TopPadding
         {
             get
@@ -73,7 +73,7 @@ namespace Editor
         Point RightBottom { get { return new Point(Right - RightPadding / 2, Bottom - BottomPadding / 2); } }
 
         public Box(EquationContainer parent, BoxType boxType)
-            :base (parent)
+            : base(parent)
         {
             this.boxType = boxType;
             ActiveChild = insideEq = new RowContainer(this);
@@ -102,7 +102,7 @@ namespace Editor
             switch (boxType)
             {
                 case BoxType.All:
-                    dc.DrawPolyline(LeftTop, new PointCollection{RightTop, RightBottom, LeftBottom, LeftTop, RightTop}, StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, new PointCollection { RightTop, RightBottom, LeftBottom, LeftTop, RightTop }, StandardMiterPen);
                     break;
                 case BoxType.LeftBottom:
                     dc.DrawPolyline(LeftTop, new PointCollection { LeftBottom, RightBottom }, StandardMiterPen);
@@ -125,7 +125,7 @@ namespace Editor
             set
             {
                 base.Top = value;
-                insideEq.Top = value + TopPadding;        
+                insideEq.Top = value + TopPadding;
             }
         }
 
@@ -141,12 +141,12 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            Width = insideEq.Width + LeftPadding + RightPadding; 
+            Width = insideEq.Width + LeftPadding + RightPadding;
         }
 
         protected override void CalculateHeight()
         {
-            Height = insideEq.Height + TopPadding + BottomPadding;            
+            Height = insideEq.Height + TopPadding + BottomPadding;
         }
 
         public override double RefY

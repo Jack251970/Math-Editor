@@ -49,7 +49,7 @@ namespace Editor
         {
             ChangeActivePanel(sender);
         }
-        
+
         private void toolBarButton_GotFocus(object sender, RoutedEventArgs e)
         {
             ChangeActivePanel(sender);
@@ -150,27 +150,27 @@ namespace Editor
                                 CreateImageUri("brackets", "BottomCurlyBracket.png"),
                                 CreateImageUri("brackets", "TopSquareBracket.png"),
                                 CreateImageUri("brackets", "BottomSquareBracket.png"),
-                                CreateImageUri("brackets", "DoubleArrowBarBracket.png"),                                
+                                CreateImageUri("brackets", "DoubleArrowBarBracket.png"),
                                };
 
-            CommandType[] commands = { CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket, 
+            CommandType[] commands = { CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                        CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
-                                       CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket, 
+                                       CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                        CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                        CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                        CommandType.LeftRightBracket,
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
-                                       CommandType.LeftBracket,      CommandType.RightBracket, 
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
+                                       CommandType.LeftBracket,      CommandType.RightBracket,
                                        CommandType.TopBracket,  CommandType.BottomBracket,
-                                       CommandType.TopBracket, CommandType.BottomBracket, 
-                                       CommandType.DoubleArrowBarBracket,                                       
+                                       CommandType.TopBracket, CommandType.BottomBracket,
+                                       CommandType.DoubleArrowBarBracket,
                                      };
-            object[] paramz = { 
+            object[] paramz = {
                                    new BracketSignType [] {BracketSignType.LeftBar,       BracketSignType.RightBar},
                                    new BracketSignType [] {BracketSignType.LeftDoubleBar, BracketSignType.RightDoubleBar},
                                    new BracketSignType [] {BracketSignType.LeftFloor,     BracketSignType.RightFloor},
@@ -185,23 +185,23 @@ namespace Editor
                                    new BracketSignType [] {BracketSignType.LeftRound,     BracketSignType.RightSquare},
                                    new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.RightRound},
                                    new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.LeftSquare},
-                                   new BracketSignType [] {BracketSignType.LeftAngle,     BracketSignType.RightAngle},                                   
+                                   new BracketSignType [] {BracketSignType.LeftAngle,     BracketSignType.RightAngle},
                                    new BracketSignType [] {BracketSignType.RightSquare,   BracketSignType.LeftSquare},
 
                                    BracketSignType.LeftCurly,
-                                   BracketSignType.RightCurly, 
+                                   BracketSignType.RightCurly,
                                    BracketSignType.LeftDoubleBar,
-                                   BracketSignType.RightDoubleBar, 
+                                   BracketSignType.RightDoubleBar,
                                    BracketSignType.LeftRound,
-                                   BracketSignType.RightRound, 
+                                   BracketSignType.RightRound,
                                    BracketSignType.LeftSquareBar,
-                                   BracketSignType.RightSquareBar, 
+                                   BracketSignType.RightSquareBar,
                                    BracketSignType.LeftSquare,
-                                   BracketSignType.RightSquare, 
+                                   BracketSignType.RightSquare,
                                    BracketSignType.LeftAngle,
                                    BracketSignType.RightAngle,
                                    BracketSignType.LeftBar,
-                                   BracketSignType.RightBar, 
+                                   BracketSignType.RightBar,
                                    HorizontalBracketSignType.TopCurly,
                                    HorizontalBracketSignType.BottomCurly,
                                    HorizontalBracketSignType.ToSquare,
@@ -214,12 +214,12 @@ namespace Editor
 
         void CreateSumsProductsPanel()
         {
-            Uri[] imageUris = {   
+            Uri[] imageUris = {
                                   CreateImageUri("sumsProducts", "sum.png"),
                                   CreateImageUri("sumsProducts", "sumSub.png"),
                                   CreateImageUri("sumsProducts", "sumSubSuper.png"),
                                   CreateImageUri("sumsProducts", "sumBottom.png"),
-                                  CreateImageUri("sumsProducts", "sumBottomTop.png"),                                  
+                                  CreateImageUri("sumsProducts", "sumBottomTop.png"),
 
                                   CreateImageUri("sumsProducts", "product.png"),
                                   CreateImageUri("sumsProducts", "productSub.png"),
@@ -232,13 +232,13 @@ namespace Editor
                                   CreateImageUri("sumsProducts", "coProductSubSuper.png"),
                                   CreateImageUri("sumsProducts", "coProductBottom.png"),
                                   CreateImageUri("sumsProducts", "coProductBottomTop.png"),
-                                  
+
                                   CreateImageUri("sumsProducts", "intersection.png"),
                                   CreateImageUri("sumsProducts", "intersectionSub.png"),
                                   CreateImageUri("sumsProducts", "intersectionSubSuper.png"),
                                   CreateImageUri("sumsProducts", "intersectionBottom.png"),
                                   CreateImageUri("sumsProducts", "intersectionBottomTop.png"),
-                                  
+
                                   CreateImageUri("sumsProducts", "union.png"),
                                   CreateImageUri("sumsProducts", "unionSub.png"),
                                   CreateImageUri("sumsProducts", "unionSubSuper.png"),
@@ -246,7 +246,7 @@ namespace Editor
                                   CreateImageUri("sumsProducts", "unionBottomTop.png"),
                               };
             CommandType[] commands = Enumerable.Repeat(CommandType.SignComposite, imageUris.Length).ToArray();
-            object[] paramz = { 
+            object[] paramz = {
                                   new object [] {Position.None,    SignCompositeSymbol.Sum} ,
                                   new object [] {Position.Sub,       SignCompositeSymbol.Sum} ,
                                   new object [] {Position.SubAndSuper,  SignCompositeSymbol.Sum} ,
@@ -283,12 +283,12 @@ namespace Editor
 
         void CreateIntegralsPanel()
         {
-            Uri[] imageUris = { 
+            Uri[] imageUris = {
                                   CreateImageUri("integrals/Single", "Simple.png"),
                                   CreateImageUri("integrals/Single", "Sub.png"),
                                   CreateImageUri("integrals/Single", "SubSuper.png"),
                                   CreateImageUri("integrals/Single", "Bottom.png"),
-                                  CreateImageUri("integrals/Single", "BottomTop.png"),                                  
+                                  CreateImageUri("integrals/Single", "BottomTop.png"),
 
                                   CreateImageUri("integrals/Double", "Simple.png"),
                                   CreateImageUri("integrals/Double", "Sub.png"),
@@ -301,7 +301,7 @@ namespace Editor
                                   CreateImageUri("integrals/Triple", "SubSuper.png"),
                                   CreateImageUri("integrals/Triple", "Bottom.png"),
                                   CreateImageUri("integrals/Triple", "BottomTop.png"),
-                                  
+
                                   CreateImageUri("integrals/Contour", "Simple.png"),
                                   CreateImageUri("integrals/Contour", "Sub.png"),
                                   CreateImageUri("integrals/Contour", "SubSuper.png"),
@@ -335,21 +335,21 @@ namespace Editor
 
             CommandType[] commands = Enumerable.Repeat(CommandType.SignComposite, imageUris.Length).ToArray();
 
-            object[] paramz = { 
+            object[] paramz = {
                                   new object [] {Position.None,    SignCompositeSymbol.Integral},
                                   new object [] {Position.Sub,       SignCompositeSymbol.Integral},
                                   new object [] {Position.SubAndSuper,  SignCompositeSymbol.Integral},
                                   new object [] {Position.Bottom,    SignCompositeSymbol.Integral},
                                   new object [] {Position.BottomAndTop, SignCompositeSymbol.Integral},
-                                  
+
 
                                   new object [] {Position.None,    SignCompositeSymbol.DoubleIntegral},
                                   new object [] {Position.Sub,       SignCompositeSymbol.DoubleIntegral},
                                   new object [] {Position.SubAndSuper,  SignCompositeSymbol.DoubleIntegral},
                                   new object [] {Position.Bottom,    SignCompositeSymbol.DoubleIntegral},
                                   new object [] {Position.BottomAndTop, SignCompositeSymbol.DoubleIntegral},
-                                  
-                                  
+
+
                                   new object [] {Position.None,    SignCompositeSymbol.TripleIntegral},
                                   new object [] {Position.Sub,       SignCompositeSymbol.TripleIntegral},
                                   new object [] {Position.SubAndSuper,  SignCompositeSymbol.TripleIntegral},
@@ -384,7 +384,7 @@ namespace Editor
                                   new object [] {Position.Sub,       SignCompositeSymbol.AntiClockContourIntegral},
                                   new object [] {Position.SubAndSuper,  SignCompositeSymbol.AntiClockContourIntegral},
                                   new object [] {Position.Bottom,    SignCompositeSymbol.AntiClockContourIntegral},
-                                  new object [] {Position.BottomAndTop, SignCompositeSymbol.AntiClockContourIntegral},                                 
+                                  new object [] {Position.BottomAndTop, SignCompositeSymbol.AntiClockContourIntegral},
                               };
 
             CreateImagePanel(imageUris, commands, paramz, integralsButton, 5);
@@ -392,13 +392,13 @@ namespace Editor
 
         void CreateSubAndSuperPanel()
         {
-            Uri[] imageUris = { 
-                                  CreateImageUri("subSuper", "Sub.png"),   
-                                  CreateImageUri("subSuper", "Super.png"),   
-                                  CreateImageUri("subSuper", "SubSuper.png"),   
-                                  CreateImageUri("subSuper", "SubLeft.png"),   
-                                  CreateImageUri("subSuper", "SuperLeft.png"),   
-                                  CreateImageUri("subSuper", "SubSuperLeft.png"),   
+            Uri[] imageUris = {
+                                  CreateImageUri("subSuper", "Sub.png"),
+                                  CreateImageUri("subSuper", "Super.png"),
+                                  CreateImageUri("subSuper", "SubSuper.png"),
+                                  CreateImageUri("subSuper", "SubLeft.png"),
+                                  CreateImageUri("subSuper", "SuperLeft.png"),
+                                  CreateImageUri("subSuper", "SubSuperLeft.png"),
                                };
             CommandType[] commands = { CommandType.Sub, CommandType.Super, CommandType.SubAndSuper,
                                        CommandType.Sub, CommandType.Super, CommandType.SubAndSuper};
@@ -411,24 +411,24 @@ namespace Editor
 
         void CreateCompositePanel()
         {
-            Uri[] imageUris = { 
-                                  CreateImageUri("composite", "CompositeBottom.png"),  
-                                  CreateImageUri("composite", "CompositeTop.png"),  
-                                  CreateImageUri("composite", "CompositeBottomTop.png"),                            
-                                  CreateImageUri("composite", "BigBottom.png"),  
-                                  CreateImageUri("composite", "BigTop.png"),  
-                                  CreateImageUri("composite", "BigBottomTop.png"),                            
-                                  CreateImageUri("composite", "BigSub.png"),  
-                                  CreateImageUri("composite", "BigSuper.png"),  
-                                  CreateImageUri("composite", "BigSubSuper.png"),                        
+            Uri[] imageUris = {
+                                  CreateImageUri("composite", "CompositeBottom.png"),
+                                  CreateImageUri("composite", "CompositeTop.png"),
+                                  CreateImageUri("composite", "CompositeBottomTop.png"),
+                                  CreateImageUri("composite", "BigBottom.png"),
+                                  CreateImageUri("composite", "BigTop.png"),
+                                  CreateImageUri("composite", "BigBottomTop.png"),
+                                  CreateImageUri("composite", "BigSub.png"),
+                                  CreateImageUri("composite", "BigSuper.png"),
+                                  CreateImageUri("composite", "BigSubSuper.png"),
                                };
-            CommandType[] commands = { 
+            CommandType[] commands = {
                                          CommandType.Composite, CommandType.Composite, CommandType.Composite,
-                                         CommandType.CompositeBig,    CommandType.CompositeBig, CommandType.CompositeBig, 
-                                         CommandType.CompositeBig, CommandType.CompositeBig, CommandType.CompositeBig,                                          
+                                         CommandType.CompositeBig,    CommandType.CompositeBig, CommandType.CompositeBig,
+                                         CommandType.CompositeBig, CommandType.CompositeBig, CommandType.CompositeBig,
                                      };
 
-            object[] paramz = { 
+            object[] paramz = {
                                   Position.Bottom, Position.Top, Position.BottomAndTop,
                                   Position.Bottom, Position.Top, Position.BottomAndTop,
                                   Position.Sub, Position.Super, Position.SubAndSuper,
@@ -439,41 +439,41 @@ namespace Editor
 
         void CreateDecoratedEquationPanel()
         {
-            Uri[] imageUris = { 
-                                  CreateImageUri("decorated/equation", "hat.png"),  
-                                  CreateImageUri("decorated/equation", "tilde.png"),  
-                                  CreateImageUri("decorated/equation", "parenthesis.png"),                            
-                                  CreateImageUri("decorated/equation", "tortoise.png"),  
-                                  CreateImageUri("decorated/equation", "topBar.png"),  
-                                  CreateImageUri("decorated/equation", "topDoubleBar.png"),                            
-                                  CreateImageUri("decorated/equation", "topRightArrow.png"),  
-                                  CreateImageUri("decorated/equation", "topLeftArrow.png"),  
-                                  CreateImageUri("decorated/equation", "topRightHalfArrow.png"),                            
-                                  CreateImageUri("decorated/equation", "topLeftHalfArrow.png"),  
-                                  CreateImageUri("decorated/equation", "topDoubleArrow.png"),  
-                                    
+            Uri[] imageUris = {
+                                  CreateImageUri("decorated/equation", "hat.png"),
+                                  CreateImageUri("decorated/equation", "tilde.png"),
+                                  CreateImageUri("decorated/equation", "parenthesis.png"),
+                                  CreateImageUri("decorated/equation", "tortoise.png"),
+                                  CreateImageUri("decorated/equation", "topBar.png"),
+                                  CreateImageUri("decorated/equation", "topDoubleBar.png"),
+                                  CreateImageUri("decorated/equation", "topRightArrow.png"),
+                                  CreateImageUri("decorated/equation", "topLeftArrow.png"),
+                                  CreateImageUri("decorated/equation", "topRightHalfArrow.png"),
+                                  CreateImageUri("decorated/equation", "topLeftHalfArrow.png"),
+                                  CreateImageUri("decorated/equation", "topDoubleArrow.png"),
+
                                   CreateImageUri("decorated/equation", "topDoubleArrow.png"),  //to be left empty
 
-                                  CreateImageUri("decorated/equation", "bottomBar.png"),                            
-                                  CreateImageUri("decorated/equation", "bottomDoubleBar.png"),  
-                                  CreateImageUri("decorated/equation", "bottomRightArrow.png"),  
-                                  CreateImageUri("decorated/equation", "bottomLeftArrow.png"),  
-                                  CreateImageUri("decorated/equation", "bottomRightHalfArrow.png"),  
-                                  CreateImageUri("decorated/equation", "bottomLeftHalfArrow.png"),  
-                                  CreateImageUri("decorated/equation", "bottomDoubleArrow.png"),                 
-           
+                                  CreateImageUri("decorated/equation", "bottomBar.png"),
+                                  CreateImageUri("decorated/equation", "bottomDoubleBar.png"),
+                                  CreateImageUri("decorated/equation", "bottomRightArrow.png"),
+                                  CreateImageUri("decorated/equation", "bottomLeftArrow.png"),
+                                  CreateImageUri("decorated/equation", "bottomRightHalfArrow.png"),
+                                  CreateImageUri("decorated/equation", "bottomLeftHalfArrow.png"),
+                                  CreateImageUri("decorated/equation", "bottomDoubleArrow.png"),
+
                                   CreateImageUri("decorated/equation", "bottomDoubleArrow.png"),  //to be left empty
                                   
-                                  CreateImageUri("decorated/equation", "cross.png"),  
-                                  CreateImageUri("decorated/equation", "leftCross.png"),  
-                                  CreateImageUri("decorated/equation", "rightCross.png"),                            
-                                  CreateImageUri("decorated/equation", "strikeThrough.png"),  
+                                  CreateImageUri("decorated/equation", "cross.png"),
+                                  CreateImageUri("decorated/equation", "leftCross.png"),
+                                  CreateImageUri("decorated/equation", "rightCross.png"),
+                                  CreateImageUri("decorated/equation", "strikeThrough.png"),
                                };
             CommandType[] commands = Enumerable.Repeat(CommandType.Decorated, imageUris.Length).ToArray();
             commands[11] = CommandType.None; //empty cell
             commands[19] = CommandType.None; //empty cell
 
-            object[] paramz = {                                   
+            object[] paramz = {
                                   new object [] {DecorationType.Hat,                    Position.Top },
                                   new object [] {DecorationType.Tilde,                  Position.Top },
                                   new object [] {DecorationType.Parenthesis,            Position.Top },
@@ -501,66 +501,66 @@ namespace Editor
                               };
             CreateImagePanel(imageUris, commands, paramz, decoratedEquationButton, 4);
         }
-        
+
         void CreateDecoratedCharacterPanel()
         {
-            Uri[] imageUris = {   
+            Uri[] imageUris = {
                                   CreateImageUri("decorated/character", "None.png"),
                                   CreateImageUri("decorated/character", "StrikeThrough.png"),
-                                  CreateImageUri("decorated/character", "DoubleStrikeThrough.png"),                                  
-                                  CreateImageUri("decorated/character", "LeftCross.png"), 
-                                  CreateImageUri("decorated/character", "RightCross.png"),         
+                                  CreateImageUri("decorated/character", "DoubleStrikeThrough.png"),
+                                  CreateImageUri("decorated/character", "LeftCross.png"),
+                                  CreateImageUri("decorated/character", "RightCross.png"),
                                   CreateImageUri("decorated/character", "Cross.png"),
                                   CreateImageUri("decorated/character", "VstrikeThrough.png"),
-                                  CreateImageUri("decorated/character", "VDoubleStrikeThrough.png"), 
-                                  CreateImageUri("decorated/character", "LeftUprightCross.png"), 
-                                  CreateImageUri("decorated/character", "RightUprightCross.png"), 
-                                  
-                                  CreateImageUri("decorated/character", "Prime.png"), 
-                                  CreateImageUri("decorated/character", "DoublePrime.png"),                                   
+                                  CreateImageUri("decorated/character", "VDoubleStrikeThrough.png"),
+                                  CreateImageUri("decorated/character", "LeftUprightCross.png"),
+                                  CreateImageUri("decorated/character", "RightUprightCross.png"),
+
+                                  CreateImageUri("decorated/character", "Prime.png"),
+                                  CreateImageUri("decorated/character", "DoublePrime.png"),
                                   CreateImageUri("decorated/character", "TriplePrime.png"),
                                   CreateImageUri("decorated/character", "ReversePrime.png"),
                                   CreateImageUri("decorated/character", "ReverseDoublePrime.png"),
 
-                                  CreateImageUri("decorated/character", "AcuteAccent.png"), 
-                                  CreateImageUri("decorated/character", "GraveAccent.png"),                                   
+                                  CreateImageUri("decorated/character", "AcuteAccent.png"),
+                                  CreateImageUri("decorated/character", "GraveAccent.png"),
                                   CreateImageUri("decorated/character", "TopRing.png"),
                                   CreateImageUri("decorated/character", "TopRightRing.png"),
                                   CreateImageUri("decorated/character", "ReverseDoublePrime.png"), //Empty
 
-                                  CreateImageUri("decorated/character", "TopBar.png"), 
-                                  CreateImageUri("decorated/character", "TopTilde.png"),                                   
+                                  CreateImageUri("decorated/character", "TopBar.png"),
+                                  CreateImageUri("decorated/character", "TopTilde.png"),
                                   CreateImageUri("decorated/character", "TopBreve.png"),
                                   CreateImageUri("decorated/character", "TopInvertedBreve.png"),
                                   CreateImageUri("decorated/character", "TopCircumflex.png"),
 
-                                  CreateImageUri("decorated/character", "BottomBar.png"), 
-                                  CreateImageUri("decorated/character", "BottomTilde.png"),                                   
+                                  CreateImageUri("decorated/character", "BottomBar.png"),
+                                  CreateImageUri("decorated/character", "BottomTilde.png"),
                                   CreateImageUri("decorated/character", "BottomBreve.png"),
                                   CreateImageUri("decorated/character", "BottomInvertedBreve.png"),
                                   CreateImageUri("decorated/character", "TopCaron.png"),
 
-                                  CreateImageUri("decorated/character", "TopRightArrow.png"), 
-                                  CreateImageUri("decorated/character", "TopLeftArrow.png"),                                   
+                                  CreateImageUri("decorated/character", "TopRightArrow.png"),
+                                  CreateImageUri("decorated/character", "TopLeftArrow.png"),
                                   CreateImageUri("decorated/character", "TopDoubleArrow.png"),
                                   CreateImageUri("decorated/character", "TopRightHarpoon.png"),
                                   CreateImageUri("decorated/character", "TopLeftHarpoon.png"),
 
 
-                                  CreateImageUri("decorated/character", "BottomRightArrow.png"), 
-                                  CreateImageUri("decorated/character", "BottomLeftArrow.png"),                                   
+                                  CreateImageUri("decorated/character", "BottomRightArrow.png"),
+                                  CreateImageUri("decorated/character", "BottomLeftArrow.png"),
                                   CreateImageUri("decorated/character", "BottomDoubleArrow.png"),
                                   CreateImageUri("decorated/character", "BottomRightHarpoon.png"),
                                   CreateImageUri("decorated/character", "BottomLeftHarpoon.png"),
 
-                                  CreateImageUri("decorated/character", "TopDot.png"), 
-                                  CreateImageUri("decorated/character", "TopDDot.png"),                                   
+                                  CreateImageUri("decorated/character", "TopDot.png"),
+                                  CreateImageUri("decorated/character", "TopDDot.png"),
                                   CreateImageUri("decorated/character", "TopTDot.png"),
                                   CreateImageUri("decorated/character", "TopFourDot.png"),
                                   CreateImageUri("decorated/character", "TopFourDot.png"), //Empty
                                   
-                                  CreateImageUri("decorated/character", "BottomDot.png"), 
-                                  CreateImageUri("decorated/character", "BottomDDot.png"),                                   
+                                  CreateImageUri("decorated/character", "BottomDot.png"),
+                                  CreateImageUri("decorated/character", "BottomDDot.png"),
                                   CreateImageUri("decorated/character", "BottomTDot.png"),
                                   CreateImageUri("decorated/character", "BottomFourDot.png"),
                                   CreateImageUri("decorated/character", "BottomFourDot.png"), //Empty
@@ -571,7 +571,7 @@ namespace Editor
             commands[44] = CommandType.None; //empty cell           
             commands[49] = CommandType.None; //empty cell  
 
-            object[] paramz = {                                   
+            object[] paramz = {
                                   new object [] {CharacterDecorationType.None,                  Position.Over, null},
                                   new object [] {CharacterDecorationType.StrikeThrough,         Position.Over, null},
                                   new object [] {CharacterDecorationType.DoubleStrikeThrough,   Position.Over, null},
@@ -579,10 +579,10 @@ namespace Editor
                                   new object [] {CharacterDecorationType.RightCross,            Position.Over, null},
                                   new object [] {CharacterDecorationType.Cross,                 Position.Over, null},
                                   new object [] {CharacterDecorationType.VStrikeThrough,        Position.Over, null},
-                                  new object [] {CharacterDecorationType.VDoubleStrikeThrough,  Position.Over, null},  
+                                  new object [] {CharacterDecorationType.VDoubleStrikeThrough,  Position.Over, null},
                                   new object [] {CharacterDecorationType.LeftUprightCross,      Position.Over, null},
-                                  new object [] {CharacterDecorationType.RightUprightCross,     Position.Over, null},  
-                                  
+                                  new object [] {CharacterDecorationType.RightUprightCross,     Position.Over, null},
+
                                   new object [] {CharacterDecorationType.Unicode, Position.TopRight,  "\u2032"}, //Prime
                                   new object [] {CharacterDecorationType.Unicode, Position.TopRight,  "\u2033"}, //Double prime
                                   new object [] {CharacterDecorationType.Unicode, Position.TopRight,  "\u2034"}, //Triple prime
@@ -635,46 +635,46 @@ namespace Editor
 
         void CreateArrowEquationPanel()
         {
-            Uri[] imageUris = {                                                                                                 
-                                  CreateImageUri("decorated/arrow", "LeftTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "LeftBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "LeftBottomTop.png"),    
+            Uri[] imageUris = {
+                                  CreateImageUri("decorated/arrow", "LeftTop.png"),
+                                  CreateImageUri("decorated/arrow", "LeftBottom.png"),
+                                  CreateImageUri("decorated/arrow", "LeftBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "RightTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightBottomTop.png"),    
+                                  CreateImageUri("decorated/arrow", "RightTop.png"),
+                                  CreateImageUri("decorated/arrow", "RightBottom.png"),
+                                  CreateImageUri("decorated/arrow", "RightBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "DoubleTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "DoubleBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "DoubleBottomTop.png"),    
+                                  CreateImageUri("decorated/arrow", "DoubleTop.png"),
+                                  CreateImageUri("decorated/arrow", "DoubleBottom.png"),
+                                  CreateImageUri("decorated/arrow", "DoubleBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "RightLeftTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightLeftBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightLeftBottomTop.png"),    
+                                  CreateImageUri("decorated/arrow", "RightLeftTop.png"),
+                                  CreateImageUri("decorated/arrow", "RightLeftBottom.png"),
+                                  CreateImageUri("decorated/arrow", "RightLeftBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "RightSmallLeftTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightSmallLeftBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightSmallLeftBottomTop.png"),    
+                                  CreateImageUri("decorated/arrow", "RightSmallLeftTop.png"),
+                                  CreateImageUri("decorated/arrow", "RightSmallLeftBottom.png"),
+                                  CreateImageUri("decorated/arrow", "RightSmallLeftBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "SmallRightLeftTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "SmallRightLeftBottom.png"),                            
+                                  CreateImageUri("decorated/arrow", "SmallRightLeftTop.png"),
+                                  CreateImageUri("decorated/arrow", "SmallRightLeftBottom.png"),
                                   CreateImageUri("decorated/arrow", "SmallRightLeftBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "RightLeftHarpTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightLeftHarpBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightLeftHarpBottomTop.png"),    
+                                  CreateImageUri("decorated/arrow", "RightLeftHarpTop.png"),
+                                  CreateImageUri("decorated/arrow", "RightLeftHarpBottom.png"),
+                                  CreateImageUri("decorated/arrow", "RightLeftHarpBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "RightSmallLeftHarpTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightSmallLeftHarpBottom.png"),                            
-                                  CreateImageUri("decorated/arrow", "RightSmallLeftHarpBottomTop.png"),    
+                                  CreateImageUri("decorated/arrow", "RightSmallLeftHarpTop.png"),
+                                  CreateImageUri("decorated/arrow", "RightSmallLeftHarpBottom.png"),
+                                  CreateImageUri("decorated/arrow", "RightSmallLeftHarpBottomTop.png"),
 
-                                  CreateImageUri("decorated/arrow", "SmallRightLeftHarpTop.png"),                            
-                                  CreateImageUri("decorated/arrow", "SmallRightLeftHarpBottom.png"),                            
+                                  CreateImageUri("decorated/arrow", "SmallRightLeftHarpTop.png"),
+                                  CreateImageUri("decorated/arrow", "SmallRightLeftHarpBottom.png"),
                                   CreateImageUri("decorated/arrow", "SmallRightLeftHarpBottomTop.png"),
                                };
             CommandType[] commands = Enumerable.Repeat(CommandType.Arrow, imageUris.Length).ToArray();
 
-            object[] paramz = {   
+            object[] paramz = {
                                   new object [] {ArrowType.LeftArrow,               Position.Top },
                                   new object [] {ArrowType.LeftArrow,               Position.Bottom },
                                   new object [] {ArrowType.LeftArrow,               Position.BottomAndTop },
@@ -683,37 +683,37 @@ namespace Editor
                                   new object [] {ArrowType.RightArrow,              Position.Bottom },
                                   new object [] {ArrowType.RightArrow,              Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.DoubleArrow,             Position.Top },
                                   new object [] {ArrowType.DoubleArrow,             Position.Bottom },
                                   new object [] {ArrowType.DoubleArrow,             Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.RightLeftArrow,          Position.Top },
                                   new object [] {ArrowType.RightLeftArrow,          Position.Bottom },
                                   new object [] {ArrowType.RightLeftArrow,          Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.RightSmallLeftArrow,     Position.Top },
                                   new object [] {ArrowType.RightSmallLeftArrow,     Position.Bottom },
                                   new object [] {ArrowType.RightSmallLeftArrow,     Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.SmallRightLeftArrow,     Position.Top },
                                   new object [] {ArrowType.SmallRightLeftArrow,     Position.Bottom },
                                   new object [] {ArrowType.SmallRightLeftArrow,     Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.RightLeftHarpoon,        Position.Top },
                                   new object [] {ArrowType.RightLeftHarpoon,        Position.Bottom },
                                   new object [] {ArrowType.RightLeftHarpoon,        Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.RightSmallLeftHarpoon,     Position.Top },
                                   new object [] {ArrowType.RightSmallLeftHarpoon,     Position.Bottom },
                                   new object [] {ArrowType.RightSmallLeftHarpoon,     Position.BottomAndTop },
 
-                                  
+
                                   new object [] {ArrowType.SmallRightLeftHarpoon,    Position.Top },
                                   new object [] {ArrowType.SmallRightLeftHarpoon,    Position.Bottom },
                                   new object [] {ArrowType.SmallRightLeftHarpoon,    Position.BottomAndTop },
@@ -721,43 +721,43 @@ namespace Editor
                               };
             CreateImagePanel(imageUris, commands, paramz, arrowEquationButton, 3);
         }
-        
+
         void CreateDivAndRootsPanel()
         {
-            Uri[] imageUris = { 
-                                  CreateImageUri("divAndRoots", "SqRoot.png"),  
-                                  CreateImageUri("divAndRoots", "nRoot.png"),  
-                                  CreateImageUri("divAndRoots", "DivMath.png"),  
-                                  CreateImageUri("divAndRoots", "DivMathWithTop.png"),  
+            Uri[] imageUris = {
+                                  CreateImageUri("divAndRoots", "SqRoot.png"),
+                                  CreateImageUri("divAndRoots", "nRoot.png"),
+                                  CreateImageUri("divAndRoots", "DivMath.png"),
+                                  CreateImageUri("divAndRoots", "DivMathWithTop.png"),
 
-                                  CreateImageUri("divAndRoots", "Div.png"),  
-                                  CreateImageUri("divAndRoots", "DivDoubleBar.png"),  
+                                  CreateImageUri("divAndRoots", "Div.png"),
+                                  CreateImageUri("divAndRoots", "DivDoubleBar.png"),
                                   CreateImageUri("divAndRoots", "DivTripleBar.png"),
                                   CreateImageUri("divAndRoots", "SmallDiv.png"),
 
-                                  CreateImageUri("divAndRoots", "DivSlant.png"),  
+                                  CreateImageUri("divAndRoots", "DivSlant.png"),
                                   CreateImageUri("divAndRoots", "SmallDivSlant.png"),
                                   CreateImageUri("divAndRoots", "DivHoriz.png"),
                                   CreateImageUri("divAndRoots", "SmallDivHoriz.png"),
 
-                                  CreateImageUri("divAndRoots", "DivMathInverted.png"),  
+                                  CreateImageUri("divAndRoots", "DivMathInverted.png"),
                                   CreateImageUri("divAndRoots", "DivMathInvertedWithBottom.png"),
                                   CreateImageUri("divAndRoots", "DivTriangleFixed.png"),
                                   CreateImageUri("divAndRoots", "DivTriangleExpanding.png"),
                                };
-            CommandType[] commands = { 
-                                         CommandType.SquareRoot, CommandType.nRoot, 
+            CommandType[] commands = {
+                                         CommandType.SquareRoot, CommandType.nRoot,
                                          CommandType.Division, CommandType.Division, CommandType.Division,
                                          CommandType.Division, CommandType.Division, CommandType.Division,
                                          CommandType.Division, CommandType.Division, CommandType.Division,
                                          CommandType.Division, CommandType.Division, CommandType.Division,
                                           CommandType.Division, CommandType.Division,
                                      };
-            object[] paramz = { 
+            object[] paramz = {
                                   0, 0, //square root and nRoot
                                   DivisionType.DivMath, DivisionType.DivMathWithTop,
                                   DivisionType.DivRegular, DivisionType.DivDoubleBar, DivisionType.DivTripleBar,
-                                  DivisionType.DivRegularSmall, DivisionType.DivSlanted, DivisionType.DivSlantedSmall, 
+                                  DivisionType.DivRegularSmall, DivisionType.DivSlanted, DivisionType.DivSlantedSmall,
                                   DivisionType.DivHoriz, DivisionType.DivHorizSmall, DivisionType.DivMathInverted,
                                   DivisionType.DivInvertedWithBottom, DivisionType.DivTriangleFixed,
                                   DivisionType.DivTriangleExpanding,
@@ -767,11 +767,11 @@ namespace Editor
 
         void CreateBoxEquationPanel()
         {
-            Uri[] imageUris = { 
-                                  CreateImageUri("box", "leftTop.png"),  
-                                  CreateImageUri("box", "leftBottom.png"),  
-                                  CreateImageUri("box", "rightTop.png"),  
-                                  CreateImageUri("box", "rightBottom.png"),  
+            Uri[] imageUris = {
+                                  CreateImageUri("box", "leftTop.png"),
+                                  CreateImageUri("box", "leftBottom.png"),
+                                  CreateImageUri("box", "rightTop.png"),
+                                  CreateImageUri("box", "rightBottom.png"),
                                   CreateImageUri("box", "all.png"),
                                };
             CommandType[] commands = Enumerable.Repeat<CommandType>(CommandType.Box, imageUris.Length).ToArray();
@@ -781,15 +781,15 @@ namespace Editor
 
         void CreateMatrixPanel()
         {
-            Uri[] imageUris = { 
-                                  CreateImageUri("matrix", "2cellRow.png"),  
-                                  CreateImageUri("matrix", "2cellColumn.png"),  
+            Uri[] imageUris = {
+                                  CreateImageUri("matrix", "2cellRow.png"),
+                                  CreateImageUri("matrix", "2cellColumn.png"),
                                   CreateImageUri("matrix", "2Square.png"),
 
-                                  CreateImageUri("matrix", "3cellRow.png"),  
-                                  CreateImageUri("matrix", "3cellColumn.png"),  
+                                  CreateImageUri("matrix", "3cellRow.png"),
+                                  CreateImageUri("matrix", "3cellColumn.png"),
                                   CreateImageUri("matrix", "3Square.png"),
-                                  
+
                                   CreateImageUri("matrix", "row.png"),
                                   CreateImageUri("matrix", "column.png"),
                                   CreateImageUri("matrix", "custom.png"),

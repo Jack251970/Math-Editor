@@ -59,7 +59,7 @@ namespace Editor
                 }
                 recentList.Insert(0, symbol);
                 usedCount.Add(symbol, 1);
-            }            
+            }
         }
 
         private void symbolClick(object sender, MouseButtonEventArgs e)

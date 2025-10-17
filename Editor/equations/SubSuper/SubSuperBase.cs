@@ -2,10 +2,10 @@
 {
     public abstract class SubSuperBase : EquationContainer
     {
-        public Position Position { get; set; }                
-        protected double Padding 
-        { 
-            get 
+        public Position Position { get; set; }
+        protected double Padding
+        {
+            get
             {
                 if (buddy != null && buddy.GetType() == typeof(TextEquation))
                 {
@@ -15,12 +15,12 @@
                 {
                     return FontSize * .05;
                 }
-            } 
+            }
         }
         protected double SuperOverlap { get { return FontSize * 0.35; } }
-        protected double SubOverlap 
-        { 
-            get 
+        protected double SubOverlap
+        {
+            get
             {
                 TextEquation te = buddy as TextEquation;
                 double oha = 0;
@@ -28,23 +28,23 @@
                 {
                     oha = te.GetCornerDescent(this.Position);
                 }
-                return FontSize * .1 - oha; 
-            } 
+                return FontSize * .1 - oha;
+            }
         }
-        
+
         EquationBase buddy = null;
         protected EquationBase Buddy
         {
             get { return buddy ?? ParentEquation.ActiveChild; }
             set { buddy = value; }
         }
-        
+
         public SubSuperBase(EquationRow parent, Position position)
             : base(parent)
         {
             ApplySymbolGap = false;
             SubLevel++;
-            Position = position;            
+            Position = position;
         }
 
         public void SetBuddy(EquationBase buddy)

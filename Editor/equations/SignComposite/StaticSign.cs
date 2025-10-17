@@ -4,11 +4,11 @@
     {
         bool integralSignItalic = false;
         public SignCompositeSymbol Symbol { get; set; }
-        public bool UseItalicIntegralSign 
-        { 
-            get {return integralSignItalic;}
-            set 
-            { 
+        public bool UseItalicIntegralSign
+        {
+            get { return integralSignItalic; }
+            set
+            {
                 integralSignItalic = value;
                 DetermineMargin();
                 DetermineFontType();
@@ -29,7 +29,7 @@
         }
 
         void DetermineMargin()
-        {            
+        {
             switch (Symbol)
             {
                 case SignCompositeSymbol.Integral:
@@ -53,7 +53,7 @@
                 default:
                     RightMarginFactor = 0.05;
                     break;
-            }            
+            }
         }
 
         void DetermineFontType()
@@ -66,7 +66,7 @@
                 case SignCompositeSymbol.TripleIntegral:
                 case SignCompositeSymbol.ContourIntegral:
                 case SignCompositeSymbol.SurfaceIntegral:
-                case SignCompositeSymbol.VolumeIntegral:                
+                case SignCompositeSymbol.VolumeIntegral:
                 case SignCompositeSymbol.ClockContourIntegral:
                 case SignCompositeSymbol.AntiClockContourIntegral:
                     if (UseItalicIntegralSign)
@@ -82,7 +82,7 @@
                 case SignCompositeSymbol.Union:
                     fontType = FontType.STIXGeneral;
                     break;
-            }            
+            }
             FontType = fontType;
         }
 

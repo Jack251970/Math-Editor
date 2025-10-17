@@ -246,10 +246,10 @@ namespace Editor
                     break;
                 case DecorationType.Hat:
                     dc.DrawPolyline(new Point(Left, Bottom - FontSize * .02),
-                                    new PointCollection 
-                                    {   
-                                        new Point(MidX, Top + FontSize * .03), 
-                                        new Point(Right, Bottom - FontSize * .02) 
+                                    new PointCollection
+                                    {
+                                        new Point(MidX, Top + FontSize * .03),
+                                        new Point(Right, Bottom - FontSize * .02)
                                     },
                                     ThinPen);
                     break;
@@ -312,7 +312,7 @@ namespace Editor
                     text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, FontSize * factor);
                     factor += .1;
                 }
-                while (Width > text.GetFullWidth());                
+                while (Width > text.GetFullWidth());
                 text.DrawTextTopLeftAligned(dc, Location);
             }
             else
@@ -353,7 +353,7 @@ namespace Editor
 
         private void DrawLeftHarpoonUpBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {  
+            PointCollection points = new PointCollection {
                                                             new Point(Left + FontSize * .3, Top),
                                                             //new Point(Left + FontSize * .31, Top + FontSize * .041),
                                                             new Point(Left + FontSize * .18, Bottom - FontSize * .06),
@@ -365,7 +365,7 @@ namespace Editor
 
         private void DrawRightHarpoonUpBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {  
+            PointCollection points = new PointCollection {
                                                             new Point(Right - FontSize * .3, Top),
                                                             //new Point(Right - FontSize * .31, Top + FontSize * .041),
                                                             new Point(Right - FontSize * .18, Bottom - FontSize * .06),
@@ -377,7 +377,7 @@ namespace Editor
 
         private void DrawLeftHarpoonDownBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {  
+            PointCollection points = new PointCollection {
                                                             new Point(Left + FontSize * .3, Bottom),
                                                             //new Point(Left + FontSize * .31, Bottom - FontSize * .041),
                                                             new Point(Left + FontSize * .18, Top + FontSize * .06),
@@ -389,7 +389,7 @@ namespace Editor
 
         private void DrawRightHarpoonDownBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {  
+            PointCollection points = new PointCollection {
                                                             new Point(Right - FontSize * .3, Bottom),
                                                             //new Point(Right - FontSize * .31, Bottom - FontSize * .041),
                                                             new Point(Right - FontSize * .18, Top + FontSize * .06),
@@ -401,7 +401,7 @@ namespace Editor
 
         private void DrawTortoise(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {  
+            PointCollection points = new PointCollection {
                                                             new Point(Left + Height * .5, Top),
                                                             new Point(Right - Height * .5, Top),
                                                             new Point(Right, Bottom),

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Editor
-{   
+{
     public sealed class RowContainerRemoveAction : RowRemoveAction
     {
         public EquationRow HeadEquationRow { get; set; }
@@ -24,6 +21,6 @@ namespace Editor
             : base(executor)
         {
         }
-    }    
+    }
 }
 

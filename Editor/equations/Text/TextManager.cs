@@ -28,7 +28,7 @@ namespace Editor
         {
             mapping.Clear();
             List<TextFormat> newList = new List<TextFormat>();
-            HashSet<int> usedOnes = root.GetUsedTextFormats();                 
+            HashSet<int> usedOnes = root.GetUsedTextFormats();
             foreach (int i in usedOnes)
             {
                 TextFormat tf = formattingList[i];
@@ -42,20 +42,20 @@ namespace Editor
         }
 
         public void RestoreAfterSave(EquationRoot root)
-        {   
+        {
             Dictionary<int, int> oldMapping = new Dictionary<int, int>();
             foreach (int i in mapping.Keys)
             {
                 oldMapping.Add(mapping[i], i);
                 TextFormat tf = formattingListBeforeSave[i];
                 tf.Index = i;
-            }            
+            }
             root.ResetTextFormats(oldMapping);
             formattingList = formattingListBeforeSave;
         }
 
         public XElement Serialize()
-        {            
+        {
             XElement thisElement = new XElement(GetType().Name);
             XElement children = new XElement("Formats");
             foreach (TextFormat tf in formattingList)
@@ -77,7 +77,7 @@ namespace Editor
             formattingList.Clear();
             XElement children = xElement.Element("Formats");
             foreach (XElement xe in children.Elements())
-            {                
+            {
                 AddToList(TextFormat.DeSerialize(xe));
             }
         }
@@ -103,7 +103,7 @@ namespace Editor
                     }
                 }
             }
-            for (int i=0;i < allFormatIds.Count;i++)
+            for (int i = 0; i < allFormatIds.Count; i++)
             {
                 int key = allFormatIds.ElementAt(i).Key;
                 TextFormat tf = TextFormat.DeSerialize(formatElements[key]);
@@ -151,7 +151,7 @@ namespace Editor
                         strBuilder.Remove(strBuilder.Length - 1, 1);
                     }
                     formatsElement.Value = strBuilder.ToString();
-                }                
+                }
             }
         }
 
@@ -172,7 +172,7 @@ namespace Editor
             {
                 tf = new TextFormat(fontSize, fontType, fontStyle, fontWeight, textBrush, useUnderline);
                 AddToList(tf);
-            } 
+            }
             return tf.Index;
         }
 
@@ -197,7 +197,7 @@ namespace Editor
             }
             return tf.Index;
         }
-        
+
         public int GetFormatIdForNewSize(int oldId, double newSize)
         {
             TextFormat oldFormat = formattingList[oldId];
@@ -342,10 +342,10 @@ namespace Editor
                                                             formattingList[format].TypeFace,
                                                             formattingList[format].FontSize,
                                                             formattingList[format].TextBrush);
-            
-            
+
+
             formattedText.SetFontStyle(formattingList[format].FontStyle);
-            formattedText.SetFontWeight(formattingList[format].FontWeight);            
+            formattedText.SetFontWeight(formattingList[format].FontWeight);
             return formattedText;
         }
 

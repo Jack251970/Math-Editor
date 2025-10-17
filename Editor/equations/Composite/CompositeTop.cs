@@ -7,8 +7,8 @@ using System.Xml.Linq;
 namespace Editor
 {
     public sealed class CompositeTop : CompositeBase
-    {        
-        RowContainer topRowContainer;       
+    {
+        RowContainer topRowContainer;
 
         public CompositeTop(EquationContainer parent)
             : base(parent)
@@ -34,7 +34,7 @@ namespace Editor
             topRowContainer.DeSerialize(xElement.Elements().Last());
             CalculateSize();
         }
-        
+
         public override double Left
         {
             get { return base.Left; }
@@ -53,7 +53,7 @@ namespace Editor
 
         protected override void CalculateHeight()
         {
-            Height = mainRowContainer.Height + topRowContainer.Height;            
+            Height = mainRowContainer.Height + topRowContainer.Height;
         }
 
         public override double RefY
@@ -116,6 +116,6 @@ namespace Editor
                 }
             }
             return false;
-        }        
+        }
     }
 }

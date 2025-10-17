@@ -8,7 +8,7 @@ namespace Editor
 {
     public sealed class CompositeBottomTop : CompositeBase
     {
-        RowContainer topRow;        
+        RowContainer topRow;
         RowContainer bottomRow;
 
         public CompositeBottomTop(EquationContainer parent)
@@ -38,8 +38,8 @@ namespace Editor
             bottomRow.DeSerialize(elementArray[1]);
             topRow.DeSerialize(elementArray[2]);
             CalculateSize();
-        }         
-        
+        }
+
         public override double Left
         {
             get { return base.Left; }
@@ -59,7 +59,7 @@ namespace Editor
 
         protected override void CalculateHeight()
         {
-            Height = mainRowContainer.Height + bottomRow.Height + topRow.Height + bottomGap;            
+            Height = mainRowContainer.Height + bottomRow.Height + topRow.Height + bottomGap;
         }
 
         public override double RefY
@@ -110,7 +110,7 @@ namespace Editor
             {
                 CalculateSize();
                 return true;
-            }            
+            }
             if (key == Key.Down)
             {
                 if (ActiveChild == mainRowContainer)

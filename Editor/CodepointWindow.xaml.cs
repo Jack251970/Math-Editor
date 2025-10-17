@@ -68,7 +68,7 @@ namespace Editor
             else
             {
                 MessageBox.Show("The entered value is invalid.", "Input error");
-            }            
+            }
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -82,7 +82,7 @@ namespace Editor
             this.Close();
         }
 
-        
+
         private void codeFormatComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             numberBase = (string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag;
@@ -92,7 +92,7 @@ namespace Editor
                 {
                     uint number;
                     if (ConvertToNumber(numberBox.Text, out number))
-                    {                        
+                    {
                         numberBox.Text = Convert.ToString(number, int.Parse(numberBase));
                     }
                     else

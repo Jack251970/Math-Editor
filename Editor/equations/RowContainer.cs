@@ -58,7 +58,7 @@ namespace Editor
                         HeadFormatsOfPastedRows = newRows[0].GetFirstTextEquation().GetFormats(),
                         TailFormatsOfPastedRows = newRows.Last().GetLastTextEquation().GetFormats(),
                         HeadModeOfPastedRows = newRows[0].GetFirstTextEquation().GetModes(),
-                        TailModesOfPastedRows = newRows.Last().GetLastTextEquation().GetModes(),                        
+                        TailModesOfPastedRows = newRows.Last().GetLastTextEquation().GetModes(),
                         HeadDecorationsOfPastedRows = newRows[0].GetFirstTextEquation().GetDecorations(),
                         TailDecorationsOfPastedRows = newRows.Last().GetLastTextEquation().GetDecorations(),
                         Equations = newRows
@@ -244,9 +244,9 @@ namespace Editor
                     FirstModes = firstText.GetModes(),
                     LastModes = lastText.GetModes(),
                     FirstRowDeletedContent = firstRow.DeleteTail(),
-                    LastRowDeletedContent = lastRow.DeleteHead(), 
+                    LastRowDeletedContent = lastRow.DeleteHead(),
                     FirstDecorations = firstRow.GetFirstTextEquation().GetDecorations(),
-                    LastDecorations = lastRow.GetLastTextEquation().GetDecorations(), 
+                    LastDecorations = lastRow.GetLastTextEquation().GetDecorations(),
                     Equations = equations,
                 };
                 action.FirstRowActiveIndexAfterRemoval = firstRow.ActiveChildIndex;
@@ -559,7 +559,7 @@ namespace Editor
             if (newRow != null)
             {
                 EquationRow activeRow = ActiveChild as EquationRow;
-                var rca = new RowContainerAction(this, childEquations.IndexOf(activeRow), activeRow.ActiveChildIndex, activeRow.TextLength, newRow) { UndoFlag = false };                
+                var rca = new RowContainerAction(this, childEquations.IndexOf(activeRow), activeRow.ActiveChildIndex, activeRow.TextLength, newRow) { UndoFlag = false };
                 UndoManager.AddUndoAction(rca);
                 AddLine(newRow);
             }
@@ -925,15 +925,15 @@ namespace Editor
                 }
                 ActiveChild = textAction.ActiveEquationAfterChange;
                 textAction.ActiveTextInRow.MoveToEnd();
-                SelectedItems = 0; 
+                SelectedItems = 0;
             }
             else
             {
                 this.SelectedItems = textAction.SelectedItems;
                 this.SelectionStartIndex = textAction.SelectionStartIndex;
                 activeRow.Merge((EquationRow)textAction.Equations.Last());
-                textAction.ActiveTextInRow.ResetTextEquation(textAction.CaretIndexOfActiveText, textAction.SelectionStartIndexOfTextEquation, 
-                                                             textAction.SelectedItemsOfTextEquation, textAction.TextEquationContents, 
+                textAction.ActiveTextInRow.ResetTextEquation(textAction.CaretIndexOfActiveText, textAction.SelectionStartIndexOfTextEquation,
+                                                             textAction.SelectedItemsOfTextEquation, textAction.TextEquationContents,
                                                              textAction.TextEquationFormats, textAction.FirstModesOfInsertedText,
                                                              textAction.FirstDecorationsOfInsertedText);
                 foreach (EquationBase eb in textAction.Equations)

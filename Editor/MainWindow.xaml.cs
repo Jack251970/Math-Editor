@@ -22,7 +22,7 @@ namespace Editor
         string currentLocalFile = "";
         static string meExtension = "med";
         static string meFileFilter = "Math Editor File (*." + meExtension + ")|*." + meExtension;
-        
+
 
         public MainWindow()
         {
@@ -86,8 +86,8 @@ namespace Editor
             }
             ChangeEditorMode();
             ChangeEditorFont();
-            editor.Focus();            
-        }        
+            editor.Focus();
+        }
 
         void editor_SelectionUnavailable(object sender, EventArgs e)
         {
@@ -731,7 +731,7 @@ namespace Editor
             if (editor != null)
             {
                 ComboBoxItem item = (ComboBoxItem)editorModeCombo.SelectedItem;
-                EditorMode mode = (EditorMode)Enum.Parse(typeof(EditorMode), item.Tag.ToString()); 
+                EditorMode mode = (EditorMode)Enum.Parse(typeof(EditorMode), item.Tag.ToString());
 
                 TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
                 TextEquation.EditorMode = (EditorMode)Enum.Parse(typeof(EditorMode), (string)((ComboBoxItem)editorModeCombo.SelectedItem).Tag);

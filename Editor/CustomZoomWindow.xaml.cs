@@ -49,7 +49,7 @@ namespace Editor
                 mainWindow.SetFontSizePercentage(number);
                 this.Close();
             }
-            catch 
+            catch
             {
                 MessageBox.Show("Zoom percentage must be a number between 1 and " + maxPercentage + ".");
             }

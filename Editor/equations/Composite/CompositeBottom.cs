@@ -7,7 +7,7 @@ using System.Xml.Linq;
 namespace Editor
 {
     public sealed class CompositeBottom : CompositeBase
-    {        
+    {
         RowContainer bottomRowContainer;
 
         public CompositeBottom(EquationContainer parent)
@@ -16,10 +16,10 @@ namespace Editor
             this.SubLevel++;
             bottomRowContainer = new RowContainer(this);
             bottomRowContainer.FontFactor = SubFontFactor;
-            bottomRowContainer.ApplySymbolGap = false;            
+            bottomRowContainer.ApplySymbolGap = false;
             childEquations.AddRange(new EquationBase[] { mainRowContainer, bottomRowContainer });
         }
-                
+
         public override XElement Serialize()
         {
             XElement thisElement = new XElement(GetType().Name);
@@ -92,7 +92,7 @@ namespace Editor
                 return true;
             }
             return false;
-        }        
+        }
 
         public override bool ConsumeKey(Key key)
         {
