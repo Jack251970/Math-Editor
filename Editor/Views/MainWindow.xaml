@@ -60,7 +60,7 @@
                     Width="22"
                     Height="22"
                     Click="exitFullScreenButton_Click"
-                    Style="{DynamicResource fullScreenButtonStyle}"
+                    Style="{DynamicResource FullScreenButtonStyle}"
                     Visibility="Collapsed">
                     <Image Source="/Images/GUI/exitfullscreen.png" />
                 </Button>
@@ -70,7 +70,7 @@
                     Height="22"
                     Margin="5 0"
                     Command="Close"
-                    Style="{DynamicResource fullScreenButtonStyle}"
+                    Style="{DynamicResource FullScreenButtonStyle}"
                     Visibility="Collapsed">
                     <Image Source="/Images/GUI/delete.png" />
                 </Button>
@@ -449,7 +449,7 @@
                 Height="25"
                 HorizontalAlignment="Right" />
         </Grid>
-        <ScrollViewer
+        <ui:ScrollViewerEx
             x:Name="scrollViwer"
             FocusVisualStyle="{x:Null}"
             Focusable="True"
@@ -460,6 +460,6 @@
                 Background="Transparent"
                 FocusVisualStyle="{x:Null}"
                 Focusable="True" />
-        </ScrollViewer>
+        </ui:ScrollViewerEx>
     </DockPanel>
 </Window>

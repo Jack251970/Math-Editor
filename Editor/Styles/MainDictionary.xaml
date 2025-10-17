@@ -23,57 +23,6 @@
 
     <SolidColorBrush x:Key="ButtonNormalBorder" Color="Black" />
 
-    <!--  // TODO: Remove this if need  -->
-    <Style x:Key="GrayButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
-        <Setter Property="Background" Value="LightGray" />
-        <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Foreground" Value="Black" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Padding" Value="1" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border
-                        x:Name="BackBorder"
-                        Width="Auto"
-                        Height="Auto"
-                        Background="LightGray"
-                        BorderBrush="#FF9D9D9D"
-                        BorderThickness="1"
-                        SnapsToDevicePixels="True">
-                        <ContentPresenter
-                            x:Name="ContentElement"
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                            TextBlock.Foreground="Black" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="BackBorder" Property="Background">
-                                <Setter.Value>
-                                    <SolidColorBrush Color="#FFBDBDBD" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="BackBorder" Property="Background">
-                                <Setter.Value>
-                                    <SolidColorBrush Color="#FF9D9D9D" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="ToolbarButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
         <!--<Setter Property="Background" Value="#FFE9E9E9"/>-->
@@ -115,8 +64,7 @@
         </Setter>
     </Style>
 
-    <!--  // TODO: Remove this if need  -->
-    <Style x:Key="fullScreenButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="FullScreenButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -138,33 +86,6 @@
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False" />
                     </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--  // TODO Remove if need  -->
-    <Style
-        x:Key="CharacterTextBoxStyle"
-        BasedOn="{x:Null}"
-        TargetType="{x:Type TextBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="1" />
-        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Microsoft_Windows_Themes:ListBoxChrome
-                        x:Name="Bd"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        SnapsToDevicePixels="true">
-                        <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Microsoft_Windows_Themes:ListBoxChrome>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -225,4 +146,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 </ResourceDictionary>
