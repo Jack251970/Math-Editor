@@ -366,7 +366,6 @@ namespace Editor
             int[] selectedFormats = GetSelectedFormats();
             if (selectedText.Length > 0)
             {
-                FormattedText formattedText = textManager.GetFormattedText(selectedText, selectedFormats.ToList());
                 RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + 4)), (int)(Math.Ceiling(Height + 4)), 96, 96, PixelFormats.Default);
                 DrawingVisual dv = new DrawingVisual();
                 using (DrawingContext dc = dv.RenderOpen())
