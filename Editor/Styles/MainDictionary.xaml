@@ -21,12 +21,10 @@
         </Setter>
     </Style>
 
-    <SolidColorBrush x:Key="ButtonNormalBorder" Color="Black" />
-
     <Style x:Key="ToolbarButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
         <!--<Setter Property="Background" Value="#FFE9E9E9"/>-->
-        <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}" />
+        <Setter Property="BorderBrush" Value="Black" />
         <!--<Setter Property="BorderThickness" Value="1"/>-->
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
