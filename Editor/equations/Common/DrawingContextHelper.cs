@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
@@ -22,7 +23,8 @@ namespace Editor
             segment.Points = points;
             PathFigure fig = new PathFigure(startPoint, new[] { segment }, true);
             geometry.Figures.Add(fig);
-            dc.DrawGeometry(Brushes.Black, null, geometry);
+            dc.DrawGeometry((ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
+                Brushes.White : Brushes.White), null, geometry);
         }
     }
 }
