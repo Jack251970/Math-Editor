@@ -70,6 +70,7 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid x:Name="grid">
                         <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             RecognizesAccessKey="True"
@@ -79,10 +80,10 @@
                         <Trigger Property="IsFocused" Value="True" />
                         <Trigger Property="IsDefaulted" Value="True" />
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="grid" Property="Background" Value="#FFE3ECED" />
+                            <Setter TargetName="grid" Property="Background" Value="{DynamicResource AppBarButtonBackgroundPointerOver}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="grid" Property="Background" Value="#FFD3DCDD" />
+                            <Setter TargetName="grid" Property="Background" Value="{DynamicResource AppBarButtonBackgroundPressed}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False" />
                     </ControlTemplate.Triggers>

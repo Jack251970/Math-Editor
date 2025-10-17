@@ -57,8 +57,9 @@
                 Orientation="Horizontal">
                 <Button
                     x:Name="exitFullScreenButton"
-                    Width="22"
-                    Height="22"
+                    Width="26"
+                    Height="26"
+                    Padding="2"
                     Click="exitFullScreenButton_Click"
                     Style="{DynamicResource FullScreenButtonStyle}"
                     Visibility="Collapsed">
@@ -66,9 +67,10 @@
                 </Button>
                 <Button
                     x:Name="closeApplictionButton"
-                    Width="22"
-                    Height="22"
+                    Width="26"
+                    Height="26"
                     Margin="5 0"
+                    Padding="2"
                     Command="Close"
                     Style="{DynamicResource FullScreenButtonStyle}"
                     Visibility="Collapsed">
