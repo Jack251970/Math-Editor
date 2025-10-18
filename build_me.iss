@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Math Editor"
-#define MyAppVersion "1.0.6.6"
-#define MyAppPublisher "MathiVersity"
-#define MyAppURL "https://mathiversity.com/"
+#define MyAppVersion "1.0.0.0"
+#define MyAppPublisher "Jack251970"
+#define MyAppURL "https://github.com/Jack251970/Math-Editor"
 #define MyAppExeName "Editor.exe"
 
 [Setup]
