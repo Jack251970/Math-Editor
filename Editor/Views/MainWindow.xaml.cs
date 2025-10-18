@@ -232,9 +232,9 @@ public partial class MainWindow : Window
         if (currentLocalFile.Length > 0)
         {
 #if DEBUG
-            Title = $"{currentLocalFile} - {Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFile}";
 #else
-            Title = $"{currentLocalFile} - {Constants.MathEditorFullName} v{Constants.Version}";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFile}";
 #endif
         }
         else
