@@ -6,21 +6,9 @@ public sealed class MouseWheelGesture : MouseGesture
 {
     public WheelDirection Direction { get; set; }
 
-    public static MouseWheelGesture CtrlDown
-    {
-        get
-        {
-            return new MouseWheelGesture(ModifierKeys.Control) { Direction = WheelDirection.Down };
-        }
-    }
+    public static MouseWheelGesture CtrlDown => new(ModifierKeys.Control) { Direction = WheelDirection.Down };
 
-    public static MouseWheelGesture CtrlUp
-    {
-        get
-        {
-            return new MouseWheelGesture(ModifierKeys.Control) { Direction = WheelDirection.Up };
-        }
-    }
+    public static MouseWheelGesture CtrlUp => new(ModifierKeys.Control) { Direction = WheelDirection.Up };
     public MouseWheelGesture()
         : base(MouseAction.WheelClick)
     {
@@ -34,19 +22,15 @@ public sealed class MouseWheelGesture : MouseGesture
     public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
     {
         if (!base.Matches(targetElement, inputEventArgs)) return false;
-        if (!(inputEventArgs is MouseWheelEventArgs)) return false;
+        if (inputEventArgs is not MouseWheelEventArgs) return false;
         var args = (MouseWheelEventArgs)inputEventArgs;
-        switch (Direction)
+        return Direction switch
         {
-            case WheelDirection.None:
-                return args.Delta == 0;
-            case WheelDirection.Up:
-                return args.Delta > 0;
-            case WheelDirection.Down:
-                return args.Delta < 0;
-            default:
-                return false;
-        }
+            WheelDirection.None => args.Delta == 0,
+            WheelDirection.Up => args.Delta > 0,
+            WheelDirection.Down => args.Delta < 0,
+            _ => false,
+        };
     }
     public enum WheelDirection
     {
