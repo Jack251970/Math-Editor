@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Editor;
 
-public enum KeyName { symbols, pass, loginName, version, default_font, default_mode, s01, s02, firstTime, checkUpdates };
+public enum KeyName { pass, loginName, version, default_font, default_mode, s01, s02, firstTime, checkUpdates };
 
 // TODO: Use settings.json in local app data folder instead
 internal static class ConfigManager

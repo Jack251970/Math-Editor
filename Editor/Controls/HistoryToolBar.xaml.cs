@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,72 +6,39 @@ namespace Editor;
 
 public partial class HistoryToolBar : UserControl
 {
-    private readonly int maxSymbols = 30;
-    private readonly ObservableCollection<string> recentList = [];
-    private readonly Dictionary<string, int> usedCount = [];
+    private const int MaxSymbols = 30;
 
     public HistoryToolBar()
     {
         DataContext = this;
         InitializeComponent();
-        recentListBox.ItemsSource = recentList;
-        var data = ConfigManager.GetConfigurationValue(KeyName.symbols);
-        if (data.Length > 0)
-        {
-            var list = data.Split(',');
-            foreach (var s in list)
-            {
-                recentList.Add(s);
-                usedCount.Add(s, 0);
-            }
-        }
+        recentListBox.ItemsSource = App.Settings.RecentSymbolList;
         recentListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
     }
 
-    public void AddItem(string symbol)
+    public static void AddItem(string symbol)
     {
-        if (!usedCount.TryAdd(symbol, 1))
+        // Add to used list
+        if (!App.Settings.UsedSymbolList.TryAdd(symbol, 1))
         {
-            usedCount[symbol] += 1;
+            App.Settings.UsedSymbolList[symbol] += 1;
         }
-        else
+
+        // Add to recent list
+        var recentList = App.Settings.RecentSymbolList;
+        if (recentList.Count >= MaxSymbols)
         {
-            if (usedCount.Count >= maxSymbols)
-            {
-                var min = int.MaxValue;
-                var s = usedCount.First().Key;
-                foreach (var pair in usedCount)
-                {
-                    if (pair.Value < min)
-                    {
-                        min = pair.Value;
-                        s = pair.Key;
-                    }
-                }
-                recentList.Remove(s);
-                usedCount.Remove(s);
-            }
-            recentList.Insert(0, symbol);
+            recentList.RemoveAt(recentList.Count - 1);
         }
+        recentList.Insert(0, symbol);
     }
 
     private void symbolClick(object sender, MouseButtonEventArgs e)
     {
-        if (((TextBlock)sender).DataContext is string str && Application.Current?.MainWindow is MainWindow win)
+        if (((TextBlock)sender).DataContext is string str && Application.Current?.MainWindow is MainWindow window)
         {
-            CommandDetails commandDetails = new CommandDetails { UnicodeString = str, CommandType = CommandType.Text };
-            win.HandleToolBarCommand(commandDetails);
+            var commandDetails = new CommandDetails { UnicodeString = str, CommandType = CommandType.Text };
+            window.HandleToolBarCommand(commandDetails);
         }
-    }
-
-    public void Save()
-    {
-        var data = "";
-        foreach (var s in recentList)
-        {
-            data += s + ",";
-        }
-        data = data.Trim(',');
-        ConfigManager.SetConfigurationValue(KeyName.symbols, data);
     }
 }

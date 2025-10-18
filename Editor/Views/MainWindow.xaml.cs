@@ -180,7 +180,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             if (commandDetails.CommandType == CommandType.Text)
             {
                 // TODO: Can history toolbar work?
-                historyToolBar.AddItem(commandDetails.UnicodeString);
+                HistoryToolBar.AddItem(commandDetails.UnicodeString);
             }
         }
     }
@@ -220,7 +220,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         this.Close();
     }
 
-    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void Window_Closing(object sender, CancelEventArgs e)
     {
         if (editor.Dirty)
         {
@@ -237,7 +237,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 }
             }
         }
-        historyToolBar.Save();
+        App.Settings.Save();
     }
 
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
