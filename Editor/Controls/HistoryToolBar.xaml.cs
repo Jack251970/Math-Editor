@@ -9,19 +9,19 @@ namespace Editor;
 
 public partial class HistoryToolBar : UserControl
 {
-    int maxSymbols = 30;
-    ObservableCollection<string> recentList = new ObservableCollection<string>();
-    Dictionary<string, int> usedCount = new Dictionary<string, int>();
+    private readonly int maxSymbols = 30;
+    private readonly ObservableCollection<string> recentList = [];
+    private readonly Dictionary<string, int> usedCount = [];
 
     public HistoryToolBar()
     {
-        this.DataContext = this;
+        DataContext = this;
         InitializeComponent();
         recentListBox.ItemsSource = recentList;
         var data = ConfigManager.GetConfigurationValue(KeyName.symbols);
         if (data.Length > 0)
         {
-            string[] list = data.Split(',');
+            var list = data.Split(',');
             foreach (var s in list)
             {
                 recentList.Add(s);
@@ -33,7 +33,7 @@ public partial class HistoryToolBar : UserControl
 
     public void AddItem(string symbol)
     {
-        if (usedCount.ContainsKey(symbol))
+        if (!usedCount.TryAdd(symbol, 1))
         {
             usedCount[symbol] += 1;
         }
@@ -41,8 +41,8 @@ public partial class HistoryToolBar : UserControl
         {
             if (usedCount.Count >= maxSymbols)
             {
-                int min = int.MaxValue;
-                string s = usedCount.First().Key;
+                var min = int.MaxValue;
+                var s = usedCount.First().Key;
                 foreach (var pair in usedCount)
                 {
                     if (pair.Value < min)
@@ -55,20 +55,21 @@ public partial class HistoryToolBar : UserControl
                 usedCount.Remove(s);
             }
             recentList.Insert(0, symbol);
-            usedCount.Add(symbol, 1);
         }
     }
 
     private void symbolClick(object sender, MouseButtonEventArgs e)
     {
-        string item = ((TextBlock)sender).DataContext as string;
-        CommandDetails commandDetails = new CommandDetails { UnicodeString = item, CommandType = Editor.CommandType.Text };
-        ((MainWindow)Application.Current.MainWindow).HandleToolBarCommand(commandDetails);
+        if (((TextBlock)sender).DataContext is string str && Application.Current?.MainWindow is MainWindow win)
+        {
+            CommandDetails commandDetails = new CommandDetails { UnicodeString = str, CommandType = CommandType.Text };
+            win.HandleToolBarCommand(commandDetails);
+        }
     }
 
     public void Save()
     {
-        string data = "";
+        var data = "";
         foreach (var s in recentList)
         {
             data += s + ",";
