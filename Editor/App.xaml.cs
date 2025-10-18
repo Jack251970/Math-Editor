@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using AnyBar.Helpers.Application;
 using Editor.Models;
 
 namespace Editor;
 
-public partial class App : Application, ISingleInstanceApp
+public partial class App : Application, IDisposable, ISingleInstanceApp
 {
     public static Settings Settings { get; private set; } = new();
+
+    private static bool _disposed;
+
+    // To prevent two disposals running at the same time.
+    private static readonly Lock _disposingLock = new();
 
     [STAThread]
     public static void Main()
@@ -56,5 +62,38 @@ public partial class App : Application, ISingleInstanceApp
             window.Show();
             window.Focus();
         }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        // Prevent two disposes at the same time.
+        lock (_disposingLock)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+        }
+
+        if (disposing)
+        {
+            // Dispose needs to be called on the main Windows thread,
+            // since some resources owned by the thread need to be disposed.
+            Settings.Save();
+        }
+    }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }
