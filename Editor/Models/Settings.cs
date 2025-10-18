@@ -1,6 +1,8 @@
-﻿namespace Editor.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Settings
+namespace Editor.Models;
+
+public class Settings : ObservableObject
 {
     private EditorJsonStorage<Settings> _storage = null!;
 
