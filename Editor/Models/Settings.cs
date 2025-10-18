@@ -26,4 +26,8 @@ public class Settings : ObservableObject
     public ObservableCollection<string> RecentSymbolList { get; set; } = [];
 
     public Dictionary<string, int> UsedSymbolList { get; set; } = [];
+
+    public string DefaultFont { get; set; } = "STIXGeneral";
+
+    public EditorMode DefaultMode { get; set; } = EditorMode.Math;
 }

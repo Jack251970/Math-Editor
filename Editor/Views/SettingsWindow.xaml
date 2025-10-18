@@ -9,6 +9,7 @@
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner">
     <Grid x:Name="MainGrid">

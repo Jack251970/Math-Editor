@@ -1,10 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,7 +27,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         equationToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
         SetTitle();
         AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
-        Task.Factory.StartNew(CheckForUpdate);
         //if (ConfigManager.GetConfigurationValue(KeyName.firstTime) == "true" || ConfigManager.GetConfigurationValue(KeyName.version) != version)
         //{
         //    string successMessage = "";
@@ -62,8 +58,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             }
         }
         catch { }
-        var mode = ConfigManager.GetConfigurationValue(KeyName.default_mode);
-        var fontName = ConfigManager.GetConfigurationValue(KeyName.default_font);
+        // TODO: Use Binding here and make sure it follows settings window
+        var mode = App.Settings.DefaultMode.ToString();
+        var fontName = App.Settings.DefaultFont;
 
         var modes = editorModeCombo.Items;
         foreach (ComboBoxItem item in modes)
@@ -124,42 +121,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     //    }
     //    return image;
     //}
-
-    void CheckForUpdate()
-    {
-        if (ConfigManager.GetConfigurationValue(KeyName.checkUpdates) == "false")
-        {
-            return;
-        }
-        try
-        {
-            string newVersion = version;
-            using (WebClient client = new WebClient())
-            {
-                newVersion = client.DownloadString("http://www.mathiversity.com/matheditor/version");
-            }
-            string[] newParts = newVersion.Split('.');
-            string[] currentParts = version.Split('.');
-            for (int i = 0; i < newParts.Length; i++)
-            {
-                if (int.Parse(newParts[i]) > int.Parse(currentParts[i]))
-                {
-                    if (MessageBox.Show("A new version of Math Editor with enhanced features is available.\r\nWould you like to download the new version?",
-                                        "New version available",
-                                        MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        BrowserHelper.Open("https://www.mathiversity.com/downloads");
-                    }
-                    break;
-                }
-                else if (int.Parse(newParts[i]) < int.Parse(currentParts[i]))
-                {
-                    break;
-                }
-            }
-        }
-        catch { } // hopeless..
-    }
 
     public void HandleToolBarCommand(CommandDetails commandDetails)
     {
