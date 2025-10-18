@@ -14,11 +14,12 @@ namespace Editor;
 
 public enum KeyName { symbols, pass, loginName, version, default_font, default_mode, s01, s02, firstTime, checkUpdates };
 
+// TODO: Use settings.json in local app data folder instead
 internal static class ConfigManager
 {
-    static readonly string exePath = Assembly.GetEntryAssembly().Location;
-    static AppSettingsSection appSection = null;
-    static Configuration config = null;
+    private static readonly string exePath = Assembly.GetEntryAssembly().Location;
+    private static AppSettingsSection? appSection = null;
+    private static Configuration? config = null;
 
     static ConfigManager()
     {
@@ -28,7 +29,7 @@ internal static class ConfigManager
             {
                 Directory.CreateDirectory(PublicFolderPath);
             }
-            bool existed = true;
+            var existed = true;
             if (!File.Exists(PublicConfigFilePath))
             {
                 CopyConfigFile();
@@ -76,7 +77,10 @@ internal static class ConfigManager
         }
     }
 
-    public static int GetEditorMode(int defaultMode) => GetNumber(KeyName.default_mode, defaultMode);
+    public static int GetEditorMode(int defaultMode)
+    {
+        return GetNumber(KeyName.default_mode, defaultMode);
+    }
 
     public static bool SetConfigurationValue(KeyName key, string value)
     {
@@ -115,7 +119,7 @@ internal static class ConfigManager
             if (!File.Exists(PublicConfigFilePath))
             {
                 CopyConfigFile();
-                ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap() { ExeConfigFilename = PublicConfigFilePath };
+                var fileMap = new ExeConfigurationFileMap() { ExeConfigFilename = PublicConfigFilePath };
                 config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
                 appSection = config.AppSettings;
                 SetConfigurationValue(KeyName.version, Assembly.GetEntryAssembly().GetName().Version.ToString());
@@ -202,10 +206,10 @@ internal static class ConfigManager
     {
         // Set your salt here, change it to meet your flavor:
         // The salt bytes must be at least 8 bytes.
-        byte[] saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        byte[] saltBytes = [1, 2, 3, 4, 5, 6, 7, 8];
 
-        using MemoryStream ms = new MemoryStream();
-        using RijndaelManaged AES = new RijndaelManaged();
+        using var ms = new MemoryStream();
+        using var AES = new RijndaelManaged();
         AES.KeySize = 256;
         AES.BlockSize = 128;
 
@@ -225,7 +229,7 @@ internal static class ConfigManager
     {
         // Set your salt here, change it to meet your flavor:
         // The salt bytes must be at least 8 bytes.
-        byte[] saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        byte[] saltBytes = [1, 2, 3, 4, 5, 6, 7, 8];
 
         using var AES = new RijndaelManaged();
         AES.KeySize = 256;
@@ -247,15 +251,15 @@ internal static class ConfigManager
     public static string EncryptText(string input, string password)
     {
         // Get the bytes of the string
-        byte[] bytesToBeEncrypted = Encoding.UTF8.GetBytes(input);
-        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+        var bytesToBeEncrypted = Encoding.UTF8.GetBytes(input);
+        var passwordBytes = Encoding.UTF8.GetBytes(password);
 
         // Hash the password with SHA256
         passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
 
-        byte[] bytesEncrypted = AES_Encrypt(bytesToBeEncrypted, passwordBytes);
+        var bytesEncrypted = AES_Encrypt(bytesToBeEncrypted, passwordBytes);
 
-        string result = Convert.ToBase64String(bytesEncrypted);
+        var result = Convert.ToBase64String(bytesEncrypted);
 
         return result;
     }
@@ -263,11 +267,11 @@ internal static class ConfigManager
     public static string DecryptText(string input, string password)
     {
         // Get the bytes of the string
-        byte[] bytesToBeDecrypted = Convert.FromBase64String(input);
-        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+        var bytesToBeDecrypted = Convert.FromBase64String(input);
+        var passwordBytes = Encoding.UTF8.GetBytes(password);
         passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
 
-        byte[] bytesDecrypted = AES_Decrypt(bytesToBeDecrypted, passwordBytes);
+        var bytesDecrypted = AES_Decrypt(bytesToBeDecrypted, passwordBytes);
 
         return Encoding.UTF8.GetString(bytesDecrypted);
     }
