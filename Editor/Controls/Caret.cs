@@ -7,12 +7,11 @@ namespace Editor;
 
 public sealed class Caret : FrameworkElement, IDisposable
 {
-    private Point location;
     public double CaretLength { get; set; } = 18d;
 
+    private Point location;
     private readonly bool _isHorizontal = false;
-
-    public static readonly DependencyProperty VisibleProperty = DependencyProperty.Register("Visible", typeof(bool), typeof(Caret), new FrameworkPropertyMetadata(false /* defaultValue */, FrameworkPropertyMetadataOptions.AffectsRender));
+    private Point OtherPoint => _isHorizontal ? new Point(Left + CaretLength, Top) : new Point(Left, VerticalCaretBottom);
 
     public Caret(bool isHorizontal)
     {
@@ -28,15 +27,15 @@ public sealed class Caret : FrameworkElement, IDisposable
         }
     }
 
-    private Point OtherPoint => _isHorizontal ? new Point(Left + CaretLength, Top) : new Point(Left, VerticalCaretBottom);
-
     public void ToggleVisibility()
     {
         if (!_isDisposed)
         {
-            Dispatcher.Invoke(new Action(() => { Visible = !Visible; }));
+            Dispatcher.Invoke(() => { Visible = !Visible; });
         }
     }
+
+    public static readonly DependencyProperty VisibleProperty = DependencyProperty.Register("Visible", typeof(bool), typeof(Caret), new FrameworkPropertyMetadata(false /* defaultValue */, FrameworkPropertyMetadataOptions.AffectsRender));
 
     private bool Visible
     {
@@ -75,6 +74,7 @@ public sealed class Caret : FrameworkElement, IDisposable
     public double VerticalCaretBottom => location.Y + CaretLength;
 
     #region IDisposable
+
     private bool _isDisposed = false;
 
     public void Dispose()
@@ -92,5 +92,6 @@ public sealed class Caret : FrameworkElement, IDisposable
     {
         _isDisposed = true;
     }
+
     #endregion
 }

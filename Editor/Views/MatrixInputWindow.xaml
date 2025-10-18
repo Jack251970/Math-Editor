@@ -26,7 +26,7 @@
             Margin="4"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Content="{x:Static local:Resources.Rows}"
+            Content="Rows"
             Target="{Binding ElementName=rowsUpDown}" />
         <TextBox
             x:Name="rowsUpDown"
@@ -38,7 +38,7 @@
             VerticalAlignment="Center"
             HorizontalContentAlignment="Right"
             Text="4"
-            ToolTip="{x:Static local:Resources.Rows}" />
+            ToolTip="Rows" />
 
         <Label
             Grid.Row="1"
@@ -46,7 +46,7 @@
             Margin="4"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Content="{x:Static local:Resources.Columns}"
+            Content="Columns"
             Target="{Binding ElementName=columnsUpDown}" />
         <TextBox
             x:Name="columnsUpDown"
@@ -58,7 +58,7 @@
             VerticalAlignment="Center"
             HorizontalContentAlignment="Right"
             Text="4"
-            ToolTip="{x:Static local:Resources.Columns}" />
+            ToolTip="Columns" />
 
         <StackPanel
             Grid.Row="2"
@@ -68,13 +68,13 @@
                 Width="112"
                 Margin="4"
                 Click="cancelButton_Click"
-                Content="{x:Static local:Resources.Cancel}"
+                Content="Cancel"
                 IsCancel="True" />
             <Button
                 Width="112"
                 Margin="4"
                 Click="okButton_Click"
-                Content="{x:Static local:Resources.Ok}"
+                Content="Ok"
                 IsDefault="True" />
         </StackPanel>
     </Grid>
