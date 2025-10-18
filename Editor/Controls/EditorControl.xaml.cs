@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,65 +8,39 @@ using System.Windows.Media;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
+using Timer = System.Threading.Timer;
 
 namespace Editor;
 
 public partial class EditorControl : UserControl, IDisposable
 {
-    System.Threading.Timer timer;
-    int blinkPeriod = 600;
-
-    #region IDisposable
-    private bool _isDisposed = false;
-
-    ~EditorControl()
-    {
-        Dispose(false);
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_isDisposed)
-        {
-            vCaret.Dispose();
-            hCaret.Dispose();
-            timer.Dispose();
-            _isDisposed = true;
-        }
-    }
-    #endregion
+    private readonly Timer timer;
+    private readonly int blinkPeriod = 600;
 
     public event EventHandler ZoomChanged = (x, y) => { };
 
     public bool Dirty { get; set; } = false;
 
-    EquationRoot equationRoot;
-    Caret vCaret = new Caret(false);
-    Caret hCaret = new Caret(true);
+    private EquationRoot equationRoot;
+    private readonly Caret vCaret = new(false);
+    private readonly Caret hCaret = new(true);
 
-    public static double rootFontBaseSize = 40;
-    static double rootFontSize = rootFontBaseSize;
-    double fontSize = rootFontBaseSize;
+    public const double RootFontBaseSize = 40;
+    private static double rootFontSize = RootFontBaseSize;
+    private readonly double fontSize = RootFontBaseSize;
 
-    public static double RootFontSize
-    {
-        get { return rootFontSize; }
-    }
+    public static double RootFontSize => rootFontSize;
 
     public EditorControl()
     {
         InitializeComponent();
         mainGrid.Children.Add(vCaret);
         mainGrid.Children.Add(hCaret);
-        equationRoot = new EquationRoot(vCaret, hCaret);
-        equationRoot.FontSize = fontSize;
-        timer = new System.Threading.Timer(blinkCaret, null, blinkPeriod, blinkPeriod);
+        equationRoot = new EquationRoot(vCaret, hCaret)
+        {
+            FontSize = fontSize
+        };
+        timer = new Timer(BlinkCaret, null, blinkPeriod, blinkPeriod);
 
         // ensure timer and carets are disposed when the window is closed.
         Loaded += OnControlLoaded;
@@ -77,7 +52,10 @@ public partial class EditorControl : UserControl, IDisposable
         window.Closing += OnWindowClosing;
     }
 
-    private void OnWindowClosing(object sender, global::System.ComponentModel.CancelEventArgs e) => Dispose();
+    private void OnWindowClosing(object? sender, CancelEventArgs e)
+    {
+        Dispose();
+    }
 
     public void SetFontSizePercentage(int percentage)
     {
@@ -90,15 +68,15 @@ public partial class EditorControl : UserControl, IDisposable
     {
         if (!show)
         {
-            hCaret.Visibility = System.Windows.Visibility.Hidden;
+            hCaret.Visibility = Visibility.Hidden;
         }
         else
         {
-            hCaret.Visibility = System.Windows.Visibility.Visible;
+            hCaret.Visibility = Visibility.Visible;
         }
     }
 
-    void blinkCaret(Object state)
+    private void BlinkCaret(object? state)
     {
         vCaret.ToggleVisibility();
         hCaret.ToggleVisibility();
@@ -116,12 +94,10 @@ public partial class EditorControl : UserControl, IDisposable
         //equationRoot.SaveFile(stream);
         try
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                equationRoot.SaveFile(memoryStream);
-                memoryStream.Position = 0;
-                ZipStream(memoryStream, stream, System.IO.Path.GetFileNameWithoutExtension(fileName) + ".xml");
-            }
+            using var memoryStream = new MemoryStream();
+            equationRoot.SaveFile(memoryStream);
+            memoryStream.Position = 0;
+            ZipStream(memoryStream, stream, Path.GetFileNameWithoutExtension(fileName) + ".xml");
         }
         catch
         {
@@ -130,12 +106,14 @@ public partial class EditorControl : UserControl, IDisposable
         Dirty = false;
     }
 
-    public void ZipStream(MemoryStream memStreamIn, Stream outputStream, string zipEntryName)
+    private static void ZipStream(MemoryStream memStreamIn, Stream outputStream, string zipEntryName)
     {
-        ZipOutputStream zipStream = new ZipOutputStream(outputStream);
+        var zipStream = new ZipOutputStream(outputStream);
         zipStream.SetLevel(5); //0-9, 9 being the highest level of compression
-        ZipEntry newEntry = new ZipEntry(zipEntryName);
-        newEntry.DateTime = DateTime.Now;
+        var newEntry = new ZipEntry(zipEntryName)
+        {
+            DateTime = DateTime.Now
+        };
         zipStream.PutNextEntry(newEntry);
         StreamUtils.Copy(memStreamIn, zipStream, new byte[4096]);
         zipStream.CloseEntry();
@@ -148,9 +126,9 @@ public partial class EditorControl : UserControl, IDisposable
         //equationRoot.LoadFile(stream);
         try
         {
-            ZipInputStream zipInputStream = new ZipInputStream(stream);
-            ZipEntry zipEntry = zipInputStream.GetNextEntry();
-            MemoryStream outputStream = new MemoryStream();
+            var zipInputStream = new ZipInputStream(stream);
+            var zipEntry = zipInputStream.GetNextEntry();
+            var outputStream = new MemoryStream();
             if (zipEntry != null)
             {
                 byte[] buffer = new byte[4096];
@@ -172,7 +150,7 @@ public partial class EditorControl : UserControl, IDisposable
         Dirty = false;
     }
 
-    bool isDragging = false;
+    private bool isDragging = false;
 
     private void EditorControl_MouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -180,7 +158,7 @@ public partial class EditorControl : UserControl, IDisposable
         {
             InvalidateVisual();
         }
-        this.Focus();
+        Focus();
         lastMouseLocation = e.GetPosition(this);
         isDragging = true;
     }
@@ -200,11 +178,11 @@ public partial class EditorControl : UserControl, IDisposable
         StatusBarHelper.ShowCoordinates("");
     }
 
-    Point lastMouseLocation = new Point();
+    private Point lastMouseLocation = new();
 
     private void EditorControl_MouseMove(object sender, MouseEventArgs e)
     {
-        Point mousePosition = e.GetPosition(this);
+        var mousePosition = e.GetPosition(this);
         StatusBarHelper.ShowCoordinates((int)mousePosition.X + ", " + (int)mousePosition.Y);
         if (isDragging)
         {
@@ -228,8 +206,8 @@ public partial class EditorControl : UserControl, IDisposable
     {
         base.OnRender(drawingContext);
         //equationRoot.DrawEquation(drawingContext);
-        ScrollViewer scrollViewer = Parent as ScrollViewer;
-        equationRoot.DrawVisibleRows(drawingContext, scrollViewer.VerticalOffset, scrollViewer.ViewportHeight + scrollViewer.VerticalOffset);
+        var scrollViewer = Parent as ScrollViewer;
+        equationRoot.DrawVisibleRows(drawingContext, scrollViewer!.VerticalOffset, scrollViewer.ViewportHeight + scrollViewer.VerticalOffset);
     }
 
     public void EditorControl_TextInput(object sender, TextCompositionEventArgs e)
@@ -268,25 +246,24 @@ public partial class EditorControl : UserControl, IDisposable
         }
     }
 
-    void AdjustView()
+    private void AdjustView()
     {
         DetermineSize();
         AdjustScrollViewer();
-        this.InvalidateVisual();
+        InvalidateVisual();
     }
 
-    void DetermineSize()
+    private void DetermineSize()
     {
-        this.MinWidth = equationRoot.Width + 50;
-        this.MinHeight = equationRoot.Height + 20;
+        MinWidth = equationRoot.Width + 50;
+        MinHeight = equationRoot.Height + 20;
     }
 
-    void AdjustScrollViewer()
+    private void AdjustScrollViewer()
     {
-        ScrollViewer scrollViewer = Parent as ScrollViewer;
         //Vector offsetPoint = VisualTreeHelper.GetOffset(this);           
 
-        if (scrollViewer != null)
+        if (Parent is ScrollViewer scrollViewer)
         {
             double left = scrollViewer.HorizontalOffset;
             double top = scrollViewer.VerticalOffset;
@@ -361,7 +338,7 @@ public partial class EditorControl : UserControl, IDisposable
 
         //clip 3
 
-        Rect rect = new Rect(this.RenderSize);
+        Rect rect = new Rect(RenderSize);
         RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
           (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
         rtb.Render(this);
@@ -450,10 +427,40 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void Clear()
     {
-        equationRoot = new EquationRoot(vCaret, hCaret);
-        equationRoot.FontSize = fontSize;
+        equationRoot = new EquationRoot(vCaret, hCaret)
+        {
+            FontSize = fontSize
+        };
         rootFontSize = fontSize;
         Dirty = false;
         AdjustView();
     }
+
+    #region IDisposable
+
+    private bool _isDisposed = false;
+
+    ~EditorControl()
+    {
+        Dispose(false);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_isDisposed)
+        {
+            vCaret.Dispose();
+            hCaret.Dispose();
+            timer.Dispose();
+            _isDisposed = true;
+        }
+    }
+
+    #endregion
 }
