@@ -10,7 +10,7 @@ namespace Editor;
 public sealed class FontFactory
 {
     private FontFactory() { }
-    static Dictionary<FontType, FontFamily> fontFamilies = new Dictionary<FontType, FontFamily>();
+    private static readonly Dictionary<FontType, FontFamily> fontFamilies = [];
 
     static FontFactory()
     {
@@ -41,10 +41,9 @@ public sealed class FontFactory
         return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, FontWeights.Normal, brush);
     }
 
-
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, Brush brush)
     {
-        Typeface typeface = GetTypeface(fontType, fontStyle, fontWeight);
+        var typeface = GetTypeface(fontType, fontStyle, fontWeight);
         return new FormattedText(textToFormat, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, brush);
     }
 
@@ -60,78 +59,45 @@ public sealed class FontFactory
         }
     }
 
-    static FontFamily CreateFontFamily(FontType ft)
+    private static FontFamily CreateFontFamily(FontType ft)
     {
-        switch (ft)
+        return ft switch
         {
-            case FontType.STIXGeneral:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXGeneral");
-            case FontType.STIXIntegralsD:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsD");
-            case FontType.STIXIntegralsSm:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsSm");
-            case FontType.STIXIntegralsUp:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUp");
-            case FontType.STIXIntegralsUpD:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpD");
-            case FontType.STIXIntegralsUpSm:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpSm");
-            case FontType.STIXNonUnicode:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXNonUnicode");
-            case FontType.STIXSizeFiveSym:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFiveSym");
-            case FontType.STIXSizeFourSym:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFourSym");
-            case FontType.STIXSizeOneSym:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeOneSym");
-            case FontType.STIXSizeThreeSym:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeThreeSym");
-            case FontType.STIXSizeTwoSym:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeTwoSym");
-            case FontType.STIXVariants:
-                return new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXVariants");
-            case FontType.Arial:
-                return new FontFamily("Arial");
-            case FontType.ArialBlack:
-                return new FontFamily("Arial Black");
-            case FontType.ComicSansMS:
-                return new FontFamily("Comic Sans MS");
-            case FontType.Courier:
-                return new FontFamily("Courier");
-            case FontType.CourierNew:
-                return new FontFamily("Courier New");
-            case FontType.Georgia:
-                return new FontFamily("Georgia");
-            case FontType.Impact:
-                return new FontFamily("Impact");
-            case FontType.LucidaConsole:
-                return new FontFamily("Lucida Console");
-            case FontType.LucidaSansUnicode:
-                return new FontFamily("Lucida Sans Unicode");
-            case FontType.MSSerif:
-                return new FontFamily("MS Serif");
-            case FontType.MSSansSerif:
-                return new FontFamily("MS Sans Serif");
-            case FontType.PalatinoLinotype:
-                return new FontFamily("Palatino Linotype");
-            case FontType.Segoe:
-                return new FontFamily("Segoe UI");
-            case FontType.Symbol:
-                return new FontFamily("Symbol");
-            case FontType.Tahoma:
-                return new FontFamily("Tahoma");
-            case FontType.TimesNewRoman:
-                return new FontFamily("Times New Roman");
-            case FontType.TrebuchetMS:
-                return new FontFamily("Trebuchet MS");
-            case FontType.Verdana:
-                return new FontFamily("Verdana");
-            case FontType.Webdings:
-                return new FontFamily("Webdings");
-            case FontType.Wingdings:
-                return new FontFamily("Wingdings");
-        }
-        return new FontFamily("Segoe UI");
+            FontType.STIXGeneral => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXGeneral"),
+            FontType.STIXIntegralsD => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsD"),
+            FontType.STIXIntegralsSm => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsSm"),
+            FontType.STIXIntegralsUp => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUp"),
+            FontType.STIXIntegralsUpD => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpD"),
+            FontType.STIXIntegralsUpSm => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpSm"),
+            FontType.STIXNonUnicode => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXNonUnicode"),
+            FontType.STIXSizeFiveSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFiveSym"),
+            FontType.STIXSizeFourSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFourSym"),
+            FontType.STIXSizeOneSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeOneSym"),
+            FontType.STIXSizeThreeSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeThreeSym"),
+            FontType.STIXSizeTwoSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeTwoSym"),
+            FontType.STIXVariants => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXVariants"),
+            FontType.Arial => new FontFamily("Arial"),
+            FontType.ArialBlack => new FontFamily("Arial Black"),
+            FontType.ComicSansMS => new FontFamily("Comic Sans MS"),
+            FontType.Courier => new FontFamily("Courier"),
+            FontType.CourierNew => new FontFamily("Courier New"),
+            FontType.Georgia => new FontFamily("Georgia"),
+            FontType.Impact => new FontFamily("Impact"),
+            FontType.LucidaConsole => new FontFamily("Lucida Console"),
+            FontType.LucidaSansUnicode => new FontFamily("Lucida Sans Unicode"),
+            FontType.MSSerif => new FontFamily("MS Serif"),
+            FontType.MSSansSerif => new FontFamily("MS Sans Serif"),
+            FontType.PalatinoLinotype => new FontFamily("Palatino Linotype"),
+            FontType.Segoe => new FontFamily("Segoe UI"),
+            FontType.Symbol => new FontFamily("Symbol"),
+            FontType.Tahoma => new FontFamily("Tahoma"),
+            FontType.TimesNewRoman => new FontFamily("Times New Roman"),
+            FontType.TrebuchetMS => new FontFamily("Trebuchet MS"),
+            FontType.Verdana => new FontFamily("Verdana"),
+            FontType.Webdings => new FontFamily("Webdings"),
+            FontType.Wingdings => new FontFamily("Wingdings"),
+            _ => new FontFamily("Segoe UI"),
+        };
     }
 
     public static Typeface GetTypeface(FontType fontType, FontStyle fontStyle, FontWeight fontWeight)
