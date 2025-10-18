@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Editor;
 
-public enum KeyName { pass, loginName, version, default_font, default_mode, s01, s02, firstTime, checkUpdates };
+public enum KeyName { default_font, default_mode, s01, s02, firstTime, checkUpdates };
 
 // TODO: Use settings.json in local app data folder instead
 internal static class ConfigManager
@@ -41,10 +41,6 @@ internal static class ConfigManager
             };
             config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
             appSection = config.AppSettings;//(AppSettingsSection)config.GetSection("appSettings");
-            if (!existed)
-            {
-                SetConfigurationValue(KeyName.version, Assembly.GetEntryAssembly().GetName().Version.ToString());
-            }
         }
         catch { }
     }
@@ -95,7 +91,6 @@ internal static class ConfigManager
                 };
                 config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
                 appSection = config.AppSettings;
-                SetConfigurationValue(KeyName.version, Assembly.GetEntryAssembly().GetName().Version.ToString());
             }
             if (appSection.Settings.AllKeys.Contains(key.ToString()))
             {
@@ -122,7 +117,6 @@ internal static class ConfigManager
                 var fileMap = new ExeConfigurationFileMap() { ExeConfigFilename = PublicConfigFilePath };
                 config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
                 appSection = config.AppSettings;
-                SetConfigurationValue(KeyName.version, Assembly.GetEntryAssembly().GetName().Version.ToString());
             }
             foreach (var item in configItems)
             {
