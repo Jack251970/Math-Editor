@@ -23,7 +23,7 @@ public class Settings : ObservableObject
         }
     }
 
-    public ObservableCollection<string> RecentSymbolList = [];
+    public ObservableCollection<string> RecentSymbolList { get; set; } = [];
 
-    public Dictionary<string, int> UsedSymbolList = [];
+    public Dictionary<string, int> UsedSymbolList { get; set; } = [];
 }
