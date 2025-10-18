@@ -42,7 +42,7 @@ namespace Editor
             XDocument xDoc = new XDocument();
             XElement root = new XElement(GetType().Name); //ActiveChild.Serialize();
             root.Add(new XAttribute("fileVersion", fileVersion));
-            root.Add(new XAttribute("appVersion", Assembly.GetEntryAssembly().GetName().Version));
+            root.Add(new XAttribute("appVersion", Constants.Version));
             textManager.OptimizeForSave(this);
             root.Add(textManager.Serialize(true));
             root.Add(ActiveChild.Serialize());

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Editor;
 
@@ -7,7 +6,12 @@ public partial class AboutWindow : Window
 {
     public AboutWindow()
     {
+        DataContext = this;
         InitializeComponent();
-        versionLabel.Content = "Math Editor v." + Assembly.GetEntryAssembly().GetName().Version.ToString();
+#if DEBUG
+        versionLabel.Text = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
+#else
+        versionLabel.Text = $"{Constants.MathEditorFullName} v{Constants.Version}";
+#endif
     }
 }
