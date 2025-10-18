@@ -102,19 +102,19 @@ namespace Editor
             switch (boxType)
             {
                 case BoxType.All:
-                    dc.DrawPolyline(LeftTop, new PointCollection { RightTop, RightBottom, LeftBottom, LeftTop, RightTop }, StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, [RightTop, RightBottom, LeftBottom, LeftTop, RightTop], StandardMiterPen);
                     break;
                 case BoxType.LeftBottom:
-                    dc.DrawPolyline(LeftTop, new PointCollection { LeftBottom, RightBottom }, StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, [LeftBottom, RightBottom], StandardMiterPen);
                     break;
                 case BoxType.LeftTop:
-                    dc.DrawPolyline(RightTop, new PointCollection { LeftTop, LeftBottom }, StandardMiterPen);
+                    dc.DrawPolyline(RightTop, [LeftTop, LeftBottom], StandardMiterPen);
                     break;
                 case BoxType.RightBottom:
-                    dc.DrawPolyline(RightTop, new PointCollection { RightBottom, LeftBottom }, StandardMiterPen);
+                    dc.DrawPolyline(RightTop, [RightBottom, LeftBottom], StandardMiterPen);
                     break;
                 case BoxType.RightTop:
-                    dc.DrawPolyline(LeftTop, new PointCollection { RightTop, RightBottom }, StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, [RightTop, RightBottom], StandardMiterPen);
                     break;
             }
         }

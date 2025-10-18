@@ -5,7 +5,7 @@ namespace Editor
 {
     public sealed class DecoratedCharacter : EquationBase
     {
-        List<CharacterDecorationInfo> decorations = new List<CharacterDecorationInfo>();
+        List<CharacterDecorationInfo> decorations = [];
         FormattedText charFt;
         public TextEquation Previous { get; set; }
         public TextEquation Next { get; set; }

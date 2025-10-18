@@ -246,11 +246,10 @@ namespace Editor
                     break;
                 case DecorationType.Hat:
                     dc.DrawPolyline(new Point(Left, Bottom - FontSize * .02),
-                                    new PointCollection
-                                    {
+                                    [
                                         new Point(MidX, Top + FontSize * .03),
                                         new Point(Right, Bottom - FontSize * .02)
-                                    },
+                                    ],
                                     ThinPen);
                     break;
                 case DecorationType.LeftArrow:
@@ -353,55 +352,55 @@ namespace Editor
 
         private void DrawLeftHarpoonUpBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(Left + FontSize * .3, Top),
                                                             //new Point(Left + FontSize * .31, Top + FontSize * .041),
                                                             new Point(Left + FontSize * .18, Bottom - FontSize * .06),
                                                             new Point(Right, Bottom - FontSize * .06),
                                                             new Point(Right, Bottom- FontSize * .02)
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(Left, Bottom - FontSize * .02), points);
         }
 
         private void DrawRightHarpoonUpBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(Right - FontSize * .3, Top),
                                                             //new Point(Right - FontSize * .31, Top + FontSize * .041),
                                                             new Point(Right - FontSize * .18, Bottom - FontSize * .06),
                                                             new Point(Left, Bottom - FontSize * .06),
                                                             new Point(Left, Bottom - FontSize * .02)
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(Right, Bottom - FontSize * .02), points);
         }
 
         private void DrawLeftHarpoonDownBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(Left + FontSize * .3, Bottom),
                                                             //new Point(Left + FontSize * .31, Bottom - FontSize * .041),
                                                             new Point(Left + FontSize * .18, Top + FontSize * .06),
                                                             new Point(Right, Top + FontSize * .06),
                                                             new Point(Right, Top + FontSize * .02)
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(Left, Top + FontSize * .02), points);
         }
 
         private void DrawRightHarpoonDownBarb(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(Right - FontSize * .3, Bottom),
                                                             //new Point(Right - FontSize * .31, Bottom - FontSize * .041),
                                                             new Point(Right - FontSize * .18, Top + FontSize * .06),
                                                             new Point(Left, Top + FontSize * .06),
                                                             new Point(Left, Top + FontSize * .02)
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(Right, Top + FontSize * .02), points);
         }
 
         private void DrawTortoise(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(Left + Height * .5, Top),
                                                             new Point(Right - Height * .5, Top),
                                                             new Point(Right, Bottom),
@@ -409,7 +408,7 @@ namespace Editor
                                                             new Point(Right - Height * .7, Top + Height * .3),
                                                             new Point(Left + Height * .7, Top + Height * .3),
                                                             new Point(Left + Height * .2, Bottom)
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(Left, Bottom), points);
         }
     }

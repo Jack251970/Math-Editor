@@ -71,7 +71,7 @@ namespace Editor
 
         public List<EquationBase> GetSelectedEquations()
         {
-            List<EquationBase> list = new List<EquationBase>();
+            List<EquationBase> list = [];
             int startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
             int endIndex = SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex;
             for (int i = startIndex; i <= endIndex; i++)
@@ -83,7 +83,7 @@ namespace Editor
 
         public List<EquationBase> DeleteTail()
         {
-            List<EquationBase> removedList = new List<EquationBase>();
+            List<EquationBase> removedList = [];
             int startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
             if (SelectedItems != 0)
             {
@@ -101,7 +101,7 @@ namespace Editor
 
         public List<EquationBase> DeleteHead()
         {
-            List<EquationBase> removedList = new List<EquationBase>();
+            List<EquationBase> removedList = [];
             int startIndex = (SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems);
             if (SelectedItems != 0)
             {
@@ -125,7 +125,7 @@ namespace Editor
                 int otherIndex = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex);
                 TextEquation firstEquation = (TextEquation)childEquations[startIndex];
                 TextEquation lastEquation = (TextEquation)childEquations[otherIndex];
-                List<EquationBase> equations = new List<EquationBase>();
+                List<EquationBase> equations = [];
                 RowRemoveAction action = new RowRemoveAction(this)
                 {
                     ActiveEquation = ActiveChild,
@@ -311,7 +311,7 @@ namespace Editor
             if (ActiveChild.GetType() == typeof(TextEquation) && xe.Name.LocalName == GetType().Name)
             {
                 XElement children = xe.Element("ChildEquations");
-                List<EquationBase> newChildren = new List<EquationBase>();
+                List<EquationBase> newChildren = [];
                 foreach (XElement xElement in children.Elements())
                 {
                     newChildren.Add(CreateChild(xElement));
@@ -381,8 +381,7 @@ namespace Editor
                 TextEquation lastEquation = new TextEquation(this);
                 firstEquation.ConsumeFormattedText(firstText, firstFormats, firstModes, firstDecorations, false);
                 lastEquation.ConsumeFormattedText(lastText, lastFormats, lastModes, lastDecorations, false);
-                List<EquationBase> equations = new List<EquationBase>();
-                equations.Add(firstEquation);
+                List<EquationBase> equations = [firstEquation];
                 for (int i = startIndex + 1; i < startIndex + count; i++)
                 {
                     equations.Add(childEquations[i]);
@@ -502,8 +501,7 @@ namespace Editor
         EquationBase CreateChild(XElement xElement)
         {
             Type type = Type.GetType(GetType().Namespace + "." + xElement.Name);
-            List<object> paramz = new List<object>();
-            paramz.Add(this);
+            List<object> paramz = [this];
             XElement parameters = xElement.Element("parameters");
             if (parameters != null)
             {
@@ -532,7 +530,7 @@ namespace Editor
                     }
                 }
             }
-            EquationBase child = (EquationBase)Activator.CreateInstance(type, paramz.ToArray());
+            EquationBase child = (EquationBase)Activator.CreateInstance(type, [.. paramz]);
             child.DeSerialize(xElement);
             child.FontSize = FontSize;
             return child;

@@ -45,7 +45,7 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            XElement[] elements = xElement.Elements(typeof(RowContainer).Name).ToArray();
+            XElement[] elements = [.. xElement.Elements(typeof(RowContainer).Name)];
             mainEquation.DeSerialize(elements[0]);
             subEquation.DeSerialize(elements[1]);
             superEquation.DeSerialize(elements[2]);

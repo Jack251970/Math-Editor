@@ -344,7 +344,7 @@ namespace Editor
                 AdjustCarets();
                 return true;
             }
-            Key[] handledKeys = { Key.Left, Key.Right, Key.Delete, Key.Up, Key.Down, Key.Enter, Key.Escape, Key.Back, Key.Home, Key.End };
+            Key[] handledKeys = [Key.Left, Key.Right, Key.Delete, Key.Up, Key.Down, Key.Enter, Key.Escape, Key.Back, Key.Home, Key.End];
             bool result = false;
             if (handledKeys.Contains(key))
             {

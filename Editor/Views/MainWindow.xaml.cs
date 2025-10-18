@@ -140,7 +140,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             }
             string[] newParts = newVersion.Split('.');
             string[] currentParts = version.Split('.');
-            for (int i = 0; i < newParts.Count(); i++)
+            for (int i = 0; i < newParts.Length; i++)
             {
                 if (int.Parse(newParts[i]) > int.Parse(currentParts[i]))
                 {
@@ -179,6 +179,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             editor.HandleUserCommand(commandDetails);
             if (commandDetails.CommandType == CommandType.Text)
             {
+                // TODO: Can history toolbar work?
                 historyToolBar.AddItem(commandDetails.UnicodeString);
             }
         }

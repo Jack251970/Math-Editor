@@ -38,8 +38,8 @@ namespace Editor
 
         void DrawTopSquare(DrawingContext dc)
         {
-            PointCollection points = new PointCollection
-            {
+            PointCollection points =
+            [
                 new Point(Left, Top),
                 new Point(Right, Top),
                 new Point(Right, Bottom),
@@ -47,14 +47,14 @@ namespace Editor
                 new Point(Right - ThinLineThickness, Top + LineThickness),
                 new Point(Left + ThinLineThickness, Top + LineThickness),
                 new Point(Left + ThinLineThickness, Bottom)
-            };
+            ];
             dc.FillPolylineGeometry(new Point(Left, Bottom), points);
         }
 
         void DrawBottomSquare(DrawingContext dc)
         {
-            PointCollection points = new PointCollection
-            {
+            PointCollection points =
+            [
                 new Point(Left, Top),
                 new Point(Left + ThinLineThickness, Top),
                 new Point(Left + ThinLineThickness, Bottom - LineThickness),
@@ -62,7 +62,7 @@ namespace Editor
                 new Point(Right - ThinLineThickness, Top),
                 new Point(Right, Top),
                 new Point(Right, Bottom)
-            };
+            ];
             dc.FillPolylineGeometry(new Point(Left, Bottom), points);
         }
 

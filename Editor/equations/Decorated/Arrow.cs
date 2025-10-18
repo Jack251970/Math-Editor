@@ -102,7 +102,7 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            XElement[] elements = xElement.Elements(rowContainer1.GetType().Name).ToArray();
+            XElement[] elements = [.. xElement.Elements(rowContainer1.GetType().Name)];
             rowContainer1.DeSerialize(elements[0]);
             if (rowContainer2 != null)
             {

@@ -4,7 +4,7 @@ namespace Editor
 {
     static class FunctionNames
     {
-        static List<string> names = new List<string>();
+        static List<string> names = [];
 
         static FunctionNames()
         {

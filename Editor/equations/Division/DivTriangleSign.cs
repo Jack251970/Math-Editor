@@ -38,7 +38,7 @@ namespace Editor
 
         public override void DrawEquation(DrawingContext dc)
         {
-            dc.DrawPolyline(new Point(ParentEquation.Right, Bottom), new PointCollection { new Point(Left, Bottom), new Point(Right, Top) }, StandardRoundPen);
+            dc.DrawPolyline(new Point(ParentEquation.Right, Bottom), [new Point(Left, Bottom), new Point(Right, Top)], StandardRoundPen);
         }
     }
 }

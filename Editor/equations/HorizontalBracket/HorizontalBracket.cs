@@ -34,7 +34,7 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            XElement[] elements = xElement.Elements(typeof(RowContainer).Name).ToArray();
+            XElement[] elements = [.. xElement.Elements(typeof(RowContainer).Name)];
             topEquation.DeSerialize(elements[0]);
             bottomEquation.DeSerialize(elements[1]);
             CalculateSize();

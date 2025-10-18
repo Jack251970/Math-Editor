@@ -12,22 +12,24 @@ namespace Editor
     //Only those EquationBase classes should use it which are able to remeber the formats (as of May 15, 2013 only TextEquation)!!
     public sealed class TextManager
     {
-        List<TextFormat> formattingList = new List<TextFormat>();
-        List<TextDecorationCollection> decorations = new List<TextDecorationCollection>();
-        Dictionary<int, int> mapping = new Dictionary<int, int>();
+        List<TextFormat> formattingList = [];
+        List<TextDecorationCollection> decorations = [];
+        Dictionary<int, int> mapping = [];
         List<TextFormat> formattingListBeforeSave = null;
 
         public TextManager()
         {
-            TextDecorationCollection tdc = new TextDecorationCollection();
-            tdc.Add(TextDecorations.Underline);
+            var tdc = new TextDecorationCollection
+            {
+                TextDecorations.Underline
+            };
             decorations.Add(tdc);
         }
 
         public void OptimizeForSave(EquationRoot root)
         {
             mapping.Clear();
-            List<TextFormat> newList = new List<TextFormat>();
+            List<TextFormat> newList = [];
             HashSet<int> usedOnes = root.GetUsedTextFormats();
             foreach (int i in usedOnes)
             {
@@ -43,7 +45,7 @@ namespace Editor
 
         public void RestoreAfterSave(EquationRoot root)
         {
-            Dictionary<int, int> oldMapping = new Dictionary<int, int>();
+            Dictionary<int, int> oldMapping = [];
             foreach (int i in mapping.Keys)
             {
                 oldMapping.Add(mapping[i], i);
@@ -85,9 +87,9 @@ namespace Editor
         public void ProcessPastedXML(XElement rootXE)
         {
             //XElement thisElement = rootXE.Element(GetType().Name);
-            XElement[] formatElements = rootXE.Element(GetType().Name).Elements("Formats").Elements().ToArray();
+            XElement[] formatElements = [.. rootXE.Element(GetType().Name).Elements("Formats").Elements()];
             IEnumerable<XElement> formats = rootXE.Descendants(typeof(TextEquation).Name).Descendants("Formats");
-            Dictionary<int, int> allFormatIds = new Dictionary<int, int>();
+            Dictionary<int, int> allFormatIds = [];
             foreach (XElement xe in formats)
             {
                 if (xe.Value.Length > 0)

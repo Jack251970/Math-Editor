@@ -33,7 +33,7 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            XElement[] elementArray = xElement.Elements().ToArray();
+            XElement[] elementArray = [.. xElement.Elements()];
             mainRowContainer.DeSerialize(elementArray[0]);
             bottomRow.DeSerialize(elementArray[1]);
             topRow.DeSerialize(elementArray[2]);

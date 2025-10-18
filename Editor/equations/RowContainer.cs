@@ -27,7 +27,7 @@ namespace Editor
             if (((EquationRow)ActiveChild).ActiveChild.GetType() == typeof(TextEquation) && xe.Name.LocalName == GetType().Name)
             {
                 XElement children = xe.Element("ChildRows");
-                List<EquationRow> newRows = new List<EquationRow>();
+                List<EquationRow> newRows = [];
                 foreach (XElement xElement in children.Elements())
                 {
                     EquationRow row = new EquationRow(this);
@@ -84,7 +84,7 @@ namespace Editor
         {
             if (((EquationRow)ActiveChild).ActiveChild.GetType() == typeof(TextEquation))
             {
-                List<string> lines = new List<string>();
+                List<string> lines = [];
                 using (StringReader reader = new StringReader(text))
                 {
                     string s;
@@ -99,7 +99,7 @@ namespace Editor
                 }
                 else if (lines.Count > 1)
                 {
-                    List<EquationRow> newEquations = new List<EquationRow>();
+                    List<EquationRow> newEquations = [];
                     TextEquation activeText = (TextEquation)((EquationRow)ActiveChild).ActiveChild;
                     RowContainerTextAction action = new RowContainerTextAction(this)
                     {
@@ -215,7 +215,7 @@ namespace Editor
                 EquationRow lastRow = (EquationRow)childEquations[endIndex];
                 TextEquation firstText = firstRow.GetFirstSelectionText();
                 TextEquation lastText = lastRow.GetLastSelectionText();
-                List<EquationBase> equations = new List<EquationBase>();
+                List<EquationBase> equations = [];
                 RowContainerRemoveAction action = new RowContainerRemoveAction(this)
                 {
                     ActiveEquation = ActiveChild,
@@ -300,7 +300,7 @@ namespace Editor
                 lastRowSelectedItems.RemoveAt(lastRowSelectedItems.Count - 1);
                 newFirstRow.AddChildren(firstRowSelectedItems, false);
                 newLastRow.AddChildren(lastRowSelectedItems, true);
-                List<EquationBase> equations = new List<EquationBase>();
+                List<EquationBase> equations = [];
                 for (int i = startIndex + 1; i < startIndex + count; i++)
                 {
                     equations.Add(childEquations[i]);

@@ -24,7 +24,7 @@ namespace Editor
             }
         }
 
-        protected List<EquationBase> childEquations = new List<EquationBase>();
+        protected List<EquationBase> childEquations = [];
         EquationBase active;
         public EquationBase ActiveChild
         {
@@ -285,7 +285,7 @@ namespace Editor
 
         public override HashSet<int> GetUsedTextFormats()
         {
-            HashSet<int> list = new HashSet<int>();
+            HashSet<int> list = [];
             foreach (EquationBase eb in childEquations)
             {
                 var listFormats = eb.GetUsedTextFormats();

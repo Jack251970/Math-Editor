@@ -12,10 +12,10 @@ namespace Editor;
 public partial class UnicodeSelectorWindow : Window
 {
     MainWindow mainWindow = null;
-    Dictionary<string, ObservableCollection<UnicodeListItem>> categories = new Dictionary<string, ObservableCollection<UnicodeListItem>>();
+    Dictionary<string, ObservableCollection<UnicodeListItem>> categories = [];
     //Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>> fontCache = new Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>>();
-    ObservableCollection<UnicodeListItem> recentList = new ObservableCollection<UnicodeListItem>();
-    ObservableCollection<UnicodeListItem> allList = new ObservableCollection<UnicodeListItem>();
+    ObservableCollection<UnicodeListItem> recentList = [];
+    ObservableCollection<UnicodeListItem> allList = [];
 
     public UnicodeSelectorWindow(MainWindow mainWindow)
     {
@@ -78,7 +78,7 @@ public partial class UnicodeSelectorWindow : Window
 
     private void SetupCategory(string categoryName, int start, int end)
     {
-        ObservableCollection<UnicodeListItem> list = new ObservableCollection<UnicodeListItem>();
+        ObservableCollection<UnicodeListItem> list = [];
         FontFamily family = FontFactory.GetFontFamily(FontType.STIXGeneral);
         for (int i = start; i <= end; i++)
         {

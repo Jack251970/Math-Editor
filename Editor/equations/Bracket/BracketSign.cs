@@ -260,65 +260,65 @@ namespace Editor
 
         void PaintVerticalBar(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
         }
 
         void PaintLeftCeiling(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Top + ThinLineThickness),
                                                             new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
                                                             new Point(SignLeft + ThinLineThickness, Bottom),
                                                             new Point(SignLeft, Bottom),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
         }
 
         void PaintRightCeiling(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignRight - ThinLineThickness, Bottom),
                                                             new Point(SignRight - ThinLineThickness, Top + ThinLineThickness),
                                                             new Point(SignLeft, Top + ThinLineThickness),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
         }
 
         void PaintLeftFloor(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignLeft + ThinLineThickness, Top),
                                                             new Point(SignLeft + ThinLineThickness, Bottom - ThinLineThickness),
                                                             new Point(SignRight, Bottom - ThinLineThickness),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
         }
 
         void PaintRightFloor(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
                                                             new Point(SignLeft, Bottom - ThinLineThickness),
                                                             new Point(SignRight - ThinLineThickness, Bottom - ThinLineThickness),
                                                             new Point(SignRight - ThinLineThickness, Top),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignRight, Top), points);
         }
 
         void PaintLeftSquareBar(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Top + ThinLineThickness),
                                                             new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
@@ -326,14 +326,14 @@ namespace Editor
                                                             new Point(SignRight, Bottom - ThinLineThickness),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
             dc.DrawLine(ThinPen, new Point(SignLeft + FontSize * .12, Top + ThinLineThickness * .5), new Point(SignLeft + FontSize * .12, Bottom - ThinLineThickness * .5));
         }
 
         void PaintRightSquareBar(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
@@ -341,14 +341,14 @@ namespace Editor
                                                             new Point(SignRight - ThinLineThickness, Bottom - ThinLineThickness),
                                                             new Point(SignRight - ThinLineThickness, Top + ThinLineThickness),
                                                             new Point(SignLeft, Top + ThinLineThickness),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
             dc.DrawLine(ThinPen, new Point(SignRight - FontSize * .12, Top + ThinLineThickness * .5), new Point(SignRight - FontSize * .12, Bottom - ThinLineThickness * .5));
         }
 
         void PaintLeftSquare(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Top + ThinLineThickness),
                                                             new Point(SignLeft + LineThickness, Top + ThinLineThickness),
@@ -356,13 +356,13 @@ namespace Editor
                                                             new Point(SignRight, Bottom - ThinLineThickness),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
         }
 
         void PaintRightSquare(DrawingContext dc)
         {
-            PointCollection points = new PointCollection {
+            PointCollection points = [
                                                             new Point(SignRight, Top),
                                                             new Point(SignRight, Bottom),
                                                             new Point(SignLeft, Bottom),
@@ -370,7 +370,7 @@ namespace Editor
                                                             new Point(SignRight - LineThickness, Bottom - ThinLineThickness),
                                                             new Point(SignRight - LineThickness, Top + ThinLineThickness),
                                                             new Point(SignLeft, Top + ThinLineThickness),
-                                                         };
+                                                         ];
             dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
         }
 
@@ -400,10 +400,10 @@ namespace Editor
                     double padding = extension.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = new PointCollection { new Point(geometry.Bounds.Right, top),
+                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),
-                                                                 };
+                                                                 ];
                     dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
 
                     //Pen pen = PenManager.GetPen(extension.GetFullWidth() * .68);
@@ -457,10 +457,10 @@ namespace Editor
                     double bottom = Bottom - signText2.Extent * .9;
                     var geometry = extension.BuildGeometry(new Point(SignRight - extension.GetFullWidth() - extension.OverhangLeading, 0));
 
-                    PointCollection points = new PointCollection { new Point(geometry.Bounds.Right, top),
+                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),
-                                                                 };
+                                                                 ];
                     dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
                     //double topExtra = extension.Height + extension.OverhangAfter - extension.Extent;
                     ////double padding = extension.OverhangLeading;
@@ -510,10 +510,10 @@ namespace Editor
                     double padding = extension.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = new PointCollection { new Point(geometry.Bounds.Right, top),
+                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),
-                                                                 };
+                                                                 ];
                     dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
 
                     //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(Left, top), new Point(Right, top));
@@ -549,10 +549,10 @@ namespace Editor
                     top = MidY + midText.Extent * .4;
                     bottom = Bottom - signText2.Extent * .9;
 
-                    points = new PointCollection { new Point(geometry.Bounds.Right, top),
+                    points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),
-                                                                 };
+                                                                 ];
                     dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
                     //dc.DrawLine(pen, new Point(left + pen.Thickness - padding * 1.2, top),
                     //                 new Point(left + pen.Thickness - padding * 1.2, bottom));
@@ -583,10 +583,10 @@ namespace Editor
                     double padding = extension.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = new PointCollection { new Point(geometry.Bounds.Right, top),
+                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),
-                                                                 };
+                                                                 ];
                     dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
 
                     //double padding = extension.OverhangLeading;
@@ -611,10 +611,10 @@ namespace Editor
                     //}
                     top = MidY + midText.Extent * .4;
                     bottom = Bottom - signText2.Extent * .9;
-                    points = new PointCollection { new Point(geometry.Bounds.Right, top),
+                    points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),
-                                                                 };
+                                                                 ];
                     dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
                     //dc.DrawLine(pen, new Point(left + pen.Thickness - padding * 1.2, top),
                     //                 new Point(left + pen.Thickness - padding * 1.2, bottom));
@@ -639,13 +639,13 @@ namespace Editor
 
         void PaintLeftAngle(DrawingContext dc)
         {
-            PointCollection points = new PointCollection { new Point(SignLeft, MidY), new Point(SignRight, Bottom) };
+            PointCollection points = [new Point(SignLeft, MidY), new Point(SignRight, Bottom)];
             dc.DrawPolyline(new Point(SignRight, Top), points, ThinPen);
         }
 
         void PaintRightAngle(DrawingContext dc)
         {
-            PointCollection points = new PointCollection { new Point(SignRight, MidY), new Point(SignLeft, Bottom) };
+            PointCollection points = [new Point(SignRight, MidY), new Point(SignLeft, Bottom)];
             dc.DrawPolyline(new Point(SignLeft, Top), points, ThinPen);
         }
     }
