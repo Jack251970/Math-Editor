@@ -91,7 +91,6 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void SaveFile(Stream stream, string fileName)
     {
-        //equationRoot.SaveFile(stream);
         try
         {
             using var memoryStream = new MemoryStream();
@@ -123,7 +122,6 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void LoadFile(Stream stream)
     {
-        //equationRoot.LoadFile(stream);
         try
         {
             var zipInputStream = new ZipInputStream(stream);
@@ -144,7 +142,7 @@ public partial class EditorControl : UserControl, IDisposable
         {
             stream.Position = 0;
             equationRoot.LoadFile(stream);
-            //MessageBox.Show("Cannot open the specified file. The file is not in correct format.", "Error");
+            MessageBox.Show("Cannot open the specified file. The file is not in correct format.", "Error");
         }
         AdjustView();
         Dirty = false;
@@ -205,7 +203,6 @@ public partial class EditorControl : UserControl, IDisposable
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
-        //equationRoot.DrawEquation(drawingContext);
         var scrollViewer = Parent as ScrollViewer;
         equationRoot.DrawVisibleRows(drawingContext, scrollViewer!.VerticalOffset, scrollViewer.ViewportHeight + scrollViewer.VerticalOffset);
     }
@@ -261,8 +258,6 @@ public partial class EditorControl : UserControl, IDisposable
 
     private void AdjustScrollViewer()
     {
-        //Vector offsetPoint = VisualTreeHelper.GetOffset(this);           
-
         if (Parent is ScrollViewer scrollViewer)
         {
             double left = scrollViewer.HorizontalOffset;
