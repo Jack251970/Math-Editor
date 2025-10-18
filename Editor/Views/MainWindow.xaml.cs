@@ -12,13 +12,14 @@ namespace Editor;
 [INotifyPropertyChanged]
 public partial class MainWindow : Window
 {
-    private string currentLocalFile = "";
-    private static readonly string meExtension = "med";
-    private static readonly string meFileFilter = "Math Editor File (*." + meExtension + ")|*." + meExtension;
     public bool IsInialized { get; private set; } = false;
 
-    public MainWindow()
+    private string _currentLocalFile = "";
+    private const string MedExtension = "med";
+    private static readonly string MedFileFilter = "Math Editor File (*." + MedExtension + ")|*." + MedExtension;
+    public MainWindow(string currentLocalFile)
     {
+        _currentLocalFile = currentLocalFile;
         DataContext = this;
         InitializeComponent();
         StatusBarHelper.Init(this);
@@ -37,15 +38,9 @@ public partial class MainWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            var strings = Environment.GetCommandLineArgs();
-            if (strings.Length > 1)
-            {
-                OpenFile(strings[1]);
-            }
-        }
-        catch { }
+        // Check if we have a file to open
+        OpenFile(_currentLocalFile);
+
         // TODO: Use Binding here and make sure it follows settings window
         var mode = App.Settings.DefaultMode.ToString();
         var fontName = App.Settings.DefaultFont;
@@ -200,7 +195,7 @@ public partial class MainWindow : Window
         var ofd = new Microsoft.Win32.OpenFileDialog
         {
             CheckPathExists = true,
-            Filter = meFileFilter
+            Filter = MedFileFilter
         };
         bool? result = ofd.ShowDialog();
         if (result == true)
@@ -211,17 +206,21 @@ public partial class MainWindow : Window
 
     private void OpenFile(string fileName)
     {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
         try
         {
             using (Stream stream = File.OpenRead(fileName))
             {
                 editor.LoadFile(stream);
             }
-            currentLocalFile = fileName;
+            _currentLocalFile = fileName;
         }
         catch
         {
-            currentLocalFile = "";
+            _currentLocalFile = "";
             MessageBox.Show("File is corrupt or inaccessible OR it was created by an incompatible version of Math Editor.", "Error");
         }
         SetTitle();
@@ -229,10 +228,10 @@ public partial class MainWindow : Window
 
     private void SetTitle()
     {
-        if (string.IsNullOrWhiteSpace(currentLocalFile))
+        if (string.IsNullOrWhiteSpace(_currentLocalFile))
         {
 #if DEBUG
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFile}";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {_currentLocalFile}";
 #else
             Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFile}";
 #endif
@@ -272,16 +271,16 @@ public partial class MainWindow : Window
 
     private bool ProcessFileSave()
     {
-        if (!File.Exists(currentLocalFile))
+        if (!File.Exists(_currentLocalFile))
         {
-            var result = ShowSaveFileDialog(meExtension, meFileFilter);
+            var result = ShowSaveFileDialog(MedExtension, MedFileFilter);
             if (string.IsNullOrEmpty(result))
             {
                 return false;
             }
             else
             {
-                currentLocalFile = result;
+                _currentLocalFile = result;
             }
         }
         return SaveFile();
@@ -291,9 +290,9 @@ public partial class MainWindow : Window
     {
         try
         {
-            using (Stream stream = File.Open(currentLocalFile, FileMode.Create))
+            using (Stream stream = File.Open(_currentLocalFile, FileMode.Create))
             {
-                editor.SaveFile(stream, currentLocalFile);
+                editor.SaveFile(stream, _currentLocalFile);
             }
             SetTitle();
             return true;
@@ -308,10 +307,10 @@ public partial class MainWindow : Window
 
     private void SaveAsCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        var result = ShowSaveFileDialog(meExtension, meFileFilter);
+        var result = ShowSaveFileDialog(MedExtension, MedFileFilter);
         if (!string.IsNullOrEmpty(result))
         {
-            currentLocalFile = result;
+            _currentLocalFile = result;
             SaveFile();
         }
     }
@@ -713,7 +712,7 @@ public partial class MainWindow : Window
                 }
             }
         }
-        currentLocalFile = "";
+        _currentLocalFile = "";
         SetTitle();
         editor.Clear();
     }

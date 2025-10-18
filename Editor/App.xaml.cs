@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
+using Microsoft.VisualBasic;
 
 namespace Editor;
 
@@ -49,7 +50,9 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        Current.MainWindow = new MainWindow();
+        var strings = Environment.GetCommandLineArgs();
+        var fileName = strings.Length > 1 ? strings[1] : string.Empty;
+        Current.MainWindow = new MainWindow(fileName);
         Current.MainWindow.Show();
     }
 
