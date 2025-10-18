@@ -938,10 +938,7 @@ namespace Editor
                                                              textAction.FirstDecorationsOfInsertedText);
                 foreach (EquationBase eb in textAction.Equations)
                 {
-                    if (childEquations.Contains(eb))
-                    {
-                        childEquations.Remove(eb);
-                    }
+                    childEquations.Remove(eb);
                 }
             }
             activeRow.CalculateSize();

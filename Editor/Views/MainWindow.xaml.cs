@@ -1,48 +1,37 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
-public partial class MainWindow : Window, INotifyPropertyChanged
+[INotifyPropertyChanged]
+public partial class MainWindow : Window
 {
-    public event PropertyChangedEventHandler PropertyChanged = (x, y) => { };
-    string currentLocalFile = "";
-    static string meExtension = "med";
-    static string meFileFilter = "Math Editor File (*." + meExtension + ")|*." + meExtension;
+    private string currentLocalFile = "";
+    private static readonly string meExtension = "med";
+    private static readonly string meFileFilter = "Math Editor File (*." + meExtension + ")|*." + meExtension;
     public bool IsInialized { get; private set; } = false;
 
     public MainWindow()
     {
-        this.DataContext = this;
+        DataContext = this;
         InitializeComponent();
         StatusBarHelper.Init(this);
         characterToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
         equationToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
         SetTitle();
         AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
-        //if (ConfigManager.GetConfigurationValue(KeyName.firstTime) == "true" || ConfigManager.GetConfigurationValue(KeyName.version) != version)
-        //{
-        //    string successMessage = "";
-        //    if (ConfigManager.SetConfigurationValue(KeyName.firstTime, "false") && ConfigManager.SetConfigurationValue(KeyName.version, version))
-        //    {
-        //        successMessage = "\r\n\r\nThis message will not be shown again.";
-        //    }
-        //    MessageBox.Show("Thanks for using Math Editor. Math Editor is under constant development and we regularly release better versions of this product." + Environment.NewLine + Environment.NewLine +
-        //                    "Please help us by sending your suggestions, feature requests or bug reports using our facebook page or our website (see help)." + Environment.NewLine + Environment.NewLine +
-        //                    successMessage, "Important message");
-        //}
         UndoManager.CanUndo += (a, b) => { undoButton.IsEnabled = b.ActionPossible; };
         UndoManager.CanRedo += (a, b) => { redoButton.IsEnabled = b.ActionPossible; };
         EquationBase.SelectionAvailable += new EventHandler<EventArgs>(editor_SelectionAvailable);
         EquationBase.SelectionUnavailable += new EventHandler<EventArgs>(editor_SelectionUnavailable);
         underbarToggle.IsChecked = true;
-        TextEquation.InputPropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(TextEquation_InputPropertyChanged);
+        TextEquation.InputPropertyChanged += new PropertyChangedEventHandler(TextEquation_InputPropertyChanged);
         editor.ZoomChanged += new EventHandler(editor_ZoomChanged);
     }
 
@@ -84,7 +73,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         IsInialized = true;
     }
 
-    void editor_SelectionUnavailable(object sender, EventArgs e)
+    private void editor_SelectionUnavailable(object? sender, EventArgs e)
     {
         copyMenuItem.IsEnabled = false;
         cutMenuItem.IsEnabled = false;
@@ -93,7 +82,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         copyButton.IsEnabled = false;
     }
 
-    void editor_SelectionAvailable(object sender, EventArgs e)
+    private void editor_SelectionAvailable(object? sender, EventArgs e)
     {
         copyMenuItem.IsEnabled = true;
         cutMenuItem.IsEnabled = true;
@@ -102,37 +91,28 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         copyButton.IsEnabled = true;
     }
 
-    //private Image ConvertImageToGrayScaleImage()
-    //{
-    //    Image image = new Image();
-    //    BitmapImage bmpImage = new BitmapImage();
-    //    bmpImage.BeginInit();
-    //    bmpImage.UriSource = new Uri("pack://application:,,,/Images/GUI/redo.png");
-    //    bmpImage.EndInit();
-    //    if (!undoButton.IsEnabled)
-    //    {
-    //        FormatConvertedBitmap grayBitmap = new FormatConvertedBitmap();
-    //        grayBitmap.BeginInit();
-    //        grayBitmap.Source = bmpImage;
-    //        grayBitmap.DestinationFormat = PixelFormats.Gray8;
-    //        grayBitmap.EndInit();
-    //        image.Source = grayBitmap;
-    //    }
-    //    return image;
-    //}
-
     public void HandleToolBarCommand(CommandDetails commandDetails)
     {
         if (commandDetails.CommandType == CommandType.CustomMatrix)
         {
-            var inputForm = new MatrixInputWindow(((int[])commandDetails.CommandParam)[0], ((int[])commandDetails.CommandParam)[1]);
-            inputForm.ProcessRequest += (x, y) =>
+            if (commandDetails.CommandParam is int[] rowsAndColumns && rowsAndColumns.Length == 2)
             {
-                CommandDetails newCommand = new CommandDetails { CommandType = CommandType.Matrix };
-                newCommand.CommandParam = new int[] { x, y };
-                editor.HandleUserCommand(newCommand);
-            };
-            _ = inputForm.ShowDialog();
+                var inputForm = new MatrixInputWindow(rowsAndColumns[0], rowsAndColumns[1]);
+                inputForm.ProcessRequest += (x, y) =>
+                {
+                    var newCommand = new CommandDetails
+                    {
+                        CommandType = CommandType.Matrix,
+                        CommandParam = new int[] { x, y }
+                    };
+                    editor.HandleUserCommand(newCommand);
+                };
+                _ = inputForm.ShowDialog();
+            }
+            else
+            {
+                throw new Exception("Invalid parameters for CustomMatrix command");
+            }
         }
         else
         {
@@ -177,14 +157,14 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         if (editor.Dirty)
         {
-            MessageBoxResult result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
+            var result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
             {
                 e.Cancel = true;
@@ -204,7 +184,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (editor.Dirty)
         {
-            MessageBoxResult mbResult = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
+            var mbResult = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
             if (mbResult == MessageBoxResult.Cancel)
             {
                 return;
@@ -217,9 +197,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 }
             }
         }
-        Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-        ofd.CheckPathExists = true;
-        ofd.Filter = meFileFilter;
+        var ofd = new Microsoft.Win32.OpenFileDialog
+        {
+            CheckPathExists = true,
+            Filter = meFileFilter
+        };
         bool? result = ofd.ShowDialog();
         if (result == true)
         {
@@ -245,7 +227,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         SetTitle();
     }
 
-    void SetTitle()
+    private void SetTitle()
     {
         if (currentLocalFile.Length > 0)
         {
@@ -265,11 +247,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
-    string ShowSaveFileDialog(string extension, string filter)
+    private string? ShowSaveFileDialog(string extension, string filter)
     {
-        Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
-        sfd.DefaultExt = "." + extension;
-        sfd.Filter = filter;
+        var sfd = new Microsoft.Win32.SaveFileDialog
+        {
+            DefaultExt = "." + extension,
+            Filter = filter
+        };
         bool? result = sfd.ShowDialog(this);
         if (result == true)
         {
@@ -290,7 +274,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (!File.Exists(currentLocalFile))
         {
-            string result = ShowSaveFileDialog(meExtension, meFileFilter);
+            var result = ShowSaveFileDialog(meExtension, meFileFilter);
             if (string.IsNullOrEmpty(result))
             {
                 return false;
@@ -324,7 +308,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void SaveAsCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        string result = ShowSaveFileDialog(meExtension, meFileFilter);
+        var result = ShowSaveFileDialog(meExtension, meFileFilter);
         if (!string.IsNullOrEmpty(result))
         {
             currentLocalFile = result;
@@ -373,8 +357,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void exportMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        string imageType = (string)((Control)sender).Tag ?? "png";
-        string fileName = ShowSaveFileDialog(imageType, string.Format("Image File (*.{0})|*.{0}", imageType));
+        var imageType = (string)((Control)sender).Tag ?? "png";
+        var fileName = ShowSaveFileDialog(imageType, string.Format("Image File (*.{0})|*.{0}", imageType));
         if (!string.IsNullOrEmpty(fileName))
         {
             string ext = Path.GetExtension(fileName);
@@ -400,9 +384,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void ToolBar_Loaded(object sender, RoutedEventArgs e)
     {
-        ToolBar toolBar = sender as ToolBar;
-        var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
-        if (overflowGrid != null)
+        var toolBar = sender as ToolBar;
+        if (toolBar?.Template.FindName("OverflowGrid", toolBar) is FrameworkElement overflowGrid)
         {
             overflowGrid.Visibility = Visibility.Collapsed;
         }
@@ -415,19 +398,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void contentsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        BrowserHelper.Open("https://www.mathiversity.com/math-editor/documentation");
+        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor/wiki");
     }
 
     private void aboutMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Window aboutWindow = new AboutWindow();
-        aboutWindow.Owner = this;
+        Window aboutWindow = new AboutWindow
+        {
+            Owner = this
+        };
         aboutWindow.ShowDialog();
     }
 
     private void videoMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        BrowserHelper.Open("http://youtu.be/_j6R2mv3StQ");
+        // TODO: Update link to actual video tutorials
+        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor");
     }
 
     private void deleteMenuItem_Click(object sender, RoutedEventArgs e)
@@ -447,30 +433,30 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void Window_KeyUp(object sender, KeyEventArgs e)
     {
-        if (WindowStyle == System.Windows.WindowStyle.None && e.Key == Key.Escape)
+        if (WindowStyle == WindowStyle.None && e.Key == Key.Escape)
         {
             ToggleFullScreen();
         }
     }
 
-    void ToggleFullScreen()
+    private void ToggleFullScreen()
     {
-        if (WindowStyle == System.Windows.WindowStyle.None)
+        if (WindowStyle == WindowStyle.None)
         {
             fullScreenMenuItem.Header = "_Full Screen";
-            WindowStyle = System.Windows.WindowStyle.ThreeDBorderWindow;
-            WindowState = System.Windows.WindowState.Normal;
-            exitFullScreenButton.Visibility = System.Windows.Visibility.Collapsed;
-            closeApplictionButton.Visibility = System.Windows.Visibility.Collapsed;
+            WindowStyle = WindowStyle.ThreeDBorderWindow;
+            WindowState = WindowState.Normal;
+            exitFullScreenButton.Visibility = Visibility.Collapsed;
+            closeApplictionButton.Visibility = Visibility.Collapsed;
         }
         else
         {
             fullScreenMenuItem.Header = "_Normal Screen";
-            WindowStyle = System.Windows.WindowStyle.None;
-            WindowState = System.Windows.WindowState.Normal; //extral call to be on safe side. windows is funky
-            WindowState = System.Windows.WindowState.Maximized;
-            exitFullScreenButton.Visibility = System.Windows.Visibility.Visible;
-            closeApplictionButton.Visibility = System.Windows.Visibility.Visible;
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Normal; //extral call to be on safe side. windows is funky
+            WindowState = WindowState.Maximized;
+            exitFullScreenButton.Visibility = Visibility.Visible;
+            closeApplictionButton.Visibility = Visibility.Visible;
         }
     }
 
@@ -481,10 +467,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void fbMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        BrowserHelper.Open("http://www.facebook.com/matheditor");
+        // TODO: Update link to actual Facebook page
+        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor");
     }
 
-    MenuItem lastZoomMenuItem = null;
+    private MenuItem? lastZoomMenuItem = null;
 
     private void ZoomMenuItem_Click(object sender, RoutedEventArgs e)
     {
@@ -496,14 +483,14 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         lastZoomMenuItem = ((MenuItem)sender);
         lastZoomMenuItem.IsChecked = true;
-        string percentage = lastZoomMenuItem.Header as string;
+        var percentage = lastZoomMenuItem.Header as string;
         if (!string.IsNullOrEmpty(percentage))
         {
             editor.SetFontSizePercentage(int.Parse(percentage.Replace("%", "")));
         }
     }
 
-    void editor_ZoomChanged(object sender, EventArgs e)
+    private void editor_ZoomChanged(object? sender, EventArgs e)
     {
         customZoomMenu.Header = "_Custom";
         customZoomMenu.IsChecked = false;
@@ -516,8 +503,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void CustomZoomMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Window zoomWindow = new CustomZoomWindow(this);
-        zoomWindow.Owner = this;
+        Window zoomWindow = new CustomZoomWindow
+        {
+            Owner = this
+        };
         zoomWindow.Show();
     }
 
@@ -548,26 +537,24 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         statusBarRightLabel.Content = coordinates;
     }
 
-    Window symbolWindow = null;
+    private Window? symbolWindow = null;
     private void symbolMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (symbolWindow == null)
+        symbolWindow ??= new UnicodeSelectorWindow
         {
-            symbolWindow = new UnicodeSelectorWindow(this);
-            symbolWindow.Owner = this;
-        }
+            Owner = this
+        };
         symbolWindow.Show();
         symbolWindow.Activate();
     }
 
-    Window codePointWindow = null;
+    private Window? codePointWindow = null;
     private void codePointMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (codePointWindow == null)
+        codePointWindow ??= new CodepointWindow
         {
-            codePointWindow = new CodepointWindow(this);
-            codePointWindow.Owner = this;
-        }
+            Owner = this
+        };
         codePointWindow.Show();
         codePointWindow.Activate();
     }
@@ -587,17 +574,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         editor.InvalidateVisual();
     }
 
-    public IntPtr Handle
-    {
-        get { return new System.Windows.Interop.WindowInteropHelper(this).Handle; }
-    }
+    public IntPtr Handle => new System.Windows.Interop.WindowInteropHelper(this).Handle;
 
     public bool InputBold
     {
-        get
-        {
-            return TextEquation.InputBold;
-        }
+        get => TextEquation.InputBold;
         set
         {
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
@@ -609,10 +590,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public bool InputItalic
     {
-        get
-        {
-            return TextEquation.InputItalic;
-        }
+        get => TextEquation.InputItalic;
         set
         {
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
@@ -624,10 +602,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public bool InputUnderline
     {
-        get
-        {
-            return TextEquation.InputUnderline;
-        }
+        get => TextEquation.InputUnderline;
         set
         {
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
@@ -637,7 +612,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
-    void TextEquation_InputPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void TextEquation_InputPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == "EditorMode")
         {
@@ -666,7 +641,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         else
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(e.PropertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(e.PropertyName));
         }
     }
 
@@ -694,12 +669,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
+    // TODO: Check that we should follow the settings?
     private void ChangeEditorMode()
     {
         if (editor != null)
         {
-            ComboBoxItem item = (ComboBoxItem)editorModeCombo.SelectedItem;
-            EditorMode mode = (EditorMode)Enum.Parse(typeof(EditorMode), item.Tag.ToString());
+            var item = (ComboBoxItem)editorModeCombo.SelectedItem;
+            var mode = Enum.Parse<EditorMode>(item.Tag.ToString()!);
 
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
             TextEquation.EditorMode = (EditorMode)Enum.Parse(typeof(EditorMode), (string)((ComboBoxItem)editorModeCombo.SelectedItem).Tag);
@@ -716,14 +692,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void mvHelpMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        BrowserHelper.Open("http://www.MathiVersity.com/MathEditor/Documentation/Online-Storage");
+        // TODO: Update link to actual discussion page
+        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor/discussions");
     }
 
     private void NewCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
         if (editor.Dirty)
         {
-            MessageBoxResult result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
+            var result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
             {
                 return;
@@ -743,14 +720,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void settingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Window settingsWindow = new SettingsWindow();
-        settingsWindow.Owner = this;
+        Window settingsWindow = new SettingsWindow
+        {
+            Owner = this
+        };
         settingsWindow.Show();
     }
 }
 public static class StatusBarHelper
 {
-    static MainWindow window = null;
+    private static MainWindow? window = null;
     public static void Init(MainWindow _window)
     {
         window = _window;
@@ -759,11 +738,11 @@ public static class StatusBarHelper
     public static void PrintStatusMessage(string message)
     {
         // TODO: Implement this method
-        window.SetStatusBarMessage(message);
+        window?.SetStatusBarMessage(message);
     }
 
     public static void ShowCoordinates(string message)
     {
-        window.ShowCoordinates(message);
+        window?.ShowCoordinates(message);
     }
 }

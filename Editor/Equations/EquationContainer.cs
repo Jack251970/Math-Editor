@@ -18,10 +18,7 @@ namespace Editor
 
         public void ReleaseChild(EquationBase child)
         {
-            if (childEquations.Contains(child))
-            {
-                childEquations.Remove(child);
-            }
+            childEquations.Remove(child);
         }
 
         protected List<EquationBase> childEquations = [];
@@ -293,10 +290,7 @@ namespace Editor
                 {
                     foreach (int i in listFormats)
                     {
-                        if (!list.Contains(i))
-                        {
-                            list.Add(i);
-                        }
+                        list.Add(i);
                     }
                 }
             }

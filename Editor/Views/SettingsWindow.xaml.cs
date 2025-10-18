@@ -35,8 +35,9 @@ public partial class SettingsWindow : Window
 
     private void okButton_Click(object sender, RoutedEventArgs e)
     {
-        App.Settings.DefaultMode = Enum.Parse<EditorMode>(((ComboBoxItem)editorModeCombo.SelectedItem).Tag.ToString());
-        App.Settings.DefaultFont = ((ComboBoxItem)equationFontCombo.SelectedItem).Tag.ToString();
+        // TODO: Use Binding here and remove ok & cancel buttons
+        App.Settings.DefaultMode = Enum.Parse<EditorMode>(((ComboBoxItem)editorModeCombo.SelectedItem).Tag.ToString()!);
+        App.Settings.DefaultFont = ((ComboBoxItem)equationFontCombo.SelectedItem).Tag.ToString()!;
         App.Settings.Save();
         Close();
     }

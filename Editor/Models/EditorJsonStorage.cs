@@ -24,7 +24,7 @@ public class EditorJsonStorage<T> : JsonStorage<T> where T : new()
         {
             base.Save();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // TODO: Handle exception
             //App.API.LogFatal(ClassName, $"Failed to save settings to path: {FilePath}", e);
@@ -37,7 +37,7 @@ public class EditorJsonStorage<T> : JsonStorage<T> where T : new()
         {
             await base.SaveAsync();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // TODO: Handle exception
             //App.API.LogFatal(ClassName, $"Failed to save settings to path: {FilePath}", e);

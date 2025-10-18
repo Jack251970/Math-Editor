@@ -9,7 +9,7 @@ public partial class ButtonPanel : UserControl
 {
     public event EventHandler ButtonClick = (x, y) => { };
 
-    List<CommandDetails> commandDetails;
+    private readonly List<CommandDetails> commandDetails;
     public ButtonPanel(List<CommandDetails> listCommandDetails, int columns, int buttonMargin)
     {
         InitializeComponent();
@@ -19,10 +19,12 @@ public partial class ButtonPanel : UserControl
         mainGrid.Width = 30 * mainGrid.Columns;
         mainGrid.Height = 30 * mainGrid.Rows;
 
-        for (int i = 0; i < commandDetails.Count; i++)
+        for (var i = 0; i < commandDetails.Count; i++)
         {
-            EditorToolBarButton b = new EditorToolBarButton(commandDetails[i]);
-            b.Margin = new Thickness(buttonMargin);
+            var b = new EditorToolBarButton(commandDetails[i])
+            {
+                Margin = new Thickness(buttonMargin)
+            };
             b.Click += new RoutedEventHandler(panelButton_Click);
             b.Style = (Style)FindResource("MathToolBarButtonStyle");
             b.SetValue(Grid.ColumnProperty, i % mainGrid.Columns);
@@ -40,26 +42,21 @@ public partial class ButtonPanel : UserControl
             mainGrid.Children.Add(b);
             if (commandDetails[i].CommandType == CommandType.None) //This is an ugly kludge!
             {
-                b.Visibility = System.Windows.Visibility.Hidden;
+                b.Visibility = Visibility.Hidden;
             }
         }
     }
 
-    void panelButton_Click(object sender, RoutedEventArgs e)
+    private void panelButton_Click(object sender, RoutedEventArgs e)
     {
-        this.Visibility = System.Windows.Visibility.Collapsed;
+        Visibility = Visibility.Collapsed;
         ButtonClick(this, EventArgs.Empty);
     }
 }
 
-public sealed class EditorToolBarButton : Button
+public sealed class EditorToolBarButton(CommandDetails commandDetails) : Button
 {
-    CommandDetails commandDetails = null;
-
-    public EditorToolBarButton(CommandDetails commandDetails)
-    {
-        this.commandDetails = commandDetails;
-    }
+    private readonly CommandDetails commandDetails = commandDetails;
 
     protected override void OnClick()
     {

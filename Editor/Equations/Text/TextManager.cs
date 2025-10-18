@@ -98,7 +98,7 @@ namespace Editor
                     foreach (string s in formatStrings)
                     {
                         int id = int.Parse(s);
-                        if (!allFormatIds.Keys.Contains(id))
+                        if (!allFormatIds.ContainsKey(id))
                         {
                             allFormatIds.Add(id, id);
                         }

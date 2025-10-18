@@ -9,11 +9,15 @@ public static class DataLocation
     public const string DeletionIndicatorFile = ".dead";
     public static readonly string PortableDataPath = Path.Combine(Constants.ProgramDirectory, PortableFolderName);
     public static readonly string RoamingDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.MathEditor);
-    public static string DataDirectory() =>
-        PortableDataLocationInUse() ? PortableDataPath : RoamingDataPath;
+    public static string DataDirectory()
+    {
+        return PortableDataLocationInUse() ? PortableDataPath : RoamingDataPath;
+    }
 
-    public static bool PortableDataLocationInUse() =>
-        Directory.Exists(PortableDataPath) && !File.Exists(Path.Combine(PortableDataPath, DeletionIndicatorFile));
+    public static bool PortableDataLocationInUse()
+    {
+        return Directory.Exists(PortableDataPath) && !File.Exists(Path.Combine(PortableDataPath, DeletionIndicatorFile));
+    }
 
     public static string VersionLogDirectory => Path.Combine(LogDirectory, Constants.Version);
     public static string LogDirectory => Path.Combine(DataDirectory(), Constants.Logs);

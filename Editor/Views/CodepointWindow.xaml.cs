@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,12 +9,10 @@ namespace Editor;
 
 public partial class CodepointWindow : Window
 {
-    string numberBase = "10";
-    MainWindow mainWindow = null;
+    private string numberBase = "10";
 
-    public CodepointWindow(MainWindow mainWindow)
+    public CodepointWindow()
     {
-        this.mainWindow = mainWindow;
         InitializeComponent();
         numberBox.Focus();
     }
@@ -42,20 +41,18 @@ public partial class CodepointWindow : Window
 
     private void numberBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-        uint temp;
-        e.Handled = !ConvertToNumber(e.Text, out temp);
+        e.Handled = !ConvertToNumber(e.Text, out var temp);
         base.OnPreviewTextInput(e);
     }
 
     private void insertButton_Click(object sender, RoutedEventArgs e)
     {
-        uint number;
-        if (ConvertToNumber(numberBox.Text, out number))
+        if (ConvertToNumber(numberBox.Text, out var number))
         {
             try
             {
-                CommandDetails commandDetails = new CommandDetails { UnicodeString = Convert.ToChar(number).ToString(), CommandType = Editor.CommandType.Text };
-                ((MainWindow)Application.Current.MainWindow).HandleToolBarCommand(commandDetails);
+                var commandDetails = new CommandDetails { UnicodeString = Convert.ToChar(number).ToString(), CommandType = Editor.CommandType.Text };
+                ((MainWindow)Owner).HandleToolBarCommand(commandDetails);
             }
             catch
             {
@@ -68,17 +65,16 @@ public partial class CodepointWindow : Window
         }
     }
 
-    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    protected override void OnClosing(CancelEventArgs e)
     {
-        this.Hide();
+        Hide();
         e.Cancel = true;
     }
 
     private void closeButton_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
-
 
     private void codeFormatComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -87,8 +83,7 @@ public partial class CodepointWindow : Window
         {
             try
             {
-                uint number;
-                if (ConvertToNumber(numberBox.Text, out number))
+                if (ConvertToNumber(numberBox.Text, out var number))
                 {
                     numberBox.Text = Convert.ToString(number, int.Parse(numberBase));
                 }

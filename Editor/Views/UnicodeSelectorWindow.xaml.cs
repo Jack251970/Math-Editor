@@ -11,17 +11,15 @@ namespace Editor;
 
 public partial class UnicodeSelectorWindow : Window
 {
-    MainWindow mainWindow = null;
-    Dictionary<string, ObservableCollection<UnicodeListItem>> categories = [];
+    private readonly Dictionary<string, ObservableCollection<UnicodeListItem>> categories = [];
     //Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>> fontCache = new Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>>();
-    ObservableCollection<UnicodeListItem> recentList = [];
-    ObservableCollection<UnicodeListItem> allList = [];
+    private readonly ObservableCollection<UnicodeListItem> recentList = [];
+    private readonly ObservableCollection<UnicodeListItem> allList = [];
 
-    public UnicodeSelectorWindow(MainWindow mainWindow)
+    public UnicodeSelectorWindow()
     {
-        this.mainWindow = mainWindow;
-        InitializeComponent();
         DataContext = this;
+        InitializeComponent();
         symbolListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
         symbolListBox.FontSize = 18;
         recentListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
@@ -79,7 +77,6 @@ public partial class UnicodeSelectorWindow : Window
     private void SetupCategory(string categoryName, int start, int end)
     {
         ObservableCollection<UnicodeListItem> list = [];
-        FontFamily family = FontFactory.GetFontFamily(FontType.STIXGeneral);
         for (int i = start; i <= end; i++)
         {
             if (TypefaceContainsCharacter(FontFactory.GetTypeface(FontType.STIXGeneral, FontStyles.Normal, FontWeights.Normal), Convert.ToChar(i)))
@@ -89,10 +86,9 @@ public partial class UnicodeSelectorWindow : Window
                 allList.Add(item);
             }
         }
-        if (categories.Keys.Contains(categoryName))
+        if (categories.TryGetValue(categoryName, out var oldList))
         {
-            ObservableCollection<UnicodeListItem> oldList = categories[categoryName];
-            foreach (UnicodeListItem item in list)
+            foreach (var item in list)
             {
                 oldList.Add(item);
             }
@@ -105,11 +101,9 @@ public partial class UnicodeSelectorWindow : Window
 
     private static bool TypefaceContainsCharacter(Typeface typeface, char characterToCheck)
     {
-        ushort glyphIndex;
         int unicodeValue = Convert.ToUInt16(characterToCheck);
-        GlyphTypeface glyph;
-        typeface.TryGetGlyphTypeface(out glyph);
-        if (glyph != null && glyph.CharacterToGlyphMap.TryGetValue(unicodeValue, out glyphIndex))
+        typeface.TryGetGlyphTypeface(out var glyph);
+        if (glyph != null && glyph.CharacterToGlyphMap.TryGetValue(unicodeValue, out var _))
         {
             return true;
         }
@@ -127,15 +121,15 @@ public partial class UnicodeSelectorWindow : Window
         symbolListBox.SelectedIndex = 0;
     }
 
-    bool useRecentList = false;
+    private bool useRecentList = false;
     private void insertButton_Click(object sender, RoutedEventArgs e)
     {
         InsertSymbol();
     }
 
-    void InsertSymbol()
+    private void InsertSymbol()
     {
-        UnicodeListItem item = null;
+        UnicodeListItem? item;
         if (useRecentList)
         {
             item = recentListBox.SelectedItem as UnicodeListItem;
@@ -146,14 +140,11 @@ public partial class UnicodeSelectorWindow : Window
         }
         if (item != null)
         {
-            CommandDetails commandDetails = new CommandDetails { UnicodeString = item.UnicodeText, CommandType = Editor.CommandType.Text };
+            CommandDetails commandDetails = new CommandDetails { UnicodeString = item.UnicodeText, CommandType = CommandType.Text };
             ((MainWindow)Application.Current.MainWindow).HandleToolBarCommand(commandDetails);
             if (!useRecentList)
             {
-                if (recentList.Contains(item))
-                {
-                    recentList.Remove(item);
-                }
+                recentList.Remove(item);
                 recentList.Insert(0, item);
                 if (recentList.Count > 20)
                 {
@@ -176,17 +167,17 @@ public partial class UnicodeSelectorWindow : Window
 
     private void symbolList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        UnicodeListItem item = symbolListBox.SelectedItem as UnicodeListItem;
+        UnicodeListItem? item = symbolListBox.SelectedItem as UnicodeListItem;
         characterCodeChanged(item);
     }
 
     private void recentListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        UnicodeListItem item = recentListBox.SelectedItem as UnicodeListItem;
+        UnicodeListItem? item = recentListBox.SelectedItem as UnicodeListItem;
         characterCodeChanged(item);
     }
 
-    private void characterCodeChanged(UnicodeListItem item)
+    private void characterCodeChanged(UnicodeListItem? item)
     {
         if (item != null)
         {
@@ -206,8 +197,7 @@ public partial class UnicodeSelectorWindow : Window
 
     private void codeFormatComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        UnicodeListItem item = symbolListBox.SelectedItem as UnicodeListItem;
-        if (item != null)
+        if (symbolListBox.SelectedItem is UnicodeListItem item)
         {
             int numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
             string numberString = Convert.ToString(item.CodePoint, numberBase);
@@ -254,12 +244,12 @@ public partial class UnicodeSelectorWindow : Window
 public sealed class UnicodeListItem
 {
     public int CodePoint { get; set; }
-    public string UnicodeText { get; set; }
+    public required string UnicodeText { get; set; }
 }
 
 public static class NativeMethods
 {
     [DllImport("user32.dll")]
-    static extern uint GetDoubleClickTime();//for emulating double-click events on elements that don't support it
-    internal static System.Timers.Timer doubleClickTimer = new System.Timers.Timer((int)GetDoubleClickTime()) { AutoReset = false };
+    private static extern uint GetDoubleClickTime();//for emulating double-click events on elements that don't support it
+    internal static System.Timers.Timer doubleClickTimer = new((int)GetDoubleClickTime()) { AutoReset = false };
 }

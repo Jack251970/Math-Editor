@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
@@ -7,21 +6,19 @@ namespace Editor;
 
 public partial class CustomZoomWindow : Window
 {
-    int maxPercentage = 9999;
-    MainWindow mainWindow = null;
+    private readonly int maxPercentage = 9999;
 
-    public CustomZoomWindow(MainWindow mainWindow)
+    public CustomZoomWindow()
     {
-        this.mainWindow = mainWindow;
         InitializeComponent();
         numberBox.Focus();
     }
 
-    private bool AreAllValidNumericChars(string str)
+    private static bool AreAllValidNumericChars(string str)
     {
-        foreach (char c in str)
+        foreach (var c in str)
         {
-            if (!Char.IsNumber(c)) return false;
+            if (!char.IsNumber(c)) return false;
         }
 
         return true;
@@ -37,14 +34,14 @@ public partial class CustomZoomWindow : Window
     {
         try
         {
-            int number = int.Parse(numberBox.Text);
+            var number = int.Parse(numberBox.Text);
             if (number <= 0 || number > maxPercentage)
             {
                 MessageBox.Show("Zoom percentage must be between 1 and " + maxPercentage + ".");
                 return;
             }
-            mainWindow.SetFontSizePercentage(number);
-            this.Close();
+            ((MainWindow)Owner).SetFontSizePercentage(number);
+            Close();
         }
         catch
         {
@@ -54,6 +51,6 @@ public partial class CustomZoomWindow : Window
 
     private void cancelButton_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 }

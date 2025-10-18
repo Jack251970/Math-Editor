@@ -14,7 +14,7 @@ public sealed class FontFactory
 
     static FontFactory()
     {
-        foreach (FontType ft in Enum.GetValues(typeof(FontType)))
+        foreach (FontType ft in Enum.GetValues<FontType>())
         {
             fontFamilies.Add(ft, CreateFontFamily(ft));
         }
@@ -44,14 +44,16 @@ public sealed class FontFactory
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, Brush brush)
     {
         var typeface = GetTypeface(fontType, fontStyle, fontWeight);
+#pragma warning disable CS0618 // Type or member is obsolete
         return new FormattedText(textToFormat, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, brush);
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     public static FontFamily GetFontFamily(FontType fontType)
     {
-        if (fontFamilies.Keys.Contains(fontType))
+        if (fontFamilies.TryGetValue(fontType, out var value))
         {
-            return fontFamilies[fontType];
+            return value;
         }
         else
         {
