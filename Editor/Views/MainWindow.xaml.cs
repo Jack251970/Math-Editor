@@ -229,7 +229,7 @@ public partial class MainWindow : Window
 
     private void SetTitle()
     {
-        if (currentLocalFile.Length > 0)
+        if (string.IsNullOrWhiteSpace(currentLocalFile))
         {
 #if DEBUG
             Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFile}";
