@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Editor.Models;
+namespace Editor;
 
 public class Settings : ObservableObject
 {

@@ -6,7 +6,7 @@ using WpfApplication = System.Windows.Application;
 
 // http://blogs.microsoft.co.il/arik/2010/05/28/wpf-single-instance-application/
 // modified to allow single instace restart
-namespace AnyBar.Helpers.Application;
+namespace Editor;
 
 public interface ISingleInstanceApp
 {

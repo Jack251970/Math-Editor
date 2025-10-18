@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
-using AnyBar.Helpers.Application;
-using Editor.Models;
 
 namespace Editor;
 
