@@ -12,8 +12,8 @@ namespace Editor;
 public partial class EquationToolBar : UserControl
 {
     public event EventHandler CommandCompleted = (x, y) => { };
-    Dictionary<object, ButtonPanel> buttonPanelMapping = new Dictionary<object, ButtonPanel>();
-    ButtonPanel visiblePanel = null;
+    private readonly Dictionary<object, ButtonPanel> buttonPanelMapping = [];
+    private ButtonPanel? visiblePanel = null;
 
     public EquationToolBar()
     {
@@ -24,11 +24,11 @@ public partial class EquationToolBar : UserControl
     {
         if (visiblePanel != null)
         {
-            visiblePanel.Visibility = System.Windows.Visibility.Collapsed;
+            visiblePanel.Visibility = Visibility.Collapsed;
         }
-        if (buttonPanelMapping[sender].Visibility != System.Windows.Visibility.Visible)
+        if (buttonPanelMapping[sender].Visibility != Visibility.Visible)
         {
-            buttonPanelMapping[sender].Visibility = System.Windows.Visibility.Visible;
+            buttonPanelMapping[sender].Visibility = Visibility.Visible;
             visiblePanel = buttonPanelMapping[sender];
         }
     }
@@ -37,7 +37,7 @@ public partial class EquationToolBar : UserControl
     {
         if (visiblePanel != null)
         {
-            visiblePanel.Visibility = System.Windows.Visibility.Collapsed;
+            visiblePanel.Visibility = Visibility.Collapsed;
             visiblePanel = null;
         }
     }
@@ -52,12 +52,12 @@ public partial class EquationToolBar : UserControl
         ChangeActivePanel(sender);
     }
 
-    void ChangeActivePanel(object sender)
+    private void ChangeActivePanel(object sender)
     {
         if (visiblePanel != null)
         {
-            visiblePanel.Visibility = System.Windows.Visibility.Collapsed;
-            buttonPanelMapping[sender].Visibility = System.Windows.Visibility.Visible;
+            visiblePanel.Visibility = Visibility.Collapsed;
+            buttonPanelMapping[sender].Visibility = Visibility.Visible;
             visiblePanel = buttonPanelMapping[sender];
         }
     }
@@ -77,43 +77,43 @@ public partial class EquationToolBar : UserControl
         CreateMatrixPanel();
     }
 
-    void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int margin)
+    private void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int margin)
     {
-        ButtonPanel bp = new ButtonPanel(list, columns, margin);
+        var bp = new ButtonPanel(list, columns, margin);
         bp.ButtonClick += (x, y) => { CommandCompleted(this, EventArgs.Empty); visiblePanel = null; };
         mainToolBarPanel.Children.Add(bp);
         Canvas.SetTop(bp, mainToolBarPanel.Height);
         Vector offset = VisualTreeHelper.GetOffset(toolBarButton);
         Canvas.SetLeft(bp, offset.X + 2);
-        bp.Visibility = System.Windows.Visibility.Collapsed;
+        bp.Visibility = Visibility.Collapsed;
         buttonPanelMapping.Add(toolBarButton, bp);
     }
 
-    void CreateImagePanel(Uri[] imageUris, CommandType[] commands, object[] paramz, Button toolBarButton, int columns)
+    private void CreateImagePanel(Uri[] imageUris, CommandType[] commands, object[] paramz, Button toolBarButton, int columns)
     {
-        Image[] items = new Image[imageUris.Count()];
-        for (int i = 0; i < items.Count(); i++)
+        var items = new Image[imageUris.Length];
+        for (int i = 0; i < items.Length; i++)
         {
             items[i] = new Image();
-            BitmapImage bmi = new BitmapImage(imageUris[i]);
+            var bmi = new BitmapImage(imageUris[i]);
             items[i].Source = bmi;
         }
-        List<CommandDetails> list = new List<CommandDetails>();
-        for (int i = 0; i < items.Count(); i++)
+        List<CommandDetails> list = [];
+        for (int i = 0; i < items.Length; i++)
         {
             list.Add(new CommandDetails { Image = items[i], CommandType = commands[i], CommandParam = paramz[i] });
         }
         CreatePanel(list, toolBarButton, columns, 4);
     }
 
-    Uri CreateImageUri(string subFolder, string imageFileName)
+    private static Uri CreateImageUri(string subFolder, string imageFileName)
     {
         return new Uri("pack://application:,,,/Images/Commands/" + subFolder + "/" + imageFileName);
     }
 
-    void CreateBracketsPanel()
+    private void CreateBracketsPanel()
     {
-        Uri[] imageUris = { CreateImageUri("Brackets", "SingleBar.png"),
+        Uri[] imageUris = [ CreateImageUri("Brackets", "SingleBar.png"),
                             CreateImageUri("Brackets", "DoubleBar.png"),
                             CreateImageUri("Brackets", "Floor.png"),
                             CreateImageUri("Brackets", "Ceiling.png"),
@@ -148,9 +148,9 @@ public partial class EquationToolBar : UserControl
                             CreateImageUri("Brackets", "TopSquareBracket.png"),
                             CreateImageUri("Brackets", "BottomSquareBracket.png"),
                             CreateImageUri("Brackets", "DoubleArrowBarBracket.png"),
-                           };
+                           ];
 
-        CommandType[] commands = { CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
+        CommandType[] commands = [ CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                    CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                    CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
                                    CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
@@ -166,8 +166,8 @@ public partial class EquationToolBar : UserControl
                                    CommandType.TopBracket,  CommandType.BottomBracket,
                                    CommandType.TopBracket, CommandType.BottomBracket,
                                    CommandType.DoubleArrowBarBracket,
-                                 };
-        object[] paramz = {
+                                 ];
+        object[] paramz = [
                                new BracketSignType [] {BracketSignType.LeftBar,       BracketSignType.RightBar},
                                new BracketSignType [] {BracketSignType.LeftDoubleBar, BracketSignType.RightDoubleBar},
                                new BracketSignType [] {BracketSignType.LeftFloor,     BracketSignType.RightFloor},
@@ -204,14 +204,14 @@ public partial class EquationToolBar : UserControl
                                HorizontalBracketSignType.ToSquare,
                                HorizontalBracketSignType.BottomSquare,
                                0,
-                          };
+                          ];
 
         CreateImagePanel(imageUris, commands, paramz, bracketsButton, 4);
     }
 
-    void CreateSumsProductsPanel()
+    private void CreateSumsProductsPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("SumsProducts", "sum.png"),
                               CreateImageUri("SumsProducts", "sumSub.png"),
                               CreateImageUri("SumsProducts", "sumSubSuper.png"),
@@ -241,9 +241,9 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("SumsProducts", "unionSubSuper.png"),
                               CreateImageUri("SumsProducts", "unionBottom.png"),
                               CreateImageUri("SumsProducts", "unionBottomTop.png"),
-                          };
-        CommandType[] commands = Enumerable.Repeat(CommandType.SignComposite, imageUris.Length).ToArray();
-        object[] paramz = {
+                          ];
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.SignComposite, imageUris.Length)];
+        object[] paramz = [
                               new object [] {Position.None,    SignCompositeSymbol.Sum} ,
                               new object [] {Position.Sub,       SignCompositeSymbol.Sum} ,
                               new object [] {Position.SubAndSuper,  SignCompositeSymbol.Sum} ,
@@ -273,14 +273,14 @@ public partial class EquationToolBar : UserControl
                               new object [] {Position.SubAndSuper,  SignCompositeSymbol.Union} ,
                               new object [] {Position.Bottom,    SignCompositeSymbol.Union} ,
                               new object [] {Position.BottomAndTop, SignCompositeSymbol.Union} ,
-                          };
+                          ];
 
         CreateImagePanel(imageUris, commands, paramz, sumsProductsButton, 5);
     }
 
-    void CreateIntegralsPanel()
+    private void CreateIntegralsPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Integrals/Single", "Simple.png"),
                               CreateImageUri("Integrals/Single", "Sub.png"),
                               CreateImageUri("Integrals/Single", "SubSuper.png"),
@@ -328,11 +328,11 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Integrals/AntiClock", "SubSuper.png"),
                               CreateImageUri("Integrals/AntiClock", "Bottom.png"),
                               CreateImageUri("Integrals/AntiClock", "BottomTop.png"),
-                           };
+                           ];
 
-        CommandType[] commands = Enumerable.Repeat(CommandType.SignComposite, imageUris.Length).ToArray();
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.SignComposite, imageUris.Length)];
 
-        object[] paramz = {
+        object[] paramz = [
                               new object [] {Position.None,    SignCompositeSymbol.Integral},
                               new object [] {Position.Sub,       SignCompositeSymbol.Integral},
                               new object [] {Position.SubAndSuper,  SignCompositeSymbol.Integral},
@@ -382,33 +382,33 @@ public partial class EquationToolBar : UserControl
                               new object [] {Position.SubAndSuper,  SignCompositeSymbol.AntiClockContourIntegral},
                               new object [] {Position.Bottom,    SignCompositeSymbol.AntiClockContourIntegral},
                               new object [] {Position.BottomAndTop, SignCompositeSymbol.AntiClockContourIntegral},
-                          };
+                          ];
 
         CreateImagePanel(imageUris, commands, paramz, integralsButton, 5);
     }
 
-    void CreateSubAndSuperPanel()
+    private void CreateSubAndSuperPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("SubSuper", "Sub.png"),
                               CreateImageUri("SubSuper", "Super.png"),
                               CreateImageUri("SubSuper", "SubSuper.png"),
                               CreateImageUri("SubSuper", "SubLeft.png"),
                               CreateImageUri("SubSuper", "SuperLeft.png"),
                               CreateImageUri("SubSuper", "SubSuperLeft.png"),
-                           };
-        CommandType[] commands = { CommandType.Sub, CommandType.Super, CommandType.SubAndSuper,
-                                   CommandType.Sub, CommandType.Super, CommandType.SubAndSuper};
+                           ];
+        CommandType[] commands = [ CommandType.Sub, CommandType.Super, CommandType.SubAndSuper,
+                                   CommandType.Sub, CommandType.Super, CommandType.SubAndSuper];
 
-        object[] paramz = { Position.Right, Position.Right, Position.Right,
-                            Position.Left, Position.Left, Position.Left,};
+        object[] paramz = [ Position.Right, Position.Right, Position.Right,
+                            Position.Left, Position.Left, Position.Left,];
 
         CreateImagePanel(imageUris, commands, paramz, subAndSuperButton, 3);
     }
 
-    void CreateCompositePanel()
+    private void CreateCompositePanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Composite", "CompositeBottom.png"),
                               CreateImageUri("Composite", "CompositeTop.png"),
                               CreateImageUri("Composite", "CompositeBottomTop.png"),
@@ -418,25 +418,25 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Composite", "BigSub.png"),
                               CreateImageUri("Composite", "BigSuper.png"),
                               CreateImageUri("Composite", "BigSubSuper.png"),
-                           };
-        CommandType[] commands = {
+                           ];
+        CommandType[] commands = [
                                      CommandType.Composite, CommandType.Composite, CommandType.Composite,
                                      CommandType.CompositeBig,    CommandType.CompositeBig, CommandType.CompositeBig,
                                      CommandType.CompositeBig, CommandType.CompositeBig, CommandType.CompositeBig,
-                                 };
+                                 ];
 
-        object[] paramz = {
+        object[] paramz = [
                               Position.Bottom, Position.Top, Position.BottomAndTop,
                               Position.Bottom, Position.Top, Position.BottomAndTop,
                               Position.Sub, Position.Super, Position.SubAndSuper,
-                          };
+                          ];
 
         CreateImagePanel(imageUris, commands, paramz, compositeButton, 3);
     }
 
-    void CreateDecoratedEquationPanel()
+    private void CreateDecoratedEquationPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Decorated/Equation", "hat.png"),
                               CreateImageUri("Decorated/Equation", "tilde.png"),
                               CreateImageUri("Decorated/Equation", "parenthesis.png"),
@@ -465,12 +465,12 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Decorated/Equation", "leftCross.png"),
                               CreateImageUri("Decorated/Equation", "rightCross.png"),
                               CreateImageUri("Decorated/Equation", "strikeThrough.png"),
-                           };
-        CommandType[] commands = Enumerable.Repeat(CommandType.Decorated, imageUris.Length).ToArray();
+                           ];
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.Decorated, imageUris.Length)];
         commands[11] = CommandType.None; //empty cell
         commands[19] = CommandType.None; //empty cell
 
-        object[] paramz = {
+        object[] paramz = [
                               new object [] {DecorationType.Hat,                    Position.Top },
                               new object [] {DecorationType.Tilde,                  Position.Top },
                               new object [] {DecorationType.Parenthesis,            Position.Top },
@@ -495,13 +495,13 @@ public partial class EquationToolBar : UserControl
                               new object [] {DecorationType.LeftCross,      Position.Middle },
                               new object [] {DecorationType.RightCross,     Position.Middle },
                               new object [] {DecorationType.StrikeThrough,  Position.Middle },
-                          };
+                          ];
         CreateImagePanel(imageUris, commands, paramz, decoratedEquationButton, 4);
     }
 
-    void CreateDecoratedCharacterPanel()
+    private void CreateDecoratedCharacterPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Decorated/Character", "None.png"),
                               CreateImageUri("Decorated/Character", "StrikeThrough.png"),
                               CreateImageUri("Decorated/Character", "DoubleStrikeThrough.png"),
@@ -562,23 +562,23 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Decorated/Character", "BottomFourDot.png"),
                               CreateImageUri("Decorated/Character", "BottomFourDot.png"), //Empty
                                                               
-                           };
-        CommandType[] commands = Enumerable.Repeat(CommandType.DecoratedCharacter, imageUris.Length).ToArray();
+                           ];
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.DecoratedCharacter, imageUris.Length)];
         commands[19] = CommandType.None; //empty cell 
         commands[44] = CommandType.None; //empty cell           
         commands[49] = CommandType.None; //empty cell  
 
-        object[] paramz = {
-                              new object [] {CharacterDecorationType.None,                  Position.Over, null},
-                              new object [] {CharacterDecorationType.StrikeThrough,         Position.Over, null},
-                              new object [] {CharacterDecorationType.DoubleStrikeThrough,   Position.Over, null},
-                              new object [] {CharacterDecorationType.LeftCross,             Position.Over, null},
-                              new object [] {CharacterDecorationType.RightCross,            Position.Over, null},
-                              new object [] {CharacterDecorationType.Cross,                 Position.Over, null},
-                              new object [] {CharacterDecorationType.VStrikeThrough,        Position.Over, null},
-                              new object [] {CharacterDecorationType.VDoubleStrikeThrough,  Position.Over, null},
-                              new object [] {CharacterDecorationType.LeftUprightCross,      Position.Over, null},
-                              new object [] {CharacterDecorationType.RightUprightCross,     Position.Over, null},
+        object[] paramz = [
+                              new object [] {CharacterDecorationType.None,                  Position.Over, null!},
+                              new object [] {CharacterDecorationType.StrikeThrough,         Position.Over, null!},
+                              new object [] {CharacterDecorationType.DoubleStrikeThrough,   Position.Over, null!},
+                              new object [] {CharacterDecorationType.LeftCross,             Position.Over, null!},
+                              new object [] {CharacterDecorationType.RightCross,            Position.Over, null!},
+                              new object [] {CharacterDecorationType.Cross,                 Position.Over, null!},
+                              new object [] {CharacterDecorationType.VStrikeThrough,        Position.Over, null!},
+                              new object [] {CharacterDecorationType.VDoubleStrikeThrough,  Position.Over, null!},
+                              new object [] {CharacterDecorationType.LeftUprightCross,      Position.Over, null!},
+                              new object [] {CharacterDecorationType.RightUprightCross,     Position.Over, null!},
 
                               new object [] {CharacterDecorationType.Unicode, Position.TopRight,  "\u2032"}, //Prime
                               new object [] {CharacterDecorationType.Unicode, Position.TopRight,  "\u2033"}, //Double prime
@@ -626,13 +626,13 @@ public partial class EquationToolBar : UserControl
                               new object [] {CharacterDecorationType.Unicode, Position.Bottom, "\u20DB" }, //three dots
                               new object [] {CharacterDecorationType.Unicode, Position.Bottom, "\u20DC" }, //four dots
                               0, //Empty
-                          };
+                          ];
         CreateImagePanel(imageUris, commands, paramz, decoratedCharacterButton, 5);
     }
 
-    void CreateArrowEquationPanel()
+    private void CreateArrowEquationPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Decorated/Arrow", "LeftTop.png"),
                               CreateImageUri("Decorated/Arrow", "LeftBottom.png"),
                               CreateImageUri("Decorated/Arrow", "LeftBottomTop.png"),
@@ -668,10 +668,10 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Decorated/Arrow", "SmallRightLeftHarpTop.png"),
                               CreateImageUri("Decorated/Arrow", "SmallRightLeftHarpBottom.png"),
                               CreateImageUri("Decorated/Arrow", "SmallRightLeftHarpBottomTop.png"),
-                           };
-        CommandType[] commands = Enumerable.Repeat(CommandType.Arrow, imageUris.Length).ToArray();
+                           ];
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.Arrow, imageUris.Length)];
 
-        object[] paramz = {
+        object[] paramz = [
                               new object [] {ArrowType.LeftArrow,               Position.Top },
                               new object [] {ArrowType.LeftArrow,               Position.Bottom },
                               new object [] {ArrowType.LeftArrow,               Position.BottomAndTop },
@@ -715,13 +715,13 @@ public partial class EquationToolBar : UserControl
                               new object [] {ArrowType.SmallRightLeftHarpoon,    Position.Bottom },
                               new object [] {ArrowType.SmallRightLeftHarpoon,    Position.BottomAndTop },
 
-                          };
+                          ];
         CreateImagePanel(imageUris, commands, paramz, arrowEquationButton, 3);
     }
 
-    void CreateDivAndRootsPanel()
+    private void CreateDivAndRootsPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("DivAndRoots", "SqRoot.png"),
                               CreateImageUri("DivAndRoots", "nRoot.png"),
                               CreateImageUri("DivAndRoots", "DivMath.png"),
@@ -741,16 +741,16 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("DivAndRoots", "DivMathInvertedWithBottom.png"),
                               CreateImageUri("DivAndRoots", "DivTriangleFixed.png"),
                               CreateImageUri("DivAndRoots", "DivTriangleExpanding.png"),
-                           };
-        CommandType[] commands = {
+                           ];
+        CommandType[] commands = [
                                      CommandType.SquareRoot, CommandType.nRoot,
                                      CommandType.Division, CommandType.Division, CommandType.Division,
                                      CommandType.Division, CommandType.Division, CommandType.Division,
                                      CommandType.Division, CommandType.Division, CommandType.Division,
                                      CommandType.Division, CommandType.Division, CommandType.Division,
                                       CommandType.Division, CommandType.Division,
-                                 };
-        object[] paramz = {
+                                 ];
+        object[] paramz = [
                               0, 0, //square root and nRoot
                               DivisionType.DivMath, DivisionType.DivMathWithTop,
                               DivisionType.DivRegular, DivisionType.DivDoubleBar, DivisionType.DivTripleBar,
@@ -758,27 +758,27 @@ public partial class EquationToolBar : UserControl
                               DivisionType.DivHoriz, DivisionType.DivHorizSmall, DivisionType.DivMathInverted,
                               DivisionType.DivInvertedWithBottom, DivisionType.DivTriangleFixed,
                               DivisionType.DivTriangleExpanding,
-                          };
+                          ];
         CreateImagePanel(imageUris, commands, paramz, divAndRootsButton, 4);
     }
 
-    void CreateBoxEquationPanel()
+    private void CreateBoxEquationPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Box", "leftTop.png"),
                               CreateImageUri("Box", "leftBottom.png"),
                               CreateImageUri("Box", "rightTop.png"),
                               CreateImageUri("Box", "rightBottom.png"),
                               CreateImageUri("Box", "all.png"),
-                           };
-        CommandType[] commands = Enumerable.Repeat<CommandType>(CommandType.Box, imageUris.Length).ToArray();
-        object[] paramz = { BoxType.LeftTop, BoxType.LeftBottom, BoxType.RightTop, BoxType.RightBottom, BoxType.All };
+                           ];
+        CommandType[] commands = [.. Enumerable.Repeat<CommandType>(CommandType.Box, imageUris.Length)];
+        object[] paramz = [BoxType.LeftTop, BoxType.LeftBottom, BoxType.RightTop, BoxType.RightBottom, BoxType.All];
         CreateImagePanel(imageUris, commands, paramz, boxButton, 2);
     }
 
-    void CreateMatrixPanel()
+    private void CreateMatrixPanel()
     {
-        Uri[] imageUris = {
+        Uri[] imageUris = [
                               CreateImageUri("Matrix", "2cellRow.png"),
                               CreateImageUri("Matrix", "2cellColumn.png"),
                               CreateImageUri("Matrix", "2Square.png"),
@@ -790,12 +790,12 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Matrix", "row.png"),
                               CreateImageUri("Matrix", "column.png"),
                               CreateImageUri("Matrix", "custom.png"),
-                           };
-        CommandType[] commands = Enumerable.Repeat<CommandType>(CommandType.Matrix, imageUris.Length).ToArray();
+                           ];
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.Matrix, imageUris.Length)];
         commands[6] = CommandType.CustomMatrix;
         commands[7] = CommandType.CustomMatrix;
         commands[8] = CommandType.CustomMatrix;
-        object[] paramz = {
+        object[] paramz = [
                               new [] {1, 2},
                               new [] {2, 1},
                               new [] {2, 2},
@@ -805,7 +805,7 @@ public partial class EquationToolBar : UserControl
                               new [] {1, 4},
                               new [] {4, 1},
                               new [] {4, 4},
-                          };
+                          ];
         CreateImagePanel(imageUris, commands, paramz, matrixButton, 3);
     }
 }
