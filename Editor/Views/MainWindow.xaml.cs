@@ -12,7 +12,6 @@ namespace Editor;
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged = (x, y) => { };
-    string version = Assembly.GetEntryAssembly().GetName().Version.ToString();
     string currentLocalFile = "";
     static string meExtension = "med";
     static string meFileFilter = "Math Editor File (*." + meExtension + ")|*." + meExtension;
@@ -250,11 +249,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (currentLocalFile.Length > 0)
         {
-            Title = currentLocalFile + " - Math Editor v." + version;
+#if DEBUG
+            Title = $"{currentLocalFile} - {Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
+#else
+            Title = $"{currentLocalFile} - {Constants.MathEditorFullName} v{Constants.Version}";
+#endif
         }
         else
         {
-            Title = "Math Editor v." + version;
+#if DEBUG
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
+#else
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version}";
+#endif
         }
     }
 
