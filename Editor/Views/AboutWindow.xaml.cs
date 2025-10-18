@@ -9,9 +9,9 @@ public partial class AboutWindow : Window
         DataContext = this;
         InitializeComponent();
 #if DEBUG
-        versionLabel.Text = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
+        VersionLabel.Text = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
 #else
-        versionLabel.Text = $"{Constants.MathEditorFullName} v{Constants.Version}";
+        VersionLabel.Text = $"{Constants.MathEditorFullName} v{Constants.Version}";
 #endif
     }
 }

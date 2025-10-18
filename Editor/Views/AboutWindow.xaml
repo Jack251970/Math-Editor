@@ -34,7 +34,7 @@
                 Source="/images/icon.png" />
         </Grid>
         <TextBlock
-            Name="versionLabel"
+            Name="VersionLabel"
             Grid.Row="0"
             Grid.Column="1"
             VerticalAlignment="Center"
