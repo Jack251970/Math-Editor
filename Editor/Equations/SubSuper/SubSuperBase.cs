@@ -17,26 +17,23 @@
                 }
             }
         }
-        protected double SuperOverlap { get { return FontSize * 0.35; } }
+        protected double SuperOverlap => FontSize * 0.35;
         protected double SubOverlap
         {
             get
             {
-                TextEquation te = buddy as TextEquation;
                 double oha = 0;
-                if (te != null)
+                if (buddy is TextEquation te)
                 {
-                    oha = te.GetCornerDescent(this.Position);
+                    oha = te.GetCornerDescent(Position);
                 }
                 return FontSize * .1 - oha;
             }
         }
 
-        EquationBase buddy = null;
+        private EquationBase? buddy = null;
         protected EquationBase Buddy
-        {
-            get { return buddy ?? ParentEquation.ActiveChild; }
-            set { buddy = value; }
+        { get => buddy ?? ParentEquation.ActiveChild; set => buddy = value;
         }
 
         public SubSuperBase(EquationRow parent, Position position)
@@ -49,7 +46,7 @@
 
         public void SetBuddy(EquationBase buddy)
         {
-            this.Buddy = buddy;
+            Buddy = buddy;
             CalculateHeight();
         }
     }
