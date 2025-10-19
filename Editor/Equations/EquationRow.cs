@@ -605,7 +605,7 @@ namespace Editor
                         newEquation = new SquareRoot(this);
                         break;
                     case CommandType.nRoot:
-                        newEquation = new nRoot(this);
+                        newEquation = new NRoot(this);
                         break;
                     case CommandType.LeftBracket:
                         newEquation = new LeftBracket(this, (BracketSignType)data);
