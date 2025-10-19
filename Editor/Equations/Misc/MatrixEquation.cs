@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -8,21 +10,21 @@ namespace Editor
 {
     public sealed class MatrixEquation : EquationContainer
     {
-        int columns = 1;
-        int rows = 1;
-        double CellSpace { get { return FontSize * .7; } }
+        private readonly int _columns = 1;
+        private readonly int _rows = 1;
+        private double CellSpace => FontSize * .7;
 
-        public override Thickness Margin
-        {
-            get { return new Thickness(FontSize * .15, 0, FontSize * .15, 0); }
-        }
+        public override Thickness Margin => new(FontSize * .15, 0, FontSize * .15, 0);
 
         public MatrixEquation(EquationContainer parent, int rows, int columns)
             : base(parent)
         {
-            this.rows = rows;
-            this.columns = columns;
-            for (int i = 0; i < columns * rows; i++)
+            _rows = rows;
+            _columns = columns;
+            // 0 1 2
+            // 3 4 5
+            // 6 7 8
+            for (var i = 0; i < columns * rows; i++)
             {
                 childEquations.Add(new RowContainer(this));
             }
@@ -31,12 +33,12 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
-            parameters.Add(new XElement(typeof(int).FullName, rows));
-            parameters.Add(new XElement(typeof(int).FullName, columns));
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
+            parameters.Add(new XElement(typeof(int).FullName!, _rows));
+            parameters.Add(new XElement(typeof(int).FullName!, _columns));
             thisElement.Add(parameters);
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 thisElement.Add(eb.Serialize());
             }
@@ -46,33 +48,47 @@ namespace Editor
         public override void DeSerialize(XElement xElement)
         {
             XElement[] elements = [.. xElement.Elements(typeof(RowContainer).Name)];
-            for (int i = 0; i < childEquations.Count; i++)
+            for (var i = 0; i < childEquations.Count; i++)
             {
                 childEquations[i].DeSerialize(elements[i]);
             }
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            if (childEquations.Count == 0) return null;
+            var matrix = new List<StringBuilder>();
+            foreach (var childEquation in childEquations)
+            {
+                if (childEquation.ToLatex() is StringBuilder childLatex)
+                {
+                    matrix.Add(childLatex);
+                }
+            }
+            return LatexConverter.ToMatrix(_rows, _columns, matrix);
+        }
+
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
-                double[] rowRefYs = new double[rows];
-                double[] topOffsets = new double[rows + 1];
+                var rowRefYs = new double[_rows];
+                var topOffsets = new double[_rows + 1];
 
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < _rows; i++)
                 {
-                    rowRefYs[i] = childEquations.Skip(i * columns).Take(columns).Max(x => x.RefY);
-                    topOffsets[i + 1] = childEquations.Skip(i * columns).Take(columns).Max(x => x.Height) + topOffsets[i];
+                    rowRefYs[i] = childEquations.Skip(i * _columns).Take(_columns).Max(x => x.RefY);
+                    topOffsets[i + 1] = childEquations.Skip(i * _columns).Take(_columns).Max(x => x.Height) + topOffsets[i];
                 }
 
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < _rows; i++)
                 {
-                    for (int j = 0; j < columns; j++)
+                    for (var j = 0; j < _columns; j++)
                     {
-                        childEquations[i * columns + j].MidY = Top + rowRefYs[i] + topOffsets[i] + CellSpace * i;
+                        childEquations[i * _columns + j].MidY = Top + rowRefYs[i] + topOffsets[i] + CellSpace * i;
                     }
                 }
             }
@@ -80,26 +96,26 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                double[] columnRefXs = new double[columns];
-                double[] leftOffsets = new double[columns + 1];
-                for (int i = 0; i < columns; i++)
+                var columnRefXs = new double[_columns];
+                var leftOffsets = new double[_columns + 1];
+                for (var i = 0; i < _columns; i++)
                 {
-                    for (int j = 0; j < rows; j++)
+                    for (var j = 0; j < _rows; j++)
                     {
-                        columnRefXs[i] = Math.Max(childEquations[j * columns + i].RefX, columnRefXs[i]);
-                        leftOffsets[i + 1] = Math.Max(childEquations[j * columns + i].Width, leftOffsets[i + 1]);
+                        columnRefXs[i] = Math.Max(childEquations[j * _columns + i].RefX, columnRefXs[i]);
+                        leftOffsets[i + 1] = Math.Max(childEquations[j * _columns + i].Width, leftOffsets[i + 1]);
                     }
                     leftOffsets[i + 1] += leftOffsets[i];
                 }
-                for (int i = 0; i < columns; i++)
+                for (var i = 0; i < _columns; i++)
                 {
-                    for (int j = 0; j < rows; j++)
+                    for (var j = 0; j < _rows; j++)
                     {
-                        childEquations[j * columns + i].MidX = value + columnRefXs[i] + leftOffsets[i] + CellSpace * i;
+                        childEquations[j * _columns + i].MidX = value + columnRefXs[i] + leftOffsets[i] + CellSpace * i;
                     }
                 }
             }
@@ -107,55 +123,55 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            double[] columnWidths = new double[columns];
-            for (int i = 0; i < columns; i++)
+            var columnWidths = new double[_columns];
+            for (var i = 0; i < _columns; i++)
             {
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < _rows; j++)
                 {
-                    columnWidths[i] = Math.Max(childEquations[j * columns + i].Width, columnWidths[i]);
+                    columnWidths[i] = Math.Max(childEquations[j * _columns + i].Width, columnWidths[i]);
                 }
             }
-            Width = columnWidths.Sum() + CellSpace * (columns - 1);
+            Width = columnWidths.Sum() + CellSpace * (_columns - 1);
         }
 
         protected override void CalculateHeight()
         {
-            double[] rowHeights = new double[rows];
-            for (int i = 0; i < rows; i++)
+            var rowHeights = new double[_rows];
+            for (var i = 0; i < _rows; i++)
             {
-                rowHeights[i] = childEquations.Skip(i * columns).Take(columns).Max(x => x.Height);
+                rowHeights[i] = childEquations.Skip(i * _columns).Take(_columns).Max(x => x.Height);
             }
-            Height = rowHeights.Sum() + CellSpace * (rows - 1);
+            Height = rowHeights.Sum() + CellSpace * (_rows - 1);
         }
 
         public override double RefY
         {
             get
             {
-                if (rows == 1)
+                if (_rows == 1)
                 {
                     return childEquations.Max(x => x.RefY);
                 }
-                else if (rows % 2 == 0)
+                else if (_rows % 2 == 0)
                 {
                     //return childEquations.Take(rows / 2 * columns).Sum(x => x.Height) - CellSpace / 2 + FontSize * .3;
-                    double[] rowHeights = new double[rows / 2];
-                    for (int i = 0; i < rows / 2; i++)
+                    var rowHeights = new double[_rows / 2];
+                    for (var i = 0; i < _rows / 2; i++)
                     {
-                        rowHeights[i] = childEquations.Skip(i * columns).Take(columns).Max(x => x.Height);
+                        rowHeights[i] = childEquations.Skip(i * _columns).Take(_columns).Max(x => x.Height);
                     }
-                    return rowHeights.Sum() + CellSpace * rows / 2 - CellSpace / 2 + FontSize * .1;
+                    return rowHeights.Sum() + CellSpace * _rows / 2 - CellSpace / 2 + FontSize * .1;
                 }
                 else
                 {
                     //return childEquations.Skip(rows / 2 * columns).Take(columns).Max(x => x.MidY) - Top;
-                    double[] rowHeights = new double[rows / 2 + 1];
-                    for (int i = 0; i < rows / 2; i++)
+                    var rowHeights = new double[_rows / 2 + 1];
+                    for (var i = 0; i < _rows / 2; i++)
                     {
-                        rowHeights[i] = childEquations.Skip(i * columns).Take(columns).Max(x => x.Height);
+                        rowHeights[i] = childEquations.Skip(i * _columns).Take(_columns).Max(x => x.Height);
                     }
-                    rowHeights[rows / 2] = childEquations.Skip(rows / 2 * columns).Take(columns).Max(x => x.RefY);
-                    return rowHeights.Sum() + CellSpace * (rows / 2);// -FontSize * .1;
+                    rowHeights[_rows / 2] = childEquations.Skip(_rows / 2 * _columns).Take(_columns).Max(x => x.RefY);
+                    return rowHeights.Sum() + CellSpace * (_rows / 2);// -FontSize * .1;
                 }
             }
         }
@@ -167,10 +183,10 @@ namespace Editor
                 CalculateSize();
                 return true;
             }
-            int currentIndex = childEquations.IndexOf(ActiveChild);
+            var currentIndex = childEquations.IndexOf(ActiveChild);
             if (key == Key.Right)
             {
-                if (currentIndex % columns < columns - 1)//not last column?
+                if (currentIndex % _columns < _columns - 1)//not last column?
                 {
                     ActiveChild = childEquations[currentIndex + 1];
                     return true;
@@ -178,7 +194,7 @@ namespace Editor
             }
             else if (key == Key.Left)
             {
-                if (currentIndex % columns > 0)//not last column?
+                if (currentIndex % _columns > 0)//not last column?
                 {
                     ActiveChild = childEquations[currentIndex - 1];
                     return true;
@@ -186,10 +202,10 @@ namespace Editor
             }
             else if (key == Key.Up)
             {
-                if (currentIndex / columns > 0)//not in first row?
+                if (currentIndex / _columns > 0)//not in first row?
                 {
-                    Point point = ActiveChild.GetVerticalCaretLocation();
-                    ActiveChild = childEquations[currentIndex - columns]; ;
+                    var point = ActiveChild.GetVerticalCaretLocation();
+                    ActiveChild = childEquations[currentIndex - _columns]; ;
                     point.Y = ActiveChild.Top + 1;
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
@@ -197,10 +213,10 @@ namespace Editor
             }
             else if (key == Key.Down)
             {
-                if (currentIndex / columns < rows - 1)//not in last row?
+                if (currentIndex / _columns < _rows - 1)//not in last row?
                 {
-                    Point point = ActiveChild.GetVerticalCaretLocation();
-                    ActiveChild = childEquations[currentIndex + columns]; ;
+                    var point = ActiveChild.GetVerticalCaretLocation();
+                    ActiveChild = childEquations[currentIndex + _columns]; ;
                     point.Y = ActiveChild.Top + 1;
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;

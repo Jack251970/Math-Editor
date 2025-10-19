@@ -125,7 +125,7 @@ public static class LatexConverter
         {
             // TODO: Handle more special characters for Latex
             '{' => convertWrapper ? ['\\', '{'] : ['{'],
-            '}' => convertWrapper?['\\', '}'] : ['}'],
+            '}' => convertWrapper ? ['\\', '}'] : ['}'],
             _ => [c],
         };
     }
@@ -147,6 +147,56 @@ public static class LatexConverter
             {
                 sb.Append(insideEquation[i]);
             }
+        }
+        return sb;
+    }
+
+    private static readonly char[] BeginMatrix = ['\\', 'b', 'e', 'g', 'i', 'n', '{', 'a', 'r', 'r', 'a', 'y', '}', '{', '*', '{', '2', '0', '}', '{', 'c', '}', '}'];
+    private static char[] EndMatrix => EndArray;
+    private static char[] MatrixColumnSeparator => ['&'];
+    private static char[] MatrixRowSeparator => RowSeparator;
+    public static StringBuilder? ToMatrix(int rows, int columns, List<StringBuilder> matrix)
+    {
+        if (matrix.Count == 0 || rows * columns != matrix.Count)
+        {
+            return null;
+        }
+        var sb = new StringBuilder();
+        foreach (var c in BeginMatrix)
+        {
+            sb.Append(c);
+        }
+        sb.Append('\n');
+        for (var i = 0; i < rows; i++)
+        {
+            for (var j = 0; j < columns; j++)
+            {
+                var index = i * columns + j;
+                var cell = matrix[index];
+                for (var k = 0; k < cell.Length; k++)
+                {
+                    sb.Append(cell[k]);
+                }
+                if (j < columns - 1)
+                {
+                    foreach (var c in MatrixColumnSeparator)
+                    {
+                        sb.Append(c);
+                    }
+                }
+            }
+            if (i < rows - 1)
+            {
+                foreach (var c in MatrixRowSeparator)
+                {
+                    sb.Append(c);
+                }
+            }
+            sb.Append('\n');
+        }
+        foreach (var c in EndMatrix)
+        {
+            sb.Append(c);
         }
         return sb;
     }
