@@ -58,11 +58,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
 
     public void OnSecondAppStarted()
     {
-        if (Current.MainWindow is MainWindow window)
-        {
-            window.Show();
-            window.Focus();
-        }
+        // TODO: Open a new window
     }
 
     protected virtual void Dispose(bool disposing)
