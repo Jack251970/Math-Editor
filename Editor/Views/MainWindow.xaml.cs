@@ -234,7 +234,7 @@ public partial class MainWindow : Window
 #if DEBUG
             Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {_currentLocalFile}";
 #else
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFile}";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {_currentLocalFile}";
 #endif
         }
         else
