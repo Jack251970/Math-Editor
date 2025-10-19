@@ -135,6 +135,9 @@ public static class LatexConverter
         };
     }
 
+    /// <summary>
+    /// \sqrt{insideEquation}
+    /// </summary>
     private const char WhiteSpace = ' ';
 
     private static readonly char[] SquareRoot = ['\\', 's', 'q', 'r', 't'];
@@ -156,6 +159,13 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// \begin{array}{*{20}{c}}
+    /// {cell}&{cell}&{cell}\\
+    /// {cell}&{cell}&{cell}\\
+    /// {cell}&{cell}&{cell}\\
+    /// \end{array}
+    /// </summary>
     private static readonly char[] BeginMatrix = ['\\', 'b', 'e', 'g', 'i', 'n', '{', 'a', 'r', 'r', 'a', 'y', '}', '{', '*', '{', '2', '0', '}', '{', 'c', '}', '}'];
     private static char[] EndMatrix => EndArray;
     private static char[] MatrixColumnSeparator => ['&'];
@@ -206,6 +216,9 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// {}^{insideEquation}
+    /// </summary>
     private static readonly char[] LeftSuper = ['{', '}', '^'];
     public static StringBuilder? ToLeftSuper(StringBuilder? insideEquation)
     {
@@ -224,6 +237,9 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// ^{insideEquation}
+    /// </summary>
     private static readonly char[] RightSuper = ['^'];
     public static StringBuilder? ToRightSuper(StringBuilder? insideEquation)
     {
@@ -242,6 +258,9 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// {}_{insideEquation}
+    /// </summary>
     private static readonly char[] LeftSub = ['{', '}', '_'];
     public static StringBuilder? ToLeftSub(StringBuilder? insideEquation)
     {
@@ -260,6 +279,9 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// _{insideEquation}
+    /// </summary>
     private static readonly char[] RightSub = ['_'];
     public static StringBuilder? ToRightSub(StringBuilder? insideEquation)
     {
@@ -278,6 +300,9 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// _{subEquation}^{superEquation}
+    /// </summary>
     public static StringBuilder? ToLeftSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
     {
         var sb = new StringBuilder();
@@ -306,6 +331,9 @@ public static class LatexConverter
         return sb;
     }
 
+    /// <summary>
+    /// {}_{subEquation}^{superEquation}
+    /// </summary>
     public static StringBuilder? ToRightSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
     {
         var sb = new StringBuilder();
