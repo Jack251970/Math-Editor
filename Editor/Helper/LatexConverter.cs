@@ -205,4 +205,76 @@ public static class LatexConverter
         }
         return sb;
     }
+
+    private static readonly char[] LeftSuper = ['{', '}', '^'];
+    public static StringBuilder? ToLeftSuper(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in LeftSuper)
+        {
+            sb.Append(c);
+        }
+        if (insideEquation != null)
+        {
+            for (var i = 0; i < insideEquation.Length; i++)
+            {
+                sb.Append(insideEquation[i]);
+            }
+        }
+        return sb;
+    }
+
+    private static readonly char[] RightSuper = ['^'];
+    public static StringBuilder? ToRightSuper(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in RightSuper)
+        {
+            sb.Append(c);
+        }
+        if (insideEquation != null)
+        {
+            for (var i = 0; i < insideEquation.Length; i++)
+            {
+                sb.Append(insideEquation[i]);
+            }
+        }
+        return sb;
+    }
+
+    private static readonly char[] LeftSub = ['{', '}', '_'];
+    public static StringBuilder? ToLeftSub(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in LeftSub)
+        {
+            sb.Append(c);
+        }
+        if (insideEquation != null)
+        {
+            for (var i = 0; i < insideEquation.Length; i++)
+            {
+                sb.Append(insideEquation[i]);
+            }
+        }
+        return sb;
+    }
+
+    private static readonly char[] RightSub = ['_'];
+    public static StringBuilder? ToRightSub(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in RightSub)
+        {
+            sb.Append(c);
+        }
+        if (insideEquation != null)
+        {
+            for (var i = 0; i < insideEquation.Length; i++)
+            {
+                sb.Append(insideEquation[i]);
+            }
+        }
+        return sb;
+    }
 }

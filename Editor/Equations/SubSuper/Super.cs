@@ -1,10 +1,12 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Editor
 {
     public sealed class Super : SubSuperBase
     {
-        RowContainer rowContainer;
+        private readonly RowContainer rowContainer;
 
         public Super(EquationRow parent, Position position)
             : base(parent, position)
@@ -23,8 +25,8 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
             parameters.Add(new XElement(Position.GetType().Name, Position));
             thisElement.Add(parameters);
             thisElement.Add(rowContainer.Serialize());
@@ -33,8 +35,24 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            rowContainer.DeSerialize(xElement.Element(rowContainer.GetType().Name));
+            rowContainer.DeSerialize(xElement.Element(rowContainer.GetType().Name)!);
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            if (Position == Position.Left)
+            {
+                return LatexConverter.ToLeftSuper(rowContainer.ToLatex());
+            }
+            else if (Position == Position.Right)
+            {
+                return LatexConverter.ToRightSuper(rowContainer.ToLatex());
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid position for Super: {Position}");
+            }
         }
 
         protected override void CalculateHeight()
@@ -44,7 +62,7 @@ namespace Editor
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -59,20 +77,14 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                rowContainer.Left = this.Left + Padding;
+                rowContainer.Left = Left + Padding;
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return Height;
-            }
-        }
+        public override double RefY => Height;
     }
 }
