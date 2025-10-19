@@ -18,8 +18,10 @@ namespace Editor
         {
             ActiveChild = mainEquation = new RowContainer(this);
             SubLevel++;
-            bottomEquation = new RowContainer(this);
-            bottomEquation.ApplySymbolGap = false;
+            bottomEquation = new RowContainer(this)
+            {
+                ApplySymbolGap = false
+            };
             sign = new StaticSign(this, symbol, useUpright);
             bottomEquation.FontFactor = SubFontFactor;
             childEquations.AddRange(new EquationBase[] { mainEquation, bottomEquation, sign });

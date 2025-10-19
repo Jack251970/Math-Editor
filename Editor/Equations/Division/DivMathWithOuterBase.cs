@@ -11,8 +11,10 @@ namespace Editor
         public DivMathWithOuterBase(EquationContainer parent)
             : base(parent)
         {
-            outerEquation = new RowContainer(this);
-            outerEquation.HAlignment = Editor.HAlignment.Right;
+            outerEquation = new RowContainer(this)
+            {
+                HAlignment = Editor.HAlignment.Right
+            };
             //insideEquation.HAlignment = Editor.HAlignment.Right;
             childEquations.Add(outerEquation);
         }

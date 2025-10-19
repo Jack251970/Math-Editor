@@ -13,9 +13,11 @@ namespace Editor
             : base(parent)
         {
             SubLevel++;
-            topRowContainer = new RowContainer(this);
-            topRowContainer.FontFactor = SubFontFactor;
-            topRowContainer.ApplySymbolGap = false;
+            topRowContainer = new RowContainer(this)
+            {
+                FontFactor = SubFontFactor,
+                ApplySymbolGap = false
+            };
             childEquations.AddRange(new EquationBase[] { mainRowContainer, topRowContainer });
         }
 

@@ -452,8 +452,10 @@ namespace Editor
             base.DrawEquation(dc);
             if (deleteable != null)
             {
-                Brush brush = new SolidColorBrush(Colors.Gray);
-                brush.Opacity = 0.5;
+                Brush brush = new SolidColorBrush(Colors.Gray)
+                {
+                    Opacity = 0.5
+                };
                 dc.DrawRectangle(brush, null, new Rect(deleteable.Location, deleteable.Size));
             }
             if (childEquations.Count == 1)
@@ -538,7 +540,7 @@ namespace Editor
 
         public static bool UseItalicIntergalOnNew { get; set; }
 
-        public override void ExecuteCommand(CommandType commandType, object data)
+        public override void ExecuteCommand(CommandType commandType, object? data)
         {
             deleteable = null;
             if (ActiveChild.GetType() == typeof(TextEquation))

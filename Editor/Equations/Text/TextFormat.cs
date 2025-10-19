@@ -51,7 +51,7 @@ namespace Editor
         public static TextFormat DeSerialize(XElement xe)
         {
             double fontSize = double.Parse(xe.Element("FontSize").Value);
-            FontType fontType = (FontType)Enum.Parse(typeof(FontType), xe.Element("FontType").Value);
+            FontType fontType = Enum.Parse<FontType>(xe.Element("FontType").Value);
             FontStyle fontStyle = xe.Element("FontStyle").Value == "Italic" ? FontStyles.Italic : FontStyles.Normal;
             FontWeight fontWeight = xe.Element("FontWeight").Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;
             BrushConverter bc = new BrushConverter();

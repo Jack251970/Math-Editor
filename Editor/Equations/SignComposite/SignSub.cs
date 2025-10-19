@@ -22,8 +22,10 @@ namespace Editor
         {
             ActiveChild = mainEquation = new RowContainer(this);
             this.SubLevel++;
-            subEquation = new RowContainer(this);
-            subEquation.ApplySymbolGap = false;
+            subEquation = new RowContainer(this)
+            {
+                ApplySymbolGap = false
+            };
             sign = new StaticSign(this, symbol, useUpright);
             subEquation.FontFactor = SubFontFactor;
             childEquations.AddRange(new EquationBase[] { mainEquation, sign, subEquation });

@@ -44,8 +44,10 @@ namespace Editor
             CreateDecorations();
             if (equationPosition == Position.BottomAndTop)
             {
-                rowContainer2 = new RowContainer(this);
-                rowContainer2.FontFactor = SubFontFactor;
+                rowContainer2 = new RowContainer(this)
+                {
+                    FontFactor = SubFontFactor
+                };
                 childEquations.Add(rowContainer2);
             }
         }

@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private string _currentLocalFile = "";
     private const string MedExtension = "med";
     private static readonly string MedFileFilter = "Math Editor File (*." + MedExtension + ")|*." + MedExtension;
+    
     public MainWindow(string currentLocalFile)
     {
         _currentLocalFile = currentLocalFile;

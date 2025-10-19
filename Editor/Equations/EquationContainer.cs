@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -22,10 +21,10 @@ namespace Editor
         }
 
         protected List<EquationBase> childEquations = [];
-        EquationBase active;
+        private EquationBase active;
         public EquationBase ActiveChild
         {
-            get { return active; }
+            get => active;
             set
             {
                 if (value == null || !value.IsStatic)
@@ -40,19 +39,19 @@ namespace Editor
 
         public EquationContainer(EquationContainer parent) : base(parent) { }
 
-        public virtual void ExecuteCommand(CommandType commandType, object data)
+        public virtual void ExecuteCommand(CommandType commandType, object? data)
         {
-            if (ActiveChild is EquationContainer)
+            if (ActiveChild is EquationContainer eq)
             {
-                ((EquationContainer)ActiveChild).ExecuteCommand(commandType, data);
+                eq.ExecuteCommand(commandType, data);
             }
             CalculateSize();
         }
 
         public override string GetSelectedText()
         {
-            StringBuilder stringBulider = new StringBuilder("");
-            foreach (EquationBase eb in childEquations)
+            var stringBulider = new StringBuilder("");
+            foreach (var eb in childEquations)
             {
                 stringBulider.Append(eb.GetSelectedText());
             }
@@ -74,7 +73,7 @@ namespace Editor
         public override void DrawEquation(DrawingContext dc)
         {
             base.DrawEquation(dc);
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 eb.DrawEquation(dc);
             }
@@ -86,9 +85,9 @@ namespace Editor
             CalculateSize();
         }
 
-        public override CopyDataObject Copy(bool removeSelection)
+        public override CopyDataObject? Copy(bool removeSelection)
         {
-            CopyDataObject temp = ActiveChild.Copy(removeSelection);
+            var temp = ActiveChild.Copy(removeSelection);
             if (removeSelection)
             {
                 CalculateSize();
@@ -110,7 +109,7 @@ namespace Editor
         public override void DeSelect()
         {
             SelectedItems = 0; //base.Deselect()
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 eb.DeSelect();
             }
@@ -120,10 +119,7 @@ namespace Editor
         {
             ActiveChild = child;
             CalculateSize();
-            if (ParentEquation != null)
-            {
-                ParentEquation.ChildCompletedUndo(this);
-            }
+            ParentEquation?.ChildCompletedUndo(this);
         }
 
         public override void ConsumeText(string text)
@@ -157,9 +153,9 @@ namespace Editor
 
         public virtual EquationContainer GetInnerMostEquationContainer()
         {
-            if (ActiveChild is EquationContainer)
+            if (ActiveChild is EquationContainer eq)
             {
-                return ((EquationContainer)ActiveChild).GetInnerMostEquationContainer();
+                return eq.GetInnerMostEquationContainer();
             }
             else
             {
@@ -175,7 +171,7 @@ namespace Editor
             }
             else
             {
-                return new Point(this.Left, this.Bottom);
+                return new Point(Left, Bottom);
             }
         }
 
@@ -191,16 +187,16 @@ namespace Editor
             }
         }
 
-        public override EquationBase Split(EquationContainer newParent)
+        public override EquationBase? Split(EquationContainer newParent)
         {
-            EquationBase result = ActiveChild.Split(this);
+            var result = ActiveChild.Split(this);
             CalculateSize();
             return result;
         }
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 if (!eb.IsStatic && eb.Bounds.Contains(mousePoint))
                 {
@@ -217,7 +213,7 @@ namespace Editor
             {
                 for (int i = childEquations.Count - 1; i >= 0; i--)
                 {
-                    Type type = childEquations[i].GetType();
+                    var type = childEquations[i].GetType();
                     if (type == typeof(RowContainer) || type == typeof(EquationRow))
                     {
                         childEquations[i].SetCursorOnKeyUpDown(key, point);
@@ -230,7 +226,7 @@ namespace Editor
             {
                 for (int i = 0; i < childEquations.Count; i++)
                 {
-                    Type type = childEquations[i].GetType();
+                    var type = childEquations[i].GetType();
                     if (type == typeof(RowContainer) || type == typeof(EquationRow))
                     {
                         childEquations[i].SetCursorOnKeyUpDown(key, point);
@@ -248,11 +244,11 @@ namespace Editor
 
         public override double FontSize
         {
-            get { return base.FontSize; }
+            get => base.FontSize;
             set
             {
                 base.FontSize = value;
-                foreach (EquationBase eb in childEquations)
+                foreach (var eb in childEquations)
                 {
                     eb.FontSize = FontSize;
                 }
@@ -273,7 +269,7 @@ namespace Editor
 
         public override void ModifySelection(string operation, string argument, bool applied, bool addUndo)
         {
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 eb.ModifySelection(operation, argument, applied, addUndo);
             }
@@ -283,7 +279,7 @@ namespace Editor
         public override HashSet<int> GetUsedTextFormats()
         {
             HashSet<int> list = [];
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 var listFormats = eb.GetUsedTextFormats();
                 if (listFormats != null) //This check is necessary as the base returns 'null'
@@ -299,21 +295,18 @@ namespace Editor
 
         public override void ResetTextFormats(Dictionary<int, int> formatMapping)
         {
-            foreach (EquationBase eb in childEquations)
+            foreach (var eb in childEquations)
             {
                 eb.ResetTextFormats(formatMapping);
             }
         }
         public override bool ApplySymbolGap
         {
-            get
-            {
-                return base.ApplySymbolGap;
-            }
+            get => base.ApplySymbolGap;
             set
             {
                 base.ApplySymbolGap = value;
-                foreach (EquationBase eb in childEquations)
+                foreach (var eb in childEquations)
                 {
                     eb.ApplySymbolGap = value;
                 }

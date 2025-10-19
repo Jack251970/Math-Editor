@@ -20,9 +20,11 @@ namespace Editor
         {
             radicalSign = new RadicalSign(this);
             ActiveChild = insideEquation = new RowContainer(this);
-            nthRootEquation = new RowContainer(this);
-            nthRootEquation.ApplySymbolGap = false;
-            nthRootEquation.FontFactor = SubFontFactor;
+            nthRootEquation = new RowContainer(this)
+            {
+                ApplySymbolGap = false,
+                FontFactor = SubFontFactor
+            };
             childEquations.AddRange(new EquationBase[] { insideEquation, radicalSign, nthRootEquation });
         }
 

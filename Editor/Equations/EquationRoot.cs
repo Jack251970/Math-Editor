@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -14,17 +13,17 @@ namespace Editor
 {
     public sealed class EquationRoot : EquationContainer
     {
-        Caret vCaret;
-        Caret hCaret;
-        string fileVersion = "1.4";
-        string sessionString = Guid.NewGuid().ToString();
+        private readonly Caret _vCaret;
+        private readonly Caret _hCaret;
+        private readonly string fileVersion = "1.4";
+        private readonly string sessionString = Guid.NewGuid().ToString();
 
         public EquationRoot(Caret vCaret, Caret hCaret)
             : base(null)
         {
             ApplySymbolGap = true;
-            this.vCaret = vCaret;
-            this.hCaret = hCaret;
+            _vCaret = vCaret;
+            _hCaret = hCaret;
             ActiveChild = new RowContainer(this, 0.3);
             childEquations.Add(ActiveChild);
             ActiveChild.Location = Location = new Point(15, 15);
@@ -39,39 +38,39 @@ namespace Editor
 
         public void SaveFile(Stream stream)
         {
-            XDocument xDoc = new XDocument();
-            XElement root = new XElement(GetType().Name); //ActiveChild.Serialize();
+            var xDoc = new XDocument();
+            var root = new XElement(GetType().Name); //ActiveChild.Serialize();
             root.Add(new XAttribute("fileVersion", fileVersion));
             root.Add(new XAttribute("appVersion", Constants.Version));
-            textManager.OptimizeForSave(this);
-            root.Add(textManager.Serialize(true));
+            TextManager.OptimizeForSave(this);
+            root.Add(TextManager.Serialize(true));
             root.Add(ActiveChild.Serialize());
             xDoc.Add(root);
             xDoc.Save(stream);
-            textManager.RestoreAfterSave(this);
+            TextManager.RestoreAfterSave(this);
         }
 
         public void LoadFile(Stream stream)
         {
             UndoManager.ClearAll();
             DeSelect();
-            XDocument xDoc = XDocument.Load(stream, LoadOptions.PreserveWhitespace);
-            XElement root = xDoc.Root;
+            var xDoc = XDocument.Load(stream, LoadOptions.PreserveWhitespace);
+            XElement? root = xDoc.Root ?? throw new InvalidOperationException("File is empty or corrupted.");
             XAttribute fileVersionAttribute;
             XAttribute appVersionAttribute;
 
             if (root.Name == GetType().Name)
             {
-                XElement formattingElement = root.Element("TextManager");
-                textManager.DeSerialize(formattingElement);
-                fileVersionAttribute = root.Attributes("fileVersion").FirstOrDefault();
-                appVersionAttribute = root.Attributes("appVersion").FirstOrDefault();
-                root = root.Element("RowContainer");
+                XElement formattingElement = root.Element("TextManager")!;
+                TextManager.DeSerialize(formattingElement);
+                fileVersionAttribute = root.Attributes("fileVersion").First();
+                appVersionAttribute = root.Attributes("appVersion").First();
+                root = root.Element("RowContainer") ?? throw new InvalidOperationException("File is corrupted.");
             }
             else
             {
-                fileVersionAttribute = root.Attributes("fileVersion").FirstOrDefault();
-                appVersionAttribute = root.Attributes("appVersion").FirstOrDefault();
+                fileVersionAttribute = root.Attributes("fileVersion").First();
+                appVersionAttribute = root.Attributes("appVersion").First();
             }
             string appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
             if (fileVersionAttribute == null || fileVersionAttribute.Value != fileVersion)
@@ -150,23 +149,24 @@ namespace Editor
 
         public void AdjustCarets()
         {
-            vCaret.Location = ActiveChild.GetVerticalCaretLocation();
-            vCaret.CaretLength = ActiveChild.GetVerticalCaretLength();
+            _vCaret.Location = ActiveChild.GetVerticalCaretLocation();
+            _vCaret.CaretLength = ActiveChild.GetVerticalCaretLength();
             EquationContainer innerMost = ((RowContainer)ActiveChild).GetInnerMostEquationContainer();
-            hCaret.Location = innerMost.GetHorizontalCaretLocation();
-            hCaret.CaretLength = innerMost.GetHorizontalCaretLength();
+            _hCaret.Location = innerMost.GetHorizontalCaretLocation();
+            _hCaret.CaretLength = innerMost.GetHorizontalCaretLength();
         }
 
         public override CopyDataObject Copy(bool removeSelection)
         {
-            CopyDataObject temp = base.Copy(removeSelection);
-            DataObject data = new DataObject();
+            CopyDataObject? temp = base.Copy(removeSelection) ??
+                throw new InvalidOperationException("Copy failed in EquationRoot.");
+            var data = new DataObject();
             data.SetImage(temp.Image);
-            XElement rootElement = new XElement(this.GetType().Name);
+            var rootElement = new XElement(GetType().Name);
             rootElement.Add(new XElement("SessionId", sessionString));
-            rootElement.Add(textManager.Serialize(true));
+            rootElement.Add(TextManager.Serialize(true));
             rootElement.Add(new XElement("payload", temp.XElement));
-            MathEditorData med = new MathEditorData { XmlString = rootElement.ToString() };
+            var med = new MathEditorData { XmlString = rootElement.ToString() };
             data.SetData(med);
             //data.SetText(GetSelectedText());
             if (temp.Text != null)
@@ -184,10 +184,10 @@ namespace Editor
 
         public override void Paste(XElement xe)
         {
-            string id = xe.Element("SessionId").Value;
+            var id = xe.Element("SessionId")?.Value;
             if (id != sessionString)
             {
-                textManager.ProcessPastedXML(xe);
+                TextManager.ProcessPastedXML(xe);
             }
             int undoCount = UndoManager.UndoCount + 1;
             if (IsSelecting)
@@ -207,7 +207,7 @@ namespace Editor
         public bool PasteFromClipBoard()
         {
             bool success = false;
-            MathEditorData data = null;
+            MathEditorData? data = null;
             string text = "";
             for (int i = 0; i < 3; i++)
             {
@@ -233,7 +233,7 @@ namespace Editor
             {
                 if (data != null)
                 {
-                    XElement element = XElement.Parse(data.XmlString, LoadOptions.PreserveWhitespace);
+                    var element = XElement.Parse(data.XmlString, LoadOptions.PreserveWhitespace);
                     Paste(element);
                     success = true;
                 }
@@ -284,16 +284,16 @@ namespace Editor
         public void SaveImageToFile(string path)
         {
             string extension = Path.GetExtension(path).ToLower();
-            DrawingVisual dv = new DrawingVisual();
+            var dv = new DrawingVisual();
             using (DrawingContext dc = dv.RenderOpen())
             {
-                if (extension == ".bmp" || extension == "jpg")
+                if (extension is ".bmp" or "jpg")
                 {
                     dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
                 }
                 ActiveChild.DrawEquation(dc);
             }
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)), (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
+            var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)), (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
             bitmap.Render(dv);
             BitmapEncoder encoder = null;
             switch (extension)
@@ -320,10 +320,8 @@ namespace Editor
             try
             {
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
-                using (Stream s = File.Create(path))
-                {
-                    encoder.Save(s);
-                }
+                using Stream s = File.Create(path);
+                encoder.Save(s);
             }
             catch
             {
@@ -405,7 +403,7 @@ namespace Editor
 
         public override double FontSize
         {
-            get { return base.FontSize; }
+            get => base.FontSize;
             set
             {
                 base.FontSize = value;

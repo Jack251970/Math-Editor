@@ -14,7 +14,7 @@ namespace Editor
             : base(parent)
         {
             this.Previous = previous;
-            this.charFt = textManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
+            this.charFt = TextManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
             previous.ConsumeKey(System.Windows.Input.Key.Back);
             Height = FontSize;
             decorations.Add(new CharacterDecorationInfo() { DecorationType = cdt, Position = position, UnicodeString = sign });

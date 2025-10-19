@@ -140,9 +140,15 @@ public partial class EditorControl : UserControl, IDisposable
         }
         catch
         {
-            stream.Position = 0;
-            equationRoot.LoadFile(stream);
-            MessageBox.Show("Cannot open the specified file. The file is not in correct format.", "Error");
+            try
+            {
+                stream.Position = 0;
+                equationRoot.LoadFile(stream);
+            }
+            catch
+            {
+                MessageBox.Show("Cannot open the specified file. The file is not in correct format.", "Error");
+            }
         }
         AdjustView();
         Dirty = false;

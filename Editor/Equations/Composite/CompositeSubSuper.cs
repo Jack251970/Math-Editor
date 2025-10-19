@@ -16,9 +16,11 @@ namespace Editor
         {
             SubLevel++;
             subRow = new RowContainer(this);
-            superRow = new RowContainer(this);
-            superRow.FontFactor = subRow.FontFactor = SubFontFactor;
-            superRow.ApplySymbolGap = subRow.ApplySymbolGap = false;
+            superRow = new RowContainer(this)
+            {
+                FontFactor = subRow.FontFactor = SubFontFactor,
+                ApplySymbolGap = subRow.ApplySymbolGap = false
+            };
             childEquations.AddRange(new EquationBase[] { mainRowContainer, subRow, superRow });
         }
 

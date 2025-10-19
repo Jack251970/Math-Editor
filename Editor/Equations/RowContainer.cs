@@ -248,8 +248,8 @@ namespace Editor
                     FirstDecorations = firstRow.GetFirstTextEquation().GetDecorations(),
                     LastDecorations = lastRow.GetLastTextEquation().GetDecorations(),
                     Equations = equations,
+                    FirstRowActiveIndexAfterRemoval = firstRow.ActiveChildIndex
                 };
-                action.FirstRowActiveIndexAfterRemoval = firstRow.ActiveChildIndex;
                 firstText.RemoveSelection(false); //.DeleteSelectedText();
                 lastText.RemoveSelection(false); //.DeleteSelectedText();                
                 firstRow.Merge(lastRow);

@@ -9,24 +9,25 @@ namespace Editor
 {
     public abstract class EquationBase : EquationBox
     {
-        protected static TextManager textManager = new TextManager();
+        protected static TextManager TextManager { get; } = new();
 
-        static protected double lineFactor = 0.06;
+        protected const double LineFactor = 0.06;
+
         public virtual bool ApplySymbolGap { get; set; }
 
-        public virtual HashSet<int> GetUsedTextFormats() { return null; }
+        public virtual HashSet<int>? GetUsedTextFormats() { return null; }
         public virtual void ResetTextFormats(Dictionary<int, int> formatMapping) { }
 
-        protected double LineThickness { get { return fontSize * lineFactor; } }
-        protected double ThinLineThickness { get { return fontSize * lineFactor * 0.7; } }
-        protected Pen StandardPen { get { return PenManager.GetPen(LineThickness); } }
-        protected Pen ThinPen { get { return PenManager.GetPen(ThinLineThickness); } }
+        protected double LineThickness => fontSize * LineFactor;
+        protected double ThinLineThickness => fontSize * LineFactor * 0.7;
+        protected Pen StandardPen => PenManager.GetPen(LineThickness);
+        protected Pen ThinPen => PenManager.GetPen(ThinLineThickness);
 
-        protected Pen StandardMiterPen { get { return PenManager.GetPen(LineThickness, PenLineJoin.Miter); } }
-        protected Pen ThinMiterPen { get { return PenManager.GetPen(ThinLineThickness, PenLineJoin.Miter); } }
+        protected Pen StandardMiterPen => PenManager.GetPen(LineThickness, PenLineJoin.Miter);
+        protected Pen ThinMiterPen => PenManager.GetPen(ThinLineThickness, PenLineJoin.Miter);
 
-        protected Pen StandardRoundPen { get { return PenManager.GetPen(LineThickness, PenLineJoin.Round); } }
-        protected Pen ThinRoundPen { get { return PenManager.GetPen(ThinLineThickness, PenLineJoin.Round); } }
+        protected Pen StandardRoundPen => PenManager.GetPen(LineThickness, PenLineJoin.Round);
+        protected Pen ThinRoundPen => PenManager.GetPen(ThinLineThickness, PenLineJoin.Round);
 
         public HAlignment HAlignment { get; set; }
         public VAlignment VAlignment { get; set; }
@@ -34,23 +35,23 @@ namespace Editor
         public int SubLevel { get; set; }
         protected double SubFontFactor = 0.6;
         protected double SubSubFontFactor = 0.7;
-        public static event EventHandler<EventArgs> SelectionAvailable;
-        public static event EventHandler<EventArgs> SelectionUnavailable;
+        public static event EventHandler<EventArgs>? SelectionAvailable;
+        public static event EventHandler<EventArgs>? SelectionUnavailable;
 
-        static bool isSelecting;
+        private static bool isSelecting;
         protected static bool IsSelecting
         {
-            get { return isSelecting; }
+            get => isSelecting;
             set
             {
                 isSelecting = value;
                 if (isSelecting)
                 {
-                    SelectionAvailable(null, EventArgs.Empty); //there MUST always be one handler attached!
+                    SelectionAvailable?.Invoke(null, EventArgs.Empty); //there MUST always be one handler attached!
                 }
                 else
                 {
-                    SelectionUnavailable(null, EventArgs.Empty); //there MUST always be one handler attached!
+                    SelectionUnavailable?.Invoke(null, EventArgs.Empty); //there MUST always be one handler attached!
                 }
             }
         }
@@ -58,23 +59,23 @@ namespace Editor
         public static bool ShowNesting { get; set; }
         public EquationContainer ParentEquation { get; set; }
         //protected static Pen BluePen = new Pen(Brushes.Blue, 1);
-        Point location = new Point();
+        private Point location = new();
         //Point refPoint = new Point();
-        double width;
-        double height;
-        double fontSize = 20;
-        double fontFactor = 1;
+        private readonly double width;
+        private readonly double height;
+        private double fontSize = 20;
+        private double fontFactor = 1;
         public int SelectionStartIndex { get; set; }
         public int SelectedItems { get; set; } //this is a directed value (as on a real line!!)
 
         protected Brush debugBrush;
-        byte r = 80;
-        byte g = 80;
-        byte b = 80;
+        private readonly byte r = 80;
+        private readonly byte g = 80;
+        private readonly byte b = 80;
 
         public EquationBase(EquationContainer parent)
         {
-            this.ParentEquation = parent;
+            ParentEquation = parent;
             if (parent != null)
             {
                 SubLevel = parent.SubLevel;
@@ -91,7 +92,7 @@ namespace Editor
         public virtual bool ConsumeMouseClick(Point mousePoint) { return false; }
         public virtual void HandleMouseDrag(Point mousePoint) { }
 
-        public virtual EquationBase Split(EquationContainer newParent) { return null; }
+        public virtual EquationBase? Split(EquationContainer newParent) { return null; }
         public virtual void ConsumeText(string text) { }
         public virtual void ConsumeFormattedText(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo) { }
         public virtual bool ConsumeKey(Key key) { return false; }
@@ -99,14 +100,14 @@ namespace Editor
         public virtual double GetVerticalCaretLength() { return height; }
         protected virtual void CalculateWidth() { }
         protected virtual void CalculateHeight() { }
-        public virtual XElement Serialize() { return null; }
+        public virtual XElement? Serialize() { return null; }
         public virtual void DeSerialize(XElement xElement) { }
         public virtual void StartSelection() { SelectedItems = 0; }
         public virtual bool Select(Key key) { return false; }
         public virtual void DeSelect() { SelectedItems = 0; }
         public virtual void RemoveSelection(bool registerUndo) { }
         public virtual Rect GetSelectionBounds() { return Rect.Empty; }
-        public virtual CopyDataObject Copy(bool removeSelection) { return null; } //copy & cut
+        public virtual CopyDataObject? Copy(bool removeSelection) { return null; } //copy & cut
         public virtual void Paste(XElement xe) { }
         public virtual void SetCursorOnKeyUpDown(Key key, Point point) { }
         public virtual void ModifySelection(string operation, string argument, bool applied, bool addUndo) { }
@@ -129,7 +130,7 @@ namespace Editor
 
         public virtual double FontFactor
         {
-            get { return fontFactor; }
+            get => fontFactor;
             set
             {
                 fontFactor = value;
@@ -139,11 +140,7 @@ namespace Editor
 
         public virtual double FontSize
         {
-            get { return fontSize; }
-            set
-            {
-                fontSize = Math.Min(1000, Math.Max(value * fontFactor, 4));
-            }
+            get => fontSize; set => fontSize = Math.Min(1000, Math.Max(value * fontFactor, 4));
         }
     }
 }
