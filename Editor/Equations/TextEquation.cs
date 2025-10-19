@@ -451,10 +451,10 @@ namespace Editor
 
         private XElement CreateXElement(int start, int count)
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement text = new XElement("Text", textData.ToString(start, count));
-            StringBuilder strBuilder = new StringBuilder();
-            StringBuilder modeStr = new StringBuilder();
+            var thisElement = new XElement(GetType().Name);
+            var text = new XElement("Text", textData.ToString(start, count));
+            var strBuilder = new StringBuilder();
+            var modeStr = new StringBuilder();
             for (var i = start; i < start + count; i++)
             {
                 strBuilder.Append(formats[i] + ",");
@@ -465,18 +465,18 @@ namespace Editor
                 strBuilder.Remove(strBuilder.Length - 1, 1);
                 modeStr.Remove(modeStr.Length - 1, 1);
             }
-            XElement formatsElement = new XElement("Formats", strBuilder.ToString());
-            XElement modesElement = new XElement("Modes", modeStr.ToString());
+            var formatsElement = new XElement("Formats", strBuilder.ToString());
+            var modesElement = new XElement("Modes", modeStr.ToString());
             thisElement.Add(text);
             thisElement.Add(formatsElement);
             thisElement.Add(modesElement);
             var d = (from x in decorations where x.Index >= start && x.Index < start + count select x).ToList();
             if (d.Count > 0)
             {
-                XElement decorationsElement = new XElement("Decorations");
+                var decorationsElement = new XElement("Decorations");
                 foreach (var x in d)
                 {
-                    XElement xe = new XElement("d", x.DecorationType + "," + (x.Index - start) + "," + x.Position + "," + x.UnicodeString);
+                    var xe = new XElement("d", x.DecorationType + "," + (x.Index - start) + "," + x.Position + "," + x.UnicodeString);
                     decorationsElement.Add(xe);
                 }
                 thisElement.Add(decorationsElement);
