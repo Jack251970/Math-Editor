@@ -2,11 +2,11 @@
 {
     public sealed class StaticSign : StaticText
     {
-        bool integralSignItalic = false;
+        private bool integralSignItalic = false;
         public SignCompositeSymbol Symbol { get; set; }
         public bool UseItalicIntegralSign
         {
-            get { return integralSignItalic; }
+            get => integralSignItalic;
             set
             {
                 integralSignItalic = value;
@@ -28,7 +28,7 @@
             ReformatSign();
         }
 
-        void DetermineMargin()
+        private void DetermineMargin()
         {
             switch (Symbol)
             {
@@ -56,9 +56,9 @@
             }
         }
 
-        void DetermineFontType()
+        private void DetermineFontType()
         {
-            FontType fontType = FontType.STIXSizeOneSym;
+            var fontType = FontType.STIXSizeOneSym;
             switch (Symbol)
             {
                 case SignCompositeSymbol.Integral:
@@ -86,7 +86,7 @@
             FontType = fontType;
         }
 
-        void DetermineFontSizeFactor()
+        private void DetermineFontSizeFactor()
         {
             double factor = 1;
             switch (Symbol)
@@ -109,7 +109,7 @@
             FontSizeFactor = factor;
         }
 
-        void DetermineSignString()
+        private void DetermineSignString()
         {
             string signStr = "";
             switch (Symbol)
