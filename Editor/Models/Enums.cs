@@ -123,3 +123,8 @@ public enum EditorMode
 {
     Math, Text,
 }
+
+public enum CopyType
+{
+    Image, Latex,
+}

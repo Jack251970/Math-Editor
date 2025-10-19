@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -29,5 +30,9 @@ public class Settings : ObservableObject
 
     public string DefaultFont { get; set; } = "STIXGeneral";
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public EditorMode DefaultMode { get; set; } = EditorMode.Math;
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CopyType CopyType { get; set; } = CopyType.Image;
 }
