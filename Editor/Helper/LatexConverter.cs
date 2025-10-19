@@ -277,4 +277,60 @@ public static class LatexConverter
         }
         return sb;
     }
+
+    public static StringBuilder? ToLeftSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in LeftSub)
+        {
+            sb.Append(c);
+        }
+        if (subEquation != null)
+        {
+            for (var i = 0; i < subEquation.Length; i++)
+            {
+                sb.Append(subEquation[i]);
+            }
+        }
+        foreach (var c in LeftSuper)
+        {
+            sb.Append(c);
+        }
+        if (superEquation != null)
+        {
+            for (var i = 0; i < superEquation.Length; i++)
+            {
+                sb.Append(superEquation[i]);
+            }
+        }
+        return sb;
+    }
+
+    public static StringBuilder? ToRightSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in RightSub)
+        {
+            sb.Append(c);
+        }
+        if (subEquation != null)
+        {
+            for (var i = 0; i < subEquation.Length; i++)
+            {
+                sb.Append(subEquation[i]);
+            }
+        }
+        foreach (var c in RightSuper)
+        {
+            sb.Append(c);
+        }
+        if (superEquation != null)
+        {
+            for (var i = 0; i < superEquation.Length; i++)
+            {
+                sb.Append(superEquation[i]);
+            }
+        }
+        return sb;
+    }
 }

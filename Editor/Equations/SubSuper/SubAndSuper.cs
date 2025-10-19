@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using System.Xml.Linq;
 
@@ -7,8 +7,8 @@ namespace Editor
 {
     public sealed class SubAndSuper : SubSuperBase
     {
-        RowContainer superEquation;
-        RowContainer subEquation;
+        private readonly RowContainer superEquation;
+        private readonly RowContainer subEquation;
 
         public SubAndSuper(EquationRow parent, Position position)
             : base(parent, position)
@@ -31,8 +31,8 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
             parameters.Add(new XElement(Position.GetType().Name, Position));
             thisElement.Add(parameters);
             thisElement.Add(superEquation.Serialize());
@@ -48,6 +48,22 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            if (Position == Position.Left)
+            {
+                return LatexConverter.ToLeftSuperSub(superEquation.ToLatex(), subEquation.ToLatex());
+            }
+            else if (Position == Position.Right)
+            {
+                return LatexConverter.ToRightSuperSub(superEquation.ToLatex(), subEquation.ToLatex());
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid position for SubAndSuper: {Position}");
+            }
+        }
+
         protected override void CalculateWidth()
         {
             Width = Math.Max(subEquation.Width, superEquation.Width) + Padding * 2;
@@ -57,8 +73,8 @@ namespace Editor
         {
             if (Buddy.GetType() == typeof(TextEquation))
             {
-                double superHeight = superEquation.Height + Buddy.RefY - SuperOverlap; ;
-                double subHeight = subEquation.Height - SubOverlap;
+                var superHeight = superEquation.Height + Buddy.RefY - SuperOverlap; ;
+                var subHeight = subEquation.Height - SubOverlap;
                 Height = subHeight + superHeight;
             }
             else
@@ -69,7 +85,7 @@ namespace Editor
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -78,13 +94,7 @@ namespace Editor
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return superEquation.Height + Buddy.RefY - SuperOverlap;
-            }
-        }
+        public override double RefY => superEquation.Height + Buddy.RefY - SuperOverlap;
 
         public override bool ConsumeKey(Key key)
         {
@@ -114,7 +124,7 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
