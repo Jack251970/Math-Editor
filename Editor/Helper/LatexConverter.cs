@@ -91,18 +91,23 @@ public static class LatexConverter
             escaped.Append(c);
         }
         escaped.Append('\n');
-        foreach (var row in rows)
+        var rowsCount = rows.Count;
+        for (var i = 0; i < rowsCount; i++)
         {
-            for (var i = 0; i < row.Length; i++)
+            var row = rows[i];
+            for (var j = 0; j < row.Length; j++)
             {
-                foreach (var c in ConvertToLatexSymbol(row[i], false))
+                foreach (var c in ConvertToLatexSymbol(row[j], false))
                 {
                     escaped.Append(c);
                 }
             }
-            foreach (var c in RowSeparator)
+            if (i < rowsCount - 1)
             {
-                escaped.Append(c);
+                foreach (var c in RowSeparator)
+                {
+                    escaped.Append(c);
+                }
             }
             escaped.Append('\n');
         }
