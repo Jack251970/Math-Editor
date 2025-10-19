@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -363,88 +364,114 @@ namespace Editor
             deleteable = null;
         }
 
-        public override CopyDataObject Copy(bool removeSelection)
+        public override CopyDataObject? Copy(bool removeSelection)
         {
             if (SelectedItems != 0)
             {
-                int startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
-                int count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
-                string firstText = ((TextEquation)childEquations[startIndex]).GetSelectedText();
-                string lastText = ((TextEquation)childEquations[startIndex + count]).GetSelectedText();
-                int[] firstFormats = ((TextEquation)childEquations[startIndex]).GetSelectedFormats();
-                EditorMode[] firstModes = ((TextEquation)childEquations[startIndex]).GetSelectedModes();
-                CharacterDecorationInfo[] firstDecorations = ((TextEquation)childEquations[startIndex]).GetSelectedDecorations();
-                int[] lastFormats = ((TextEquation)childEquations[startIndex + count]).GetSelectedFormats();
-                EditorMode[] lastModes = ((TextEquation)childEquations[startIndex + count]).GetSelectedModes();
-                CharacterDecorationInfo[] lastDecorations = ((TextEquation)childEquations[startIndex + count]).GetSelectedDecorations();
-                TextEquation firstEquation = new TextEquation(this);
-                TextEquation lastEquation = new TextEquation(this);
+                // Prepare information for copy
+                var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
+                var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
+                
+                var firstText = ((TextEquation)childEquations[startIndex]).GetSelectedText();
+                var lastText = ((TextEquation)childEquations[startIndex + count]).GetSelectedText();
+                var firstFormats = ((TextEquation)childEquations[startIndex]).GetSelectedFormats();
+                var firstModes = ((TextEquation)childEquations[startIndex]).GetSelectedModes();
+                var firstDecorations = ((TextEquation)childEquations[startIndex]).GetSelectedDecorations();
+                var lastFormats = ((TextEquation)childEquations[startIndex + count]).GetSelectedFormats();
+                var lastModes = ((TextEquation)childEquations[startIndex + count]).GetSelectedModes();
+                var lastDecorations = ((TextEquation)childEquations[startIndex + count]).GetSelectedDecorations();
+
+                var firstEquation = new TextEquation(this);
+                var lastEquation = new TextEquation(this);
                 firstEquation.ConsumeFormattedText(firstText, firstFormats, firstModes, firstDecorations, false);
                 lastEquation.ConsumeFormattedText(lastText, lastFormats, lastModes, lastDecorations, false);
-                List<EquationBase> equations = [firstEquation];
-                for (int i = startIndex + 1; i < startIndex + count; i++)
+
+                var equations = new List<EquationBase>() { firstEquation };
+                for (var i = startIndex + 1; i < startIndex + count; i++)
                 {
                     equations.Add(childEquations[i]);
                 }
                 equations.Add(lastEquation);
-                double left = 0;
-                foreach (EquationBase eb in equations)
+
+                // Create bitmap if needed
+                RenderTargetBitmap? bitmap = null;
+                if (App.Settings.CopyType == CopyType.Image)
                 {
-                    eb.Left = 1 + left;
-                    left += eb.Width;
-                }
-                double maxUpperHalf = 0;
-                double maxBottomHalf = 0;
-                foreach (EquationBase eb in childEquations)
-                {
-                    if (eb.RefY > maxUpperHalf) { maxUpperHalf = eb.RefY; }
-                    if (eb.Height - eb.RefY > maxBottomHalf) { maxBottomHalf = eb.Height - eb.RefY; }
-                }
-                double width = 0;
-                foreach (EquationBase eb in equations)
-                {
-                    eb.Top = 1 + maxUpperHalf - eb.RefY;
-                    width += eb.Width;
-                }
-                Rect rect = GetSelectionBounds();
-                RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)), (int)(Math.Ceiling(maxUpperHalf + maxBottomHalf + 2)), 96, 96, PixelFormats.Default);
-                DrawingVisual dv = new DrawingVisual();
-                IsSelecting = false;
-                using (DrawingContext dc = dv.RenderOpen())
-                {
-                    dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
-                    foreach (EquationBase eb in equations)
+                    double left = 0;
+                    foreach (var eb in equations)
                     {
-                        eb.DrawEquation(dc);
+                        eb.Left = 1 + left;
+                        left += eb.Width;
                     }
+                    double maxUpperHalf = 0;
+                    double maxBottomHalf = 0;
+                    foreach (var eb in childEquations)
+                    {
+                        if (eb.RefY > maxUpperHalf) { maxUpperHalf = eb.RefY; }
+                        if (eb.Height - eb.RefY > maxBottomHalf) { maxBottomHalf = eb.Height - eb.RefY; }
+                    }
+                    double width = 0;
+                    foreach (var eb in equations)
+                    {
+                        eb.Top = 1 + maxUpperHalf - eb.RefY;
+                        width += eb.Width;
+                    }
+
+                    bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)),
+                        (int)(Math.Ceiling(maxUpperHalf + maxBottomHalf + 2)), 96, 96, PixelFormats.Default);
+                    var dv = new DrawingVisual();
+                    IsSelecting = false;
+                    using (var dc = dv.RenderOpen())
+                    {
+                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
+                        foreach (var eb in equations)
+                        {
+                            eb.DrawEquation(dc);
+                        }
+                    }
+                    IsSelecting = true;
+                    bitmap.Render(dv);
                 }
-                IsSelecting = true;
-                bitmap.Render(dv);
-                XElement thisElement = new XElement(GetType().Name);
-                XElement children = new XElement("ChildEquations");
-                foreach (EquationBase eb in equations)
+
+                // Create text if needed
+                string? copyText = null;
+                if (App.Settings.CopyType == CopyType.Latex)
+                {
+                    var latexList = new List<StringBuilder>();
+                    foreach (var eb in equations)
+                    {
+                        if (eb.ToLatex() is StringBuilder sb)
+                        {
+                            latexList.Add(sb);
+                        }
+                    }
+                    copyText = LatexConverter.EscapeRowText(latexList)?.ToString();
+                }
+
+                // Create XML element
+                var thisElement = new XElement(GetType().Name);
+                var children = new XElement("ChildEquations");
+                foreach (var eb in equations)
                 {
                     eb.SelectAll();
                     children.Add(eb.Serialize());
                 }
                 thisElement.Add(children);
-                //data.SetText(GetSelectedText());
-                foreach (EquationBase eb in equations)
+                foreach (var eb in equations)
                 {
                     eb.DeSelect();
                 }
-                Left = Left;
-                Top = Top;
+
+                // Remove selection if needed
                 if (removeSelection)
                 {
                     RemoveSelection(true);
                 }
-                return new CopyDataObject { Image = bitmap, Text = null, XElement = thisElement };
+
+                return new CopyDataObject { Image = bitmap, Text = copyText, XElement = thisElement };
             }
-            else
-            {
-                return base.Copy(removeSelection);
-            }
+
+            return base.Copy(removeSelection);
         }
 
         public override void DrawEquation(DrawingContext dc)
@@ -474,9 +501,9 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement children = new XElement("ChildEquations");
-            foreach (EquationBase childEquation in childEquations)
+            var thisElement = new XElement(GetType().Name);
+            var children = new XElement("ChildEquations");
+            foreach (var childEquation in childEquations)
             {
                 children.Add(childEquation.Serialize());
             }
@@ -486,9 +513,9 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            XElement children = xElement.Element("ChildEquations");
+            var children = xElement.Element("ChildEquations") ?? throw new Exception("Invalid XML format");
             childEquations.Clear();
-            foreach (XElement xe in children.Elements())
+            foreach (var xe in children.Elements())
             {
                 childEquations.Add(CreateChild(xe));
             }
@@ -498,6 +525,23 @@ namespace Editor
             }
             ActiveChild = childEquations.First();
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            if (childEquations.Count == 0) return null;
+            var sb = new StringBuilder();
+            foreach (var childEquation in childEquations)
+            {
+                if (childEquation.ToLatex() is StringBuilder childLatex)
+                {
+                    for (var i = 0; i < childLatex.Length; i++)
+                    {
+                        sb.Append(childLatex[i]);
+                    }
+                }
+            }
+            return sb;
         }
 
         EquationBase CreateChild(XElement xElement)

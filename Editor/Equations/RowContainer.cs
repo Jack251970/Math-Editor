@@ -273,19 +273,21 @@ namespace Editor
             CalculateSize();
         }
 
-        public override CopyDataObject Copy(bool removeSelection)
+        public override CopyDataObject? Copy(bool removeSelection)
         {
             if (SelectedItems != 0)
             {
-                int startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
-                int count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
-                EquationRow firstRow = (EquationRow)childEquations[startIndex];
-                EquationRow lastRow = (EquationRow)childEquations[startIndex + count];
-                List<EquationBase> firstRowSelectedItems = firstRow.GetSelectedEquations();
-                List<EquationBase> lastRowSelectedItems = lastRow.GetSelectedEquations();
+                // Prepare information for copy
+                var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
+                var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
+                
+                var firstRow = (EquationRow)childEquations[startIndex];
+                var lastRow = (EquationRow)childEquations[startIndex + count];
+                var firstRowSelectedItems = firstRow.GetSelectedEquations();
+                var lastRowSelectedItems = lastRow.GetSelectedEquations();
 
-                EquationRow newFirstRow = new EquationRow(this);
-                EquationRow newLastRow = new EquationRow(this);
+                var newFirstRow = new EquationRow(this);
+                var newLastRow = new EquationRow(this);
                 newFirstRow.GetFirstTextEquation().ConsumeFormattedText(firstRowSelectedItems.First().GetSelectedText(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedFormats(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedModes(),
@@ -300,72 +302,95 @@ namespace Editor
                 lastRowSelectedItems.RemoveAt(lastRowSelectedItems.Count - 1);
                 newFirstRow.AddChildren(firstRowSelectedItems, false);
                 newLastRow.AddChildren(lastRowSelectedItems, true);
-                List<EquationBase> equations = [];
-                for (int i = startIndex + 1; i < startIndex + count; i++)
+                var equations = new List<EquationBase>();
+                for (var i = startIndex + 1; i < startIndex + count; i++)
                 {
                     equations.Add(childEquations[i]);
                 }
                 equations.Add(newLastRow);
-                foreach (EquationBase eb in equations)
+                foreach (var eb in equations)
                 {
                     eb.Left = 1;
                 }
-                double left = firstRow.GetFirstSelectionText().Right - this.Left;
-                Rect firstTextRect = firstRow.GetFirstSelectionText().GetSelectionBounds();
+                var left = firstRow.GetFirstSelectionText().Right - Left;
+                var firstTextRect = firstRow.GetFirstSelectionText().GetSelectionBounds();
                 if (!firstTextRect.IsEmpty)
                 {
                     left = firstTextRect.Left - Left;
                 }
                 newFirstRow.Left = left + 1;
                 equations.Insert(0, newFirstRow);
-                double nextY = 1;
-                double width = firstRow.Width;
-                double height = 0;
-                foreach (EquationBase eb in equations)
+
+                // Create image if needed
+                RenderTargetBitmap? bitmap = null;
+                if (App.Settings.CopyType == CopyType.Image)
                 {
-                    eb.Top = nextY;
-                    nextY += eb.Height + LineSpace;
-                    width = eb.Width > width ? eb.Width : width;
-                    height += eb.Height + LineSpace;
-                }
-                height -= LineSpace;
-                RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)), (int)(Math.Ceiling(height + 2)), 96, 96, PixelFormats.Default);
-                DrawingVisual dv = new DrawingVisual();
-                IsSelecting = false;
-                using (DrawingContext dc = dv.RenderOpen())
-                {
-                    dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
-                    foreach (EquationBase eb in equations)
+                    double nextY = 1;
+                    double width = firstRow.Width;
+                    double height = 0;
+                    foreach (var eb in equations)
                     {
-                        eb.DrawEquation(dc);
+                        eb.Top = nextY;
+                        nextY += eb.Height + LineSpace;
+                        width = eb.Width > width ? eb.Width : width;
+                        height += eb.Height + LineSpace;
                     }
+                    height -= LineSpace;
+
+                    bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)), (int)(Math.Ceiling(height + 2)), 96, 96, PixelFormats.Default);
+                    var dv = new DrawingVisual();
+                    IsSelecting = false;
+                    using (DrawingContext dc = dv.RenderOpen())
+                    {
+                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
+                        foreach (EquationBase eb in equations)
+                        {
+                            eb.DrawEquation(dc);
+                        }
+                    }
+                    IsSelecting = true;
+                    bitmap.Render(dv);
                 }
-                IsSelecting = true;
-                bitmap.Render(dv);
-                XElement thisElement = new XElement(GetType().Name);
-                XElement children = new XElement("ChildRows");
-                foreach (EquationBase eb in equations)
+
+                // Create text if needed
+                string? copyText = null;
+                if (App.Settings.CopyType == CopyType.Latex)
+                {
+                    var latexList = new List<StringBuilder>();
+                    foreach (var eb in equations)
+                    {
+                        if (eb.ToLatex() is StringBuilder sb)
+                        {
+                            latexList.Add(sb);
+                        }
+                    }
+                    copyText = LatexConverter.EscapeRows(latexList)?.ToString();
+                }
+
+                // Create XML element
+                var thisElement = new XElement(GetType().Name);
+                var children = new XElement("ChildRows");
+                foreach (var eb in equations)
                 {
                     eb.SelectAll();
                     children.Add(eb.Serialize());
                 }
                 thisElement.Add(children);
-                foreach (EquationBase eb in equations)
+                foreach (var eb in equations)
                 {
                     eb.DeSelect();
                 }
-                Left = Left;
-                Top = Top;
+
+                // Remove selection if needed
                 if (removeSelection)
                 {
                     RemoveSelection(true);
                 }
-                return new CopyDataObject { Image = bitmap, Text = null, XElement = thisElement };
+
+                return new CopyDataObject { Image = bitmap, Text = copyText, XElement = thisElement };
             }
-            else
-            {
-                return base.Copy(removeSelection);
-            }
+
+            return base.Copy(removeSelection);
         }
 
         public override void SelectAll()
@@ -513,9 +538,9 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement children = new XElement("ChildRows");
-            foreach (EquationBase childRow in childEquations)
+            var thisElement = new XElement(GetType().Name);
+            var children = new XElement("ChildRows");
+            foreach (var childRow in childEquations)
             {
                 children.Add(childRow.Serialize());
             }
@@ -525,11 +550,11 @@ namespace Editor
 
         public override void DeSerialize(XElement xElement)
         {
-            XElement children = xElement.Element("ChildRows");
+            var children = xElement.Element("ChildRows") ?? throw new Exception("Invalid XML format");
             childEquations.Clear();
-            foreach (XElement xe in children.Elements())
+            foreach (var xe in children.Elements())
             {
-                EquationRow row = new EquationRow(this);
+                var row = new EquationRow(this);
                 row.DeSerialize(xe);
                 childEquations.Add(row);
             }
@@ -539,6 +564,23 @@ namespace Editor
             }
             ActiveChild = childEquations.First();
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            if (childEquations.Count == 0) return null;
+            var sb = new StringBuilder();
+            foreach (var childRow in childEquations)
+            {
+                if (childRow.ToLatex() is StringBuilder childLatex)
+                {
+                    for (var i = 0; i < childLatex.Length; i++)
+                    {
+                        sb.Append(childLatex[i]);
+                    }
+                }
+            }
+            return sb;
         }
 
         void AddLine(EquationRow newRow)

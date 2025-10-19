@@ -352,26 +352,45 @@ namespace Editor
         public override CopyDataObject? Copy(bool removeSelection)
         {
             var selectedText = GetSelectedText();
-            var selectedFormats = GetSelectedFormats();
             if (selectedText.Length > 0)
             {
-                RenderTargetBitmap bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + 4)), (int)(Math.Ceiling(Height + 4)), 96, 96, PixelFormats.Default);
-                DrawingVisual dv = new DrawingVisual();
-                using (DrawingContext dc = dv.RenderOpen())
-                {
-                    dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
-                    DrawEquation(dc);
-                }
-                bitmap.Render(dv);
+                // Prepare information for copy
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                 var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
-                XElement xElement = CreateXElement(startIndex, count);
+                
+                // Create image if needed
+                RenderTargetBitmap? bitmap = null;
+                if (App.Settings.CopyType == CopyType.Image)
+                {
+                    bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + 4)), (int)(Math.Ceiling(Height + 4)), 96, 96, PixelFormats.Default);
+                    var dv = new DrawingVisual();
+                    using (var dc = dv.RenderOpen())
+                    {
+                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
+                        DrawEquation(dc);
+                    }
+                    bitmap.Render(dv);
+                }
+
+                // Create text
+                var copyText = selectedText;
+                if (App.Settings.CopyType == CopyType.Latex)
+                {
+                    copyText = CreateLatex(startIndex, count)?.ToString();
+                }
+
+                // Create XML element
+                var xElement = CreateXElement(startIndex, count);
+
+                // Remove selection if needed
                 if (removeSelection)
                 {
                     RemoveSelection(true);
                 }
-                return new CopyDataObject { Image = bitmap, Text = selectedText, XElement = xElement };
+
+                return new CopyDataObject { Image = bitmap, Text = copyText, XElement = xElement };
             }
+
             return null;
         }
 
@@ -509,6 +528,16 @@ namespace Editor
                 }
             }
             FormatText();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return CreateLatex(0, textData.Length);
+        }
+
+        public StringBuilder? CreateLatex(int startIndex, int count)
+        {
+            return LatexConverter.EscapeText(textData, startIndex, count);
         }
 
         public override double FontSize

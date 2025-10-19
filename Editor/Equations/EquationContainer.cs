@@ -88,10 +88,13 @@ namespace Editor
         public override CopyDataObject? Copy(bool removeSelection)
         {
             var temp = ActiveChild.Copy(removeSelection);
+
+            // Remove selection if needed
             if (removeSelection)
             {
                 CalculateSize();
             }
+
             return temp;
         }
 

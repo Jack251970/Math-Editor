@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -102,6 +103,7 @@ namespace Editor
         protected virtual void CalculateHeight() { }
         public virtual XElement? Serialize() { return null; }
         public virtual void DeSerialize(XElement xElement) { }
+        public virtual StringBuilder? ToLatex() { return null;  }
         public virtual void StartSelection() { SelectedItems = 0; }
         public virtual bool Select(Key key) { return false; }
         public virtual void DeSelect() { SelectedItems = 0; }

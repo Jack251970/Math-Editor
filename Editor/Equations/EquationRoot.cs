@@ -160,25 +160,34 @@ namespace Editor
         {
             CopyDataObject? temp = base.Copy(removeSelection) ??
                 throw new InvalidOperationException("Copy failed in EquationRoot.");
+
+            // Prepare data object for clipboard
             var data = new DataObject();
-            data.SetImage(temp.Image);
             var rootElement = new XElement(GetType().Name);
             rootElement.Add(new XElement("SessionId", sessionString));
             rootElement.Add(TextManager.Serialize(true));
             rootElement.Add(new XElement("payload", temp.XElement));
             var med = new MathEditorData { XmlString = rootElement.ToString() };
             data.SetData(med);
-            //data.SetText(GetSelectedText());
+            if (temp.Image != null)
+            {
+                data.SetImage(temp.Image);
+            }
             if (temp.Text != null)
             {
                 data.SetText(temp.Text);
             }
+
+            // Set data to clipboard
             Clipboard.SetDataObject(data, true);
+
+            // Remove selection if needed
             if (removeSelection)
             {
                 DeSelect();
                 AdjustCarets();
             }
+
             return temp;
         }
 

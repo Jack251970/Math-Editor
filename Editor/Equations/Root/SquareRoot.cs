@@ -1,47 +1,47 @@
 ﻿using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Editor
 {
     public sealed class SquareRoot : EquationContainer
     {
-        protected RowContainer insideEquation = null;
-        protected RadicalSign radicalSign;
-        protected double ExtraHeight
-        {
-            get { return FontSize * .15; }
-        }
+        private readonly RowContainer _insideEquation;
+        private readonly RadicalSign _radicalSign;
 
-        protected double LeftGap
-        {
-            get { return FontSize * .1; }
-        }
+        private double ExtraHeight => FontSize * .15;
+        private double LeftGap => FontSize * .1;
 
         public SquareRoot(EquationContainer parent)
             : base(parent)
         {
-            radicalSign = new RadicalSign(this);
-            ActiveChild = insideEquation = new RowContainer(this);
-            childEquations.Add(insideEquation);
-            childEquations.Add(radicalSign);
+            _radicalSign = new RadicalSign(this);
+            ActiveChild = _insideEquation = new RowContainer(this);
+            childEquations.Add(_insideEquation);
+            childEquations.Add(_radicalSign);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(insideEquation.Serialize());
+            var thisElement = new XElement(GetType().Name);
+            thisElement.Add(_insideEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            insideEquation.DeSerialize(xElement.Elements().First());
+            _insideEquation.DeSerialize(xElement.Elements().First());
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToSquareRoot(_insideEquation.ToLatex());
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -51,39 +51,33 @@ namespace Editor
 
         private void AdjustVertical()
         {
-            insideEquation.Bottom = Bottom;
-            radicalSign.Top = Top;
+            _insideEquation.Bottom = Bottom;
+            _radicalSign.Top = Top;
         }
 
         protected override void CalculateWidth()
         {
-            Width = insideEquation.Width + radicalSign.Width + LeftGap;
+            Width = _insideEquation.Width + _radicalSign.Width + LeftGap;
         }
 
         protected override void CalculateHeight()
         {
-            Height = insideEquation.Height + ExtraHeight;
-            radicalSign.Height = Height;
+            Height = _insideEquation.Height + ExtraHeight;
+            _radicalSign.Height = Height;
             AdjustVertical();
         }
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                radicalSign.Left = value + LeftGap;
-                insideEquation.Left = radicalSign.Right;
+                _radicalSign.Left = value + LeftGap;
+                _insideEquation.Left = _radicalSign.Right;
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return insideEquation.RefY + ExtraHeight;
-            }
-        }
+        public override double RefY => _insideEquation.RefY + ExtraHeight;
     }
 }
