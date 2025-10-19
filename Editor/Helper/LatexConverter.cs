@@ -361,4 +361,38 @@ public static class LatexConverter
         }
         return sb;
     }
+
+    /// <summary>
+    /// \sqrt[nthRootEquation]{insideEquation}
+    /// </summary>
+    private static readonly char[] NRoot1 = ['\\', 's', 'q', 'r', 't', '['];
+    private static readonly char[] NRoot2 = [']'];
+    public static StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in NRoot1)
+        {
+            sb.Append(c);
+        }
+        if (nthRootEquation != null)
+        {
+            for (var i = 0; i < nthRootEquation.Length; i++)
+            {
+                sb.Append(nthRootEquation[i]);
+            }
+        }
+        foreach (var c in NRoot2)
+        {
+            sb.Append(c);
+        }
+        if (insideEquation != null)
+        {
+            // No need to wrap it with {} since insideEquation is already wrapped
+            for (var i = 0; i < insideEquation.Length; i++)
+            {
+                sb.Append(insideEquation[i]);
+            }
+        }
+        return sb;
+    }
 }
