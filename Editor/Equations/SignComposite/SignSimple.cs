@@ -1,76 +1,76 @@
 ﻿using System;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Editor
 {
-    class SignSimple : EquationContainer
+    public sealed class SignSimple : EquationContainer
     {
-        protected RowContainer mainEquation;
-        protected StaticSign sign;
+        private readonly RowContainer _mainEquation;
+        private readonly StaticSign _sign;
 
         public SignSimple(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(parent)
         {
-            ActiveChild = mainEquation = new RowContainer(this);
-            sign = new StaticSign(this, symbol, useUpright);
-            childEquations.AddRange(new EquationBase[] { mainEquation, sign });
+            ActiveChild = _mainEquation = new RowContainer(this);
+            _sign = new StaticSign(this, symbol, useUpright);
+            childEquations.AddRange([_mainEquation, _sign]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
-            parameters.Add(new XElement(sign.Symbol.GetType().Name, sign.Symbol));
-            parameters.Add(new XElement(typeof(bool).FullName, sign.UseItalicIntegralSign));
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
+            parameters.Add(new XElement(_sign.Symbol.GetType().Name, _sign.Symbol));
+            parameters.Add(new XElement(typeof(bool).FullName!, _sign.UseItalicIntegralSign));
             thisElement.Add(parameters);
-            thisElement.Add(mainEquation.Serialize());
+            thisElement.Add(_mainEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            mainEquation.DeSerialize(xElement.Element(mainEquation.GetType().Name));
+            _mainEquation.DeSerialize(xElement.Element(_mainEquation.GetType().Name)!);
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToSignSimple(_sign.ToLatex(), _mainEquation.ToLatex());
         }
 
         protected override void CalculateWidth()
         {
-            Width = sign.Width + mainEquation.Width;
+            Width = _sign.Width + _mainEquation.Width;
         }
 
         protected override void CalculateHeight()
         {
-            Height = Math.Max(sign.RefY, mainEquation.RefY) + Math.Max(sign.RefY, mainEquation.Height - mainEquation.RefY);
+            Height = Math.Max(_sign.RefY, _mainEquation.RefY) + Math.Max(_sign.RefY, _mainEquation.Height - _mainEquation.RefY);
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
-                sign.MidY = MidY;
-                mainEquation.MidY = MidY;
+                _sign.MidY = MidY;
+                _mainEquation.MidY = MidY;
             }
         }
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                sign.Left = value;
-                mainEquation.Left = sign.Right;
+                _sign.Left = value;
+                _mainEquation.Left = _sign.Right;
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return Math.Max(sign.RefY, mainEquation.RefY);
-            }
-        }
+        public override double RefY => Math.Max(_sign.RefY, _mainEquation.RefY);
     }
 }

@@ -159,24 +159,22 @@ public static class LatexConverter
             '\u222C' => ['\\', 'i', 'i', 'n', 't'], // ∬
             '\u222D' => ['\\', 'i', 'i', 'i', 'n', 't'], // ∭
             '\u222E' => ['\\', 'o', 'i', 'n', 't'], // ∮
-            // \mathop{{\int\!\!\!\!\!\int}\mkern-21mu \bigcirc} 
-            '\u222F' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', '!', '\\', '!', '\\', '!', '\\',
-                '!', '\\', 'i', 'n', 't', '}', '\\', 'm', 'k', 'e', 'r', 'n', '-', '2', '1', 'm', 'u', ' ', '\\', 'b', 'i', 'g',
-                'c', 'i', 'r', 'c', 'o', '}', WhiteSpace], // ∯
-            // \mathop{{\int\!\!\!\!\!\int\!\!\!\!\!\int}\mkern-31.2mu \bigodot} 
-            '\u2230' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', '!', '\\', '!', '\\', '!', '\\',
-                '!', '\\', 'i', 'n', 't', '\\', '!', '\\', '!', '\\', '!', '\\', '!', '\\', 'i', 'n', 't', '}', '\\', 'm', 'k',
-                'e', 'r', 'n', '-', '3', '1', '.', '2', 'm', 'u', ' ', '\\', 'b', 'i', 'g', 'o', 'd', 'o', 't', '}', WhiteSpace], // ∰
-            // \mathop{\int\mkern-20.8mu \circlearrowleft} 
-            '\u2232' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', 'm', 'k', 'e', 'r', 'n', '-',
-                '2', '0', '.', '8', 'm', 'u', ' ', '\\', 'c', 'i', 'r', 'c', 'l', 'e', 'a', 'r', 'r', 'o', 'w', 'l', 'e', 'f',
-                't', '}', WhiteSpace], // ∲
-            // \mathop{\int\mkern-20.8mu \circlearrowright} 
-            '\u2233' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', 'm', 'k', 'e', 'r', 'n', '-',
-                '2', '0', '.', '8', 'm', 'u', ' ', '\\', 'c', 'i', 'r', 'c', 'l', 'e', 'a', 'r', 'r', 'o', 'w', 'r', 'i', 'g',
-                'h', 't', '}', WhiteSpace], // ∳
+            '\u222F' => ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}"), // ∯
+            '\u2230' => ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}"), // ∰
+            '\u2232' => ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}"), // ∲
+            '\u2233' => ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}"), // ∳
             _ => [c],
         };
+    }
+
+    private static char[] ToChars(string str)
+    {
+        var chars = new char[str.Length];
+        for (var i = 0; i < str.Length; i++)
+        {
+            chars[i] = str[i];
+        }
+        return chars;
     }
 
     /// <summary>
@@ -435,6 +433,33 @@ public static class LatexConverter
             for (var i = 0; i < insideEquation.Length; i++)
             {
                 sb.Append(insideEquation[i]);
+            }
+        }
+        return sb;
+    }
+
+    /// <summary>
+    /// {sign} {mainEquation}
+    /// </summary>
+    /// <param name="sign"></param>
+    /// <param name="mainEquation"></param>
+    /// <returns></returns>
+    public static StringBuilder? ToSignSimple(StringBuilder? sign, StringBuilder? mainEquation)
+    {
+        var sb = new StringBuilder();
+        if (sign != null)
+        {
+            for (var i = 0; i < sign.Length; i++)
+            {
+                sb.Append(sign[i]);
+            }
+        }
+        sb.Append(WhiteSpace);
+        if (mainEquation != null)
+        {
+            for (var i = 0; i < mainEquation.Length; i++)
+            {
+                sb.Append(mainEquation[i]);
             }
         }
         return sb;
