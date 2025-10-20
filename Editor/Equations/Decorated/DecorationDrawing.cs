@@ -4,41 +4,42 @@ using System.Windows.Media;
 
 namespace Editor
 {
-    class DecorationDrawing : EquationBase
+    public sealed class DecorationDrawing : EquationBase
     {
-        DecorationType decorationType;
-        FormattedText firstSign; //only used by certain decorations
-        FormattedText secondSign; //only used by certain decorations
-        FormattedText bar;
+        private readonly DecorationType _decorationType;
+        private FormattedText _firstSign = null!; //only used by certain decorations
+        private FormattedText _secondSign = null!; //only used by certain decorations
+        private FormattedText _bar = null!;
 
         public DecorationDrawing(EquationContainer parent, DecorationType decorationType)
             : base(parent)
         {
-            this.decorationType = decorationType;
+            _decorationType = decorationType;
             IsStatic = true;
             CreateDecorations();
             DetermineHeight();
         }
 
-        void CreateDecorations()
+        private void CreateDecorations()
         {
-            switch (decorationType)
+            switch (_decorationType)
             {
                 case DecorationType.DoubleArrow:
-                    firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7);
-                    secondSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
+                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7);
+                    _secondSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
                     break;
                 case DecorationType.LeftArrow:
-                    firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7);
+                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7);
                     break;
                 case DecorationType.RightArrow:
-                    firstSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
+                    _firstSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
                     break;
+                // TODO: Looks like it is unnecessary?
                 //case DecorationType.RightHarpoonUpBarb:
                 //case DecorationType.LeftHarpoonUpBarb:
                 //case DecorationType.RightHarpoonDownBarb:
                 //case DecorationType.LeftHarpoonDownBarb:
-                //    firstSign = FontFactory.GetFormattedText("\u21BC", FontType.STIXGeneral, FontSize);
+                //    _firstSign = FontFactory.GetFormattedText("\u21BC", FontType.STIXGeneral, FontSize);
                 //    break;
                 case DecorationType.Parenthesis:
                     CreateParenthesisSigns();
@@ -49,7 +50,7 @@ namespace Editor
             }
         }
 
-        void CreateParenthesisSigns()
+        private void CreateParenthesisSigns()
         {
             if (Width < FontSize * .8)
             {
@@ -65,23 +66,20 @@ namespace Editor
             }
             else
             {
-                firstSign = FontFactory.GetFormattedText("\uE142", FontType.STIXNonUnicode, FontSize * .55);
-                secondSign = FontFactory.GetFormattedText("\uE143", FontType.STIXNonUnicode, FontSize * .55);
-                bar = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55);
+                _firstSign = FontFactory.GetFormattedText("\uE142", FontType.STIXNonUnicode, FontSize * .55);
+                _secondSign = FontFactory.GetFormattedText("\uE143", FontType.STIXNonUnicode, FontSize * .55);
+                _bar = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55);
             }
         }
 
         public override double Width
         {
-            get
-            {
-                return base.Width;
-            }
+            get => base.Width;
             set
             {
                 base.Width = value;
-                if (decorationType == DecorationType.Tilde || decorationType == DecorationType.Parenthesis ||
-                    decorationType == DecorationType.Hat)
+                if (_decorationType is DecorationType.Tilde or DecorationType.Parenthesis or
+                    DecorationType.Hat)
                 {
                     CreateDecorations();
                     DetermineHeight();
@@ -124,13 +122,13 @@ namespace Editor
 
         private void FitFirstSignToWidth(FontType fontType, string unicodeChar, FontWeight weight)
         {
-            double factor = .1;
+            var factor = .1;
             do
             {
-                firstSign = FontFactory.GetFormattedText(unicodeChar, fontType, FontSize * factor);
+                _firstSign = FontFactory.GetFormattedText(unicodeChar, fontType, FontSize * factor);
                 factor += .1;
             }
-            while (Width > firstSign.Width - firstSign.OverhangLeading - firstSign.OverhangTrailing);
+            while (Width > _firstSign.Width - _firstSign.OverhangLeading - _firstSign.OverhangTrailing);
         }
 
         protected override void CalculateHeight()
@@ -140,45 +138,21 @@ namespace Editor
 
         public override double Left
         {
-            get
-            {
-                return base.Left;
-            }
-            set
-            {
-                base.Left = Math.Floor(value) + .5;
-            }
+            get => base.Left; set => base.Left = Math.Floor(value) + .5;
         }
         public override double Top
         {
-            get
-            {
-                return base.Top;
-            }
-            set
-            {
-                base.Top = Math.Floor(value) + .5;
-            }
+            get => base.Top; set => base.Top = Math.Floor(value) + .5;
         }
 
         public override double Bottom
         {
-            get
-            {
-                return Math.Floor(base.Bottom) + .5;
-            }
-            set
-            {
-                base.Bottom = value;
-            }
+            get => Math.Floor(base.Bottom) + .5; set => base.Bottom = value;
         }
 
         public override double FontSize
         {
-            get
-            {
-                return base.FontSize;
-            }
+            get => base.FontSize;
             set
             {
                 base.FontSize = value;
@@ -187,9 +161,9 @@ namespace Editor
             }
         }
 
-        void DetermineHeight()
+        private void DetermineHeight()
         {
-            switch (decorationType)
+            switch (_decorationType)
             {
                 case DecorationType.Cross:
                 case DecorationType.LeftCross:
@@ -211,7 +185,7 @@ namespace Editor
                 case DecorationType.DoubleArrow:
                 case DecorationType.Parenthesis:
                 case DecorationType.Tilde:
-                    Height = firstSign.Extent;
+                    Height = _firstSign.Extent;
                     break;
                 case DecorationType.RightHarpoonUpBarb:
                 case DecorationType.LeftHarpoonUpBarb:
@@ -234,7 +208,7 @@ namespace Editor
 
         public override void DrawEquation(DrawingContext dc)
         {
-            switch (decorationType)
+            switch (_decorationType)
             {
                 case DecorationType.Bar:
                     dc.DrawLine(ThinPen, Location, new Point(Right, Top));
@@ -253,11 +227,11 @@ namespace Editor
                                     ThinPen);
                     break;
                 case DecorationType.LeftArrow:
-                    firstSign.DrawTextTopLeftAligned(dc, Location);
+                    _firstSign.DrawTextTopLeftAligned(dc, Location);
                     dc.DrawLine(ThinPen, new Point(Left + FontSize * .06, MidY), new Point(Right, MidY));
                     break;
                 case DecorationType.RightArrow:
-                    firstSign.DrawTextTopRightAligned(dc, new Point(Right, Top));
+                    _firstSign.DrawTextTopRightAligned(dc, new Point(Right, Top));
                     dc.DrawLine(ThinPen, new Point(Left, MidY), new Point(Right - FontSize * .06, MidY));
                     break;
                 case DecorationType.DoubleArrow:
@@ -279,7 +253,7 @@ namespace Editor
                     DrawLeftHarpoonDownBarb(dc);
                     break;
                 case DecorationType.Tilde:
-                    firstSign.DrawTextTopLeftAligned(dc, Location);
+                    _firstSign.DrawTextTopLeftAligned(dc, Location);
                     break;
                 case DecorationType.Tortoise:
                     DrawTortoise(dc);
@@ -304,8 +278,8 @@ namespace Editor
         {
             if (Width < FontSize * 0.8)
             {
-                FormattedText text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, Width * 1.5);
-                double factor = .1;
+                var text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, Width * 1.5);
+                var factor = .1;
                 do
                 {
                     text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, FontSize * factor);
@@ -316,8 +290,8 @@ namespace Editor
             }
             else
             {
-                firstSign.DrawTextTopLeftAligned(dc, Location);
-                secondSign.DrawTextTopRightAligned(dc, new Point(Right, Top));
+                _firstSign.DrawTextTopLeftAligned(dc, Location);
+                _secondSign.DrawTextTopRightAligned(dc, new Point(Right, Top));
                 dc.DrawLine(ThinPen, new Point(Left + FontSize * .06, MidY), new Point(Right - FontSize * .06, MidY));
             }
         }
@@ -326,24 +300,24 @@ namespace Editor
         {
             if (Width < FontSize * 3)
             {
-                firstSign.DrawTextTopLeftAligned(dc, Location);
+                _firstSign.DrawTextTopLeftAligned(dc, Location);
             }
             else
             {
-                firstSign.DrawTextTopLeftAligned(dc, Location);
-                secondSign.DrawTextTopLeftAligned(dc, new Point(Right - secondSign.Width + secondSign.OverhangLeading, Top));
+                _firstSign.DrawTextTopLeftAligned(dc, Location);
+                _secondSign.DrawTextTopLeftAligned(dc, new Point(Right - _secondSign.Width + _secondSign.OverhangLeading, Top));
                 //dc.DrawLine(StandardPen, new Point(Left + secondSign.Width + secondSign.OverhangLeading, Top + FontSize * .03), new Point(Right - (secondSign.Width + secondSign.OverhangLeading), Top + FontSize * .03));
-                double left = Left + firstSign.GetFullWidth() * .85;
-                double right = Right - secondSign.GetFullWidth() * .85;
+                var left = Left + _firstSign.GetFullWidth() * .85;
+                var right = Right - _secondSign.GetFullWidth() * .85;
                 while (left < right)
                 {
-                    bar.DrawTextTopLeftAligned(dc, new Point(left, Top));
-                    left += bar.GetFullWidth() * .8;
-                    double shoot = (left + bar.GetFullWidth() * .8) - right;
+                    _bar.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                    left += _bar.GetFullWidth() * .8;
+                    var shoot = (left + _bar.GetFullWidth() * .8) - right;
                     if (shoot > 0)
                     {
                         left -= shoot;
-                        bar.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                        _bar.DrawTextTopLeftAligned(dc, new Point(left, Top));
                         break;
                     }
                 }
@@ -353,62 +327,62 @@ namespace Editor
         private void DrawLeftHarpoonUpBarb(DrawingContext dc)
         {
             PointCollection points = [
-                                                            new Point(Left + FontSize * .3, Top),
-                                                            //new Point(Left + FontSize * .31, Top + FontSize * .041),
-                                                            new Point(Left + FontSize * .18, Bottom - FontSize * .06),
-                                                            new Point(Right, Bottom - FontSize * .06),
-                                                            new Point(Right, Bottom- FontSize * .02)
-                                                         ];
+                new Point(Left + FontSize * .3, Top),
+                //new Point(Left + FontSize * .31, Top + FontSize * .041),
+                new Point(Left + FontSize * .18, Bottom - FontSize * .06),
+                new Point(Right, Bottom - FontSize * .06),
+                new Point(Right, Bottom- FontSize * .02)
+                ];
             dc.FillPolylineGeometry(new Point(Left, Bottom - FontSize * .02), points);
         }
 
         private void DrawRightHarpoonUpBarb(DrawingContext dc)
         {
             PointCollection points = [
-                                                            new Point(Right - FontSize * .3, Top),
-                                                            //new Point(Right - FontSize * .31, Top + FontSize * .041),
-                                                            new Point(Right - FontSize * .18, Bottom - FontSize * .06),
-                                                            new Point(Left, Bottom - FontSize * .06),
-                                                            new Point(Left, Bottom - FontSize * .02)
-                                                         ];
+                new Point(Right - FontSize * .3, Top),
+                //new Point(Right - FontSize * .31, Top + FontSize * .041),
+                new Point(Right - FontSize * .18, Bottom - FontSize * .06),
+                new Point(Left, Bottom - FontSize * .06),
+                new Point(Left, Bottom - FontSize * .02)
+                ];
             dc.FillPolylineGeometry(new Point(Right, Bottom - FontSize * .02), points);
         }
 
         private void DrawLeftHarpoonDownBarb(DrawingContext dc)
         {
             PointCollection points = [
-                                                            new Point(Left + FontSize * .3, Bottom),
-                                                            //new Point(Left + FontSize * .31, Bottom - FontSize * .041),
-                                                            new Point(Left + FontSize * .18, Top + FontSize * .06),
-                                                            new Point(Right, Top + FontSize * .06),
-                                                            new Point(Right, Top + FontSize * .02)
-                                                         ];
+                new Point(Left + FontSize * .3, Bottom),
+                //new Point(Left + FontSize * .31, Bottom - FontSize * .041),
+                new Point(Left + FontSize * .18, Top + FontSize * .06),
+                new Point(Right, Top + FontSize * .06),
+                new Point(Right, Top + FontSize * .02)
+                ];
             dc.FillPolylineGeometry(new Point(Left, Top + FontSize * .02), points);
         }
 
         private void DrawRightHarpoonDownBarb(DrawingContext dc)
         {
             PointCollection points = [
-                                                            new Point(Right - FontSize * .3, Bottom),
-                                                            //new Point(Right - FontSize * .31, Bottom - FontSize * .041),
-                                                            new Point(Right - FontSize * .18, Top + FontSize * .06),
-                                                            new Point(Left, Top + FontSize * .06),
-                                                            new Point(Left, Top + FontSize * .02)
-                                                         ];
+                new Point(Right - FontSize * .3, Bottom),
+                //new Point(Right - FontSize * .31, Bottom - FontSize * .041),
+                new Point(Right - FontSize * .18, Top + FontSize * .06),
+                new Point(Left, Top + FontSize * .06),
+                new Point(Left, Top + FontSize * .02)
+                ];
             dc.FillPolylineGeometry(new Point(Right, Top + FontSize * .02), points);
         }
 
         private void DrawTortoise(DrawingContext dc)
         {
             PointCollection points = [
-                                                            new Point(Left + Height * .5, Top),
-                                                            new Point(Right - Height * .5, Top),
-                                                            new Point(Right, Bottom),
-                                                            new Point(Right - Height * .2, Bottom),
-                                                            new Point(Right - Height * .7, Top + Height * .3),
-                                                            new Point(Left + Height * .7, Top + Height * .3),
-                                                            new Point(Left + Height * .2, Bottom)
-                                                         ];
+                new Point(Left + Height * .5, Top),
+                new Point(Right - Height * .5, Top),
+                new Point(Right, Bottom),
+                new Point(Right - Height * .2, Bottom),
+                new Point(Right - Height * .7, Top + Height * .3),
+                new Point(Left + Height * .7, Top + Height * .3),
+                new Point(Left + Height * .2, Bottom)
+                ];
             dc.FillPolylineGeometry(new Point(Left, Bottom), points);
         }
     }

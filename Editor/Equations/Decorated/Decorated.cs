@@ -5,48 +5,48 @@ namespace Editor
 {
     public sealed class Decorated : EquationContainer
     {
-        RowContainer rowContainer;
-        DecorationDrawing decoration;
-        DecorationType decorationType;
-        Position decorationPosition;
+        private readonly RowContainer _rowContainer;
+        private readonly DecorationDrawing _decoration;
+        private readonly DecorationType _decorationType;
+        private readonly Position _decorationPosition;
 
         public Decorated(EquationContainer parent, DecorationType decorationType, Position decorationPosition)
             : base(parent)
         {
-            ActiveChild = rowContainer = new RowContainer(this);
-            this.decorationType = decorationType;
-            this.decorationPosition = decorationPosition;
-            decoration = new DecorationDrawing(this, decorationType);
-            this.childEquations.Add(rowContainer);
-            this.childEquations.Add(decoration);
+            ActiveChild = _rowContainer = new RowContainer(this);
+            _decorationType = decorationType;
+            _decorationPosition = decorationPosition;
+            _decoration = new DecorationDrawing(this, decorationType);
+            childEquations.Add(_rowContainer);
+            childEquations.Add(_decoration);
         }
 
         public override void DrawEquation(DrawingContext dc)
         {
-            rowContainer.DrawEquation(dc);
-            decoration.DrawEquation(dc);
+            _rowContainer.DrawEquation(dc);
+            _decoration.DrawEquation(dc);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
-            parameters.Add(new XElement(decorationType.GetType().Name, decorationType));
-            parameters.Add(new XElement(decorationPosition.GetType().Name, decorationPosition));
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
+            parameters.Add(new XElement(_decorationType.GetType().Name, _decorationType));
+            parameters.Add(new XElement(_decorationPosition.GetType().Name, _decorationPosition));
             thisElement.Add(parameters);
-            thisElement.Add(rowContainer.Serialize());
+            thisElement.Add(_rowContainer.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            rowContainer.DeSerialize(xElement.Element(rowContainer.GetType().Name));
+            _rowContainer.DeSerialize(xElement.Element(_rowContainer.GetType().Name)!);
             CalculateSize();
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -56,26 +56,26 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                rowContainer.Left = value;
-                decoration.Left = value;
+                _rowContainer.Left = value;
+                _decoration.Left = value;
             }
         }
 
         private void AdjustVertical()
         {
-            if (decorationPosition == Position.Top)
+            if (_decorationPosition == Position.Top)
             {
-                rowContainer.Bottom = Bottom;
-                decoration.Top = Top;
+                _rowContainer.Bottom = Bottom;
+                _decoration.Top = Top;
             }
             else
             {
-                rowContainer.Top = Top;
-                decoration.Bottom = Bottom;
+                _rowContainer.Top = Top;
+                _decoration.Bottom = Bottom;
             }
         }
 
@@ -83,34 +83,34 @@ namespace Editor
         {
             get
             {
-                if (decorationPosition == Position.Top)
+                if (_decorationPosition == Position.Top)
                 {
-                    return rowContainer.RefY + decoration.Height;
+                    return _rowContainer.RefY + _decoration.Height;
                 }
                 else
                 {
-                    return rowContainer.RefY;
+                    return _rowContainer.RefY;
                 }
             }
         }
 
         protected override void CalculateHeight()
         {
-            if (decorationPosition == Position.Bottom)
+            if (_decorationPosition == Position.Bottom)
             {
-                Height = rowContainer.Height + decoration.Height + FontSize * .1;
+                Height = _rowContainer.Height + _decoration.Height + FontSize * .1;
             }
             else
             {
-                Height = rowContainer.Height + decoration.Height;
+                Height = _rowContainer.Height + _decoration.Height;
             }
             AdjustVertical();
         }
 
         protected override void CalculateWidth()
         {
-            Width = rowContainer.Width;
-            decoration.Width = Width;
+            Width = _rowContainer.Width;
+            _decoration.Width = Width;
         }
     }
 }
