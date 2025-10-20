@@ -23,10 +23,7 @@ public static class LatexConverter
         escaped.Append('{');
         for (var i = start; i < start + count; i++)
         {
-            foreach (var c in ConvertToLatexSymbol(sb[i], true))
-            {
-                escaped.Append(c);
-            }
+            escaped.Append(ConvertToLatexSymbol(sb[i], true));
         }
         escaped.Append('}');
         return escaped;
@@ -54,10 +51,7 @@ public static class LatexConverter
         {
             for (var i = 0; i < sb.Length; i++)
             {
-                foreach (var c in ConvertToLatexSymbol(sb[i], false))
-                {
-                    escaped.Append(c);
-                }
+                escaped.Append(ConvertToLatexSymbol(sb[i], false));
             }
         }
         escaped.Append('}');
@@ -86,10 +80,7 @@ public static class LatexConverter
         }
 
         var escaped = new StringBuilder();
-        foreach (var c in BeginArray)
-        {
-            escaped.Append(c);
-        }
+        escaped.Append(BeginArray);
         escaped.Append('\n');
         var rowsCount = rows.Count;
         for (var i = 0; i < rowsCount; i++)
@@ -97,24 +88,15 @@ public static class LatexConverter
             var row = rows[i];
             for (var j = 0; j < row.Length; j++)
             {
-                foreach (var c in ConvertToLatexSymbol(row[j], false))
-                {
-                    escaped.Append(c);
-                }
+                escaped.Append(ConvertToLatexSymbol(row[j], false));
             }
             if (i < rowsCount - 1)
             {
-                foreach (var c in RowSeparator)
-                {
-                    escaped.Append(c);
-                }
+                escaped.Append(RowSeparator);
             }
             escaped.Append('\n');
         }
-        foreach (var c in EndArray)
-        {
-            escaped.Append(c);
-        }
+        escaped.Append(EndArray);
         return escaped;
     }
 
@@ -129,10 +111,7 @@ public static class LatexConverter
         var sb = new StringBuilder();
         foreach (var c in str)
         {
-            foreach (var latexChar in ConvertToLatexSymbol(c, convertWrapper))
-            {
-                sb.Append(latexChar);
-            }
+            sb.Append(ConvertToLatexSymbol(c, convertWrapper));
         }
         return sb;
     }
@@ -148,8 +127,8 @@ public static class LatexConverter
         return c switch
         {
             // TODO: Handle more special characters for Latex
-            '{' => convertWrapper ? ['\\', '{'] : ['{'],
-            '}' => convertWrapper ? ['\\', '}'] : ['}'],
+            '{' => convertWrapper ? ToChars("\\{") : ToChars("{"),
+            '}' => convertWrapper ? ToChars("\\}") : ToChars("}"),
             '\u2211' => ToChars("\\sum"), // ∑
             '\u220F' => ToChars("\\prod"), // ∏
             '\u2210' => ToChars("\\coprod"), // ∐
@@ -186,18 +165,9 @@ public static class LatexConverter
     public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in SquareRoot)
-        {
-            sb.Append(c);
-        }
+        sb.Append(SquareRoot);
         sb.Append(WhiteSpace);
-        if (insideEquation != null)
-        {
-            for (var i = 0; i < insideEquation.Length; i++)
-            {
-                sb.Append(insideEquation[i]);
-            }
-        }
+        sb.Append(insideEquation);
         return sb;
     }
 
@@ -219,10 +189,7 @@ public static class LatexConverter
             return null;
         }
         var sb = new StringBuilder();
-        foreach (var c in BeginMatrix)
-        {
-            sb.Append(c);
-        }
+        sb.Append(BeginMatrix);
         sb.Append('\n');
         for (var i = 0; i < rows; i++)
         {
@@ -230,31 +197,19 @@ public static class LatexConverter
             {
                 var index = i * columns + j;
                 var cell = matrix[index];
-                for (var k = 0; k < cell.Length; k++)
-                {
-                    sb.Append(cell[k]);
-                }
+                sb.Append(cell);
                 if (j < columns - 1)
                 {
-                    foreach (var c in MatrixColumnSeparator)
-                    {
-                        sb.Append(c);
-                    }
+                    sb.Append(MatrixColumnSeparator);
                 }
             }
             if (i < rows - 1)
             {
-                foreach (var c in MatrixRowSeparator)
-                {
-                    sb.Append(c);
-                }
+                sb.Append(MatrixRowSeparator);
             }
             sb.Append('\n');
         }
-        foreach (var c in EndMatrix)
-        {
-            sb.Append(c);
-        }
+        sb.Append(EndMatrix);
         return sb;
     }
 
@@ -265,17 +220,8 @@ public static class LatexConverter
     public static StringBuilder? ToLeftSuper(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in LeftSuper)
-        {
-            sb.Append(c);
-        }
-        if (insideEquation != null)
-        {
-            for (var i = 0; i < insideEquation.Length; i++)
-            {
-                sb.Append(insideEquation[i]);
-            }
-        }
+        sb.Append(LeftSuper);
+        sb.Append(insideEquation);
         return sb;
     }
 
@@ -286,17 +232,8 @@ public static class LatexConverter
     public static StringBuilder? ToRightSuper(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in RightSuper)
-        {
-            sb.Append(c);
-        }
-        if (insideEquation != null)
-        {
-            for (var i = 0; i < insideEquation.Length; i++)
-            {
-                sb.Append(insideEquation[i]);
-            }
-        }
+        sb.Append(RightSuper);
+        sb.Append(insideEquation);
         return sb;
     }
 
@@ -307,17 +244,8 @@ public static class LatexConverter
     public static StringBuilder? ToLeftSub(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in LeftSub)
-        {
-            sb.Append(c);
-        }
-        if (insideEquation != null)
-        {
-            for (var i = 0; i < insideEquation.Length; i++)
-            {
-                sb.Append(insideEquation[i]);
-            }
-        }
+        sb.Append(LeftSub);
+        sb.Append(insideEquation);
         return sb;
     }
 
@@ -328,17 +256,8 @@ public static class LatexConverter
     public static StringBuilder? ToRightSub(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in RightSub)
-        {
-            sb.Append(c);
-        }
-        if (insideEquation != null)
-        {
-            for (var i = 0; i < insideEquation.Length; i++)
-            {
-                sb.Append(insideEquation[i]);
-            }
-        }
+        sb.Append(RightSub);
+        sb.Append(insideEquation);
         return sb;
     }
 
@@ -348,28 +267,10 @@ public static class LatexConverter
     public static StringBuilder? ToLeftSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in LeftSub)
-        {
-            sb.Append(c);
-        }
-        if (subEquation != null)
-        {
-            for (var i = 0; i < subEquation.Length; i++)
-            {
-                sb.Append(subEquation[i]);
-            }
-        }
-        foreach (var c in LeftSuper)
-        {
-            sb.Append(c);
-        }
-        if (superEquation != null)
-        {
-            for (var i = 0; i < superEquation.Length; i++)
-            {
-                sb.Append(superEquation[i]);
-            }
-        }
+        sb.Append(LeftSub);
+        sb.Append(subEquation);
+        sb.Append(LeftSuper);
+        sb.Append(superEquation);
         return sb;
     }
 
@@ -379,28 +280,10 @@ public static class LatexConverter
     public static StringBuilder? ToRightSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in RightSub)
-        {
-            sb.Append(c);
-        }
-        if (subEquation != null)
-        {
-            for (var i = 0; i < subEquation.Length; i++)
-            {
-                sb.Append(subEquation[i]);
-            }
-        }
-        foreach (var c in RightSuper)
-        {
-            sb.Append(c);
-        }
-        if (superEquation != null)
-        {
-            for (var i = 0; i < superEquation.Length; i++)
-            {
-                sb.Append(superEquation[i]);
-            }
-        }
+        sb.Append(RightSub);
+        sb.Append(subEquation);
+        sb.Append(RightSuper);
+        sb.Append(superEquation);
         return sb;
     }
 
@@ -412,29 +295,10 @@ public static class LatexConverter
     public static StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
     {
         var sb = new StringBuilder();
-        foreach (var c in NRoot1)
-        {
-            sb.Append(c);
-        }
-        if (nthRootEquation != null)
-        {
-            for (var i = 0; i < nthRootEquation.Length; i++)
-            {
-                sb.Append(nthRootEquation[i]);
-            }
-        }
-        foreach (var c in NRoot2)
-        {
-            sb.Append(c);
-        }
-        if (insideEquation != null)
-        {
-            // No need to wrap it with {} since insideEquation is already wrapped
-            for (var i = 0; i < insideEquation.Length; i++)
-            {
-                sb.Append(insideEquation[i]);
-            }
-        }
+        sb.Append(NRoot1);
+        sb.Append(nthRootEquation);
+        sb.Append(NRoot2);
+        sb.Append(insideEquation);
         return sb;
     }
 
@@ -444,21 +308,9 @@ public static class LatexConverter
     public static StringBuilder? ToSignSimple(StringBuilder? sign, StringBuilder? mainEquation)
     {
         var sb = new StringBuilder();
-        if (sign != null)
-        {
-            for (var i = 0; i < sign.Length; i++)
-            {
-                sb.Append(sign[i]);
-            }
-        }
+        sb.Append(sign);
         sb.Append(WhiteSpace);
-        if (mainEquation != null)
-        {
-            for (var i = 0; i < mainEquation.Length; i++)
-            {
-                sb.Append(mainEquation[i]);
-            }
-        }
+        sb.Append(mainEquation);
         return sb;
     }
 
@@ -469,32 +321,11 @@ public static class LatexConverter
     public static StringBuilder? ToSignBottom(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? bottomEquation)
     {
         var sb = new StringBuilder();
-        if (sign != null)
-        {
-            for (var i = 0; i < sign.Length; i++)
-            {
-                sb.Append(sign[i]);
-            }
-        }
-        foreach (var c in Limits)
-        {
-            sb.Append(c);
-        }
-        if (bottomEquation != null)
-        {
-            for (var i = 0; i < bottomEquation.Length; i++)
-            {
-                sb.Append(bottomEquation[i]);
-            }
-        }
+        sb.Append(sign);
+        sb.Append(Limits);
+        sb.Append(bottomEquation);
         sb.Append(WhiteSpace);
-        if (mainEquation != null)
-        {
-            for (var i = 0; i < mainEquation.Length; i++)
-            {
-                sb.Append(mainEquation[i]);
-            }
-        }
+        sb.Append(mainEquation);
         return sb;
     }
 }
