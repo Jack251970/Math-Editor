@@ -572,13 +572,7 @@ namespace Editor
             var sb = new StringBuilder();
             foreach (var childRow in childEquations)
             {
-                if (childRow.ToLatex() is StringBuilder childLatex)
-                {
-                    for (var i = 0; i < childLatex.Length; i++)
-                    {
-                        sb.Append(childLatex[i]);
-                    }
-                }
+                sb.Append(childRow.ToLatex());
             }
             return sb;
         }
