@@ -37,7 +37,7 @@ namespace Editor
 
         public XElement Serialize(bool themeAwareBrush = false)
         {
-            XElement thisElement = new XElement(GetType().Name);
+            var thisElement = new XElement(GetType().Name);
             thisElement.Add(new XElement("FontSize", FontSize),
                              new XElement("FontType", FontType),
                              new XElement("FontStyle", FontStyle),
@@ -50,12 +50,12 @@ namespace Editor
 
         public static TextFormat DeSerialize(XElement xe)
         {
-            double fontSize = double.Parse(xe.Element("FontSize").Value);
-            FontType fontType = Enum.Parse<FontType>(xe.Element("FontType").Value);
-            FontStyle fontStyle = xe.Element("FontStyle").Value == "Italic" ? FontStyles.Italic : FontStyles.Normal;
-            FontWeight fontWeight = xe.Element("FontWeight").Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;
-            BrushConverter bc = new BrushConverter();
-            var brushString = xe.Element("Brush").Value;
+            var fontSize = double.Parse(xe.Element("FontSize")!.Value);
+            var fontType = Enum.Parse<FontType>(xe.Element("FontType")!.Value);
+            var fontStyle = xe.Element("FontStyle")!.Value == "Italic" ? FontStyles.Italic : FontStyles.Normal;
+            var fontWeight = xe.Element("FontWeight")!.Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;
+            var bc = new BrushConverter();
+            var brushString = xe.Element("Brush")!.Value;
             SolidColorBrush brush;
             if (string.Equals(brushString, ThemeAwareTextBrushString, StringComparison.OrdinalIgnoreCase))
             {
@@ -64,9 +64,9 @@ namespace Editor
             }
             else
             {
-                brush = (SolidColorBrush)bc.ConvertFrom(brushString);
+                brush = (SolidColorBrush)bc.ConvertFrom(brushString)!;
             }
-            bool useUnderline = Convert.ToBoolean(xe.Element("Underline").Value);
+            var useUnderline = Convert.ToBoolean(xe.Element("Underline")!.Value);
             return new TextFormat(fontSize, fontType, fontStyle, fontWeight, brush, useUnderline);
         }
     }

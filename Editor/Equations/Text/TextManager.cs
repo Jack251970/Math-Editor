@@ -58,9 +58,9 @@ namespace Editor
 
         public XElement Serialize(bool themeAwareBrush = false)
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement children = new XElement("Formats");
-            foreach (TextFormat tf in formattingList)
+            var thisElement = new XElement(GetType().Name);
+            var children = new XElement("Formats");
+            foreach (var tf in formattingList)
             {
                 children.Add(tf.Serialize(themeAwareBrush));
             }
@@ -77,8 +77,8 @@ namespace Editor
         public void DeSerialize(XElement xElement)
         {
             formattingList.Clear();
-            XElement children = xElement.Element("Formats");
-            foreach (XElement xe in children.Elements())
+            var children = xElement.Element("Formats");
+            foreach (var xe in children!.Elements())
             {
                 AddToList(TextFormat.DeSerialize(xe));
             }
