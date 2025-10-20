@@ -22,6 +22,7 @@ public static class LatexConverter
         }
 
         var escaped = new StringBuilder();
+        // TODO: Remove this?
         escaped.Append('{');
         for (var i = start; i < start + count; i++)
         {
@@ -48,6 +49,7 @@ public static class LatexConverter
         }
 
         var escaped = new StringBuilder();
+        // TODO: Remove this?
         escaped.Append('{');
         foreach (var sb in row)
         {
@@ -70,7 +72,16 @@ public static class LatexConverter
     /// </summary>
     /// <param name="rows"></param>
     /// <returns></returns>
-    // TODO: Support \begin{gathered} \end{gathered}??
+    // TODO: Support \begin{gathered} \hfill \\ \hfill \\ \end{gathered}??
+    // \[\begin{gathered}
+    //  1111 \hfill \\
+    //  2222 \hfill \\ 
+    // \end{gathered
+    // } \]
+    // \[\begin{array}{ l}
+    // 1111\\
+    // 2222
+    // \end{array}\]
     public static StringBuilder? EscapeRows(List<StringBuilder> rows)
     {
         if (rows.Count == 0)
@@ -159,6 +170,11 @@ public static class LatexConverter
         return chars;
     }
 
+    private static StringBuilder? AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
+    {
+        return sb.Append('{').Append(equ).Append('}');
+    }
+
     /// <summary>
     /// \sqrt{insideEquation}
     /// </summary>
@@ -168,8 +184,10 @@ public static class LatexConverter
     public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
+        // TODO: Use Append.Append to improve code quality
         sb.Append(SquareRoot);
         sb.Append(WhiteSpace);
+        // TODO: Add {} to wrapper with AppendWithWrapper
         sb.Append(insideEquation);
         return sb;
     }
@@ -321,6 +339,7 @@ public static class LatexConverter
     /// {sign}\limits_{bottomEquation} {mainEquation}
     /// </summary>
     private static readonly char[] Limits = ToChars("\\limits_");
+    // TODO: Combine ToSignBottom and ToSignBottomTop to reduce code duplication.
     public static StringBuilder? ToSignBottom(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? bottomEquation)
     {
         var sb = new StringBuilder();
