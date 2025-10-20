@@ -68,6 +68,7 @@ public static class LatexConverter
     /// </summary>
     /// <param name="rows"></param>
     /// <returns></returns>
+    // TODO: Support \begin{gathered} \end{gathered}??
     public static StringBuilder? EscapeRows(List<StringBuilder> rows)
     {
         if (rows.Count == 0)
@@ -389,6 +390,62 @@ public static class LatexConverter
         var sb = new StringBuilder();
         sb.Append(Boxed);
         sb.Append(insideEquation);
+        return sb;
+    }
+
+    /// <summary>
+    /// \left| \!{\overline {\, {insideEquation} \,}} \right.
+    /// </summary>
+    private static readonly char[] LeftTopBox1 = ToChars("\\left| \\!{\\overline {\\, ");
+    private static readonly char[] LeftTopBox2 = ToChars(" \\,}} \\right.");
+    public static StringBuilder? ToLeftTopBox(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(LeftTopBox1);
+        sb.Append(insideEquation);
+        sb.Append(LeftTopBox2);
+        return sb;
+    }
+
+    /// <summary>
+    /// \left. {\overline {\, {insideEquation} \,}}\! \right|
+    /// </summary>
+    private static readonly char[] RightTopBox1 = ToChars("\\left. {\\overline {\\, ");
+    private static readonly char[] RightTopBox2 = ToChars(" \\,}}\\! \\right|");
+    public static StringBuilder? ToRightTopBox(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(RightTopBox1);
+        sb.Append(insideEquation);
+        sb.Append(RightTopBox2);
+        return sb;
+    }
+
+    /// <summary>
+    /// \left| \!{\underline {\, {insideEquation} \,}} \right.
+    /// </summary>
+    private static readonly char[] LeftBottomBox1 = ToChars("\\left| \\!{\\underline {\\, ");
+    private static readonly char[] LeftBottomBox2 = ToChars(" \\,}} \\right.");
+    public static StringBuilder? ToLeftBottomBox(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(LeftBottomBox1);
+        sb.Append(insideEquation);
+        sb.Append(LeftBottomBox2);
+        return sb;
+    }
+
+    /// <summary>
+    /// \left. {\underline {\, {insideEquation} \,}}\! \right|
+    /// </summary>
+    private static readonly char[] RightBottomBox1 = ToChars("\\left. {\\underline {\\, ");
+    private static readonly char[] RightBottomBox2 = ToChars(" \\,}}\\! \\right|");
+    public static StringBuilder? ToRightBottomBox(StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(RightBottomBox1);
+        sb.Append(insideEquation);
+        sb.Append(RightBottomBox2);
         return sb;
     }
 }
