@@ -461,4 +461,40 @@ public static class LatexConverter
         }
         return sb;
     }
+
+    /// <summary>
+    /// {sign}\limits_{bottomEquation} {mainEquation}
+    /// </summary>
+    private static readonly char[] Limits = ToChars("\\limits_");
+    public static StringBuilder? ToSignBottom(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? bottomEquation)
+    {
+        var sb = new StringBuilder();
+        if (sign != null)
+        {
+            for (var i = 0; i < sign.Length; i++)
+            {
+                sb.Append(sign[i]);
+            }
+        }
+        foreach (var c in Limits)
+        {
+            sb.Append(c);
+        }
+        if (bottomEquation != null)
+        {
+            for (var i = 0; i < bottomEquation.Length; i++)
+            {
+                sb.Append(bottomEquation[i]);
+            }
+        }
+        sb.Append(WhiteSpace);
+        if (mainEquation != null)
+        {
+            for (var i = 0; i < mainEquation.Length; i++)
+            {
+                sb.Append(mainEquation[i]);
+            }
+        }
+        return sb;
+    }
 }
