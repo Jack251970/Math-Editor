@@ -441,9 +441,6 @@ public static class LatexConverter
     /// <summary>
     /// {sign} {mainEquation}
     /// </summary>
-    /// <param name="sign"></param>
-    /// <param name="mainEquation"></param>
-    /// <returns></returns>
     public static StringBuilder? ToSignSimple(StringBuilder? sign, StringBuilder? mainEquation)
     {
         var sb = new StringBuilder();
