@@ -64,8 +64,8 @@ public static class LatexConverter
         return escaped;
     }
 
-    private static readonly char[] BeginArray = ['\\', 'b', 'e', 'g', 'i', 'n', '{', 'a', 'r', 'r', 'a', 'y', '}', '{', 'l', '}'];
-    private static readonly char[] EndArray = ['\\', 'e', 'n', 'd', '{', 'a', 'r', 'r', 'a', 'y', '}'];
+    private static readonly char[] BeginArray = ToChars("\\begin{array}{l}");
+    private static readonly char[] EndArray = ToChars("\\end{array}");
     private static readonly char[] RowSeparator = ['\\', '\\'];
 
     /// <summary>
@@ -208,7 +208,7 @@ public static class LatexConverter
     /// {cell}&{cell}&{cell}\\
     /// \end{array}
     /// </summary>
-    private static readonly char[] BeginMatrix = ['\\', 'b', 'e', 'g', 'i', 'n', '{', 'a', 'r', 'r', 'a', 'y', '}', '{', '*', '{', '2', '0', '}', '{', 'c', '}', '}'];
+    private static readonly char[] BeginMatrix = ToChars("\\begin{array}{*{20}{c}}");
     private static char[] EndMatrix => EndArray;
     private static char[] MatrixColumnSeparator => ['&'];
     private static char[] MatrixRowSeparator => RowSeparator;
