@@ -5,7 +5,7 @@ namespace Editor
 {
     public class StaticText : EquationBase
     {
-        protected string Text { get; set; }
+        protected string Text { get; set; } = string.Empty;
         protected FontType FontType { get; set; }
         protected double FontSizeFactor = 1;
         protected FontWeight FontWeight = FontWeights.Normal;
@@ -13,7 +13,7 @@ namespace Editor
         protected double LeftMarginFactor = 0;
         protected double RightMarginFactor = 0;
 
-        FormattedText formattedText;
+        private FormattedText _formattedText = null!;
 
         public StaticText(EquationContainer parent)
             : base(parent)
@@ -24,15 +24,12 @@ namespace Editor
         public override void DrawEquation(DrawingContext dc)
         {
             //dc.DrawText(formattedText, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height));
-            formattedText.DrawTextTopLeftAligned(dc, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height));
+            _formattedText.DrawTextTopLeftAligned(dc, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height));
         }
 
         public override double FontSize
         {
-            get
-            {
-                return base.FontSize;
-            }
+            get => base.FontSize;
             set
             {
                 base.FontSize = value;
@@ -42,19 +39,13 @@ namespace Editor
 
         protected void ReformatSign()
         {
-            formattedText = FontFactory.GetFormattedText(Text, FontType, FontSize * FontSizeFactor, FontWeight);
-            Width = formattedText.GetFullWidth() + LeftMarginFactor * FontSize + RightMarginFactor * FontSize; // * WidthFactor;
-            Height = formattedText.Extent;
+            _formattedText = FontFactory.GetFormattedText(Text, FontType, FontSize * FontSizeFactor, FontWeight);
+            Width = _formattedText.GetFullWidth() + LeftMarginFactor * FontSize + RightMarginFactor * FontSize; // * WidthFactor;
+            Height = _formattedText.Extent;
         }
 
-        public double OverhangTrailing
-        {
-            get { return formattedText.OverhangTrailing; }
-        }
+        public double OverhangTrailing => _formattedText.OverhangTrailing;
 
-        public double OverhangLeading
-        {
-            get { return formattedText.OverhangLeading; }
-        }
+        public double OverhangLeading => _formattedText.OverhangLeading;
     }
 }
