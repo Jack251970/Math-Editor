@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Editor;
 
@@ -446,6 +448,228 @@ public static class LatexConverter
         sb.Append(RightBottomBox1);
         sb.Append(insideEquation);
         sb.Append(RightBottomBox2);
+        return sb;
+    }
+
+    private static readonly char[] EmptyWrapper = ToChars("{}");
+    private static readonly char[] LeftArrow = ToChars("\\xleftarrow");
+    private static readonly char[] RightArrow = ToChars("\\xrightarrow");
+    private static readonly char[] OverSet = ToChars("\\overset");
+    private static readonly char[] UnderSet = ToChars("\\underset");
+    private static readonly char[] LongLeftRightArrow = ToChars("\\longleftrightarrow");
+    private static readonly char[] LeftRightArrows = ToChars("\\leftrightarrows");
+    public static StringBuilder? ToArrow(ArrowType type, Position position, StringBuilder? rowContainer1, StringBuilder? rowContainer2)
+    {
+        var sb = new StringBuilder();
+        switch (type)
+        {
+            case ArrowType.LeftArrow:
+                /// \xleftarrow{1}
+                /// \xleftarrow[1]{}
+                /// \xleftarrow[2]{1}
+                switch (position)
+                {
+                    case Position.Top:
+                        sb.Append(LeftArrow);
+                        sb.Append(rowContainer1);
+                        break;
+                    case Position.Bottom:
+                        sb.Append(LeftArrow);
+                        sb.Append('[');
+                        sb.Append(rowContainer1);
+                        sb.Append(']');
+                        sb.Append(EmptyWrapper);
+                        break;
+                    case Position.BottomAndTop:
+                        sb.Append(LeftArrow);
+                        sb.Append('[');
+                        sb.Append(rowContainer2);
+                        sb.Append(']');
+                        sb.Append(rowContainer1);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+                break;
+            case ArrowType.RightArrow:
+                /// \xrightarrow{1}
+                /// \xrightarrow[1]{}
+                /// \xrightarrow[2]{1}
+                switch (position)
+                {
+                    case Position.Top:
+                        sb.Append(RightArrow);
+                        sb.Append(rowContainer1);
+                        break;
+                    case Position.Bottom:
+                        sb.Append(RightArrow);
+                        sb.Append('[');
+                        sb.Append(rowContainer1);
+                        sb.Append(']');
+                        sb.Append(EmptyWrapper);
+                        break;
+                    case Position.BottomAndTop:
+                        sb.Append(RightArrow);
+                        sb.Append('[');
+                        sb.Append(rowContainer2);
+                        sb.Append(']');
+                        sb.Append(rowContainer1);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+                break;
+            case ArrowType.DoubleArrow:
+                /// \overset 1 \longleftrightarrow
+                /// \underset 1 \longleftrightarrow
+                /// \underset{2}{\overset{1} {\longleftrightarrow}}
+                switch (position)
+                {
+                    case Position.Top:
+                        sb.Append(OverSet);
+                        sb.Append(WhiteSpace);
+                        sb.Append(rowContainer1);
+                        sb.Append(WhiteSpace);
+                        sb.Append(LongLeftRightArrow);
+                        break;
+                    case Position.Bottom:
+                        sb.Append(UnderSet);
+                        sb.Append(WhiteSpace);
+                        sb.Append(rowContainer1);
+                        sb.Append(WhiteSpace);
+                        sb.Append(LongLeftRightArrow);
+                        break;
+                    case Position.BottomAndTop:
+                        sb.Append(UnderSet);
+                        sb.Append(rowContainer2);
+                        sb.Append('{');
+                        sb.Append(OverSet);
+                        sb.Append(rowContainer1);
+                        sb.Append(WhiteSpace);
+                        sb.Append('{');
+                        sb.Append(LongLeftRightArrow);
+                        sb.Append('}');
+                        sb.Append('}');
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+                break;
+            case ArrowType.RightLeftArrow:
+                /// \overset 1 \leftrightarrows
+                /// \underset 1 \leftrightarrows
+                /// \underset{2}{\overset{1} {\longleftrightarrow}}
+                switch (position)
+                {
+                    case Position.Top:
+                        sb.Append(OverSet);
+                        sb.Append(WhiteSpace);
+                        sb.Append(rowContainer1);
+                        sb.Append(WhiteSpace);
+                        sb.Append(LeftRightArrows);
+                        break;
+                    case Position.Bottom:
+                        sb.Append(UnderSet);
+                        sb.Append(WhiteSpace);
+                        sb.Append(rowContainer1);
+                        sb.Append(WhiteSpace);
+                        sb.Append(LeftRightArrows);
+                        break;
+                    case Position.BottomAndTop:
+                        sb.Append(UnderSet);
+                        sb.Append(rowContainer2);
+                        sb.Append('{');
+                        sb.Append(OverSet);
+                        sb.Append(rowContainer1);
+                        sb.Append(WhiteSpace);
+                        sb.Append('{');
+                        sb.Append(LongLeftRightArrow);
+                        sb.Append('}');
+                        sb.Append('}');
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+                break;
+            // TODO: Support editting these in the settings.
+            case ArrowType.RightSmallLeftArrow:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Large over small arrow with upper text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Large over small arrow with lower text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.BottomAndTop:
+                        MessageBox.Show("Translation Error", "No translation available for Large over small arrow with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+            case ArrowType.SmallRightLeftArrow:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Small over large arrow with upper text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Small over large arrow with lower text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.BottomAndTop:
+                        MessageBox.Show("Translation Error", "No translation available for Small over large arrow with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+            case ArrowType.RightLeftHarpoon:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Harpoons with upper text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Harpoons with lower text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.BottomAndTop:
+                        MessageBox.Show("Translation Error", "No translation available for Harpoons with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+            case ArrowType.RightSmallLeftHarpoon:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Large over small harpoon with upper text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Large over small harpoon with lower text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.BottomAndTop:
+                        MessageBox.Show("Translation Error", "No translation available for Large over small harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+            case ArrowType.SmallRightLeftHarpoon:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Small over large harpoon with upper text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Small over large harpoon with lower text slot.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.BottomAndTop:
+                        MessageBox.Show("Translation Error", "No translation available for Small over large harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
+                }
+            default:
+                throw new InvalidOperationException($"Unsupported arrow type for LaTeX conversion: {type}");
+        }
         return sb;
     }
 }

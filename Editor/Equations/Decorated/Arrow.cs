@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using System.Xml.Linq;
 
@@ -107,6 +108,11 @@ namespace Editor
             _rowContainer1.DeSerialize(elements[0]);
             _rowContainer2?.DeSerialize(elements[1]);
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToArrow(_arrowType, _equationPosition, _rowContainer1.ToLatex(), _rowContainer2?.ToLatex());
         }
 
         public override double Top
