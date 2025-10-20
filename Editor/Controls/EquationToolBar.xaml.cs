@@ -771,7 +771,7 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("Box", "rightBottom.png"),
                               CreateImageUri("Box", "all.png"),
                            ];
-        CommandType[] commands = [.. Enumerable.Repeat<CommandType>(CommandType.Box, imageUris.Length)];
+        CommandType[] commands = [.. Enumerable.Repeat(CommandType.Box, imageUris.Length)];
         object[] paramz = [BoxType.LeftTop, BoxType.LeftBottom, BoxType.RightTop, BoxType.RightBottom, BoxType.All];
         CreateImagePanel(imageUris, commands, paramz, boxButton, 2);
     }
