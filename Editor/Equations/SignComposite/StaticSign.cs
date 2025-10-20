@@ -1,4 +1,6 @@
-﻿namespace Editor
+﻿using System;
+
+namespace Editor
 {
     public sealed class StaticSign : StaticText
     {
@@ -111,50 +113,23 @@
 
         private void DetermineSignString()
         {
-            string signStr = "";
-            switch (Symbol)
+            Text = Symbol switch
             {
-                case SignCompositeSymbol.Sum:
-                    signStr = "\u2211";
-                    break;
-                case SignCompositeSymbol.Product:
-                    signStr = "\u220F";
-                    break;
-                case SignCompositeSymbol.CoProduct:
-                    signStr = "\u2210";
-                    break;
-                case SignCompositeSymbol.Intersection:
-                    signStr = "\u22C2";
-                    break;
-                case SignCompositeSymbol.Union:
-                    signStr = "\u22C3";
-                    break;
-                case SignCompositeSymbol.Integral:
-                    signStr = "\u222B";
-                    break;
-                case SignCompositeSymbol.DoubleIntegral:
-                    signStr = "\u222C";
-                    break;
-                case SignCompositeSymbol.TripleIntegral:
-                    signStr = "\u222D";
-                    break;
-                case SignCompositeSymbol.ContourIntegral:
-                    signStr = "\u222E";
-                    break;
-                case SignCompositeSymbol.SurfaceIntegral:
-                    signStr = "\u222F";
-                    break;
-                case SignCompositeSymbol.VolumeIntegral:
-                    signStr = "\u2230";
-                    break;
-                case SignCompositeSymbol.ClockContourIntegral:
-                    signStr = "\u2232";
-                    break;
-                case SignCompositeSymbol.AntiClockContourIntegral:
-                    signStr = "\u2233";
-                    break;
-            }
-            Text = signStr;
+                SignCompositeSymbol.Sum => "\u2211",
+                SignCompositeSymbol.Product => "\u220F",
+                SignCompositeSymbol.CoProduct => "\u2210",
+                SignCompositeSymbol.Intersection => "\u22C2",
+                SignCompositeSymbol.Union => "\u22C3",
+                SignCompositeSymbol.Integral => "\u222B",
+                SignCompositeSymbol.DoubleIntegral => "\u222C",
+                SignCompositeSymbol.TripleIntegral => "\u222D",
+                SignCompositeSymbol.ContourIntegral => "\u222E",
+                SignCompositeSymbol.SurfaceIntegral => "\u222F",
+                SignCompositeSymbol.VolumeIntegral => "\u2230",
+                SignCompositeSymbol.ClockContourIntegral => "\u2232",
+                SignCompositeSymbol.AntiClockContourIntegral => "\u2233",
+                _ => throw new InvalidOperationException($"Unknown sign composite symbol: {Symbol}"),
+            };
         }
     }
 }
