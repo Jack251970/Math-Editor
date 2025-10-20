@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 
 namespace Editor
 {
-    class SignSub : EquationContainer
+    public sealed class SignSub : EquationContainer
     {
-        RowContainer mainEquation;
-        StaticSign sign;
-        RowContainer subEquation;
-        double SubOverlap { get { return FontSize * .5; } }
-        double maxUpperHalf = 0;
-        double gapFactor = .06;
-        double Gap { get { return FontSize * gapFactor; } }
-        double LeftMinus { get; set; }
-        double MainLeft { get { return Left + LeftMinus; } }
+        private readonly RowContainer mainEquation;
+        private readonly StaticSign sign;
+        private readonly RowContainer subEquation;
+        private double SubOverlap => FontSize * .5;
+        private double maxUpperHalf = 0;
+        private readonly double gapFactor = .06;
+        private double Gap => FontSize * gapFactor;
+        private double LeftMinus { get; set; }
+        private double MainLeft => Left + LeftMinus;
 
         public SignSub(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(parent)
@@ -28,15 +29,15 @@ namespace Editor
             };
             sign = new StaticSign(this, symbol, useUpright);
             subEquation.FontFactor = SubFontFactor;
-            childEquations.AddRange(new EquationBase[] { mainEquation, sign, subEquation });
+            childEquations.AddRange([mainEquation, sign, subEquation]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
             parameters.Add(new XElement(sign.Symbol.GetType().Name, sign.Symbol));
-            parameters.Add(new XElement(typeof(bool).FullName, sign.UseItalicIntegralSign));
+            parameters.Add(new XElement(typeof(bool).FullName!, sign.UseItalicIntegralSign));
             thisElement.Add(parameters);
             thisElement.Add(mainEquation.Serialize());
             thisElement.Add(subEquation.Serialize());
@@ -51,9 +52,14 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToSignSub(sign.ToLatex(), mainEquation.ToLatex(), subEquation.ToLatex());
+        }
+
         protected override void CalculateWidth()
         {
-            if (sign.Symbol.ToString().ToLower().Contains("integral"))
+            if (sign.Symbol.ToString().Contains("integral", StringComparison.CurrentCultureIgnoreCase))
             {
                 LeftMinus = sign.OverhangTrailing;
             }
@@ -63,7 +69,7 @@ namespace Editor
         protected override void CalculateHeight()
         {
             maxUpperHalf = Math.Max(mainEquation.RefY, sign.RefY);
-            double maxLowerHalf = Math.Max(mainEquation.RefYReverse, sign.RefYReverse + subEquation.Height - SubOverlap);
+            var maxLowerHalf = Math.Max(mainEquation.RefYReverse, sign.RefYReverse + subEquation.Height - SubOverlap);
             Height = maxLowerHalf + maxUpperHalf;
             sign.MidY = MidY;
             mainEquation.MidY = MidY;
@@ -72,24 +78,14 @@ namespace Editor
 
         public override double Height
         {
-            get { return base.Height; }
-            set
-            {
-                base.Height = value;
-            }
+            get => base.Height; set => base.Height = value;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return maxUpperHalf;
-            }
-        }
+        public override double RefY => maxUpperHalf;
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -99,7 +95,7 @@ namespace Editor
             }
         }
 
-        public override bool ConsumeMouseClick(System.Windows.Point mousePoint)
+        public override bool ConsumeMouseClick(Point mousePoint)
         {
             if (subEquation.Bounds.Contains(mousePoint))
             {
@@ -114,7 +110,7 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;

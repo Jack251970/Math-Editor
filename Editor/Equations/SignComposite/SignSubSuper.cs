@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 
 namespace Editor
 {
-    class SignSubSuper : EquationContainer
+    public sealed class SignSubSuper : EquationContainer
     {
-        RowContainer mainEquation;
-        StaticSign sign;
-        RowContainer superEquation;
-        RowContainer subEquation;
-        double HGap { get { return FontSize * .06; } }
-        double SubMinus = 0;
-        double SuperMinus = 0;
+        private readonly RowContainer mainEquation;
+        private readonly StaticSign sign;
+        private readonly RowContainer superEquation;
+        private readonly RowContainer subEquation;
+        private double HGap => FontSize * .06;
+        private double SubMinus = 0;
+        private double SuperMinus = 0;
 
         public SignSubSuper(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(parent)
@@ -27,15 +28,15 @@ namespace Editor
             sign = new StaticSign(this, symbol, useUpright);
             subEquation.FontFactor = SubFontFactor;
             superEquation.FontFactor = SubFontFactor;
-            childEquations.AddRange(new EquationBase[] { mainEquation, sign, superEquation, subEquation });
+            childEquations.AddRange([mainEquation, sign, superEquation, subEquation]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
             parameters.Add(new XElement(sign.Symbol.GetType().Name, sign.Symbol));
-            parameters.Add(new XElement(typeof(bool).FullName, sign.UseItalicIntegralSign));
+            parameters.Add(new XElement(typeof(bool).FullName!, sign.UseItalicIntegralSign));
             thisElement.Add(parameters);
             thisElement.Add(mainEquation.Serialize());
             thisElement.Add(subEquation.Serialize());
@@ -52,9 +53,14 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToSignSubSuper(sign.ToLatex(), mainEquation.ToLatex(), superEquation.ToLatex(), subEquation.ToLatex());
+        }
+
         protected override void CalculateWidth()
         {
-            if (sign.Symbol.ToString().ToLower().Contains("integral"))
+            if (sign.Symbol.ToString().Contains("integral", StringComparison.CurrentCultureIgnoreCase))
             {
                 SubMinus = sign.OverhangTrailing;
                 SuperMinus = sign.OverhangLeading + (sign.UseItalicIntegralSign ? FontSize * .1 : 0);
@@ -67,17 +73,11 @@ namespace Editor
             Height = Math.Max(sign.Height * .5 + subEquation.Height + superEquation.Height, mainEquation.Height);
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return Math.Max(superEquation.Height + sign.Height * .3, mainEquation.RefY);
-            }
-        }
+        public override double RefY => Math.Max(superEquation.Height + sign.Height * .3, mainEquation.RefY);
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -88,7 +88,7 @@ namespace Editor
             }
         }
 
-        public override bool ConsumeMouseClick(System.Windows.Point mousePoint)
+        public override bool ConsumeMouseClick(Point mousePoint)
         {
             if (mainEquation.Bounds.Contains(mousePoint))
             {
@@ -107,7 +107,7 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;

@@ -328,4 +328,51 @@ public static class LatexConverter
         sb.Append(mainEquation);
         return sb;
     }
+
+    /// <summary>
+    /// {sign}\limits_{bottomEquation}^{topEquation} {mainEquation}
+    /// </summary>
+    public static StringBuilder? ToSignBottomTop(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? topEquation, StringBuilder? bottomEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(sign);
+        sb.Append(Limits);
+        sb.Append(bottomEquation);
+        sb.Append(RightSuper);
+        sb.Append(topEquation);
+        sb.Append(WhiteSpace);
+        sb.Append(mainEquation);
+        return sb;
+    }
+
+    /// <summary>
+    /// {sign}\nolimits_{subEquation} {mainEquation}
+    /// </summary>
+    private static readonly char[] NoLimits = ToChars("\\nolimits_");
+    public static StringBuilder? ToSignSub(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? subEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(sign);
+        sb.Append(NoLimits);
+        sb.Append(subEquation);
+        sb.Append(WhiteSpace);
+        sb.Append(mainEquation);
+        return sb;
+    }
+
+    /// <summary>
+    /// {sign}\nolimits_{subEquation}^{superEquation} {mainEquation}
+    /// </summary>
+    public static StringBuilder? ToSignSubSuper(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? superEquation, StringBuilder? subEquation)
+    {
+        var sb = new StringBuilder();
+        sb.Append(sign);
+        sb.Append(NoLimits);
+        sb.Append(subEquation);
+        sb.Append(RightSuper);
+        sb.Append(superEquation);
+        sb.Append(WhiteSpace);
+        sb.Append(mainEquation);
+        return sb;
+    }
 }

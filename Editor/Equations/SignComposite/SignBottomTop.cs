@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 
 namespace Editor
 {
-    class SignBottomTop : EquationContainer
+    public sealed class SignBottomTop : EquationContainer
     {
-        RowContainer mainEquation;
-        RowContainer topEquation;
-        RowContainer bottomEquation;
-        StaticSign sign;
-        double HGap { get { return FontSize * .02; } }
-        double VGap { get { return FontSize * .05; } }
+        private readonly RowContainer mainEquation;
+        private readonly RowContainer topEquation;
+        private readonly RowContainer bottomEquation;
+        private readonly StaticSign sign;
+        private double HGap => FontSize * .02;
+        private double VGap => FontSize * .05;
 
         public SignBottomTop(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(parent)
@@ -26,15 +27,15 @@ namespace Editor
             sign = new StaticSign(this, symbol, useUpright);
             topEquation.FontFactor = SubFontFactor;
             bottomEquation.FontFactor = SubFontFactor;
-            childEquations.AddRange(new EquationBase[] { mainEquation, topEquation, bottomEquation, sign });
+            childEquations.AddRange([mainEquation, topEquation, bottomEquation, sign]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
             parameters.Add(new XElement(sign.Symbol.GetType().Name, sign.Symbol));
-            parameters.Add(new XElement(typeof(bool).FullName, sign.UseItalicIntegralSign));
+            parameters.Add(new XElement(typeof(bool).FullName!, sign.UseItalicIntegralSign));
             thisElement.Add(parameters);
             thisElement.Add(mainEquation.Serialize());
             thisElement.Add(bottomEquation.Serialize());
@@ -51,9 +52,14 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToSignBottomTop(sign.ToLatex(), mainEquation.ToLatex(), topEquation.ToLatex(), bottomEquation.ToLatex());
+        }
+
         protected override void CalculateWidth()
         {
-            double maxLeft = Math.Max(sign.Width, Math.Max(bottomEquation.Width, topEquation.Width));
+            var maxLeft = Math.Max(sign.Width, Math.Max(bottomEquation.Width, topEquation.Width));
             Width = maxLeft + mainEquation.Width + HGap;
             sign.MidX = Left + maxLeft / 2;
             topEquation.MidX = sign.MidX;
@@ -63,19 +69,19 @@ namespace Editor
 
         protected override void CalculateHeight()
         {
-            double upperHalf = Math.Max(sign.RefY + VGap + topEquation.Height, mainEquation.RefY);
-            double lowerHalf = Math.Max(sign.RefY + VGap + bottomEquation.Height, mainEquation.Height - mainEquation.RefY);
+            var upperHalf = Math.Max(sign.RefY + VGap + topEquation.Height, mainEquation.RefY);
+            var lowerHalf = Math.Max(sign.RefY + VGap + bottomEquation.Height, mainEquation.Height - mainEquation.RefY);
             Height = upperHalf + lowerHalf;
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
-                double upperHalf = Math.Max(sign.RefY + VGap + topEquation.Height, mainEquation.RefY);
-                double lowerHalf = Math.Max(sign.RefY + VGap + bottomEquation.Height, mainEquation.Height - mainEquation.RefY);
+                var upperHalf = Math.Max(sign.RefY + VGap + topEquation.Height, mainEquation.RefY);
+                var lowerHalf = Math.Max(sign.RefY + VGap + bottomEquation.Height, mainEquation.Height - mainEquation.RefY);
                 Height = upperHalf + lowerHalf;
                 if (mainEquation.RefY > sign.RefY + VGap + topEquation.Height)
                 {
@@ -94,7 +100,7 @@ namespace Editor
             }
         }
 
-        public override bool ConsumeMouseClick(System.Windows.Point mousePoint)
+        public override bool ConsumeMouseClick(Point mousePoint)
         {
             if (topEquation.Bounds.Contains(mousePoint))
             {
@@ -113,11 +119,11 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                double maxLeft = Math.Max(sign.Width, Math.Max(bottomEquation.Width, topEquation.Width));
+                var maxLeft = Math.Max(sign.Width, Math.Max(bottomEquation.Width, topEquation.Width));
                 sign.MidX = value + maxLeft / 2;
                 topEquation.MidX = sign.MidX;
                 bottomEquation.MidX = sign.MidX;
@@ -127,20 +133,10 @@ namespace Editor
 
         public override double Height
         {
-            get { return base.Height; }
-            set
-            {
-                base.Height = value;
-            }
+            get => base.Height; set => base.Height = value;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return Math.Max(sign.RefY + topEquation.Height + VGap, mainEquation.RefY);
-            }
-        }
+        public override double RefY => Math.Max(sign.RefY + topEquation.Height + VGap, mainEquation.RefY);
 
         public override bool ConsumeKey(Key key)
         {
