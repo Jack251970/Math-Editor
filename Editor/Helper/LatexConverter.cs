@@ -119,6 +119,25 @@ public static class LatexConverter
     }
 
     /// <summary>
+    /// Converts a string to its Latex representation.
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="convertWrapper"></param>
+    /// <returns></returns>
+    public static StringBuilder? ConvertToLatexSymbol(string str, bool convertWrapper)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in str)
+        {
+            foreach (var latexChar in ConvertToLatexSymbol(c, convertWrapper))
+            {
+                sb.Append(latexChar);
+            }
+        }
+        return sb;
+    }
+
+    /// <summary>
     /// Converts a character to its Latex representation.
     /// </summary>
     /// <param name="c"></param>
@@ -131,6 +150,31 @@ public static class LatexConverter
             // TODO: Handle more special characters for Latex
             '{' => convertWrapper ? ['\\', '{'] : ['{'],
             '}' => convertWrapper ? ['\\', '}'] : ['}'],
+            '\u2211' => ['\\', 's', 'u', 'm'], // ∑
+            '\u220F' => ['\\', 'p', 'r', 'o', 'd'], // ∏
+            '\u2210' => ['\\', 'c', 'o', 'p', 'r', 'o', 'd'], // ∐
+            '\u22C2' => ['\\', 'b', 'i', 'g', 'c', 'a', 'p'], // ⋂
+            '\u22C3' => ['\\', 'b', 'i', 'g', 'c', 'u', 'p'], // ⋃
+            '\u222B' => ['\\', 'i', 'n', 't'], // ∫
+            '\u222C' => ['\\', 'i', 'i', 'n', 't'], // ∬
+            '\u222D' => ['\\', 'i', 'i', 'i', 'n', 't'], // ∭
+            '\u222E' => ['\\', 'o', 'i', 'n', 't'], // ∮
+            // \mathop{{\int\!\!\!\!\!\int}\mkern-21mu \bigcirc} 
+            '\u222F' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', '!', '\\', '!', '\\', '!', '\\',
+                '!', '\\', 'i', 'n', 't', '}', '\\', 'm', 'k', 'e', 'r', 'n', '-', '2', '1', 'm', 'u', ' ', '\\', 'b', 'i', 'g',
+                'c', 'i', 'r', 'c', 'o', '}', WhiteSpace], // ∯
+            // \mathop{{\int\!\!\!\!\!\int\!\!\!\!\!\int}\mkern-31.2mu \bigodot} 
+            '\u2230' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', '!', '\\', '!', '\\', '!', '\\',
+                '!', '\\', 'i', 'n', 't', '\\', '!', '\\', '!', '\\', '!', '\\', '!', '\\', 'i', 'n', 't', '}', '\\', 'm', 'k',
+                'e', 'r', 'n', '-', '3', '1', '.', '2', 'm', 'u', ' ', '\\', 'b', 'i', 'g', 'o', 'd', 'o', 't', '}', WhiteSpace], // ∰
+            // \mathop{\int\mkern-20.8mu \circlearrowleft} 
+            '\u2232' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', 'm', 'k', 'e', 'r', 'n', '-',
+                '2', '0', '.', '8', 'm', 'u', ' ', '\\', 'c', 'i', 'r', 'c', 'l', 'e', 'a', 'r', 'r', 'o', 'w', 'l', 'e', 'f',
+                't', '}', WhiteSpace], // ∲
+            // \mathop{\int\mkern-20.8mu \circlearrowright} 
+            '\u2233' => ['\\', 'm', 'a', 't', 'h', 'o', 'p', '{', '{', '\\', 'i', 'n', 't', '\\', 'm', 'k', 'e', 'r', 'n', '-',
+                '2', '0', '.', '8', 'm', 'u', ' ', '\\', 'c', 'i', 'r', 'c', 'l', 'e', 'a', 'r', 'r', 'o', 'w', 'r', 'i', 'g',
+                'h', 't', '}', WhiteSpace], // ∳
             _ => [c],
         };
     }

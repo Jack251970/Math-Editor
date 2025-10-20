@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Editor
 {
@@ -130,6 +131,11 @@ namespace Editor
                 SignCompositeSymbol.AntiClockContourIntegral => "\u2233",
                 _ => throw new InvalidOperationException($"Unknown sign composite symbol: {Symbol}"),
             };
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ConvertToLatexSymbol(Text, true);
         }
     }
 }
