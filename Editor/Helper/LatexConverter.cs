@@ -66,7 +66,7 @@ public static class LatexConverter
 
     private static readonly char[] BeginArray = ToChars("\\begin{array}{l}");
     private static readonly char[] EndArray = ToChars("\\end{array}");
-    private static readonly char[] RowSeparator = ['\\', '\\'];
+    private static readonly char[] RowSeparator = ToChars("\\\\");
 
     /// <summary>
     /// Escapes a row of text parts with \begin{array}{l} and \end{array}.
@@ -150,15 +150,15 @@ public static class LatexConverter
             // TODO: Handle more special characters for Latex
             '{' => convertWrapper ? ['\\', '{'] : ['{'],
             '}' => convertWrapper ? ['\\', '}'] : ['}'],
-            '\u2211' => ['\\', 's', 'u', 'm'], // ∑
-            '\u220F' => ['\\', 'p', 'r', 'o', 'd'], // ∏
-            '\u2210' => ['\\', 'c', 'o', 'p', 'r', 'o', 'd'], // ∐
-            '\u22C2' => ['\\', 'b', 'i', 'g', 'c', 'a', 'p'], // ⋂
-            '\u22C3' => ['\\', 'b', 'i', 'g', 'c', 'u', 'p'], // ⋃
-            '\u222B' => ['\\', 'i', 'n', 't'], // ∫
-            '\u222C' => ['\\', 'i', 'i', 'n', 't'], // ∬
-            '\u222D' => ['\\', 'i', 'i', 'i', 'n', 't'], // ∭
-            '\u222E' => ['\\', 'o', 'i', 'n', 't'], // ∮
+            '\u2211' => ToChars("\\sum"), // ∑
+            '\u220F' => ToChars("\\prod"), // ∏
+            '\u2210' => ToChars("\\coprod"), // ∐
+            '\u22C2' => ToChars("\\bigcap"), // ⋂
+            '\u22C3' => ToChars("\\bigcup"), // ⋃
+            '\u222B' => ToChars("\\int"), // ∫
+            '\u222C' => ToChars("\\iint"), // ∬
+            '\u222D' => ToChars("\\iiint"), // ∭
+            '\u222E' => ToChars("\\oint"), // ∮
             '\u222F' => ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}"), // ∯
             '\u2230' => ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}"), // ∰
             '\u2232' => ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}"), // ∲
@@ -182,7 +182,7 @@ public static class LatexConverter
     /// </summary>
     private const char WhiteSpace = ' ';
 
-    private static readonly char[] SquareRoot = ['\\', 's', 'q', 'r', 't'];
+    private static readonly char[] SquareRoot = ToChars("\\sqrt");
     public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
@@ -210,7 +210,7 @@ public static class LatexConverter
     /// </summary>
     private static readonly char[] BeginMatrix = ToChars("\\begin{array}{*{20}{c}}");
     private static char[] EndMatrix => EndArray;
-    private static char[] MatrixColumnSeparator => ['&'];
+    private static char[] MatrixColumnSeparator => ToChars("&");
     private static char[] MatrixRowSeparator => RowSeparator;
     public static StringBuilder? ToMatrix(int rows, int columns, List<StringBuilder> matrix)
     {
@@ -261,7 +261,7 @@ public static class LatexConverter
     /// <summary>
     /// {}^{insideEquation}
     /// </summary>
-    private static readonly char[] LeftSuper = ['{', '}', '^'];
+    private static readonly char[] LeftSuper = ToChars("{}^");
     public static StringBuilder? ToLeftSuper(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
@@ -282,7 +282,7 @@ public static class LatexConverter
     /// <summary>
     /// ^{insideEquation}
     /// </summary>
-    private static readonly char[] RightSuper = ['^'];
+    private static readonly char[] RightSuper = ToChars("^");
     public static StringBuilder? ToRightSuper(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
@@ -303,7 +303,7 @@ public static class LatexConverter
     /// <summary>
     /// {}_{insideEquation}
     /// </summary>
-    private static readonly char[] LeftSub = ['{', '}', '_'];
+    private static readonly char[] LeftSub = ToChars("{}_");
     public static StringBuilder? ToLeftSub(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
@@ -324,7 +324,7 @@ public static class LatexConverter
     /// <summary>
     /// _{insideEquation}
     /// </summary>
-    private static readonly char[] RightSub = ['_'];
+    private static readonly char[] RightSub = ToChars("_");
     public static StringBuilder? ToRightSub(StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
@@ -407,8 +407,8 @@ public static class LatexConverter
     /// <summary>
     /// \sqrt[nthRootEquation]{insideEquation}
     /// </summary>
-    private static readonly char[] NRoot1 = ['\\', 's', 'q', 'r', 't', '['];
-    private static readonly char[] NRoot2 = [']'];
+    private static readonly char[] NRoot1 = ToChars("\\sqrt[");
+    private static readonly char[] NRoot2 = ToChars("]");
     public static StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
     {
         var sb = new StringBuilder();
