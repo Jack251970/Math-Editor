@@ -240,9 +240,9 @@ public partial class MainWindow : Window
         else
         {
 #if DEBUG
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev})";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - Untitled 1";
 #else
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version}";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - Untitled 1";
 #endif
         }
     }
