@@ -27,12 +27,11 @@ namespace Editor
             get => active;
             set
             {
+                // Not sure if this is right - I think value == null is to temporarily set value to null
+                // before assigning a new value in EquationContainer.ConsumeMouseClick function
                 if (value == null || !value.IsStatic)
                 {
-                    active = value;
-                }
-                else
-                {
+                    active = value!;
                 }
             }
         }
