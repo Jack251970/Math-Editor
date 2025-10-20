@@ -375,4 +375,20 @@ public static class LatexConverter
         sb.Append(mainEquation);
         return sb;
     }
+
+    /// <summary>
+    /// \boxed{insideEquation}
+    /// </summary>
+    private static readonly char[] Boxed = ToChars("\\boxed");
+    public static StringBuilder? ToBox(StringBuilder? insideEquation)
+    {
+        if (insideEquation == null)
+        {
+            return null;
+        }
+        var sb = new StringBuilder();
+        sb.Append(Boxed);
+        sb.Append(insideEquation);
+        return sb;
+    }
 }
