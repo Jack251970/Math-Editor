@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Media;
 using iNKORE.UI.WPF.Modern;
 
@@ -7,31 +8,31 @@ namespace Editor
 {
     public static class PenManager
     {
-        static Dictionary<(double, ApplicationTheme), Pen> bevelPens = [];
-        static Dictionary<(double, ApplicationTheme), Pen> miterPens = [];
-        static Dictionary<(double, ApplicationTheme), Pen> roundPens = [];
+        private static readonly Dictionary<(double, ApplicationTheme), Pen> _bevelPens = [];
+        private static readonly Dictionary<(double, ApplicationTheme), Pen> _miterPens = [];
+        private static readonly Dictionary<(double, ApplicationTheme), Pen> _roundPens = [];
 
-        static readonly object bevelLock = new();
-        static readonly object miterLock = new object();
-        static readonly object roundLock = new object();
+        private static readonly Lock _bevelLock = new();
+        private static readonly Lock _miterLock = new();
+        private static readonly Lock _roundLock = new();
 
         public static Pen GetPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
         {
             if (lineJoin == PenLineJoin.Bevel)
             {
-                return GetPen(bevelLock, bevelPens, thickness, lineJoin);
+                return GetPen(_bevelLock, _bevelPens, thickness, lineJoin);
             }
             else if (lineJoin == PenLineJoin.Miter)
             {
-                return GetPen(miterLock, miterPens, thickness, lineJoin);
+                return GetPen(_miterLock, _miterPens, thickness, lineJoin);
             }
             else
             {
-                return GetPen(roundLock, roundPens, thickness, lineJoin);
+                return GetPen(_roundLock, _roundPens, thickness, lineJoin);
             }
         }
 
-        static Pen GetPen(object lockObj, Dictionary<(double, ApplicationTheme), Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush brush = null)
+        private static Pen GetPen(Lock lockObj, Dictionary<(double, ApplicationTheme), Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush? brush = null)
         {
             lock (lockObj)
             {
