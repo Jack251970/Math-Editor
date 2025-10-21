@@ -744,13 +744,13 @@ public partial class EquationToolBar : UserControl
                               CreateImageUri("DivAndRoots", "DivTriangleExpanding.png"),
                            ];
         CommandType[] commands = [
-                                     CommandType.SquareRoot, CommandType.nRoot,
-                                     CommandType.Division, CommandType.Division, CommandType.Division,
-                                     CommandType.Division, CommandType.Division, CommandType.Division,
-                                     CommandType.Division, CommandType.Division, CommandType.Division,
-                                     CommandType.Division, CommandType.Division, CommandType.Division,
-                                      CommandType.Division, CommandType.Division,
-                                 ];
+                                    CommandType.SquareRoot, CommandType.nRoot,
+                                    CommandType.Division, CommandType.Division, CommandType.Division,
+                                    CommandType.Division, CommandType.Division, CommandType.Division,
+                                    CommandType.Division, CommandType.Division, CommandType.Division,
+                                    CommandType.Division, CommandType.Division, CommandType.Division,
+                                    CommandType.Division, CommandType.Division,
+                                ];
         object[] paramz = [
                               0, 0, //square root and nRoot
                               DivisionType.DivMath, DivisionType.DivMathWithTop,
