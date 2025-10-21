@@ -5,21 +5,15 @@
         public DivMathInverted(EquationContainer parent)
             : base(parent)
         {
-            divMathSign.IsInverted = true;
+            _divMathSign.IsInverted = true;
         }
 
         protected override void AdjustVertical()
         {
-            insideEquation.Top = Top + VerticalGap;
-            divMathSign.Bottom = Bottom;
+            _insideEquation.Top = Top + VerticalGap;
+            _divMathSign.Bottom = Bottom;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return insideEquation.LastRow.MidY - Top;
-            }
-        }
+        public override double RefY => _insideEquation.LastRow.MidY - Top;
     }
 }

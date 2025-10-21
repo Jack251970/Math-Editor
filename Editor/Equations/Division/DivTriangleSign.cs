@@ -13,10 +13,7 @@ namespace Editor
 
         public override double Height
         {
-            get
-            {
-                return base.Height;
-            }
+            get => base.Height;
             set
             {
                 base.Height = value;
@@ -26,14 +23,7 @@ namespace Editor
 
         public override double Bottom
         {
-            get
-            {
-                return base.Bottom - StandardPen.Thickness / 2;
-            }
-            set
-            {
-                base.Bottom = value;
-            }
+            get => base.Bottom - StandardPen.Thickness / 2; set => base.Bottom = value;
         }
 
         public override void DrawEquation(DrawingContext dc)

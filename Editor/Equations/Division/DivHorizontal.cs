@@ -22,7 +22,7 @@ namespace Editor
         public override void DrawEquation(DrawingContext dc)
         {
             base.DrawEquation(dc);
-            dc.DrawLine(StandardPen, new Point(bottomEquation.Left - ExtraWidth / 10, Top), new Point(topEquation.Right + ExtraWidth / 10, Bottom));
+            dc.DrawLine(StandardPen, new Point(_bottomEquation.Left - ExtraWidth / 10, Top), new Point(_topEquation.Right + ExtraWidth / 10, Bottom));
         }
 
         public override double Left
@@ -38,8 +38,8 @@ namespace Editor
         private void AdjustHorizontal()
         {
 
-            topEquation.Left = this.Left;
-            bottomEquation.Left = topEquation.Right + ExtraWidth;
+            _topEquation.Left = this.Left;
+            _bottomEquation.Left = _topEquation.Right + ExtraWidth;
         }
         public override double Top
         {
@@ -47,8 +47,8 @@ namespace Editor
             set
             {
                 base.Top = value;
-                topEquation.MidY = MidY;
-                bottomEquation.MidY = MidY;
+                _topEquation.MidY = MidY;
+                _bottomEquation.MidY = MidY;
             }
         }
 
@@ -56,20 +56,20 @@ namespace Editor
         {
             get
             {
-                return Math.Max(topEquation.RefY, bottomEquation.RefY);
+                return Math.Max(_topEquation.RefY, _bottomEquation.RefY);
             }
         }
 
 
         protected override void CalculateWidth()
         {
-            Width = topEquation.Width + bottomEquation.Width + ExtraWidth;
+            Width = _topEquation.Width + _bottomEquation.Width + ExtraWidth;
             AdjustHorizontal();
         }
 
         protected override void CalculateHeight()
         {
-            Height = Math.Max(topEquation.Height, bottomEquation.Height);
+            Height = Math.Max(_topEquation.Height, _bottomEquation.Height);
         }
 
         public override bool ConsumeKey(Key key)
@@ -81,17 +81,17 @@ namespace Editor
             }
             if (key == Key.Right)
             {
-                if (ActiveChild == topEquation)
+                if (ActiveChild == _topEquation)
                 {
-                    ActiveChild = bottomEquation;
+                    ActiveChild = _bottomEquation;
                     return true;
                 }
             }
             else if (key == Key.Left)
             {
-                if (ActiveChild == bottomEquation)
+                if (ActiveChild == _bottomEquation)
                 {
-                    ActiveChild = topEquation;
+                    ActiveChild = _topEquation;
                     return true;
                 }
             }

@@ -3,53 +3,44 @@ using System.Xml.Linq;
 
 namespace Editor
 {
-    class DivTriangle : EquationContainer
+    internal class DivTriangle : EquationContainer
     {
-        RowContainer insideEquation = null;
-        DivTriangleSign divTriangleSign;
-        bool isFixed;
+        private readonly RowContainer _insideEquation;
+        private readonly DivTriangleSign _divTriangleSign;
+        private readonly bool _isFixed;
 
-        double ExtraHeight
-        {
-            get { return FontSize * .2; }
-        }
+        private double ExtraHeight => FontSize * .2;
 
-        double VerticalGap
-        {
-            get { return FontSize * .1; }
-        }
+        private double VerticalGap => FontSize * .1;
 
-        double LeftGap
-        {
-            get { return FontSize * .1; }
-        }
+        private double LeftGap => FontSize * .1;
 
         public DivTriangle(EquationContainer parent, bool isFixed)
             : base(parent)
         {
-            this.isFixed = isFixed;
-            divTriangleSign = new DivTriangleSign(this);
-            ActiveChild = insideEquation = new RowContainer(this);
-            childEquations.Add(insideEquation);
-            childEquations.Add(divTriangleSign);
+            _isFixed = isFixed;
+            _divTriangleSign = new DivTriangleSign(this);
+            ActiveChild = _insideEquation = new RowContainer(this);
+            childEquations.Add(_insideEquation);
+            childEquations.Add(_divTriangleSign);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(insideEquation.Serialize());
+            var thisElement = new XElement(GetType().Name);
+            thisElement.Add(_insideEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            insideEquation.DeSerialize(xElement.Elements().First());
+            _insideEquation.DeSerialize(xElement.Elements().First());
             CalculateSize();
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -57,10 +48,10 @@ namespace Editor
             }
         }
 
-        void AdjustVertical()
+        private void AdjustVertical()
         {
-            divTriangleSign.Bottom = Bottom;
-            insideEquation.Top = Top; //Bottom - VerticalGap;            
+            _divTriangleSign.Bottom = Bottom;
+            _insideEquation.Top = Top; //Bottom - VerticalGap;            
         }
 
         public override void CalculateSize()
@@ -71,39 +62,33 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            Width = insideEquation.Width + divTriangleSign.Width + LeftGap * 2;
+            Width = _insideEquation.Width + _divTriangleSign.Width + LeftGap * 2;
         }
 
         protected override void CalculateHeight()
         {
-            if (isFixed)
+            if (_isFixed)
             {
-                divTriangleSign.Height = insideEquation.LastRow.Height + ExtraHeight;
+                _divTriangleSign.Height = _insideEquation.LastRow.Height + ExtraHeight;
             }
             else
             {
-                divTriangleSign.Height = insideEquation.Height + ExtraHeight;
+                _divTriangleSign.Height = _insideEquation.Height + ExtraHeight;
             }
-            Height = insideEquation.Height + ExtraHeight;
+            Height = _insideEquation.Height + ExtraHeight;
         }
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                divTriangleSign.Left = value + LeftGap;
-                insideEquation.Left = divTriangleSign.Right + LeftGap;
+                _divTriangleSign.Left = value + LeftGap;
+                _insideEquation.Left = _divTriangleSign.Right + LeftGap;
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return insideEquation.LastRow.MidY - Top;
-            }
-        }
+        public override double RefY => _insideEquation.LastRow.MidY - Top;
     }
 }

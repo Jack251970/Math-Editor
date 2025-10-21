@@ -6,12 +6,12 @@ namespace Editor
 {
     public class DivSlanted : DivBase
     {
-        double ExtraWidth { get { return FontSize * .1; } }
-        double ExtraHeight { get { return FontSize * .1; } }
+        private double ExtraWidth => FontSize * .1;
+        private double ExtraHeight => FontSize * .1;
 
-        double centerX;
-        double slantXTop;
-        double slantXBottom;
+        private double centerX;
+        private double slantXTop;
+        private double slantXBottom;
 
         public DivSlanted(EquationContainer parent)
             : base(parent, false)
@@ -31,22 +31,22 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                topEquation.Right = Left + centerX - ExtraWidth / 2;
-                bottomEquation.Left = Left + centerX + ExtraWidth / 2;
+                _topEquation.Right = Left + centerX - ExtraWidth / 2;
+                _bottomEquation.Left = Left + centerX + ExtraWidth / 2;
             }
         }
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
-                topEquation.Top = this.Top;
-                bottomEquation.Bottom = Bottom;
+                _topEquation.Top = Top;
+                _bottomEquation.Bottom = Bottom;
             }
         }
 
@@ -58,19 +58,19 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            double width = topEquation.Width + bottomEquation.Width + ExtraWidth;
+            var width = _topEquation.Width + _bottomEquation.Width + ExtraWidth;
             Rect rect = new Rect(0, 0, width, Height);
-            slantXTop = Math.Sin(Math.PI / 5) * (topEquation.Height + ExtraHeight / 2);
-            slantXBottom = Math.Sin(Math.PI / 5) * (bottomEquation.Height + ExtraHeight / 2);
-            rect.Union(new Point(topEquation.Width + slantXTop + ExtraWidth / 2, Top));
-            rect.Union(new Point(bottomEquation.Width + slantXBottom + ExtraWidth / 2, Bottom));
+            slantXTop = Math.Sin(Math.PI / 5) * (_topEquation.Height + ExtraHeight / 2);
+            slantXBottom = Math.Sin(Math.PI / 5) * (_bottomEquation.Height + ExtraHeight / 2);
+            rect.Union(new Point(_topEquation.Width + slantXTop + ExtraWidth / 2, Top));
+            rect.Union(new Point(_bottomEquation.Width + slantXBottom + ExtraWidth / 2, Bottom));
             Width = rect.Width;
-            centerX = rect.Width - Math.Max(slantXTop, bottomEquation.Width) - ExtraWidth / 2;
+            centerX = rect.Width - Math.Max(slantXTop, _bottomEquation.Width) - ExtraWidth / 2;
         }
 
         protected override void CalculateHeight()
         {
-            Height = topEquation.Height + bottomEquation.Height + ExtraHeight;
+            Height = _topEquation.Height + _bottomEquation.Height + ExtraHeight;
         }
 
         //public override double RefY

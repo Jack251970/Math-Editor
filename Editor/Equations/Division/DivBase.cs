@@ -7,8 +7,8 @@ namespace Editor
 {
     public abstract class DivBase : EquationContainer
     {
-        protected RowContainer topEquation;
-        protected RowContainer bottomEquation;
+        protected RowContainer _topEquation;
+        protected RowContainer _bottomEquation;
 
         protected DivBase(EquationContainer parent, bool isSmall = false)
             : base(parent)
@@ -17,44 +17,44 @@ namespace Editor
             {
                 SubLevel++;
             }
-            ActiveChild = topEquation = new RowContainer(this);
-            bottomEquation = new RowContainer(this);
+            ActiveChild = _topEquation = new RowContainer(this);
+            _bottomEquation = new RowContainer(this);
             if (isSmall)
             {
-                topEquation.FontFactor = SubFontFactor;
-                bottomEquation.FontFactor = SubFontFactor;
-                topEquation.ApplySymbolGap = false;
-                bottomEquation.ApplySymbolGap = false;
+                _topEquation.FontFactor = SubFontFactor;
+                _bottomEquation.FontFactor = SubFontFactor;
+                _topEquation.ApplySymbolGap = false;
+                _bottomEquation.ApplySymbolGap = false;
             }
-            childEquations.AddRange(new EquationBase[] { topEquation, bottomEquation });
+            childEquations.AddRange([_topEquation, _bottomEquation]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(topEquation.Serialize());
-            thisElement.Add(bottomEquation.Serialize());
+            var thisElement = new XElement(GetType().Name);
+            thisElement.Add(_topEquation.Serialize());
+            thisElement.Add(_bottomEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            topEquation.DeSerialize(xElement.Elements().First());
-            bottomEquation.DeSerialize(xElement.Elements().Last());
+            _topEquation.DeSerialize(xElement.Elements().First());
+            _bottomEquation.DeSerialize(xElement.Elements().Last());
             CalculateSize();
         }
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            if (bottomEquation.Bounds.Contains(mousePoint))
+            if (_bottomEquation.Bounds.Contains(mousePoint))
             {
-                ActiveChild = bottomEquation;
+                ActiveChild = _bottomEquation;
                 ActiveChild.ConsumeMouseClick(mousePoint);
                 return true;
             }
-            else if (topEquation.Bounds.Contains(mousePoint))
+            else if (_topEquation.Bounds.Contains(mousePoint))
             {
-                ActiveChild = topEquation;
+                ActiveChild = _topEquation;
                 ActiveChild.ConsumeMouseClick(mousePoint);
                 return true;
             }
@@ -70,10 +70,10 @@ namespace Editor
             }
             if (key == Key.Down)
             {
-                if (ActiveChild == topEquation)
+                if (ActiveChild == _topEquation)
                 {
-                    Point point = ActiveChild.GetVerticalCaretLocation();
-                    ActiveChild = bottomEquation;
+                    var point = ActiveChild.GetVerticalCaretLocation();
+                    ActiveChild = _bottomEquation;
                     point.Y = ActiveChild.Top + 1;
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
@@ -81,10 +81,10 @@ namespace Editor
             }
             else if (key == Key.Up)
             {
-                if (ActiveChild == bottomEquation)
+                if (ActiveChild == _bottomEquation)
                 {
-                    Point point = ActiveChild.GetVerticalCaretLocation();
-                    ActiveChild = topEquation;
+                    var point = ActiveChild.GetVerticalCaretLocation();
+                    ActiveChild = _topEquation;
                     point.Y = ActiveChild.Bottom - 1;
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;

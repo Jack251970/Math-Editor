@@ -15,10 +15,7 @@ namespace Editor
 
         public override double Height
         {
-            get
-            {
-                return base.Height;
-            }
+            get => base.Height;
             set
             {
                 base.Height = value;
@@ -44,8 +41,8 @@ namespace Editor
                 line = new LineSegment(Location, true);
                 arc = new ArcSegment(new Point(Left, Bottom), new Size(Width * 4.5, Height), 0, false, SweepDirection.Clockwise, true);
             }
-            PathGeometry pathGeometry = new PathGeometry();
-            PathFigure pathFigure = new PathFigure(pathFigureStart, new PathSegment[] { line, arc }, false);
+            var pathGeometry = new PathGeometry();
+            var pathFigure = new PathFigure(pathFigureStart, [line, arc], false);
             pathGeometry.Figures.Add(pathFigure);
             dc.DrawGeometry(null, StandardRoundPen, pathGeometry);
         }

@@ -10,16 +10,10 @@
         protected override void AdjustVertical()
         {
             outerEquation.Top = Top;
-            insideEquation.Top = outerEquation.Bottom + VerticalGap;
-            divMathSign.Top = outerEquation.Bottom + VerticalGap;
+            _insideEquation.Top = outerEquation.Bottom + VerticalGap;
+            _divMathSign.Top = outerEquation.Bottom + VerticalGap;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return outerEquation.Height + insideEquation.FirstRow.RefY + VerticalGap;
-            }
-        }
+        public override double RefY => outerEquation.Height + _insideEquation.FirstRow.RefY + VerticalGap;
     }
 }

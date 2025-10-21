@@ -21,8 +21,8 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(insideEquation.Serialize());
+            var thisElement = new XElement(GetType().Name);
+            thisElement.Add(_insideEquation.Serialize());
             thisElement.Add(outerEquation.Serialize());
             return thisElement;
         }
@@ -30,7 +30,7 @@ namespace Editor
         public override void DeSerialize(XElement xElement)
         {
             var elements = xElement.Elements().ToArray();
-            insideEquation.DeSerialize(elements[0]);
+            _insideEquation.DeSerialize(elements[0]);
             outerEquation.DeSerialize(elements[1]);
             CalculateSize();
         }
@@ -43,23 +43,23 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            Width = Math.Max(insideEquation.Width, outerEquation.Width) + divMathSign.Width + LeftGap;
+            Width = Math.Max(_insideEquation.Width, outerEquation.Width) + _divMathSign.Width + LeftGap;
         }
 
         protected override void CalculateHeight()
         {
-            Height = outerEquation.Height + insideEquation.Height + ExtraHeight;
-            divMathSign.Height = insideEquation.FirstRow.Height + ExtraHeight;
+            Height = outerEquation.Height + _insideEquation.Height + ExtraHeight;
+            _divMathSign.Height = _insideEquation.FirstRow.Height + ExtraHeight;
         }
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                divMathSign.Left = value + LeftGap;
-                insideEquation.Right = Right;
+                _divMathSign.Left = value + LeftGap;
+                _insideEquation.Right = Right;
                 outerEquation.Right = Right;
             }
         }

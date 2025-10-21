@@ -6,8 +6,8 @@ namespace Editor
 {
     public class DivRegular : DivBase
     {
-        double ExtraWidth { get { return FontSize * .2; } }
-        double ExtraHeight { get { return FontSize * .2; } }
+        private double ExtraWidth => FontSize * .2;
+        private double ExtraHeight => FontSize * .2;
 
         protected int barCount = 1;
 
@@ -44,44 +44,38 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                topEquation.MidX = this.MidX;
-                bottomEquation.MidX = this.MidX;
+                _topEquation.MidX = MidX;
+                _bottomEquation.MidX = MidX;
             }
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
-                topEquation.Top = value;
-                bottomEquation.Bottom = Bottom;
+                _topEquation.Top = value;
+                _bottomEquation.Bottom = Bottom;
             }
         }
 
         protected override void CalculateWidth()
         {
-            Width = Math.Max(topEquation.Width, bottomEquation.Width) + ExtraWidth;
+            Width = Math.Max(_topEquation.Width, _bottomEquation.Width) + ExtraWidth;
         }
 
         protected override void CalculateHeight()
         {
-            double height = topEquation.Height + bottomEquation.Height + ExtraHeight * 1.6;
+            var height = _topEquation.Height + _bottomEquation.Height + ExtraHeight * 1.6;
             height += (barCount - 1) * ExtraHeight;
             Height = height;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return topEquation.Height + ExtraHeight * ((barCount + 1.0) / 2);
-            }
-        }
+        public override double RefY => _topEquation.Height + ExtraHeight * ((barCount + 1.0) / 2);
     }
 }

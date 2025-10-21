@@ -1,59 +1,29 @@
-﻿namespace Editor
+﻿using System;
+
+namespace Editor
 {
     public static class DivisionFactory
     {
         public static EquationBase CreateEquation(EquationContainer equationParent, DivisionType divType)
         {
-            EquationBase equation = null;
-            switch (divType)
+            EquationBase equation = divType switch
             {
-                case DivisionType.DivRegular:
-                    equation = new DivRegular(equationParent);
-                    break;
-                case DivisionType.DivRegularSmall:
-                    equation = new DivRegularSmall(equationParent);
-                    break;
-                case DivisionType.DivDoubleBar:
-                    equation = new DivDoubleBar(equationParent);
-                    break;
-                case DivisionType.DivTripleBar:
-                    equation = new DivTripleBar(equationParent);
-                    break;
-
-                case DivisionType.DivHoriz:
-                    equation = new DivHorizontal(equationParent);
-                    break;
-                case DivisionType.DivHorizSmall:
-                    equation = new DivHorizSmall(equationParent);
-                    break;
-
-                case DivisionType.DivMath:
-                    equation = new DivMath(equationParent);
-                    break;
-                case DivisionType.DivMathWithTop:
-                    equation = new DivMathWithTop(equationParent);
-                    break;
-
-                case DivisionType.DivSlanted:
-                    equation = new DivSlanted(equationParent);
-                    break;
-                case DivisionType.DivSlantedSmall:
-                    equation = new DivSlantedSmall(equationParent);
-                    break;
-
-                case DivisionType.DivMathInverted:
-                    equation = new DivMathInverted(equationParent);
-                    break;
-                case DivisionType.DivInvertedWithBottom:
-                    equation = new DivMathWithBottom(equationParent);
-                    break;
-                case DivisionType.DivTriangleFixed:
-                    equation = new DivTriangle(equationParent, true);
-                    break;
-                case DivisionType.DivTriangleExpanding:
-                    equation = new DivTriangle(equationParent, false);
-                    break;
-            }
+                DivisionType.DivRegular => new DivRegular(equationParent),
+                DivisionType.DivRegularSmall => new DivRegularSmall(equationParent),
+                DivisionType.DivDoubleBar => new DivDoubleBar(equationParent),
+                DivisionType.DivTripleBar => new DivTripleBar(equationParent),
+                DivisionType.DivHoriz => new DivHorizontal(equationParent),
+                DivisionType.DivHorizSmall => new DivHorizSmall(equationParent),
+                DivisionType.DivMath => new DivMath(equationParent),
+                DivisionType.DivMathWithTop => new DivMathWithTop(equationParent),
+                DivisionType.DivSlanted => new DivSlanted(equationParent),
+                DivisionType.DivSlantedSmall => new DivSlantedSmall(equationParent),
+                DivisionType.DivMathInverted => new DivMathInverted(equationParent),
+                DivisionType.DivInvertedWithBottom => new DivMathWithBottom(equationParent),
+                DivisionType.DivTriangleFixed => new DivTriangle(equationParent, true),
+                DivisionType.DivTriangleExpanding => new DivTriangle(equationParent, false),
+                _ => throw new InvalidOperationException("Unsupported DivisionType in DivisionFactory"),
+            };
             return equation;
         }
     }

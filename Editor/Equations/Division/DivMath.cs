@@ -6,48 +6,39 @@ namespace Editor
 {
     public class DivMath : EquationContainer
     {
-        protected RowContainer insideEquation = null;
-        protected DivMathSign divMathSign;
-        protected double ExtraHeight
-        {
-            get { return FontSize * .3; }
-        }
+        protected RowContainer _insideEquation;
+        protected DivMathSign _divMathSign;
+        protected double ExtraHeight => FontSize * .3;
 
-        protected double VerticalGap
-        {
-            get { return FontSize * .1; }
-        }
+        protected double VerticalGap => FontSize * .1;
 
-        protected double LeftGap
-        {
-            get { return FontSize * .1; }
-        }
+        protected double LeftGap => FontSize * .1;
 
         public DivMath(EquationContainer parent)
             : base(parent)
         {
-            divMathSign = new DivMathSign(this);
-            ActiveChild = insideEquation = new RowContainer(this);
-            childEquations.Add(insideEquation);
-            childEquations.Add(divMathSign);
+            _divMathSign = new DivMathSign(this);
+            ActiveChild = _insideEquation = new RowContainer(this);
+            childEquations.Add(_insideEquation);
+            childEquations.Add(_divMathSign);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            thisElement.Add(insideEquation.Serialize());
+            var thisElement = new XElement(GetType().Name);
+            thisElement.Add(_insideEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
-            insideEquation.DeSerialize(xElement.Elements().First());
+            _insideEquation.DeSerialize(xElement.Elements().First());
             CalculateSize();
         }
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -57,8 +48,8 @@ namespace Editor
 
         protected virtual void AdjustVertical()
         {
-            insideEquation.Top = Top + VerticalGap;
-            divMathSign.Top = Top + VerticalGap;
+            _insideEquation.Top = Top + VerticalGap;
+            _divMathSign.Top = Top + VerticalGap;
         }
 
         public override void CalculateSize()
@@ -69,32 +60,26 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            Width = insideEquation.Width + divMathSign.Width + LeftGap;
+            Width = _insideEquation.Width + _divMathSign.Width + LeftGap;
         }
 
         protected override void CalculateHeight()
         {
-            divMathSign.Height = insideEquation.FirstRow.Height + ExtraHeight;
-            Height = Math.Max(insideEquation.Height + ExtraHeight, divMathSign.Height);
+            _divMathSign.Height = _insideEquation.FirstRow.Height + ExtraHeight;
+            Height = Math.Max(_insideEquation.Height + ExtraHeight, _divMathSign.Height);
         }
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
-                divMathSign.Left = value + LeftGap;
-                insideEquation.Left = divMathSign.Right;
+                _divMathSign.Left = value + LeftGap;
+                _insideEquation.Left = _divMathSign.Right;
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return insideEquation.FirstRow.RefY + VerticalGap;
-            }
-        }
+        public override double RefY => _insideEquation.FirstRow.RefY + VerticalGap;
     }
 }
