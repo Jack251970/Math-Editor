@@ -780,4 +780,34 @@ public static class LatexConverter
         }
         return sb;
     }
+
+    private static readonly char[] OverBrace = ToChars("\\overbrace");
+    private static readonly char[] UnderBrace = ToChars("\\underbrace");
+    public static StringBuilder? ToHorizontalBracket(HorizontalBracketSignType type, StringBuilder? topEquation,
+        StringBuilder? bottomEquation)
+    {
+        var sb = new StringBuilder();
+        switch (type)
+        {
+            case HorizontalBracketSignType.TopCurly:
+                /// \overbrace bottomEquation^topEquation
+                sb.Append(OverBrace).Append(WhiteSpace).Append(bottomEquation).Append(RightSuper)
+                    .Append(topEquation);
+                break;
+            case HorizontalBracketSignType.BottomCurly:
+                /// \underbrace topEquation_bottomEquation
+                sb.Append(UnderBrace).Append(WhiteSpace).Append(topEquation).Append('_')
+                    .Append(bottomEquation);
+                break;
+            case HorizontalBracketSignType.TopSquare:
+                MessageBox.Show("No translation available for Upper horizontal bracket.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case HorizontalBracketSignType.BottomSquare:
+                MessageBox.Show("No translation available for Lower horizontal bracket.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            default:
+                throw new InvalidOperationException($"Invalid HorizontalBracketSignType: {type}");
+        }
+        return sb;
+    }
 }

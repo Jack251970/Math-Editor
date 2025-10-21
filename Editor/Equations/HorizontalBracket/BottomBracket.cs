@@ -5,8 +5,8 @@
         public BottomBracket(EquationContainer parent, HorizontalBracketSignType signType)
              : base(parent, signType)
         {
-            bottomEquation.FontFactor = SubFontFactor;
-            ActiveChild = topEquation;
+            _bottomEquation.FontFactor = SubFontFactor;
+            ActiveChild = _topEquation;
         }
     }
 }

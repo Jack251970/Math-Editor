@@ -1,42 +1,48 @@
 ﻿using System;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Editor
 {
     public abstract class HorizontalBracket : EquationContainer
     {
-        protected RowContainer topEquation;
-        protected HorizontalBracketSign bracketSign;
-        protected RowContainer bottomEquation;
+        protected RowContainer _topEquation;
+        protected HorizontalBracketSign _bracketSign;
+        protected RowContainer _bottomEquation;
 
         public HorizontalBracket(EquationContainer parent, HorizontalBracketSignType signType)
             : base(parent)
         {
-            topEquation = new RowContainer(this);
-            bottomEquation = new RowContainer(this);
-            bracketSign = new HorizontalBracketSign(this, signType);
-            childEquations.Add(topEquation);
-            childEquations.Add(bracketSign);
-            childEquations.Add(bottomEquation);
+            _topEquation = new RowContainer(this);
+            _bottomEquation = new RowContainer(this);
+            _bracketSign = new HorizontalBracketSign(this, signType);
+            childEquations.Add(_topEquation);
+            childEquations.Add(_bracketSign);
+            childEquations.Add(_bottomEquation);
         }
 
         public override XElement Serialize()
         {
             var thisElement = new XElement(GetType().Name);
             var parameters = new XElement("parameters");
-            parameters.Add(new XElement(bracketSign.SignType.GetType().Name, bracketSign.SignType));
+            parameters.Add(new XElement(_bracketSign.SignType.GetType().Name, _bracketSign.SignType));
             thisElement.Add(parameters);
-            thisElement.Add(topEquation.Serialize());
-            thisElement.Add(bottomEquation.Serialize());
+            thisElement.Add(_topEquation.Serialize());
+            thisElement.Add(_bottomEquation.Serialize());
             return thisElement;
         }
 
         public override void DeSerialize(XElement xElement)
         {
             XElement[] elements = [.. xElement.Elements(typeof(RowContainer).Name)];
-            topEquation.DeSerialize(elements[0]);
-            bottomEquation.DeSerialize(elements[1]);
+            _topEquation.DeSerialize(elements[0]);
+            _bottomEquation.DeSerialize(elements[1]);
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToHorizontalBracket(_bracketSign.SignType, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
         public override double Left
@@ -45,9 +51,9 @@ namespace Editor
             set
             {
                 base.Left = value;
-                bracketSign.MidX = MidX;
-                topEquation.MidX = MidX;
-                bottomEquation.MidX = MidX;
+                _bracketSign.MidX = MidX;
+                _topEquation.MidX = MidX;
+                _bottomEquation.MidX = MidX;
             }
         }
 
@@ -63,20 +69,20 @@ namespace Editor
 
         private void AdjustChildrenVertical()
         {
-            topEquation.Top = Top;
-            bracketSign.Top = topEquation.Bottom;
-            bottomEquation.Top = bracketSign.Bottom;
+            _topEquation.Top = Top;
+            _bracketSign.Top = _topEquation.Bottom;
+            _bottomEquation.Top = _bracketSign.Bottom;
         }
 
         protected override void CalculateWidth()
         {
-            Width = Math.Max(topEquation.Width, bottomEquation.Width) + FontSize * .6;
-            bracketSign.Width = Width - FontSize * .2;
+            Width = Math.Max(_topEquation.Width, _bottomEquation.Width) + FontSize * .6;
+            _bracketSign.Width = Width - FontSize * .2;
         }
 
         protected override void CalculateHeight()
         {
-            Height = topEquation.Height + bottomEquation.Height + bracketSign.Height;
+            Height = _topEquation.Height + _bottomEquation.Height + _bracketSign.Height;
             AdjustChildrenVertical();
         }
 
@@ -84,13 +90,13 @@ namespace Editor
         {
             get
             {
-                if (bracketSign.SignType is HorizontalBracketSignType.TopCurly or HorizontalBracketSignType.TopSquare)
+                if (_bracketSign.SignType is HorizontalBracketSignType.TopCurly or HorizontalBracketSignType.TopSquare)
                 {
-                    return Height - bottomEquation.RefY;
+                    return Height - _bottomEquation.RefY;
                 }
                 else
                 {
-                    return topEquation.RefY;
+                    return _topEquation.RefY;
                 }
             }
         }
