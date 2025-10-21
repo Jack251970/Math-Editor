@@ -12,8 +12,11 @@ namespace Editor
 {
     public sealed class EquationRow : EquationContainer, ISupportsUndo
     {
-        protected EquationContainer deleteable = null;
-        static Pen boxPen = new Pen(Brushes.Blue, 1.1) { StartLineCap = PenLineCap.Flat, EndLineCap = PenLineCap.Flat };
+        private EquationContainer? _deleteable = null;
+        private static readonly Pen boxPen = new(Brushes.Blue, 1.1)
+        {
+            StartLineCap = PenLineCap.Flat, EndLineCap = PenLineCap.Flat
+        };
 
         static EquationRow()
         {
@@ -361,7 +364,7 @@ namespace Editor
         public override void DeSelect()
         {
             base.DeSelect();
-            deleteable = null;
+            _deleteable = null;
         }
 
         public override CopyDataObject? Copy(bool removeSelection)
@@ -477,13 +480,13 @@ namespace Editor
         public override void DrawEquation(DrawingContext dc)
         {
             base.DrawEquation(dc);
-            if (deleteable != null)
+            if (_deleteable != null)
             {
                 Brush brush = new SolidColorBrush(Colors.Gray)
                 {
                     Opacity = 0.5
                 };
-                dc.DrawRectangle(brush, null, new Rect(deleteable.Location, deleteable.Size));
+                dc.DrawRectangle(brush, null, new Rect(_deleteable.Location, _deleteable.Size));
             }
             if (childEquations.Count == 1)
             {
@@ -580,7 +583,7 @@ namespace Editor
 
         public override void ExecuteCommand(CommandType commandType, object? data)
         {
-            deleteable = null;
+            _deleteable = null;
             if (ActiveChild.GetType() == typeof(TextEquation))
             {
                 EquationBase newEquation = null;
@@ -797,7 +800,7 @@ namespace Editor
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            deleteable = null;
+            _deleteable = null;
             ActiveChild = null;
             foreach (EquationBase eb in childEquations)
             {
@@ -869,26 +872,26 @@ namespace Editor
             }
             if (ActiveChild.ConsumeKey(key))
             {
-                deleteable = null;
+                _deleteable = null;
                 result = true;
             }
             else if (key == Key.Delete)
             {
                 if (ActiveChild.GetType() == typeof(TextEquation) && ActiveChild != childEquations.Last())
                 {
-                    if (childEquations[childEquations.IndexOf(ActiveChild) + 1] == deleteable)
+                    if (childEquations[childEquations.IndexOf(ActiveChild) + 1] == _deleteable)
                     {
-                        UndoManager.AddUndoAction(new RowAction(this, deleteable, (TextEquation)childEquations[childEquations.IndexOf(deleteable) + 1],
-                                                                childEquations.IndexOf(deleteable), TextLength)
+                        UndoManager.AddUndoAction(new RowAction(this, _deleteable, (TextEquation)childEquations[childEquations.IndexOf(_deleteable) + 1],
+                                                                childEquations.IndexOf(_deleteable), TextLength)
                         { UndoFlag = false });
-                        childEquations.Remove(deleteable);
-                        deleteable = null;
+                        childEquations.Remove(_deleteable);
+                        _deleteable = null;
                         ((TextEquation)ActiveChild).Merge((TextEquation)childEquations[childEquations.IndexOf(ActiveChild) + 1]);
                         childEquations.Remove(childEquations[childEquations.IndexOf(ActiveChild) + 1]);
                     }
                     else
                     {
-                        deleteable = (EquationContainer)childEquations[childEquations.IndexOf(ActiveChild) + 1];
+                        _deleteable = (EquationContainer)childEquations[childEquations.IndexOf(ActiveChild) + 1];
                     }
                     result = true;
                 }
@@ -899,45 +902,45 @@ namespace Editor
                 {
                     if (ActiveChild != childEquations.First())
                     {
-                        if ((EquationContainer)childEquations[childEquations.IndexOf(ActiveChild) - 1] == deleteable)
+                        if ((EquationContainer)childEquations[childEquations.IndexOf(ActiveChild) - 1] == _deleteable)
                         {
                             TextEquation equationAfter = (TextEquation)ActiveChild;
                             ActiveChild = childEquations[childEquations.IndexOf(ActiveChild) - 2];
-                            UndoManager.AddUndoAction(new RowAction(this, deleteable, equationAfter, childEquations.IndexOf(deleteable), TextLength) { UndoFlag = false });
-                            childEquations.Remove(deleteable);
+                            UndoManager.AddUndoAction(new RowAction(this, _deleteable, equationAfter, childEquations.IndexOf(_deleteable), TextLength) { UndoFlag = false });
+                            childEquations.Remove(_deleteable);
                             ((TextEquation)ActiveChild).Merge(equationAfter);
                             childEquations.Remove(equationAfter);
-                            deleteable = null;
+                            _deleteable = null;
                         }
                         else
                         {
-                            deleteable = (EquationContainer)childEquations[childEquations.IndexOf(ActiveChild) - 1];
+                            _deleteable = (EquationContainer)childEquations[childEquations.IndexOf(ActiveChild) - 1];
                         }
                         result = true;
                     }
                 }
                 else
                 {
-                    if (deleteable == ActiveChild)
+                    if (_deleteable == ActiveChild)
                     {
                         TextEquation equationAfter = (TextEquation)childEquations[childEquations.IndexOf(ActiveChild) + 1];
                         ActiveChild = childEquations[childEquations.IndexOf(ActiveChild) - 1];
-                        UndoManager.AddUndoAction(new RowAction(this, deleteable, equationAfter, childEquations.IndexOf(deleteable), TextLength) { UndoFlag = false });
-                        childEquations.Remove(deleteable);
+                        UndoManager.AddUndoAction(new RowAction(this, _deleteable, equationAfter, childEquations.IndexOf(_deleteable), TextLength) { UndoFlag = false });
+                        childEquations.Remove(_deleteable);
                         ((TextEquation)ActiveChild).Merge(equationAfter);
                         childEquations.Remove(equationAfter);
-                        deleteable = null;
+                        _deleteable = null;
                     }
                     else
                     {
-                        deleteable = (EquationContainer)ActiveChild;
+                        _deleteable = (EquationContainer)ActiveChild;
                     }
                     result = true;
                 }
             }
             if (!result)
             {
-                deleteable = null;
+                _deleteable = null;
                 if (key == Key.Right)
                 {
                     if (ActiveChild != childEquations.Last())
@@ -992,7 +995,7 @@ namespace Editor
 
         public override EquationBase Split(EquationContainer newParent)
         {
-            deleteable = null;
+            _deleteable = null;
             EquationRow newRow = null;
             if (ActiveChild.GetType() == typeof(TextEquation))
             {
@@ -1012,7 +1015,7 @@ namespace Editor
         {
             if (ActiveChild.GetType() == typeof(TextEquation))
             {
-                deleteable = null;
+                _deleteable = null;
                 ((TextEquation)ActiveChild).Truncate();
                 int index = childEquations.IndexOf(ActiveChild) + 1;
                 int i = index;
@@ -1139,7 +1142,7 @@ namespace Editor
 
         public void ProcessUndo(EquationAction action)
         {
-            deleteable = null;
+            _deleteable = null;
             if (action.GetType() == typeof(RowAction))
             {
                 ProcessRowAction(action);
