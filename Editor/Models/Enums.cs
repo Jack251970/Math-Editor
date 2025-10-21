@@ -59,7 +59,10 @@ public enum DivisionType
     DivTriangleFixed, DivTriangleExpanding
 }
 
-public enum BoxType { All, LeftTop, RightTop, LeftBottom, RightBottom }
+public enum BoxType
+{
+    All, LeftTop, RightTop, LeftBottom, RightBottom
+}
 
 public enum ArrowType
 {
@@ -104,7 +107,15 @@ public enum HorizontalBracketSignType
     TopCurly, BottomCurly, TopSquare, BottomSquare,
 }
 
-//public enum SubSuperType { Sub = 0, Super = 1 }   
+public enum SubSuperType
+{
+    Sub, Super, SubAndSuper
+}
+
+public enum SignType
+{
+    Simple, Bottom, BottomTop, Sub, SubSuper
+}
 
 public enum FontType
 {

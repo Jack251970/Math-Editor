@@ -54,7 +54,8 @@ namespace Editor
 
         public override StringBuilder? ToLatex()
         {
-            return LatexConverter.ToSignSub(sign.ToLatex(), mainEquation.ToLatex(), subEquation.ToLatex());
+            return LatexConverter.ToSign(SignType.Sub, sign.ToLatex(), mainEquation.ToLatex(), null,
+                subEquation.ToLatex());
         }
 
         protected override void CalculateWidth()

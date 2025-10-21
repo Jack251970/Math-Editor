@@ -40,7 +40,7 @@ namespace Editor
 
         public override StringBuilder? ToLatex()
         {
-            return LatexConverter.ToSuper(Position, rowContainer.ToLatex());
+            return LatexConverter.ToSubOrSuper(SubSuperType.Super, Position, rowContainer.ToLatex(), null);
         }
 
         protected override void CalculateHeight()

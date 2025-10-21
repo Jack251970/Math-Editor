@@ -8,7 +8,37 @@ namespace Editor;
 // TODO: Convert to non-static and use App.LatexConverter?
 public static class LatexConverter
 {
+    #region Helpers
+
     private const char WhiteSpace = ' ';
+
+    private static char[] ToChars(string str)
+    {
+        var chars = new char[str.Length];
+        for (var i = 0; i < str.Length; i++)
+        {
+            chars[i] = str[i];
+        }
+        return chars;
+    }
+
+    private static StringBuilder Append(char[] chars)
+    {
+        var sb = new StringBuilder();
+        return sb.Append(chars);
+    }
+
+    private static StringBuilder Append(StringBuilder? sb)
+    {
+        return sb ?? new StringBuilder();
+    }
+
+    private static StringBuilder AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
+    {
+        return sb.Append(LeftBrace).Append(equ).Append(RightBrace);
+    }
+
+    #endregion
 
     /// <summary>
     /// Convert to latex symbol.
@@ -19,7 +49,7 @@ public static class LatexConverter
     /// <param name="convertWrapper"></param>
     /// <param name="wrap"></param>
     /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper, 
+    public static StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper,
         bool wrap = false)
     {
         if (count <= 0 || start < 0 || start + count > sb.Length)
@@ -170,28 +200,11 @@ public static class LatexConverter
         };
     }
 
-    private static char[] ToChars(string str)
-    {
-        var chars = new char[str.Length];
-        for (var i = 0; i < str.Length; i++)
-        {
-            chars[i] = str[i];
-        }
-        return chars;
-    }
-
-    private static StringBuilder AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
-    {
-        return sb.Append(LeftBrace).Append(equ).Append(RightBrace);
-    }
-
     private static readonly char[] SquareRoot = ToChars("\\sqrt");
     public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
     {
         /// \sqrt{insideEquation}
-        var sb = new StringBuilder();
-        sb.Append(SquareRoot).Append(WhiteSpace).AppendWithWrapper(insideEquation);
-        return sb;
+        return Append(SquareRoot).Append(WhiteSpace).AppendWithWrapper(insideEquation);
     }
 
     private static readonly char[] BeginMatrix = ToChars("\\begin{array}{*{20}{c}}");
@@ -232,96 +245,73 @@ public static class LatexConverter
     }
 
     private static readonly char[] LeftSuper = ToChars("{}^");
-    private static readonly char[] RightSuper = ToChars("^");
-    public static StringBuilder? ToSuper(Position position, StringBuilder? insideEquation)
-    {
-        var sb = new StringBuilder();
-        return position switch
-        {
-            /// {}^{insideEquation}
-            Position.Left => sb.Append(LeftSuper).AppendWithWrapper(insideEquation),
-            /// ^{insideEquation}
-            Position.Right => sb.Append(RightSuper).AppendWithWrapper(insideEquation),
-            _ => throw new InvalidOperationException($"Invalid position for Super: {position}"),
-        };
-    }
-
+    private static readonly char[] Super = ToChars("^");
     private static readonly char[] LeftSub = ToChars("{}_");
-    private static readonly char[] RightSub = ToChars("_");
-    public static StringBuilder? ToSub(Position position, StringBuilder? insideEquation)
+    private static readonly char[] Sub = ToChars("_");
+    public static StringBuilder? ToSubOrSuper(SubSuperType type, Position position, StringBuilder? superEquation, StringBuilder? subEquation)
     {
-        var sb = new StringBuilder();
-        return position switch
+        return type switch
         {
-            /// {}_{insideEquation}
-            Position.Left => sb.Append(LeftSub).AppendWithWrapper(insideEquation),
-            /// _{insideEquation}
-            Position.Right => sb.Append(RightSub).AppendWithWrapper(insideEquation),
-            _ => throw new InvalidOperationException($"Invalid position for Sub: {position}"),
+            SubSuperType.Sub => position switch
+            {
+                /// {}_insideEquation
+                Position.Left => Append(LeftSub).Append(subEquation),
+                /// _insideEquation
+                Position.Right => Append(Sub).Append(subEquation),
+                _ => throw new InvalidOperationException($"Invalid position for Sub: {position}"),
+            },
+            SubSuperType.Super => position switch
+            {
+                /// {}^insideEquation
+                Position.Left => Append(LeftSuper).Append(superEquation),
+                /// ^insideEquation
+                Position.Right => Append(Super).Append(superEquation),
+                _ => throw new InvalidOperationException($"Invalid position for Super: {position}"),
+            },
+            SubSuperType.SubAndSuper => position switch
+            {
+                /// {}_subEquation^superEquation
+                Position.Left => Append(LeftSub).Append(subEquation).Append(Super).Append(superEquation),
+                /// {}_subEquation^superEquation
+                Position.Right => Append(Sub).Append(subEquation).Append(Super).Append(superEquation),
+                _ => throw new InvalidOperationException($"Invalid positions for SuperSub: {position}"),
+            },
+            _ => throw new InvalidOperationException($"Invalid SuperSub type: {type}"),
         };
     }
 
-    public static StringBuilder? ToSuperSub(Position position, StringBuilder? superEquation, StringBuilder? subEquation)
-    {
-        var sb = new StringBuilder();
-        return position switch
-        {
-            /// _{subEquation}^{superEquation}
-            Position.Left => sb.Append(LeftSub).AppendWithWrapper(subEquation).Append(LeftSuper).AppendWithWrapper(superEquation),
-            /// {}_{subEquation}^{superEquation}
-            Position.Right => sb.Append(RightSub).AppendWithWrapper(subEquation).Append(RightSuper).AppendWithWrapper(superEquation),
-            _ => throw new InvalidOperationException($"Invalid positions for SuperSub: {position}"),
-        };
-    }
-
-    private static readonly char[] NRoot1 = ToChars("\\sqrt[");
-    private static readonly char[] NRoot2 = ToChars("]");
+    private static readonly char[] Sqrt = ToChars("\\sqrt");
     public static StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
     {
         /// \sqrt[nthRootEquation]{insideEquation}
         var sb = new StringBuilder();
-        return sb.Append(NRoot1).Append(nthRootEquation).Append(NRoot2).AppendWithWrapper(insideEquation);
-    }
-
-    public static StringBuilder? ToSignSimple(StringBuilder? sign, StringBuilder? mainEquation)
-    {
-        /// sign {mainEquation}
-        var sb = new StringBuilder();
-        return sb.Append(sign).Append(WhiteSpace).AppendWithWrapper(mainEquation);
+        return sb.Append(Sqrt).Append('[').Append(nthRootEquation).Append(']').AppendWithWrapper(insideEquation);
     }
 
     private static readonly char[] Limits = ToChars("\\limits");
-    public static StringBuilder? ToSignBottom(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? bottomEquation)
-    {
-        /// sign\limits_{bottomEquation} {mainEquation}
-        var sb = new StringBuilder();
-        return sb.Append(sign).Append(Limits).Append('_').AppendWithWrapper(bottomEquation).Append(WhiteSpace)
-            .AppendWithWrapper(mainEquation);
-    }
-
-    public static StringBuilder? ToSignBottomTop(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? topEquation, StringBuilder? bottomEquation)
-    {
-        /// sign\limits_{bottomEquation}^{topEquation} {mainEquation}
-        var sb = new StringBuilder();
-        return sb.Append(sign).Append(Limits).Append('_').AppendWithWrapper(bottomEquation).Append(RightSuper)
-            .AppendWithWrapper(topEquation).Append(WhiteSpace).AppendWithWrapper(mainEquation);
-    }
-
     private static readonly char[] NoLimits = ToChars("\\nolimits");
-    public static StringBuilder? ToSignSub(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? subEquation)
+    public static StringBuilder? ToSign(SignType type, StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
     {
-        /// sign\nolimits_{subEquation} {mainEquation}
-        var sb = new StringBuilder();
-        return sb.Append(sign).Append(NoLimits).Append('_').AppendWithWrapper(subEquation).Append(WhiteSpace)
-            .AppendWithWrapper(mainEquation);
-    }
-
-    public static StringBuilder? ToSignSubSuper(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? superEquation, StringBuilder? subEquation)
-    {
-        /// {sign}\nolimits_{subEquation}^{superEquation} {mainEquation}
-        var sb = new StringBuilder();
-        return sb.Append(sign).Append(NoLimits).Append('_').AppendWithWrapper(subEquation).Append(RightSuper)
-            .AppendWithWrapper(superEquation).Append(WhiteSpace).AppendWithWrapper(mainEquation);
+        return type switch
+        {
+            /// sign {mainEquation}
+            SignType.Simple => Append(sign).Append(WhiteSpace).AppendWithWrapper(mainEquation),
+            /// sign\limits_{bottomEquation} {mainEquation}
+            SignType.Bottom => Append(sign).Append(Limits).Append('_').AppendWithWrapper(bottomSubEquation)
+                .Append(WhiteSpace).AppendWithWrapper(mainEquation),
+            /// sign\limits_{bottomEquation}^{topEquation} {mainEquation}
+            SignType.BottomTop => Append(sign).Append(Limits).Append('_').AppendWithWrapper(bottomSubEquation)
+                .Append(Super).AppendWithWrapper(topSuperEquation).Append(WhiteSpace)
+                .AppendWithWrapper(mainEquation),
+            /// sign\nolimits_{subEquation} {mainEquation}
+            SignType.Sub => Append(sign).Append(NoLimits).Append('_').AppendWithWrapper(bottomSubEquation)
+                .Append(WhiteSpace).AppendWithWrapper(mainEquation),
+            /// {sign}\nolimits_{subEquation}^{superEquation} {mainEquation}
+            SignType.SubSuper => Append(sign).Append(NoLimits).Append('_').AppendWithWrapper(bottomSubEquation)
+                .Append(Super).AppendWithWrapper(topSuperEquation).Append(WhiteSpace)
+                .AppendWithWrapper(mainEquation),
+            _ => throw new InvalidOperationException($"Invalid SignType: {type}"),
+        };
     }
 
     private static readonly char[] Boxed = ToChars("\\boxed");
@@ -335,19 +325,18 @@ public static class LatexConverter
     private static readonly char[] RightBottomBox2 = ToChars(" \\,}}\\! \\right|");
     public static StringBuilder? ToBox(BoxType type, StringBuilder? insideEquation)
     {
-        var sb = new StringBuilder();
         return type switch
         {
             /// \boxed{insideEquation}
-            BoxType.All => sb.Append(Boxed).AppendWithWrapper(insideEquation),
+            BoxType.All => Append(Boxed).AppendWithWrapper(insideEquation),
             /// \left| \!{\overline {\, {insideEquation} \,}} \right.
-            BoxType.LeftTop => sb.Append(LeftTopBox1).AppendWithWrapper(insideEquation).Append(LeftTopBox2),
+            BoxType.LeftTop => Append(LeftTopBox1).AppendWithWrapper(insideEquation).Append(LeftTopBox2),
             /// \left. {\overline {\, {insideEquation} \,}}\! \right|
-            BoxType.RightTop => sb.Append(RightTopBox1).AppendWithWrapper(insideEquation).Append(RightTopBox2),
+            BoxType.RightTop => Append(RightTopBox1).AppendWithWrapper(insideEquation).Append(RightTopBox2),
             /// \left| \!{\underline {\, {insideEquation} \,}} \right.
-            BoxType.LeftBottom => sb.Append(LeftBottomBox1).AppendWithWrapper(insideEquation).Append(LeftBottomBox2),
+            BoxType.LeftBottom => Append(LeftBottomBox1).AppendWithWrapper(insideEquation).Append(LeftBottomBox2),
             /// \left. {\underline {\, {insideEquation} \,}}\! \right|
-            BoxType.RightBottom => sb.Append(RightBottomBox1).AppendWithWrapper(insideEquation).Append(RightBottomBox2),
+            BoxType.RightBottom => Append(RightBottomBox1).AppendWithWrapper(insideEquation).Append(RightBottomBox2),
             _ => throw new InvalidOperationException($"Invalid BoxType: {type}"),
         };
     }
@@ -361,137 +350,60 @@ public static class LatexConverter
     private static readonly char[] LeftRightArrows = ToChars("\\leftrightarrows");
     public static StringBuilder? ToArrow(ArrowType type, Position position, StringBuilder? rowContainer1, StringBuilder? rowContainer2)
     {
-        var sb = new StringBuilder();
         switch (type)
         {
             case ArrowType.LeftArrow:
-                /// \xleftarrow{1}
-                /// \xleftarrow[1]{}
-                /// \xleftarrow[2]{1}
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        sb.Append(LeftArrow);
-                        sb.Append(rowContainer1);
-                        break;
-                    case Position.Bottom:
-                        sb.Append(LeftArrow);
-                        sb.Append('[');
-                        sb.Append(rowContainer1);
-                        sb.Append(']');
-                        sb.Append(EmptyWrapper);
-                        break;
-                    case Position.BottomAndTop:
-                        sb.Append(LeftArrow);
-                        sb.Append('[');
-                        sb.Append(rowContainer2);
-                        sb.Append(']');
-                        sb.Append(rowContainer1);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
-                }
-                break;
+                    /// \xleftarrow{1}
+                    Position.Top => Append(LeftArrow).Append(rowContainer1),
+                    /// \xleftarrow[1]{}
+                    Position.Bottom => Append(LeftArrow).Append('[').Append(rowContainer1).Append(']').Append(EmptyWrapper),
+                    /// \xleftarrow[2]{1}
+                    Position.BottomAndTop => Append(LeftArrow).Append('[').Append(rowContainer2).Append(']').Append(rowContainer1),
+                    _ => throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}"),
+                };
             case ArrowType.RightArrow:
-                /// \xrightarrow{1}
-                /// \xrightarrow[1]{}
-                /// \xrightarrow[2]{1}
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        sb.Append(RightArrow);
-                        sb.Append(rowContainer1);
-                        break;
-                    case Position.Bottom:
-                        sb.Append(RightArrow);
-                        sb.Append('[');
-                        sb.Append(rowContainer1);
-                        sb.Append(']');
-                        sb.Append(EmptyWrapper);
-                        break;
-                    case Position.BottomAndTop:
-                        sb.Append(RightArrow);
-                        sb.Append('[');
-                        sb.Append(rowContainer2);
-                        sb.Append(']');
-                        sb.Append(rowContainer1);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
-                }
-                break;
+                    /// \xrightarrow{1}
+                    Position.Top => Append(RightArrow).Append(rowContainer1),
+                    /// \xrightarrow[1]{}
+                    Position.Bottom => Append(RightArrow).Append('[').Append(rowContainer1).Append(']').Append(EmptyWrapper),
+                    /// \xrightarrow[2]{1}
+                    Position.BottomAndTop => Append(RightArrow).Append('[').Append(rowContainer2).Append(']').Append(rowContainer1),
+                    _ => throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}"),
+                };
             case ArrowType.DoubleArrow:
-                /// \overset 1 \longleftrightarrow
-                /// \underset 1 \longleftrightarrow
-                /// \underset{2}{\overset{1} {\longleftrightarrow}}
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        sb.Append(OverSet);
-                        sb.Append(WhiteSpace);
-                        sb.Append(rowContainer1);
-                        sb.Append(WhiteSpace);
-                        sb.Append(LongLeftRightArrow);
-                        break;
-                    case Position.Bottom:
-                        sb.Append(UnderSet);
-                        sb.Append(WhiteSpace);
-                        sb.Append(rowContainer1);
-                        sb.Append(WhiteSpace);
-                        sb.Append(LongLeftRightArrow);
-                        break;
-                    case Position.BottomAndTop:
-                        sb.Append(UnderSet);
-                        sb.Append(rowContainer2);
-                        sb.Append('{');
-                        sb.Append(OverSet);
-                        sb.Append(rowContainer1);
-                        sb.Append(WhiteSpace);
-                        sb.Append('{');
-                        sb.Append(LongLeftRightArrow);
-                        sb.Append('}');
-                        sb.Append('}');
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
-                }
-                break;
+                    /// \overset 1 \longleftrightarrow
+                    Position.Top => Append(OverSet).Append(WhiteSpace).Append(rowContainer1).Append(WhiteSpace)
+                        .Append(LongLeftRightArrow),
+                    /// \underset 1 \longleftrightarrow
+                    Position.Bottom => Append(UnderSet).Append(WhiteSpace).Append(rowContainer1).Append(WhiteSpace)
+                        .Append(LongLeftRightArrow),
+                    /// \underset{2}{\overset{1} {\longleftrightarrow}}
+                    Position.BottomAndTop => Append(UnderSet).Append(rowContainer2).Append('{').Append(OverSet)
+                        .Append(rowContainer1).Append(WhiteSpace).Append('{').Append(LongLeftRightArrow)
+                        .Append('}').Append('}'),
+                    _ => throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}"),
+                };
             case ArrowType.RightLeftArrow:
-                /// \overset 1 \leftrightarrows
-                /// \underset 1 \leftrightarrows
-                /// \underset{2}{\overset{1} {\longleftrightarrow}}
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        sb.Append(OverSet);
-                        sb.Append(WhiteSpace);
-                        sb.Append(rowContainer1);
-                        sb.Append(WhiteSpace);
-                        sb.Append(LeftRightArrows);
-                        break;
-                    case Position.Bottom:
-                        sb.Append(UnderSet);
-                        sb.Append(WhiteSpace);
-                        sb.Append(rowContainer1);
-                        sb.Append(WhiteSpace);
-                        sb.Append(LeftRightArrows);
-                        break;
-                    case Position.BottomAndTop:
-                        sb.Append(UnderSet);
-                        sb.Append(rowContainer2);
-                        sb.Append('{');
-                        sb.Append(OverSet);
-                        sb.Append(rowContainer1);
-                        sb.Append(WhiteSpace);
-                        sb.Append('{');
-                        sb.Append(LongLeftRightArrow);
-                        sb.Append('}');
-                        sb.Append('}');
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
-                }
-                break;
+                    /// \overset 1 \leftrightarrows
+                    Position.Top => Append(OverSet).Append(WhiteSpace).Append(rowContainer1).Append(WhiteSpace)
+                        .Append(LeftRightArrows),
+                    /// \underset 1 \leftrightarrows
+                    Position.Bottom => Append(UnderSet).Append(WhiteSpace).Append(rowContainer1).Append(WhiteSpace)
+                        .Append(LeftRightArrows),
+                    /// \underset{2}{\overset{1} {\longleftrightarrow}}
+                    Position.BottomAndTop => Append(UnderSet).Append(rowContainer2).Append('{').Append(OverSet)
+                        .Append(rowContainer1).Append(WhiteSpace).Append('{').Append(LongLeftRightArrow)
+                        .Append('}').Append('}'),
+                    _ => throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}"),
+                };
             // TODO: Support editting these in the settings.
             case ArrowType.RightSmallLeftArrow:
                 switch (position)
@@ -571,7 +483,6 @@ public static class LatexConverter
             default:
                 throw new InvalidOperationException($"Unsupported arrow type for LaTeX conversion: {type}");
         }
-        return sb;
     }
 
     private static readonly char[] WideTilde = ToChars("\\widetilde");
@@ -589,31 +500,22 @@ public static class LatexConverter
     private static readonly char[] UnderDoubleArrow = ToChars("\\underleftrightarrow");
     public static StringBuilder? ToDecorated(DecorationType type, Position position, StringBuilder? insideEquation)
     {
-        var sb = new StringBuilder();
         switch (type)
         {
             case DecorationType.Tilde:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \widetilde insideEquation
-                        sb.Append(WideTilde).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for Tilde decoration: {position}");
-                }
-                break;
+                    /// \widetilde insideEquation
+                    Position.Top => Append(WideTilde).Append(WhiteSpace).Append(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for Tilde decoration: {position}"),
+                };
             case DecorationType.Hat:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \widehat insideEquation
-                        sb.Append(WideHat).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for Hat decoration: {position}");
-                }
-                break;
+                    /// \widehat insideEquation
+                    Position.Top => Append(WideHat).Append(WhiteSpace).Append(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for Hat decoration: {position}"),
+                };
             case DecorationType.Parenthesis:
                 switch (position)
                 {
@@ -633,67 +535,43 @@ public static class LatexConverter
                         throw new InvalidOperationException($"Invalid position for Tortoise decoration: {position}");
                 }
             case DecorationType.Bar:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \overline insideEquation
-                        sb.Append(OverLine).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    case Position.Bottom:
-                        /// \underline insideEquation
-                        sb.Append(UnderLine).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for Bar decoration: {position}");
-                }
-                break;
+                    /// \overline insideEquation
+                    Position.Top => Append(OverLine).Append(WhiteSpace).Append(insideEquation),
+                    /// \underline insideEquation
+                    Position.Bottom => Append(UnderLine).Append(WhiteSpace).Append(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for Bar decoration: {position}"),
+                };
             case DecorationType.DoubleBar:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \overline{\overline insideEquation}
-                        sb.Append(OverLine).Append('{').Append(OverLine).Append(WhiteSpace)
-                            .Append(insideEquation).Append('}');
-                        break;
-                    case Position.Bottom:
-                        /// \underline{\underline insideEquation}
-                        sb.Append(UnderLine).Append('{').Append(UnderLine).Append(WhiteSpace)
-                            .Append(insideEquation).Append('}');
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for DoubleBar decoration: {position}");
-                }
-                break;
+                    /// \overline{\overline insideEquation}
+                    Position.Top => Append(OverLine).Append('{').Append(OverLine).Append(WhiteSpace)
+                        .Append(insideEquation).Append('}'),
+                    /// \underline{\underline insideEquation}
+                    Position.Bottom => Append(UnderLine).Append('{').Append(UnderLine).Append(WhiteSpace)
+                        .Append(insideEquation).Append('}'),
+                    _ => throw new InvalidOperationException($"Invalid position for DoubleBar decoration: {position}"),
+                };
             case DecorationType.RightArrow:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \overrightarrow insideEquation
-                        sb.Append(OverRightArrow).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    case Position.Bottom:
-                        /// \underrightarrow insideEquation
-                        sb.Append(UnderRightArrow).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for RightArrow decoration: {position}");
-                }
-                break;
+                    /// \overrightarrow insideEquation
+                    Position.Top => Append(OverRightArrow).Append(WhiteSpace).Append(insideEquation),
+                    /// \underrightarrow insideEquation
+                    Position.Bottom => Append(UnderRightArrow).Append(WhiteSpace).Append(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for RightArrow decoration: {position}"),
+                };
             case DecorationType.LeftArrow:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \overleftarrow insideEquation
-                        sb.Append(OverLeftArrow).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    case Position.Bottom:
-                        /// \underleftarrow insideEquation
-                        sb.Append(UnderLeftArrow).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for LeftArrow decoration: {position}");
-                }
-                break;
+                    /// \overleftarrow insideEquation
+                    Position.Top => Append(OverLeftArrow).Append(WhiteSpace).Append(insideEquation),
+                    /// \underleftarrow insideEquation
+                    Position.Bottom => Append(UnderLeftArrow).Append(WhiteSpace).Append(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for LeftArrow decoration: {position}"),
+                };
             case DecorationType.RightHarpoonUpBarb:
                 switch (position)
                 {
@@ -719,20 +597,14 @@ public static class LatexConverter
                         throw new InvalidOperationException($"Invalid position for LeftHarpoonUpBarb decoration: {position}");
                 }
             case DecorationType.DoubleArrow:
-                switch (position)
+                return position switch
                 {
-                    case Position.Top:
-                        /// \overleftrightarrow insideEquation
-                        sb.Append(OverDoubleArrow).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    case Position.Bottom:
-                        /// \underleftrightarrow insideEquation
-                        sb.Append(UnderDoubleArrow).Append(WhiteSpace).Append(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for DoubleArrow decoration: {position}");
-                }
-                break;
+                    /// \overleftrightarrow insideEquation
+                    Position.Top => Append(OverDoubleArrow).Append(WhiteSpace).Append(insideEquation),
+                    /// \underleftrightarrow insideEquation
+                    Position.Bottom => Append(UnderDoubleArrow).Append(WhiteSpace).Append(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for DoubleArrow decoration: {position}"),
+                };
             case DecorationType.StrikeThrough:
                 switch (position)
                 {
@@ -743,42 +615,29 @@ public static class LatexConverter
                         throw new InvalidOperationException($"Invalid position for StrikeThrough decoration: {position}");
                 }
             case DecorationType.Cross:
-                switch (position)
+                return position switch
                 {
-                    case Position.Middle:
-                        /// \xcancel{insideEquation}
-                        sb.Append(Cross).AppendWithWrapper(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for Cross decoration: {position}");
-                }
-                break;
+                    /// \xcancel{insideEquation}
+                    Position.Middle => Append(Cross).AppendWithWrapper(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for Cross decoration: {position}"),
+                };
             case DecorationType.RightCross:
-                switch (position)
+                return position switch
                 {
-                    case Position.Middle:
-                        /// \cancel{insideEquation}
-                        sb.Append(RightCross).AppendWithWrapper(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for RightCross decoration: {position}");
-                }
-                break;
+                    /// \cancel{insideEquation}
+                    Position.Middle => Append(RightCross).AppendWithWrapper(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for RightCross decoration: {position}"),
+                };
             case DecorationType.LeftCross:
-                switch (position)
+                return position switch
                 {
-                    case Position.Middle:
-                        /// \bcancel{insideEquation}
-                        sb.Append(LeftCross).AppendWithWrapper(insideEquation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Invalid position for LeftCross decoration: {position}");
-                }
-                break;
+                    /// \bcancel{insideEquation}
+                    Position.Middle => Append(LeftCross).AppendWithWrapper(insideEquation),
+                    _ => throw new InvalidOperationException($"Invalid position for LeftCross decoration: {position}"),
+                };
             default:
                 throw new InvalidOperationException($"Unsupported decoration type for LaTeX conversion: {type}");
         }
-        return sb;
     }
 
     private static readonly char[] OverBrace = ToChars("\\overbrace");
@@ -786,19 +645,16 @@ public static class LatexConverter
     public static StringBuilder? ToHorizontalBracket(HorizontalBracketSignType type, StringBuilder? topEquation,
         StringBuilder? bottomEquation)
     {
-        var sb = new StringBuilder();
         switch (type)
         {
             case HorizontalBracketSignType.TopCurly:
                 /// \overbrace bottomEquation^topEquation
-                sb.Append(OverBrace).Append(WhiteSpace).Append(bottomEquation).Append(RightSuper)
+                return Append(OverBrace).Append(WhiteSpace).Append(bottomEquation).Append(Super)
                     .Append(topEquation);
-                break;
             case HorizontalBracketSignType.BottomCurly:
                 /// \underbrace topEquation_bottomEquation
-                sb.Append(UnderBrace).Append(WhiteSpace).Append(topEquation).Append('_')
+                return Append(UnderBrace).Append(WhiteSpace).Append(topEquation).Append('_')
                     .Append(bottomEquation);
-                break;
             case HorizontalBracketSignType.TopSquare:
                 MessageBox.Show("No translation available for Upper horizontal bracket.\nPlease add a translation for it in the settings.", "Translation Error");
                 return null;
@@ -808,77 +664,54 @@ public static class LatexConverter
             default:
                 throw new InvalidOperationException($"Invalid HorizontalBracketSignType: {type}");
         }
-        return sb;
     }
 
     private static readonly char[] MathOp = ToChars("\\mathop");
     public static StringBuilder? ToComposite(bool isCompositeBig, Position position, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
     {
-        var sb = new StringBuilder();
         if (isCompositeBig)
         {
-            switch (position)
+            return position switch
             {
-                case Position.Bottom:
-                    /// \mathop mainEquation\limits_bottomSubEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(Limits).Append('_').Append(bottomSubEquation);
-                    break;
-                case Position.Top:
-                    /// \mathop mainEquation\limits^topSuperEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(Limits).Append(RightSuper).Append(topSuperEquation);
-                    break;
-                case Position.BottomAndTop:
-                    /// \mathop mainEquation\limits_bottomSubEquation^topSuperEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(Limits).Append('_').Append(bottomSubEquation)
-                        .Append(RightSuper).Append(topSuperEquation);
-                    break;
-                case Position.Sub:
-                    /// \mathop mainEquation\nolimits_bottomSubEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(NoLimits).Append('_').Append(bottomSubEquation);
-                    break;
-                case Position.Super:
-                    /// \mathop mainEquation\nolimits^topSuperEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(NoLimits).Append(RightSuper).Append(topSuperEquation);
-                    break;
-                case Position.SubAndSuper:
-                    /// \mathop mainEquation\nolimits_bottomSubEquation^topSuperEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(NoLimits).Append('_').Append(bottomSubEquation)
-                        .Append(RightSuper).Append(topSuperEquation);
-                    break;
-                default:
-                    throw new InvalidOperationException($"Invalid position for Composite: {position}");
-            }
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.Bottom => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(Limits).Append('_').Append(bottomSubEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.Top => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(Limits).Append(Super).Append(topSuperEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.BottomAndTop => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(Limits).Append('_').Append(bottomSubEquation)
+                    .Append(Super).Append(topSuperEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.Sub => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(NoLimits).Append('_').Append(bottomSubEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.Super => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(NoLimits).Append(Super).Append(topSuperEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.SubAndSuper => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(NoLimits).Append('_').Append(bottomSubEquation)
+                    .Append(Super).Append(topSuperEquation),
+                _ => throw new InvalidOperationException($"Invalid position for Composite: {position}"),
+            };
         }
         else
         {
-            switch (position)
+            return position switch
             {
-                case Position.Bottom:
-                    /// \mathop mainEquation\limits_bottomSubEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(Limits).Append('_').Append(bottomSubEquation);
-                    break;
-                case Position.Top:
-                    /// \mathop mainEquation\limits^topSuperEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(Limits).Append(RightSuper).Append(topSuperEquation);
-                    break;
-                case Position.BottomAndTop:
-                    /// \mathop mainEquation\limits_bottomSubEquation^topSuperEquation
-                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
-                        .Append(Limits).Append('_').Append(bottomSubEquation)
-                        .Append(RightSuper).Append(topSuperEquation);
-                    break;
-                default:
-                    throw new InvalidOperationException($"Invalid position for Composite: {position}");
-            }
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.Bottom => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(Limits).Append('_').Append(bottomSubEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.Top => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(Limits).Append(Super).Append(topSuperEquation),
+                /// \mathop mainEquation\limits_bottomSubEquation
+                Position.BottomAndTop => Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                    .Append(Limits).Append('_').Append(bottomSubEquation)
+                    .Append(Super).Append(topSuperEquation),
+                _ => throw new InvalidOperationException($"Invalid position for Composite: {position}"),
+            };
         }
-        return sb;
     }
 }
