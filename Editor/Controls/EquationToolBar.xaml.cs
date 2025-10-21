@@ -201,7 +201,7 @@ public partial class EquationToolBar : UserControl
                                BracketSignType.RightBar,
                                HorizontalBracketSignType.TopCurly,
                                HorizontalBracketSignType.BottomCurly,
-                               HorizontalBracketSignType.ToSquare,
+                               HorizontalBracketSignType.TopSquare,
                                HorizontalBracketSignType.BottomSquare,
                                0,
                           ];

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace Editor
@@ -23,8 +22,8 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
-            XElement parameters = new XElement("parameters");
+            var thisElement = new XElement(GetType().Name);
+            var parameters = new XElement("parameters");
             parameters.Add(new XElement(bracketSign.SignType.GetType().Name, bracketSign.SignType));
             thisElement.Add(parameters);
             thisElement.Add(topEquation.Serialize());
@@ -42,7 +41,7 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
@@ -54,7 +53,7 @@ namespace Editor
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -62,7 +61,7 @@ namespace Editor
             }
         }
 
-        void AdjustChildrenVertical()
+        private void AdjustChildrenVertical()
         {
             topEquation.Top = Top;
             bracketSign.Top = topEquation.Bottom;
@@ -85,7 +84,7 @@ namespace Editor
         {
             get
             {
-                if (bracketSign.SignType == HorizontalBracketSignType.TopCurly || bracketSign.SignType == HorizontalBracketSignType.ToSquare)
+                if (bracketSign.SignType is HorizontalBracketSignType.TopCurly or HorizontalBracketSignType.TopSquare)
                 {
                     return Height - bottomEquation.RefY;
                 }

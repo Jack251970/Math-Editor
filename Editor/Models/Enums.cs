@@ -101,7 +101,7 @@ public enum BracketSignType
 
 public enum HorizontalBracketSignType
 {
-    TopCurly, BottomCurly, ToSquare, BottomSquare,
+    TopCurly, BottomCurly, TopSquare, BottomSquare,
 }
 
 //public enum SubSuperType { Sub = 0, Super = 1 }   
