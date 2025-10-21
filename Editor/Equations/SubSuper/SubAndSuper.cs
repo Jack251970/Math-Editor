@@ -50,18 +50,7 @@ namespace Editor
 
         public override StringBuilder? ToLatex()
         {
-            if (Position == Position.Left)
-            {
-                return LatexConverter.ToLeftSuperSub(superEquation.ToLatex(), subEquation.ToLatex());
-            }
-            else if (Position == Position.Right)
-            {
-                return LatexConverter.ToRightSuperSub(superEquation.ToLatex(), subEquation.ToLatex());
-            }
-            else
-            {
-                throw new InvalidOperationException($"Invalid position for SubAndSuper: {Position}");
-            }
+            return LatexConverter.ToSuperSub(Position, superEquation.ToLatex(), subEquation.ToLatex());
         }
 
         protected override void CalculateWidth()

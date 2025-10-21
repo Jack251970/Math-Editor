@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Xml.Linq;
 
 namespace Editor
@@ -41,18 +40,7 @@ namespace Editor
 
         public override StringBuilder? ToLatex()
         {
-            if (Position == Position.Left)
-            {
-                return LatexConverter.ToLeftSub(rowContainer.ToLatex());
-            }
-            else if (Position == Position.Right)
-            {
-                return LatexConverter.ToRightSub(rowContainer.ToLatex());
-            }
-            else
-            {
-                throw new InvalidOperationException($"Invalid position for Sub: {Position}");
-            }
+            return LatexConverter.ToSub(Position, rowContainer.ToLatex());
         }
 
         protected override void CalculateWidth()

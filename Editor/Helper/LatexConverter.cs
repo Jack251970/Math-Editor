@@ -8,6 +8,8 @@ namespace Editor;
 // TODO: Convert to non-static and use App.LatexConverter?
 public static class LatexConverter
 {
+    private const char WhiteSpace = ' ';
+
     /// <summary>
     /// Convert to latex symbol.
     /// </summary>
@@ -82,18 +84,11 @@ public static class LatexConverter
     // \end{array}\]
     public static StringBuilder? EscapeRows(List<StringBuilder> rows)
     {
-        if (rows.Count == 0)
-        {
-            return null;
-        }
-        else if (rows.Count == 1)
-        {
-            return rows[0];
-        }
+        if (rows.Count == 0) return null;
+        else if (rows.Count == 1) return rows[0];
 
         var escaped = new StringBuilder();
-        escaped.Append(BeginArray);
-        escaped.Append('\n');
+        escaped.Append(BeginArray).Append('\n');
         var rowsCount = rows.Count;
         for (var i = 0; i < rowsCount; i++)
         {
@@ -185,48 +180,35 @@ public static class LatexConverter
         return chars;
     }
 
-    private static StringBuilder? AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
+    private static StringBuilder AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
     {
         return sb.Append(LeftBrace).Append(equ).Append(RightBrace);
     }
 
-    /// <summary>
-    /// \sqrt{insideEquation}
-    /// </summary>
-    private const char WhiteSpace = ' ';
-
     private static readonly char[] SquareRoot = ToChars("\\sqrt");
     public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
     {
+        /// \sqrt{insideEquation}
         var sb = new StringBuilder();
-        // TODO: Use Append.Append to improve code quality
-        sb.Append(SquareRoot);
-        sb.Append(WhiteSpace);
-        // TODO: Add {} to wrapper with AppendWithWrapper
-        sb.Append(insideEquation);
+        sb.Append(SquareRoot).Append(WhiteSpace).AppendWithWrapper(insideEquation);
         return sb;
     }
 
-    /// <summary>
-    /// \begin{array}{*{20}{c}}
-    /// {cell}&{cell}&{cell}\\
-    /// {cell}&{cell}&{cell}\\
-    /// {cell}&{cell}&{cell}\\
-    /// \end{array}
-    /// </summary>
     private static readonly char[] BeginMatrix = ToChars("\\begin{array}{*{20}{c}}");
     private static char[] EndMatrix => EndArray;
     private static char[] MatrixColumnSeparator => ToChars("&");
     private static char[] MatrixRowSeparator => RowSeparator;
     public static StringBuilder? ToMatrix(int rows, int columns, List<StringBuilder> matrix)
     {
-        if (matrix.Count == 0 || rows * columns != matrix.Count)
-        {
-            return null;
-        }
+        /// \begin{array}{*{20}{c}}
+        /// {cell}&{cell}&{cell}\\
+        /// {cell}&{cell}&{cell}\\
+        /// {cell}&{cell}&{cell}\\
+        /// \end{array}
+        if (matrix.Count == 0 || rows * columns != matrix.Count) return null;
+
         var sb = new StringBuilder();
-        sb.Append(BeginMatrix);
-        sb.Append('\n');
+        sb.Append(BeginMatrix).Append('\n');
         for (var i = 0; i < rows; i++)
         {
             for (var j = 0; j < columns; j++)
@@ -249,240 +231,125 @@ public static class LatexConverter
         return sb;
     }
 
-    /// <summary>
-    /// {}^{insideEquation}
-    /// </summary>
     private static readonly char[] LeftSuper = ToChars("{}^");
-    public static StringBuilder? ToLeftSuper(StringBuilder? insideEquation)
-    {
-        var sb = new StringBuilder();
-        sb.Append(LeftSuper);
-        sb.Append(insideEquation);
-        return sb;
-    }
-
-    /// <summary>
-    /// ^{insideEquation}
-    /// </summary>
     private static readonly char[] RightSuper = ToChars("^");
-    public static StringBuilder? ToRightSuper(StringBuilder? insideEquation)
+    public static StringBuilder? ToSuper(Position position, StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        sb.Append(RightSuper);
-        sb.Append(insideEquation);
-        return sb;
+        return position switch
+        {
+            /// {}^{insideEquation}
+            Position.Left => sb.Append(LeftSuper).AppendWithWrapper(insideEquation),
+            /// ^{insideEquation}
+            Position.Right => sb.Append(RightSuper).AppendWithWrapper(insideEquation),
+            _ => throw new InvalidOperationException($"Invalid position for Super: {position}"),
+        };
     }
 
-    /// <summary>
-    /// {}_{insideEquation}
-    /// </summary>
     private static readonly char[] LeftSub = ToChars("{}_");
-    public static StringBuilder? ToLeftSub(StringBuilder? insideEquation)
-    {
-        var sb = new StringBuilder();
-        sb.Append(LeftSub);
-        sb.Append(insideEquation);
-        return sb;
-    }
-
-    /// <summary>
-    /// _{insideEquation}
-    /// </summary>
     private static readonly char[] RightSub = ToChars("_");
-    public static StringBuilder? ToRightSub(StringBuilder? insideEquation)
+    public static StringBuilder? ToSub(Position position, StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        sb.Append(RightSub);
-        sb.Append(insideEquation);
-        return sb;
+        return position switch
+        {
+            /// {}_{insideEquation}
+            Position.Left => sb.Append(LeftSub).AppendWithWrapper(insideEquation),
+            /// _{insideEquation}
+            Position.Right => sb.Append(RightSub).AppendWithWrapper(insideEquation),
+            _ => throw new InvalidOperationException($"Invalid position for Sub: {position}"),
+        };
     }
 
-    /// <summary>
-    /// _{subEquation}^{superEquation}
-    /// </summary>
-    public static StringBuilder? ToLeftSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
+    public static StringBuilder? ToSuperSub(Position position, StringBuilder? superEquation, StringBuilder? subEquation)
     {
         var sb = new StringBuilder();
-        sb.Append(LeftSub);
-        sb.Append(subEquation);
-        sb.Append(LeftSuper);
-        sb.Append(superEquation);
-        return sb;
+        return position switch
+        {
+            /// _{subEquation}^{superEquation}
+            Position.Left => sb.Append(LeftSub).AppendWithWrapper(subEquation).Append(LeftSuper).AppendWithWrapper(superEquation),
+            /// {}_{subEquation}^{superEquation}
+            Position.Right => sb.Append(RightSub).AppendWithWrapper(subEquation).Append(RightSuper).AppendWithWrapper(superEquation),
+            _ => throw new InvalidOperationException($"Invalid positions for SuperSub: {position}"),
+        };
     }
 
-    /// <summary>
-    /// {}_{subEquation}^{superEquation}
-    /// </summary>
-    public static StringBuilder? ToRightSuperSub(StringBuilder? superEquation, StringBuilder? subEquation)
-    {
-        var sb = new StringBuilder();
-        sb.Append(RightSub);
-        sb.Append(subEquation);
-        sb.Append(RightSuper);
-        sb.Append(superEquation);
-        return sb;
-    }
-
-    /// <summary>
-    /// \sqrt[nthRootEquation]{insideEquation}
-    /// </summary>
     private static readonly char[] NRoot1 = ToChars("\\sqrt[");
     private static readonly char[] NRoot2 = ToChars("]");
     public static StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
     {
+        /// \sqrt[nthRootEquation]{insideEquation}
         var sb = new StringBuilder();
-        sb.Append(NRoot1);
-        sb.Append(nthRootEquation);
-        sb.Append(NRoot2);
-        sb.Append(insideEquation);
-        return sb;
+        return sb.Append(NRoot1).Append(nthRootEquation).Append(NRoot2).AppendWithWrapper(insideEquation);
     }
 
-    /// <summary>
-    /// {sign} {mainEquation}
-    /// </summary>
     public static StringBuilder? ToSignSimple(StringBuilder? sign, StringBuilder? mainEquation)
     {
+        /// sign {mainEquation}
         var sb = new StringBuilder();
-        sb.Append(sign);
-        sb.Append(WhiteSpace);
-        sb.Append(mainEquation);
-        return sb;
+        return sb.Append(sign).Append(WhiteSpace).AppendWithWrapper(mainEquation);
     }
 
-    /// <summary>
-    /// {sign}\limits_{bottomEquation} {mainEquation}
-    /// </summary>
     private static readonly char[] Limits = ToChars("\\limits_");
-    // TODO: Combine ToSignBottom and ToSignBottomTop to reduce code duplication.
     public static StringBuilder? ToSignBottom(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? bottomEquation)
     {
+        /// sign\limits_{bottomEquation} {mainEquation}
         var sb = new StringBuilder();
-        sb.Append(sign);
-        sb.Append(Limits);
-        sb.Append(bottomEquation);
-        sb.Append(WhiteSpace);
-        sb.Append(mainEquation);
-        return sb;
+        return sb.Append(sign).Append(Limits).AppendWithWrapper(bottomEquation).Append(WhiteSpace)
+            .AppendWithWrapper(mainEquation);
     }
 
-    /// <summary>
-    /// {sign}\limits_{bottomEquation}^{topEquation} {mainEquation}
-    /// </summary>
     public static StringBuilder? ToSignBottomTop(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? topEquation, StringBuilder? bottomEquation)
     {
+        /// sign\limits_{bottomEquation}^{topEquation} {mainEquation}
         var sb = new StringBuilder();
-        sb.Append(sign);
-        sb.Append(Limits);
-        sb.Append(bottomEquation);
-        sb.Append(RightSuper);
-        sb.Append(topEquation);
-        sb.Append(WhiteSpace);
-        sb.Append(mainEquation);
-        return sb;
+        return sb.Append(sign).Append(Limits).AppendWithWrapper(bottomEquation).Append(RightSuper)
+            .AppendWithWrapper(topEquation).Append(WhiteSpace).AppendWithWrapper(mainEquation);
     }
 
-    /// <summary>
-    /// {sign}\nolimits_{subEquation} {mainEquation}
-    /// </summary>
     private static readonly char[] NoLimits = ToChars("\\nolimits_");
     public static StringBuilder? ToSignSub(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? subEquation)
     {
+        /// sign\nolimits_{subEquation} {mainEquation}
         var sb = new StringBuilder();
-        sb.Append(sign);
-        sb.Append(NoLimits);
-        sb.Append(subEquation);
-        sb.Append(WhiteSpace);
-        sb.Append(mainEquation);
-        return sb;
+        return sb.Append(sign).Append(NoLimits).AppendWithWrapper(subEquation).Append(WhiteSpace)
+            .AppendWithWrapper(mainEquation);
     }
 
-    /// <summary>
-    /// {sign}\nolimits_{subEquation}^{superEquation} {mainEquation}
-    /// </summary>
     public static StringBuilder? ToSignSubSuper(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? superEquation, StringBuilder? subEquation)
     {
+        /// {sign}\nolimits_{subEquation}^{superEquation} {mainEquation}
         var sb = new StringBuilder();
-        sb.Append(sign);
-        sb.Append(NoLimits);
-        sb.Append(subEquation);
-        sb.Append(RightSuper);
-        sb.Append(superEquation);
-        sb.Append(WhiteSpace);
-        sb.Append(mainEquation);
-        return sb;
+        return sb.Append(sign).Append(NoLimits).AppendWithWrapper(subEquation).Append(RightSuper)
+            .AppendWithWrapper(superEquation).Append(WhiteSpace).AppendWithWrapper(mainEquation);
     }
 
-    /// <summary>
-    /// \boxed{insideEquation}
-    /// </summary>
     private static readonly char[] Boxed = ToChars("\\boxed");
-    public static StringBuilder? ToBox(StringBuilder? insideEquation)
-    {
-        if (insideEquation == null)
-        {
-            return null;
-        }
-        var sb = new StringBuilder();
-        sb.Append(Boxed);
-        sb.Append(insideEquation);
-        return sb;
-    }
-
-    /// <summary>
-    /// \left| \!{\overline {\, {insideEquation} \,}} \right.
-    /// </summary>
     private static readonly char[] LeftTopBox1 = ToChars("\\left| \\!{\\overline {\\, ");
     private static readonly char[] LeftTopBox2 = ToChars(" \\,}} \\right.");
-    public static StringBuilder? ToLeftTopBox(StringBuilder? insideEquation)
-    {
-        var sb = new StringBuilder();
-        sb.Append(LeftTopBox1);
-        sb.Append(insideEquation);
-        sb.Append(LeftTopBox2);
-        return sb;
-    }
-
-    /// <summary>
-    /// \left. {\overline {\, {insideEquation} \,}}\! \right|
-    /// </summary>
     private static readonly char[] RightTopBox1 = ToChars("\\left. {\\overline {\\, ");
     private static readonly char[] RightTopBox2 = ToChars(" \\,}}\\! \\right|");
-    public static StringBuilder? ToRightTopBox(StringBuilder? insideEquation)
-    {
-        var sb = new StringBuilder();
-        sb.Append(RightTopBox1);
-        sb.Append(insideEquation);
-        sb.Append(RightTopBox2);
-        return sb;
-    }
-
-    /// <summary>
-    /// \left| \!{\underline {\, {insideEquation} \,}} \right.
-    /// </summary>
     private static readonly char[] LeftBottomBox1 = ToChars("\\left| \\!{\\underline {\\, ");
     private static readonly char[] LeftBottomBox2 = ToChars(" \\,}} \\right.");
-    public static StringBuilder? ToLeftBottomBox(StringBuilder? insideEquation)
-    {
-        var sb = new StringBuilder();
-        sb.Append(LeftBottomBox1);
-        sb.Append(insideEquation);
-        sb.Append(LeftBottomBox2);
-        return sb;
-    }
-
-    /// <summary>
-    /// \left. {\underline {\, {insideEquation} \,}}\! \right|
-    /// </summary>
     private static readonly char[] RightBottomBox1 = ToChars("\\left. {\\underline {\\, ");
     private static readonly char[] RightBottomBox2 = ToChars(" \\,}}\\! \\right|");
-    public static StringBuilder? ToRightBottomBox(StringBuilder? insideEquation)
+    public static StringBuilder? ToBox(BoxType type, StringBuilder? insideEquation)
     {
         var sb = new StringBuilder();
-        sb.Append(RightBottomBox1);
-        sb.Append(insideEquation);
-        sb.Append(RightBottomBox2);
-        return sb;
+        return type switch
+        {
+            /// \boxed{insideEquation}
+            BoxType.All => sb.Append(Boxed).AppendWithWrapper(insideEquation),
+            /// \left| \!{\overline {\, {insideEquation} \,}} \right.
+            BoxType.LeftTop => sb.Append(LeftTopBox1).AppendWithWrapper(insideEquation).Append(LeftTopBox2),
+            /// \left. {\overline {\, {insideEquation} \,}}\! \right|
+            BoxType.RightTop => sb.Append(RightTopBox1).AppendWithWrapper(insideEquation).Append(RightTopBox2),
+            /// \left| \!{\underline {\, {insideEquation} \,}} \right.
+            BoxType.LeftBottom => sb.Append(LeftBottomBox1).AppendWithWrapper(insideEquation).Append(LeftBottomBox2),
+            /// \left. {\underline {\, {insideEquation} \,}}\! \right|
+            BoxType.RightBottom => sb.Append(RightBottomBox1).AppendWithWrapper(insideEquation).Append(RightBottomBox2),
+            _ => throw new InvalidOperationException($"Invalid BoxType: {type}"),
+        };
     }
 
     private static readonly char[] EmptyWrapper = ToChars("{}");

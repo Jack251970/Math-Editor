@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
@@ -100,15 +99,7 @@ namespace Editor
 
         public override StringBuilder? ToLatex()
         {
-            return _boxType switch
-            {
-                BoxType.All => LatexConverter.ToBox(_insideEq.ToLatex()),
-                BoxType.LeftTop => LatexConverter.ToLeftTopBox(_insideEq.ToLatex()),
-                BoxType.RightTop => LatexConverter.ToRightTopBox(_insideEq.ToLatex()),
-                BoxType.LeftBottom => LatexConverter.ToLeftBottomBox(_insideEq.ToLatex()),
-                BoxType.RightBottom => LatexConverter.ToRightBottomBox(_insideEq.ToLatex()),
-                _ => throw new InvalidOperationException($"Invalid BoxType: {_boxType}"),
-            };
+            return LatexConverter.ToBox(_boxType, _insideEq.ToLatex());
         }
 
         public override void DrawEquation(DrawingContext dc)
