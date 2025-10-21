@@ -5,16 +5,20 @@ using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Editor;
 
+// TODO: Convert to non-static and use App.LatexConverter?
 public static class LatexConverter
 {
     /// <summary>
-    /// Escapes text with { and }.
+    /// Convert to latex symbol.
     /// </summary>
     /// <param name="sb"></param>
     /// <param name="start"></param>
     /// <param name="count"></param>
+    /// <param name="convertWrapper"></param>
+    /// <param name="wrap"></param>
     /// <returns></returns>
-    public static StringBuilder? EscapeText(StringBuilder sb, int start, int count)
+    public static StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper, 
+        bool wrap = false)
     {
         if (count <= 0 || start < 0 || start + count > sb.Length)
         {
@@ -22,43 +26,37 @@ public static class LatexConverter
         }
 
         var escaped = new StringBuilder();
-        // TODO: Remove this?
-        escaped.Append('{');
+        if (wrap) escaped.Append(LeftBrace);
         for (var i = start; i < start + count; i++)
         {
-            escaped.Append(ConvertToLatexSymbol(sb[i], true));
+            escaped.Append(ConvertToLatexSymbol(sb[i], convertWrapper));
         }
-        escaped.Append('}');
+        if (wrap) escaped.Append(RightBrace);
         return escaped;
     }
 
     /// <summary>
-    /// Escapes a row of text parts with { and }.
+    /// Convert to latex symbol.
     /// </summary>
     /// <param name="row"></param>
+    /// <param name="convertWrapper"></param>
+    /// <param name="wrap"></param>
     /// <returns></returns>
-    public static StringBuilder? EscapeRowText(List<StringBuilder> row)
+    public static StringBuilder? ConvertToLatexSymbol(List<StringBuilder> row, bool convertWrapper, bool wrap = false)
     {
-        if (row.Count == 0)
-        {
-            return null;
-        }
-        else if (row.Count == 1)
-        {
-            return row[0];
-        }
+        if (row.Count == 0) return null;
+        else if (row.Count == 1) return row[0];
 
         var escaped = new StringBuilder();
-        // TODO: Remove this?
-        escaped.Append('{');
+        if (wrap) escaped.Append(LeftBrace);
         foreach (var sb in row)
         {
             for (var i = 0; i < sb.Length; i++)
             {
-                escaped.Append(ConvertToLatexSymbol(sb[i], false));
+                escaped.Append(ConvertToLatexSymbol(sb[i], convertWrapper));
             }
         }
-        escaped.Append('}');
+        if (wrap) escaped.Append(RightBrace);
         return escaped;
     }
 
@@ -136,26 +134,43 @@ public static class LatexConverter
     /// <param name="c"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
+    private static readonly char[] Sum = ToChars("\\sum");
+    private static readonly char[] Prod = ToChars("\\prod");
+    private static readonly char[] CoProd = ToChars("\\coprod");
+    private static readonly char[] BigCap = ToChars("\\bigcap");
+    private static readonly char[] BigCup = ToChars("\\bigcup");
+    private static readonly char[] Int = ToChars("\\int");
+    private static readonly char[] IInt = ToChars("\\iint");
+    private static readonly char[] IIInt = ToChars("\\iiint");
+    private static readonly char[] OInt = ToChars("\\oint");
+    private static readonly char[] IntBigCirc = ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}");
+    private static readonly char[] IntBigOdot = ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}");
+    private static readonly char[] IntCircleArrowLeft = ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}");
+    private static readonly char[] IntCircleArrowRight = ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}");
+    private static readonly char[] EscapedLeftBrace = ToChars("\\{");
+    private static readonly char[] EscapedRightBrace = ToChars("\\}");
+    private static readonly char[] LeftBrace = ToChars("{");
+    private static readonly char[] RightBrace = ToChars("}");
     private static char[] ConvertToLatexSymbol(char c, bool convertWrapper)
     {
         return c switch
         {
             // TODO: Handle more special characters for Latex
-            '{' => convertWrapper ? ToChars("\\{") : ToChars("{"),
-            '}' => convertWrapper ? ToChars("\\}") : ToChars("}"),
-            '\u2211' => ToChars("\\sum"), // ∑
-            '\u220F' => ToChars("\\prod"), // ∏
-            '\u2210' => ToChars("\\coprod"), // ∐
-            '\u22C2' => ToChars("\\bigcap"), // ⋂
-            '\u22C3' => ToChars("\\bigcup"), // ⋃
-            '\u222B' => ToChars("\\int"), // ∫
-            '\u222C' => ToChars("\\iint"), // ∬
-            '\u222D' => ToChars("\\iiint"), // ∭
-            '\u222E' => ToChars("\\oint"), // ∮
-            '\u222F' => ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}"), // ∯
-            '\u2230' => ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}"), // ∰
-            '\u2232' => ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}"), // ∲
-            '\u2233' => ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}"), // ∳
+            '{' => convertWrapper ? EscapedLeftBrace : LeftBrace,
+            '}' => convertWrapper ? EscapedRightBrace : RightBrace,
+            '\u2211' => Sum, // ∑
+            '\u220F' => Prod, // ∏
+            '\u2210' => CoProd, // ∐
+            '\u22C2' => BigCap, // ⋂
+            '\u22C3' => BigCup, // ⋃
+            '\u222B' => Int, // ∫
+            '\u222C' => IInt, // ∬
+            '\u222D' => IIInt, // ∭
+            '\u222E' => OInt, // ∮
+            '\u222F' => IntBigCirc, // ∯
+            '\u2230' => IntBigOdot, // ∰
+            '\u2232' => IntCircleArrowLeft, // ∲
+            '\u2233' => IntCircleArrowRight, // ∳
             _ => [c],
         };
     }
@@ -172,7 +187,7 @@ public static class LatexConverter
 
     private static StringBuilder? AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
     {
-        return sb.Append('{').Append(equ).Append('}');
+        return sb.Append(LeftBrace).Append(equ).Append(RightBrace);
     }
 
     /// <summary>

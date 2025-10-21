@@ -537,7 +537,7 @@ namespace Editor
 
         public StringBuilder? CreateLatex(int startIndex, int count)
         {
-            return LatexConverter.EscapeText(textData, startIndex, count);
+            return LatexConverter.ConvertToLatexSymbol(textData, startIndex, count, true);
         }
 
         public override double FontSize

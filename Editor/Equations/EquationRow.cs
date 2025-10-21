@@ -445,7 +445,7 @@ namespace Editor
                             latexList.Add(sb);
                         }
                     }
-                    copyText = LatexConverter.EscapeRowText(latexList)?.ToString();
+                    copyText = LatexConverter.ConvertToLatexSymbol(latexList, false)?.ToString();
                 }
 
                 // Create XML element
