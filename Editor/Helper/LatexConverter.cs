@@ -142,8 +142,8 @@ public static class LatexConverter
     private static readonly char[] IntBigOdot = ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}");
     private static readonly char[] IntCircleArrowLeft = ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}");
     private static readonly char[] IntCircleArrowRight = ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}");
-    private static readonly char[] EscapedLeftBrace = ToChars("\\{");
-    private static readonly char[] EscapedRightBrace = ToChars("\\}");
+    private static readonly char[] EscapedLeftBrace = ToChars("\\{ ");
+    private static readonly char[] EscapedRightBrace = ToChars("\\} ");
     private static readonly char[] LeftBrace = ToChars("{");
     private static readonly char[] RightBrace = ToChars("}");
     private static char[] ConvertToLatexSymbol(char c, bool convertWrapper)
