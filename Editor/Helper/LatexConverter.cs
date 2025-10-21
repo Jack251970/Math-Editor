@@ -573,4 +573,211 @@ public static class LatexConverter
         }
         return sb;
     }
+
+    private static readonly char[] WideTilde = ToChars("\\widetilde");
+    private static readonly char[] WideHat = ToChars("\\widehat");
+    private static readonly char[] OverLine = ToChars("\\overline");
+    private static readonly char[] UnderLine = ToChars("\\underline");
+    private static readonly char[] Cross = ToChars("\\xcancel");
+    private static readonly char[] RightCross = ToChars("\\cancel");
+    private static readonly char[] LeftCross = ToChars("\\bcancel");
+    private static readonly char[] OverRightArrow = ToChars("\\overrightarrow");
+    private static readonly char[] OverLeftArrow = ToChars("\\overleftarrow");
+    private static readonly char[] OverDoubleArrow = ToChars("\\overleftrightarrow");
+    private static readonly char[] UnderRightArrow = ToChars("\\underrightarrow");
+    private static readonly char[] UnderLeftArrow = ToChars("\\underleftarrow");
+    private static readonly char[] UnderDoubleArrow = ToChars("\\underleftrightarrow");
+    public static StringBuilder? ToDecorated(DecorationType type, Position position, StringBuilder? insideEquation)
+    {
+        var sb = new StringBuilder();
+        switch (type)
+        {
+            case DecorationType.Tilde:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \widetilde insideEquation
+                        sb.Append(WideTilde).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for Tilde decoration: {position}");
+                }
+                break;
+            case DecorationType.Hat:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \widehat insideEquation
+                        sb.Append(WideHat).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for Hat decoration: {position}");
+                }
+                break;
+            case DecorationType.Parenthesis:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Arc.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for Parenthesis decoration: {position}");
+                }
+            case DecorationType.Tortoise:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Joint status.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for Tortoise decoration: {position}");
+                }
+            case DecorationType.Bar:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \overline insideEquation
+                        sb.Append(OverLine).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    case Position.Bottom:
+                        /// \underline insideEquation
+                        sb.Append(UnderLine).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for Bar decoration: {position}");
+                }
+                break;
+            case DecorationType.DoubleBar:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \overline{\overline insideEquation}
+                        sb.Append(OverLine).Append('{').Append(OverLine).Append(WhiteSpace)
+                            .Append(insideEquation).Append('}');
+                        break;
+                    case Position.Bottom:
+                        /// \underline{\underline insideEquation}
+                        sb.Append(UnderLine).Append('{').Append(UnderLine).Append(WhiteSpace)
+                            .Append(insideEquation).Append('}');
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for DoubleBar decoration: {position}");
+                }
+                break;
+            case DecorationType.RightArrow:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \overrightarrow insideEquation
+                        sb.Append(OverRightArrow).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    case Position.Bottom:
+                        /// \underrightarrow insideEquation
+                        sb.Append(UnderRightArrow).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for RightArrow decoration: {position}");
+                }
+                break;
+            case DecorationType.LeftArrow:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \overleftarrow insideEquation
+                        sb.Append(OverLeftArrow).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    case Position.Bottom:
+                        /// \underleftarrow insideEquation
+                        sb.Append(UnderLeftArrow).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for LeftArrow decoration: {position}");
+                }
+                break;
+            case DecorationType.RightHarpoonUpBarb:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Right harpoon over-bar.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Right harpoon under-bar.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for RightHarpoonUpBarb decoration: {position}");
+                }
+            case DecorationType.LeftHarpoonUpBarb:
+                switch (position)
+                {
+                    case Position.Top:
+                        MessageBox.Show("Translation Error", "No translation available for Left harpoon over-bar.\nPlease add a translation for it in the settings.");
+                        return null;
+                    case Position.Bottom:
+                        MessageBox.Show("Translation Error", "No translation available for Left harpoon under-bar.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for LeftHarpoonUpBarb decoration: {position}");
+                }
+            case DecorationType.DoubleArrow:
+                switch (position)
+                {
+                    case Position.Top:
+                        /// \overleftrightarrow insideEquation
+                        sb.Append(OverDoubleArrow).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    case Position.Bottom:
+                        /// \underleftrightarrow insideEquation
+                        sb.Append(UnderDoubleArrow).Append(WhiteSpace).Append(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for DoubleArrow decoration: {position}");
+                }
+                break;
+            case DecorationType.StrikeThrough:
+                switch (position)
+                {
+                    case Position.Middle:
+                        MessageBox.Show("Translation Error", "No translation available for Mid-line strike-through.\nPlease add a translation for it in the settings.");
+                        return null;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for StrikeThrough decoration: {position}");
+                }
+            case DecorationType.Cross:
+                switch (position)
+                {
+                    case Position.Middle:
+                        /// \xcancel{insideEquation}
+                        sb.Append(Cross).AppendWithWrapper(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for Cross decoration: {position}");
+                }
+                break;
+            case DecorationType.RightCross:
+                switch (position)
+                {
+                    case Position.Middle:
+                        /// \cancel{insideEquation}
+                        sb.Append(RightCross).AppendWithWrapper(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for RightCross decoration: {position}");
+                }
+                break;
+            case DecorationType.LeftCross:
+                switch (position)
+                {
+                    case Position.Middle:
+                        /// \bcancel{insideEquation}
+                        sb.Append(LeftCross).AppendWithWrapper(insideEquation);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid position for LeftCross decoration: {position}");
+                }
+                break;
+            default:
+                throw new InvalidOperationException($"Unsupported decoration type for LaTeX conversion: {type}");
+        }
+        return sb;
+    }
 }

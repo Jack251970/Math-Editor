@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Text;
+using System.Windows.Media;
 using System.Xml.Linq;
 
 namespace Editor
@@ -42,6 +43,11 @@ namespace Editor
         {
             _rowContainer.DeSerialize(xElement.Element(_rowContainer.GetType().Name)!);
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDecorated(_decorationType, _decorationPosition, _rowContainer.ToLatex());
         }
 
         public override double Top
