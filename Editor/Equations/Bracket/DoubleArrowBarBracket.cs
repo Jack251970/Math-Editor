@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
@@ -8,12 +9,12 @@ namespace Editor
 {
     public sealed class DoubleArrowBarBracket : EquationContainer
     {
-        RowContainer leftEquation = null;
-        RowContainer rightEquation = null;
-        BracketSign leftArrowSign;
-        BracketSign rightArrowSign;
-        double ExtraHeight { get; set; }
-        double MidSpace { get; set; }
+        private readonly RowContainer leftEquation;
+        private readonly RowContainer rightEquation;
+        private readonly BracketSign leftArrowSign;
+        private readonly BracketSign rightArrowSign;
+        private double ExtraHeight { get; set; }
+        private double MidSpace { get; set; }
 
         public DoubleArrowBarBracket(EquationContainer parent)
             : base(parent)
@@ -24,7 +25,7 @@ namespace Editor
             rightArrowSign = new BracketSign(this, BracketSignType.RightAngle);
             ActiveChild = leftEquation = new RowContainer(this);
             rightEquation = new RowContainer(this);
-            childEquations.AddRange(new EquationBase[] { leftEquation, leftArrowSign, rightArrowSign, rightEquation });
+            childEquations.AddRange([leftEquation, leftArrowSign, rightArrowSign, rightEquation]);
         }
 
         public override void DrawEquation(DrawingContext dc)
@@ -35,7 +36,7 @@ namespace Editor
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
+            var thisElement = new XElement(GetType().Name);
             thisElement.Add(leftEquation.Serialize());
             thisElement.Add(rightEquation.Serialize());
             return thisElement;
@@ -48,9 +49,14 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDoubleArrowBarBracket(leftEquation.ToLatex(), rightEquation.ToLatex());
+        }
+
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -60,7 +66,7 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
@@ -73,10 +79,7 @@ namespace Editor
 
         public override double FontSize
         {
-            get
-            {
-                return base.FontSize;
-            }
+            get => base.FontSize;
             set
             {
                 MidSpace = value * 0.5;
@@ -110,12 +113,6 @@ namespace Editor
             rightArrowSign.Height = leftArrowSign.Height;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return Math.Max(leftEquation.RefY, rightEquation.RefY);
-            }
-        }
+        public override double RefY => Math.Max(leftEquation.RefY, rightEquation.RefY);
     }
 }

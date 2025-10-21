@@ -804,4 +804,19 @@ public static class LatexConverter
                 throw new InvalidOperationException($"Invalid DivisionType: {type}");
         }
     }
+
+    private static readonly char[] DoubleArrowBarBracket1 = ToChars("\\left\\langle ");
+    private static readonly char[] DoubleArrowBarBracket2 = ToChars("\n \\mathrel{\\left | {\\vphantom {");
+    private static readonly char[] DoubleArrowBarBracket3 = ToChars("}}\n\\right. \\kern-\\nulldelimiterspace}\n ");
+    private static readonly char[] DoubleArrowBarBracket4 = ToChars(" \\right\\rangle ");
+    public static StringBuilder? ToDoubleArrowBarBracket(StringBuilder? leftEquation, StringBuilder? rightEquation)
+    {
+        /// \left\langle {a}
+        ///  \mathrel{\left | {\vphantom {a b}}
+        ///  \right. \kern-\nulldelimiterspace}
+        ///  {b} \right\rangle 
+        return Append(DoubleArrowBarBracket1).AppendWithWrapper(leftEquation).Append(DoubleArrowBarBracket2)
+            .Append(leftEquation).Append(WhiteSpace).Append(rightEquation).Append(DoubleArrowBarBracket3)
+            .AppendWithWrapper(rightEquation).Append(DoubleArrowBarBracket4);
+    }
 }
