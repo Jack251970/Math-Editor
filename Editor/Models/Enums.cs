@@ -69,8 +69,11 @@ public enum ArrowType
 
 public enum DecorationType
 {
-    Tilde, Hat, Parenthesis, Tortoise, RightArrow, LeftArrow, DoubleArrow, RightHarpoonUpBarb, LeftHarpoonUpBarb,
-    RightHarpoonDownBarb, LeftHarpoonDownBarb, Bar, DoubleBar, StrikeThrough, Cross, RightCross, LeftCross,
+    Hat, Tilde, Parenthesis, Tortoise,
+    Bar, DoubleBar, RightArrow, LeftArrow,
+    RightHarpoonUpBarb, LeftHarpoonUpBarb, DoubleArrow,
+    RightHarpoonDownBarb, LeftHarpoonDownBarb,
+    Cross, LeftCross, RightCross, StrikeThrough
 }
 
 public enum SignCompositeSymbol
