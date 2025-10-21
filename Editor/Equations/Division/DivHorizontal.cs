@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -17,6 +18,11 @@ namespace Editor
         public DivHorizontal(EquationContainer parent, bool isSmall)
             : base(parent, isSmall)
         {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivHoriz, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
         public override void DrawEquation(DrawingContext dc)
@@ -60,7 +66,6 @@ namespace Editor
             }
         }
 
-
         protected override void CalculateWidth()
         {
             Width = _topEquation.Width + _bottomEquation.Width + ExtraWidth;
@@ -96,6 +101,19 @@ namespace Editor
                 }
             }
             return false;
+        }
+    }
+
+    public sealed class DivHorizSmall : DivHorizontal
+    {
+        public DivHorizSmall(EquationContainer parent)
+            : base(parent, true)
+        {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivHorizSmall, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
     }
 }

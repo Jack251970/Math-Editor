@@ -22,6 +22,12 @@ public static class LatexConverter
         return chars;
     }
 
+    private static StringBuilder Append(char c)
+    {
+        var sb = new StringBuilder();
+        return sb.Append(c);
+    }
+
     private static StringBuilder Append(char[] chars)
     {
         var sb = new StringBuilder();
@@ -708,6 +714,94 @@ public static class LatexConverter
                     .Append(Super).Append(topSuperEquation),
                 _ => throw new InvalidOperationException($"Invalid position for Composite: {position}"),
             };
+        }
+    }
+
+    private static readonly char[] DivMath1 = ToChars("\\[\\left){\\vphantom{1");
+    private static readonly char[] DivMath2 = ToChars("}}\\right.\n\\!\\!\\!\\!\\overline{\\,\\,\\,\\vphantom 1");
+    private static readonly char[] DivMath3 = ToChars(" }\\]");
+    private static readonly char[] DivMathWithTop1 = ToChars("\\mathop{\\left){\\vphantom{1");
+    private static readonly char[] DivMathWithTop2 = ToChars("}}\\right.\n\\!\\!\\!\\!\\overline{\\,\\,\\,\\vphantom 1");
+    private static readonly char[] DivMathWithTop3 = ToChars("}}\n\\limits^{\\displaystyle\\hfill\\,\\,\\, ");
+    private static readonly char[] Frac = ToChars("\\frac");
+    private static readonly char[] DivRegularSmall1 = ToChars("{\\textstyle{");
+    private static readonly char[] DivRegularSmall2 = ToChars(" \\over ");
+    private static readonly char[] DivRegularSmall3 = ToChars("}}");
+    private static readonly char[] DivSlanted1 = ToChars("{\\raise0.7ex\\hbox{$");
+    private static readonly char[] DivSlanted2 = ToChars("$} \\!\\mathord{\\left/\n {\\vphantom {");
+    private static readonly char[] DivSlanted3 = ToChars("}}\\right.\\kern-\\nulldelimiterspace}\n\\!\\lower0.7ex\\hbox{$");
+    private static readonly char[] DivSlanted4 = ToChars("$}}");
+    private static readonly char[] DivSlantedSmall1 = ToChars("{\\raise0.5ex\\hbox{$\\scriptstyle ");
+    private static readonly char[] DivSlantedSmall2 = ToChars("\\kern-0.1em/\\kern-0.15em\n\\lower0.25ex\\hbox{$\\scriptstyle ");
+    private static readonly char[] DivSlantedSmall3 = ToChars("$}}");
+    private static readonly char[] DivHoriz1 = ToChars(" \\mathord{\\left/\n {\\vphantom {");
+    private static readonly char[] DivHoriz2 = ToChars("}} \\right.\n \\kern-\\nulldelimiterspace} ");
+    public static StringBuilder? ToDivision(DivisionType type, StringBuilder? insideOrTopEquation, StringBuilder? bottomEquation)
+    {
+        switch (type)
+        {
+            case DivisionType.DivMath:
+                /// \[\left){\vphantom{1a}}\right.
+                /// \!\!\!\!\overline{\,\,\,\vphantom 1{a} }\]
+                return Append(DivMath1).Append(insideOrTopEquation).Append(DivMath2)
+                    .AppendWithWrapper(insideOrTopEquation).Append(DivMath3);
+            case DivisionType.DivMathWithTop:
+                /// \mathop{\left){\vphantom{1a}}\right.
+                /// \!\!\!\!\overline{\,\,\,\vphantom 1{a}}}
+                /// \limits^{\displaystyle\hfill\,\,\, b}
+                return Append(DivMathWithTop1).Append(insideOrTopEquation).Append(DivMathWithTop2)
+                    .AppendWithWrapper(insideOrTopEquation).Append(DivMathWithTop3).Append(bottomEquation)
+                    .Append('}');
+            case DivisionType.DivRegular:
+                /// \frac{a}{b}
+                return Append(Frac).AppendWithWrapper(insideOrTopEquation).AppendWithWrapper(bottomEquation);
+            case DivisionType.DivDoubleBar:
+                MessageBox.Show("No translation available for Double bar division.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case DivisionType.DivTripleBar:
+                MessageBox.Show("No translation available for Triple bar division.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case DivisionType.DivRegularSmall:
+                /// {\textstyle{a \over b}}
+                return Append(DivRegularSmall1).Append(insideOrTopEquation).Append(DivRegularSmall2)
+                    .Append(bottomEquation).Append(DivRegularSmall3);
+            case DivisionType.DivSlanted:
+                /// {\raise0.7ex\hbox{$a$} \!\mathord{\left/
+                ///  {\vphantom {a b}}\right.\kern-\nulldelimiterspace}
+                /// \!\lower0.7ex\hbox{$b$}}
+                return Append(DivSlanted1).Append(insideOrTopEquation).Append(DivSlanted2)
+                    .Append(insideOrTopEquation).Append(WhiteSpace).Append(bottomEquation)
+                    .Append(DivSlanted3).Append(bottomEquation).Append(DivSlanted4);
+            case DivisionType.DivSlantedSmall:
+                /// {\raise0.5ex\hbox{$\scriptstyle a$}
+                /// \kern-0.1em/\kern-0.15em
+                /// \lower0.25ex\hbox{$\scriptstyle b$}}
+                return Append(DivSlantedSmall1).Append(insideOrTopEquation).Append(DivSlantedSmall2)
+                    .Append(bottomEquation).Append(DivSlantedSmall3);
+            case DivisionType.DivHoriz:
+                /// {a \mathord{\left/
+                ///  {\vphantom {a b}} \right.
+                ///  \kern-\nulldelimiterspace} b}
+                return Append('{').Append(insideOrTopEquation).Append(DivHoriz1)
+                    .Append(insideOrTopEquation).Append(WhiteSpace).Append(bottomEquation)
+                    .Append(DivHoriz2).Append(bottomEquation).Append('}');
+            case DivisionType.DivHorizSmall:
+                MessageBox.Show("No translation available for Horizontal small division.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case DivisionType.DivMathInverted:
+                MessageBox.Show("No translation available for Inverted division.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case DivisionType.DivInvertedWithBottom:
+                MessageBox.Show("No translation available for Inverted division with bottom.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case DivisionType.DivTriangleFixed:
+                MessageBox.Show("No translation available for Triangle fixed division.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            case DivisionType.DivTriangleExpanding:
+                MessageBox.Show("No translation available for Triangle expanding division.\nPlease add a translation for it in the settings.", "Translation Error");
+                return null;
+            default:
+                throw new InvalidOperationException($"Invalid DivisionType: {type}");
         }
     }
 }

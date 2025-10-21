@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Editor
@@ -34,6 +35,11 @@ namespace Editor
         {
             _insideEquation.DeSerialize(xElement.Elements().First());
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivMath, _insideEquation.ToLatex(), null);
         }
 
         public override double Top

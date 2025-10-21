@@ -1,10 +1,17 @@
-﻿namespace Editor
+﻿using System.Text;
+
+namespace Editor
 {
     public sealed class DivRegularSmall : DivRegular
     {
         public DivRegularSmall(EquationContainer parent)
             : base(parent, true)
         {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivRegularSmall, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
     }
 
@@ -15,6 +22,11 @@
         {
             barCount = 2;
         }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivDoubleBar, _topEquation.ToLatex(), _bottomEquation.ToLatex());
+        }
     }
 
     public sealed class DivTripleBar : DivRegular
@@ -24,22 +36,10 @@
         {
             barCount = 3;
         }
-    }
 
-    public sealed class DivSlantedSmall : DivSlanted
-    {
-        public DivSlantedSmall(EquationContainer parent)
-            : base(parent, true)
+        public override StringBuilder? ToLatex()
         {
+            return LatexConverter.ToDivision(DivisionType.DivTripleBar, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
     }
-
-    public sealed class DivHorizSmall : DivHorizontal
-    {
-        public DivHorizSmall(EquationContainer parent)
-            : base(parent, true)
-        {
-        }
-    }
-
 }

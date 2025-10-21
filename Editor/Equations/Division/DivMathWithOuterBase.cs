@@ -13,7 +13,7 @@ namespace Editor
         {
             outerEquation = new RowContainer(this)
             {
-                HAlignment = Editor.HAlignment.Right
+                HAlignment = HAlignment.Right
             };
             //insideEquation.HAlignment = Editor.HAlignment.Right;
             childEquations.Add(outerEquation);

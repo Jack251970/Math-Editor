@@ -1,4 +1,6 @@
-﻿namespace Editor
+﻿using System.Text;
+
+namespace Editor
 {
     public sealed class DivMathWithBottom : DivMathWithOuterBase
     {
@@ -6,6 +8,11 @@
             : base(parent)
         {
             _divMathSign.IsInverted = true;
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivInvertedWithBottom, _insideEquation.ToLatex(), null);
         }
 
         protected override void AdjustVertical()

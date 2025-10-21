@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -21,6 +22,11 @@ namespace Editor
         public DivSlanted(EquationContainer parent, bool isSmall)
             : base(parent, isSmall)
         {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivSlanted, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
         public override void DrawEquation(DrawingContext dc)
@@ -80,5 +86,18 @@ namespace Editor
         //        return topEquation.Height + ExtraHeight / 2;
         //    }
         //}
+    }
+
+    public sealed class DivSlantedSmall : DivSlanted
+    {
+        public DivSlantedSmall(EquationContainer parent)
+            : base(parent, true)
+        {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivSlantedSmall, _topEquation.ToLatex(), _bottomEquation.ToLatex());
+        }
     }
 }

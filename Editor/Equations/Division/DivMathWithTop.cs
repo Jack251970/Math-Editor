@@ -1,10 +1,17 @@
-﻿namespace Editor
+﻿using System.Text;
+
+namespace Editor
 {
     public sealed class DivMathWithTop : DivMathWithOuterBase
     {
         public DivMathWithTop(EquationContainer parent)
             : base(parent)
         {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivMathWithTop, _insideEquation.ToLatex(), outerEquation.ToLatex());
         }
 
         protected override void AdjustVertical()

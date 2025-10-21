@@ -23,7 +23,6 @@ namespace Editor
             }
         }
 
-
         public override void DrawEquation(DrawingContext dc)
         {
             LineSegment line;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -19,6 +20,11 @@ namespace Editor
         public DivRegular(EquationContainer parent, bool isSmall)
             : base(parent, isSmall)
         {
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToDivision(DivisionType.DivRegular, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
         public override void DrawEquation(DrawingContext dc)
