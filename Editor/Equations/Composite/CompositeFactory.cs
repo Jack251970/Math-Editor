@@ -1,22 +1,18 @@
-﻿namespace Editor
+﻿using System;
+
+namespace Editor
 {
     public static class CompositeFactory
     {
         public static EquationBase CreateEquation(EquationContainer equationParent, Position position)
         {
-            EquationBase equation = null;
-            switch (position)
+            EquationBase equation = position switch
             {
-                case Position.Bottom:
-                    equation = new CompositeBottom(equationParent);
-                    break;
-                case Position.Top:
-                    equation = new CompositeTop(equationParent);
-                    break;
-                case Position.BottomAndTop:
-                    equation = new CompositeBottomTop(equationParent);
-                    break;
-            }
+                Position.Bottom => new CompositeBottom(equationParent),
+                Position.Top => new CompositeTop(equationParent),
+                Position.BottomAndTop => new CompositeBottomTop(equationParent),
+                _ => throw new InvalidOperationException("Invalid position for composite equation."),
+            };
             return equation;
         }
     }
