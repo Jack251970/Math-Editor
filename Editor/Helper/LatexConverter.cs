@@ -47,23 +47,19 @@ public static class LatexConverter
     /// <param name="start"></param>
     /// <param name="count"></param>
     /// <param name="convertWrapper"></param>
-    /// <param name="wrap"></param>
     /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper,
-        bool wrap = false)
+    public static StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper)
     {
-        if (count <= 0 || start < 0 || start + count > sb.Length)
-        {
-            return null;
-        }
+        if (count <= 0 || start < 0 || start + count > sb.Length) return null;
 
         var escaped = new StringBuilder();
-        if (wrap) escaped.Append(LeftBrace);
+        var onlyOneChar = count == 1;
+        if (!onlyOneChar) escaped.Append(LeftBrace);
         for (var i = start; i < start + count; i++)
         {
             escaped.Append(ConvertToLatexSymbol(sb[i], convertWrapper));
         }
-        if (wrap) escaped.Append(RightBrace);
+        if (!onlyOneChar) escaped.Append(RightBrace);
         return escaped;
     }
 
@@ -72,15 +68,15 @@ public static class LatexConverter
     /// </summary>
     /// <param name="row"></param>
     /// <param name="convertWrapper"></param>
-    /// <param name="wrap"></param>
     /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(List<StringBuilder> row, bool convertWrapper, bool wrap = false)
+    public static StringBuilder? ConvertToLatexSymbol(List<StringBuilder> row, bool convertWrapper)
     {
         if (row.Count == 0) return null;
         else if (row.Count == 1) return row[0];
 
         var escaped = new StringBuilder();
-        if (wrap) escaped.Append(LeftBrace);
+        var onlyOneChar = row.Count == 1 && row[0].Length == 1;
+        if (!onlyOneChar) escaped.Append(LeftBrace);
         foreach (var sb in row)
         {
             for (var i = 0; i < sb.Length; i++)
@@ -88,7 +84,7 @@ public static class LatexConverter
                 escaped.Append(ConvertToLatexSymbol(sb[i], convertWrapper));
             }
         }
-        if (wrap) escaped.Append(RightBrace);
+        if (!onlyOneChar) escaped.Append(RightBrace);
         return escaped;
     }
 
