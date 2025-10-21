@@ -143,11 +143,13 @@ public partial class EquationToolBar : UserControl
                             CreateImageUri("Brackets", "RightAngle.png"),
                             CreateImageUri("Brackets", "LeftBar.png"),
                             CreateImageUri("Brackets", "RightBar.png"),
+                            CreateImageUri("Brackets", "DoubleArrowBarBracket.png"),
+                            CreateImageUri("Brackets", "DoubleArrowBarBracket.png"),  //empty cell
+
                             CreateImageUri("Brackets", "TopCurlyBracket.png"),
                             CreateImageUri("Brackets", "BottomCurlyBracket.png"),
                             CreateImageUri("Brackets", "TopSquareBracket.png"),
                             CreateImageUri("Brackets", "BottomSquareBracket.png"),
-                            CreateImageUri("Brackets", "DoubleArrowBarBracket.png"),
                            ];
 
         CommandType[] commands = [ CommandType.LeftRightBracket, CommandType.LeftRightBracket, CommandType.LeftRightBracket,
@@ -163,9 +165,11 @@ public partial class EquationToolBar : UserControl
                                    CommandType.LeftBracket,      CommandType.RightBracket,
                                    CommandType.LeftBracket,      CommandType.RightBracket,
                                    CommandType.LeftBracket,      CommandType.RightBracket,
+                                   CommandType.DoubleArrowBarBracket,
+                                   CommandType.None,  //empty cell
+
                                    CommandType.TopBracket,  CommandType.BottomBracket,
                                    CommandType.TopBracket, CommandType.BottomBracket,
-                                   CommandType.DoubleArrowBarBracket,
                                  ];
         object[] paramz = [
                                new BracketSignType [] {BracketSignType.LeftBar,       BracketSignType.RightBar},
@@ -199,11 +203,13 @@ public partial class EquationToolBar : UserControl
                                BracketSignType.RightAngle,
                                BracketSignType.LeftBar,
                                BracketSignType.RightBar,
+                               0,
+                               0,  //empty cell
+
                                HorizontalBracketSignType.TopCurly,
                                HorizontalBracketSignType.BottomCurly,
                                HorizontalBracketSignType.TopSquare,
                                HorizontalBracketSignType.BottomSquare,
-                               0,
                           ];
 
         CreateImagePanel(imageUris, commands, paramz, bracketsButton, 4);
