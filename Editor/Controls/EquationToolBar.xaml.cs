@@ -421,7 +421,7 @@ public partial class EquationToolBar : UserControl
                            ];
         CommandType[] commands = [
                                      CommandType.Composite, CommandType.Composite, CommandType.Composite,
-                                     CommandType.CompositeBig,    CommandType.CompositeBig, CommandType.CompositeBig,
+                                     CommandType.CompositeBig, CommandType.CompositeBig, CommandType.CompositeBig,
                                      CommandType.CompositeBig, CommandType.CompositeBig, CommandType.CompositeBig,
                                  ];
 

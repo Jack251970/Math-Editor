@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -8,11 +8,11 @@ namespace Editor
 {
     public sealed class CompositeBottomTop : CompositeBase
     {
-        RowContainer topRow;
-        RowContainer bottomRow;
+        private readonly RowContainer topRow;
+        private readonly RowContainer bottomRow;
 
-        public CompositeBottomTop(EquationContainer parent)
-            : base(parent)
+        public CompositeBottomTop(EquationContainer parent, bool isCompositeBig)
+            : base(parent, isCompositeBig)
         {
             SubLevel++;
             bottomRow = new RowContainer(this);
@@ -21,12 +21,12 @@ namespace Editor
                 FontFactor = bottomRow.FontFactor = SubFontFactor,
                 ApplySymbolGap = bottomRow.ApplySymbolGap = false
             };
-            childEquations.AddRange(new EquationBase[] { mainRowContainer, bottomRow, topRow });
+            childEquations.AddRange([mainRowContainer, bottomRow, topRow]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
+            var thisElement = new XElement(GetType().Name);
             thisElement.Add(mainRowContainer.Serialize());
             thisElement.Add(bottomRow.Serialize());
             thisElement.Add(topRow.Serialize());
@@ -42,9 +42,15 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToComposite(IsCompositeBig, Position.BottomAndTop, mainRowContainer.ToLatex(),
+                topRow.ToLatex(), bottomRow.ToLatex());
+        }
+
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
@@ -64,17 +70,11 @@ namespace Editor
             Height = mainRowContainer.Height + bottomRow.Height + topRow.Height + bottomGap;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return topRow.Height + mainRowContainer.RefY;
-            }
-        }
+        public override double RefY => topRow.Height + mainRowContainer.RefY;
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -86,7 +86,7 @@ namespace Editor
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            bool returnValue = false;
+            var returnValue = false;
             if (mainRowContainer.Bounds.Contains(mousePoint))
             {
                 ActiveChild = mainRowContainer;

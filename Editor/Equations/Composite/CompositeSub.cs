@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -7,10 +8,10 @@ namespace Editor
 {
     public sealed class CompositeSub : CompositeBase
     {
-        RowContainer bottomRowContainer;
+        private readonly RowContainer bottomRowContainer;
 
-        public CompositeSub(EquationContainer parent)
-            : base(parent)
+        public CompositeSub(EquationContainer parent, bool isCompositeBig)
+            : base(parent, isCompositeBig)
         {
             SubLevel++;
             bottomRowContainer = new RowContainer(this)
@@ -18,12 +19,12 @@ namespace Editor
                 FontFactor = SubFontFactor,
                 ApplySymbolGap = false
             };
-            childEquations.AddRange(new EquationBase[] { mainRowContainer, bottomRowContainer });
+            childEquations.AddRange([mainRowContainer, bottomRowContainer]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
+            var thisElement = new XElement(GetType().Name);
             thisElement.Add(mainRowContainer.Serialize());
             thisElement.Add(bottomRowContainer.Serialize());
             return thisElement;
@@ -36,9 +37,15 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToComposite(IsCompositeBig, Position.Sub, mainRowContainer.ToLatex(),
+                null, bottomRowContainer.ToLatex());
+        }
+
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
@@ -58,18 +65,12 @@ namespace Editor
         }
 
 
-        public override double RefY
-        {
-            get
-            {
-                return mainRowContainer.RefY;
-            }
-        }
+        public override double RefY => mainRowContainer.RefY;
 
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;

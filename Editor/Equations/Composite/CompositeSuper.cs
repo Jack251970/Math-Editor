@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -7,10 +8,10 @@ namespace Editor
 {
     public sealed class CompositeSuper : CompositeBase
     {
-        RowContainer topRowContainer;
+        private readonly RowContainer topRowContainer;
 
-        public CompositeSuper(EquationContainer parent)
-            : base(parent)
+        public CompositeSuper(EquationContainer parent, bool isCompositeBig)
+            : base(parent, isCompositeBig)
         {
             SubLevel++;
             topRowContainer = new RowContainer(this)
@@ -18,12 +19,12 @@ namespace Editor
                 FontFactor = SubFontFactor,
                 ApplySymbolGap = false
             };
-            childEquations.AddRange(new EquationBase[] { mainRowContainer, topRowContainer });
+            childEquations.AddRange([mainRowContainer, topRowContainer]);
         }
 
         public override XElement Serialize()
         {
-            XElement thisElement = new XElement(GetType().Name);
+            var thisElement = new XElement(GetType().Name);
             thisElement.Add(mainRowContainer.Serialize());
             thisElement.Add(topRowContainer.Serialize());
             return thisElement;
@@ -36,9 +37,15 @@ namespace Editor
             CalculateSize();
         }
 
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToComposite(IsCompositeBig, Position.Super, mainRowContainer.ToLatex(),
+                topRowContainer.ToLatex(), null);
+        }
+
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
@@ -58,17 +65,11 @@ namespace Editor
             Height = mainRowContainer.Height + topRowContainer.Height - SuperOverlap;
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return mainRowContainer.RefY + topRowContainer.Height - SuperOverlap;
-            }
-        }
+        public override double RefY => mainRowContainer.RefY + topRowContainer.Height - SuperOverlap;
 
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;

@@ -290,12 +290,12 @@ public static class LatexConverter
         return sb.Append(sign).Append(WhiteSpace).AppendWithWrapper(mainEquation);
     }
 
-    private static readonly char[] Limits = ToChars("\\limits_");
+    private static readonly char[] Limits = ToChars("\\limits");
     public static StringBuilder? ToSignBottom(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? bottomEquation)
     {
         /// sign\limits_{bottomEquation} {mainEquation}
         var sb = new StringBuilder();
-        return sb.Append(sign).Append(Limits).AppendWithWrapper(bottomEquation).Append(WhiteSpace)
+        return sb.Append(sign).Append(Limits).Append('_').AppendWithWrapper(bottomEquation).Append(WhiteSpace)
             .AppendWithWrapper(mainEquation);
     }
 
@@ -303,16 +303,16 @@ public static class LatexConverter
     {
         /// sign\limits_{bottomEquation}^{topEquation} {mainEquation}
         var sb = new StringBuilder();
-        return sb.Append(sign).Append(Limits).AppendWithWrapper(bottomEquation).Append(RightSuper)
+        return sb.Append(sign).Append(Limits).Append('_').AppendWithWrapper(bottomEquation).Append(RightSuper)
             .AppendWithWrapper(topEquation).Append(WhiteSpace).AppendWithWrapper(mainEquation);
     }
 
-    private static readonly char[] NoLimits = ToChars("\\nolimits_");
+    private static readonly char[] NoLimits = ToChars("\\nolimits");
     public static StringBuilder? ToSignSub(StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? subEquation)
     {
         /// sign\nolimits_{subEquation} {mainEquation}
         var sb = new StringBuilder();
-        return sb.Append(sign).Append(NoLimits).AppendWithWrapper(subEquation).Append(WhiteSpace)
+        return sb.Append(sign).Append(NoLimits).Append('_').AppendWithWrapper(subEquation).Append(WhiteSpace)
             .AppendWithWrapper(mainEquation);
     }
 
@@ -320,7 +320,7 @@ public static class LatexConverter
     {
         /// {sign}\nolimits_{subEquation}^{superEquation} {mainEquation}
         var sb = new StringBuilder();
-        return sb.Append(sign).Append(NoLimits).AppendWithWrapper(subEquation).Append(RightSuper)
+        return sb.Append(sign).Append(NoLimits).Append('_').AppendWithWrapper(subEquation).Append(RightSuper)
             .AppendWithWrapper(superEquation).Append(WhiteSpace).AppendWithWrapper(mainEquation);
     }
 
@@ -807,6 +807,77 @@ public static class LatexConverter
                 return null;
             default:
                 throw new InvalidOperationException($"Invalid HorizontalBracketSignType: {type}");
+        }
+        return sb;
+    }
+
+    private static readonly char[] MathOp = ToChars("\\mathop");
+    public static StringBuilder? ToComposite(bool isCompositeBig, Position position, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
+    {
+        var sb = new StringBuilder();
+        if (isCompositeBig)
+        {
+            switch (position)
+            {
+                case Position.Bottom:
+                    /// \mathop mainEquation\limits_bottomSubEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(Limits).Append('_').Append(bottomSubEquation);
+                    break;
+                case Position.Top:
+                    /// \mathop mainEquation\limits^topSuperEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(Limits).Append(RightSuper).Append(topSuperEquation);
+                    break;
+                case Position.BottomAndTop:
+                    /// \mathop mainEquation\limits_bottomSubEquation^topSuperEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(Limits).Append('_').Append(bottomSubEquation)
+                        .Append(RightSuper).Append(topSuperEquation);
+                    break;
+                case Position.Sub:
+                    /// \mathop mainEquation\nolimits_bottomSubEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(NoLimits).Append('_').Append(bottomSubEquation);
+                    break;
+                case Position.Super:
+                    /// \mathop mainEquation\nolimits^topSuperEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(NoLimits).Append(RightSuper).Append(topSuperEquation);
+                    break;
+                case Position.SubAndSuper:
+                    /// \mathop mainEquation\nolimits_bottomSubEquation^topSuperEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(NoLimits).Append('_').Append(bottomSubEquation)
+                        .Append(RightSuper).Append(topSuperEquation);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Invalid position for Composite: {position}");
+            }
+        }
+        else
+        {
+            switch (position)
+            {
+                case Position.Bottom:
+                    /// \mathop mainEquation\limits_bottomSubEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(Limits).Append('_').Append(bottomSubEquation);
+                    break;
+                case Position.Top:
+                    /// \mathop mainEquation\limits^topSuperEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(Limits).Append(RightSuper).Append(topSuperEquation);
+                    break;
+                case Position.BottomAndTop:
+                    /// \mathop mainEquation\limits_bottomSubEquation^topSuperEquation
+                    sb.Append(MathOp).Append(WhiteSpace).Append(mainEquation)
+                        .Append(Limits).Append('_').Append(bottomSubEquation)
+                        .Append(RightSuper).Append(topSuperEquation);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Invalid position for Composite: {position}");
+            }
         }
         return sb;
     }

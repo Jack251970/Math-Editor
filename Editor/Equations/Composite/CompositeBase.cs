@@ -2,16 +2,22 @@
 {
     public abstract class CompositeBase : EquationContainer
     {
+        protected bool IsCompositeBig;
         protected RowContainer mainRowContainer;
         protected double bottomGap;
-        protected double SubOverlap { get { return FontSize * .4; } }
-        protected double SuperOverlap { get { return FontSize * 0.32; } }
+        protected double SubOverlap => FontSize * .4;
+        protected double SuperOverlap => FontSize * 0.32;
 
-        public CompositeBase(EquationContainer parent)
+        public CompositeBase(EquationContainer parent, bool isCompositeBig)
             : base(parent)
         {
             ActiveChild = mainRowContainer = new RowContainer(this);
             DetermineBottomGap();
+            IsCompositeBig = isCompositeBig;
+            if (isCompositeBig)
+            {
+                mainRowContainer.FontFactor = 1.3;
+            }
         }
 
         private void DetermineBottomGap()
@@ -21,20 +27,12 @@
 
         public override double FontSize
         {
-            get
-            {
-                return base.FontSize;
-            }
+            get => base.FontSize;
             set
             {
                 base.FontSize = value;
                 DetermineBottomGap();
             }
-        }
-
-        public void ChangeMainEquationSize(double newFontSizeFactor)
-        {
-            mainRowContainer.FontFactor = newFontSizeFactor;
         }
     }
 }

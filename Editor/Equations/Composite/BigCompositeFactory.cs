@@ -6,18 +6,16 @@ namespace Editor
     {
         public static EquationBase CreateEquation(EquationContainer equationParent, Position position)
         {
-            CompositeBase equation = position switch
+            return position switch
             {
-                Position.Bottom => new CompositeBottom(equationParent),
-                Position.Top => new CompositeTop(equationParent),
-                Position.BottomAndTop => new CompositeBottomTop(equationParent),
-                Position.Sub => new CompositeSub(equationParent),
-                Position.Super => new CompositeSuper(equationParent),
-                Position.SubAndSuper => new CompositeSubSuper(equationParent),
+                Position.Bottom => new CompositeBottom(equationParent, true),
+                Position.Top => new CompositeTop(equationParent, true),
+                Position.BottomAndTop => new CompositeBottomTop(equationParent, true),
+                Position.Sub => new CompositeSub(equationParent, true),
+                Position.Super => new CompositeSuper(equationParent, true),
+                Position.SubAndSuper => new CompositeSubSuper(equationParent, true),
                 _ => throw new InvalidOperationException("Invalid position for big composite equation."),
             };
-            equation.ChangeMainEquationSize(1.3);
-            return equation;
         }
     }
 }
