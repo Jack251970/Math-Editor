@@ -497,13 +497,13 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Large over small arrow with upper text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Large over small arrow with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Large over small arrow with lower text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Large over small arrow with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("Translation Error", "No translation available for Large over small arrow with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Large over small arrow with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -512,13 +512,13 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Small over large arrow with upper text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Small over large arrow with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Small over large arrow with lower text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Small over large arrow with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("Translation Error", "No translation available for Small over large arrow with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Small over large arrow with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -527,13 +527,13 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Harpoons with upper text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Harpoons with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Harpoons with lower text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Harpoons with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("Translation Error", "No translation available for Harpoons with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Harpoons with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -542,13 +542,13 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Large over small harpoon with upper text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Large over small harpoon with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Large over small harpoon with lower text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Large over small harpoon with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("Translation Error", "No translation available for Large over small harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Large over small harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -557,13 +557,13 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Small over large harpoon with upper text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Small over large harpoon with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Small over large harpoon with lower text slot.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Small over large harpoon with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("Translation Error", "No translation available for Small over large harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Small over large harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -618,7 +618,7 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Arc.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Arc.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for Parenthesis decoration: {position}");
@@ -627,7 +627,7 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Joint status.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Joint status.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for Tortoise decoration: {position}");
@@ -698,10 +698,10 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Right harpoon over-bar.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Right harpoon over-bar.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Right harpoon under-bar.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Right harpoon under-bar.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for RightHarpoonUpBarb decoration: {position}");
@@ -710,10 +710,10 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("Translation Error", "No translation available for Left harpoon over-bar.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Left harpoon over-bar.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("Translation Error", "No translation available for Left harpoon under-bar.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Left harpoon under-bar.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for LeftHarpoonUpBarb decoration: {position}");
@@ -737,7 +737,7 @@ public static class LatexConverter
                 switch (position)
                 {
                     case Position.Middle:
-                        MessageBox.Show("Translation Error", "No translation available for Mid-line strike-through.\nPlease add a translation for it in the settings.");
+                        MessageBox.Show("No translation available for Mid-line strike-through.\nPlease add a translation for it in the settings.", "Translation Error");
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for StrikeThrough decoration: {position}");
