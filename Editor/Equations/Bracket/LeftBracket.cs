@@ -6,12 +6,12 @@
             : base(parent)
         {
             bracketSign = new BracketSign(this, bracketType);
-            childEquations.AddRange(new EquationBase[] { insideEq, bracketSign });
+            childEquations.AddRange([insideEq, bracketSign]);
         }
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
