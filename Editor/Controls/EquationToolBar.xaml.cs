@@ -437,8 +437,8 @@ public partial class EquationToolBar : UserControl
     private void CreateDecoratedEquationPanel()
     {
         Uri[] imageUris = [
-                              CreateImageUri("Decorated/Equation", "hat.png"),
                               CreateImageUri("Decorated/Equation", "tilde.png"),
+                              CreateImageUri("Decorated/Equation", "hat.png"),
                               CreateImageUri("Decorated/Equation", "parenthesis.png"),
                               CreateImageUri("Decorated/Equation", "tortoise.png"),
                               CreateImageUri("Decorated/Equation", "topBar.png"),
@@ -471,8 +471,8 @@ public partial class EquationToolBar : UserControl
         commands[19] = CommandType.None; //empty cell
 
         object[] paramz = [
-                              new object [] {DecorationType.Hat,                    Position.Top },
                               new object [] {DecorationType.Tilde,                  Position.Top },
+                              new object [] {DecorationType.Hat,                    Position.Top },
                               new object [] {DecorationType.Parenthesis,            Position.Top },
                               new object [] {DecorationType.Tortoise,               Position.Top },
                               new object [] {DecorationType.Bar,                    Position.Top },

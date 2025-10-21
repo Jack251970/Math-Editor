@@ -69,7 +69,7 @@ public enum ArrowType
 
 public enum DecorationType
 {
-    Hat, Tilde, Parenthesis, Tortoise,
+    Tilde, Hat, Parenthesis, Tortoise,
     Bar, DoubleBar, RightArrow, LeftArrow,
     RightHarpoonUpBarb, LeftHarpoonUpBarb, DoubleArrow,
     RightHarpoonDownBarb, LeftHarpoonDownBarb,
