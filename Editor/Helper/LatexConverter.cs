@@ -819,4 +819,213 @@ public static class LatexConverter
             .Append(leftEquation).Append(WhiteSpace).Append(rightEquation).Append(DoubleArrowBarBracket3)
             .AppendWithWrapper(rightEquation).Append(DoubleArrowBarBracket4);
     }
+
+    private static readonly char[] Left = ToChars("\\left");
+    private static readonly char[] Right = ToChars("\\right");
+    private static readonly char[] Langle = ToChars("\\langle");
+    private static readonly char[] Rangle = ToChars("\\rangle");
+    private static readonly char[] LFloor = ToChars("\\lfloor");
+    private static readonly char[] RFloor = ToChars("\\rfloor");
+    private static readonly char[] LeftCeil = ToChars("\\lceil");
+    private static readonly char[] RightCeil = ToChars("\\rceil");
+    private static readonly char[] LeftSquareBar = ToChars("\\left[\\kern-0.15em\\left[ ");
+    private static readonly char[] RightSquareBar = ToChars("\\right]\\kern-0.15em\\right]");
+    public static StringBuilder? ToLeftRightBracket(BracketSignType leftBracketType, BracketSignType rightBracketType, StringBuilder? insideEquation)
+    {
+        if (leftBracketType == BracketSignType.LeftRound && rightBracketType == BracketSignType.RightRound)
+        {
+            /// \left( a \right)
+            return Append(Left).Append('(').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(')');
+        }
+        else if (leftBracketType == BracketSignType.LeftSquare && rightBracketType == BracketSignType.RightSquare)
+        {
+            /// \left[ a \right]
+            return Append(Left).Append('[').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(']');
+        }
+        else if (leftBracketType == BracketSignType.LeftCurly && rightBracketType == BracketSignType.RightCurly)
+        {
+            /// \left\{ a \right\}
+            return Append(Left).Append('\\').Append('{').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append('\\').Append('}');
+        }
+        else if (leftBracketType == BracketSignType.LeftAngle && rightBracketType == BracketSignType.RightAngle)
+        {
+            /// \left\langle a \right\rangle 
+            return Append(Left).Append(Langle).Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(Rangle).Append(WhiteSpace);
+        }
+        else if (leftBracketType == BracketSignType.LeftBar && rightBracketType == BracketSignType.RightBar)
+        {
+            /// \left| a \right|
+            return Append(Left).Append('|').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append('|');
+        }
+        else if (leftBracketType == BracketSignType.LeftDoubleBar && rightBracketType == BracketSignType.RightDoubleBar)
+        {
+            /// \left\| a \right\|
+            return Append(Left).Append('\\').Append('|').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('\\').Append('|');
+        }
+        else if (leftBracketType == BracketSignType.LeftFloor && rightBracketType == BracketSignType.RightFloor)
+        {
+            /// \left\lfloor a \right\rfloor 
+            return Append(Left).Append(LFloor).Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append(RFloor).Append(WhiteSpace);
+        }
+        else if (leftBracketType == BracketSignType.LeftCeiling && rightBracketType == BracketSignType.RightCeiling)
+        {
+            /// \left\lceil a \right\rceil 
+            return Append(Left).Append(LeftCeil).Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append(RightCeil).Append(WhiteSpace);
+        }
+        else if (leftBracketType == BracketSignType.LeftSquare && rightBracketType == BracketSignType.RightRound)
+        {
+            /// \left[ a \right)
+            return Append(Left).Append('[').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(')');
+        }
+        else if (leftBracketType == BracketSignType.LeftRound && rightBracketType == BracketSignType.RightSquare)
+        {
+            /// \left( a \right]
+            return Append(Left).Append('(').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(']');
+        }
+        else if (leftBracketType == BracketSignType.LeftBar && rightBracketType == BracketSignType.RightAngle)
+        {
+            /// \left| a \right\rangle 
+            return Append(Left).Append('|').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append(Rangle).Append(WhiteSpace);
+        }
+        else if (leftBracketType == BracketSignType.LeftAngle && rightBracketType == BracketSignType.RightBar)
+        {
+            /// \left\langle a \right|
+            return Append(Left).Append(Langle).Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('|');
+        }
+        else if (leftBracketType == BracketSignType.LeftSquare && rightBracketType == BracketSignType.LeftSquare)
+        {
+            /// \left[ a \right[
+            return Append(Left).Append('[').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append('[');
+        }
+        else if (leftBracketType == BracketSignType.RightSquare && rightBracketType == BracketSignType.RightSquare)
+        {
+            /// \left] a \right]
+            return Append(Left).Append(']').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(']');
+        }
+        else if (leftBracketType == BracketSignType.RightSquare && rightBracketType == BracketSignType.LeftSquare)
+        {
+            /// \left] a \right[
+            return Append(Left).Append(']').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append('[');
+        }
+        else if (leftBracketType == BracketSignType.LeftSquareBar && rightBracketType == BracketSignType.RightSquareBar)
+        {
+            /// \left[\kern-0.15em\left[ a 
+            ///  \right]\kern-0.15em\right]
+            return Append(LeftSquareBar).Append(insideEquation).Append(WhiteSpace).Append('\n')
+                .Append(WhiteSpace).Append(RightSquareBar);
+        }
+        else
+        {
+            throw new NotImplementedException($"Unsupported combination of left and right bracket types for LaTeX conversion: {leftBracketType}, {rightBracketType}");
+        }
+    }
+
+    public static StringBuilder? ToLeftOrRightBracket(BracketSignType bracketType, StringBuilder? insideEquation)
+    {
+        if (bracketType == BracketSignType.LeftRound)
+        {
+            /// \left( a \right.
+            return Append(Left).Append('(').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightRound)
+        {
+            /// \left. a \right)
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(')');
+        }
+        else if (bracketType == BracketSignType.LeftSquare)
+        {
+            /// \left[ a \right.
+            return Append(Left).Append('[').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightSquare)
+        {
+            /// \left. a \right]
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation).Append(WhiteSpace)
+                .Append(Right).Append(']');
+        }
+        else if (bracketType == BracketSignType.LeftCurly)
+        {
+            /// \left\{ a \right.
+            return Append(Left).Append('\\').Append('{').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightCurly)
+        {
+            /// \left. a \right\}
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('\\').Append('}');
+        }
+        else if (bracketType == BracketSignType.LeftAngle)
+        {
+            /// \left\langle a \right.
+            return Append(Left).Append(Langle).Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightAngle)
+        {
+            /// \left. a \right\rangle 
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append(Rangle).Append(WhiteSpace);
+        }
+        else if (bracketType == BracketSignType.LeftBar)
+        {
+            /// \left| a \right.
+            return Append(Left).Append('|').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightBar)
+        {
+            /// \left. a \right|
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('|');
+        }
+        else if (bracketType == BracketSignType.LeftDoubleBar)
+        {
+            /// \left\| a \right.
+            return Append(Left).Append('\\').Append('|').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightDoubleBar)
+        {
+            /// \left. a \right\|
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append(Right).Append('\\').Append('|');
+        }
+        else if (bracketType == BracketSignType.LeftSquareBar)
+        {
+            /// \left[\kern-0.15em\left[ a 
+            ///  \right.
+            return Append(LeftSquareBar).Append(insideEquation).Append(WhiteSpace).Append('\n')
+                .Append(WhiteSpace).Append(Right).Append('.');
+        }
+        else if (bracketType == BracketSignType.RightSquareBar)
+        {
+            /// \left. a 
+            ///  \right]\kern-0.15em\right]
+            return Append(Left).Append('.').Append(WhiteSpace).Append(insideEquation)
+                .Append(WhiteSpace).Append('\n').Append(WhiteSpace).Append(RightSquareBar);
+        }
+        else
+        {
+            throw new NotImplementedException($"Unsupported left or right bracket types for LaTeX conversion: {bracketType}");
+        }
+    }
 }

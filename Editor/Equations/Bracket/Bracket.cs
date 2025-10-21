@@ -6,7 +6,7 @@ namespace Editor
     public abstract class Bracket : EquationContainer
     {
         protected RowContainer insideEq;
-        protected BracketSign bracketSign;
+        protected BracketSign bracketSign = null!;
         protected double ExtraHeight { get; set; }
 
         public Bracket(EquationContainer parent)

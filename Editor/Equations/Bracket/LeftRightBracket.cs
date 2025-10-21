@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Text;
+using System.Xml.Linq;
 
 namespace Editor
 {
@@ -29,6 +30,14 @@ namespace Editor
         {
             insideEq.DeSerialize(xElement.Element(insideEq.GetType().Name)!);
             CalculateSize();
+        }
+
+        public override StringBuilder? ToLatex()
+        {
+            return LatexConverter.ToLeftRightBracket(
+                bracketSign.SignType,
+                bracketSign2.SignType,
+                insideEq.ToLatex());
         }
 
         protected override void CalculateWidth()
