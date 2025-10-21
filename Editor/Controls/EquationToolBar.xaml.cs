@@ -461,15 +461,16 @@ public partial class EquationToolBar : UserControl
 
                               CreateImageUri("Decorated/Equation", "bottomDoubleArrow.png"),  //to be left empty
                               
-                              CreateImageUri("Decorated/Equation", "cross.png"),
-                              CreateImageUri("Decorated/Equation", "leftCross.png"),
-                              CreateImageUri("Decorated/Equation", "rightCross.png"),
                               CreateImageUri("Decorated/Equation", "strikeThrough.png"),
+                              CreateImageUri("Decorated/Equation", "cross.png"),
+                              CreateImageUri("Decorated/Equation", "rightCross.png"),
+                              CreateImageUri("Decorated/Equation", "leftCross.png"),
                            ];
         CommandType[] commands = [.. Enumerable.Repeat(CommandType.Decorated, imageUris.Length)];
         commands[11] = CommandType.None; //empty cell
         commands[19] = CommandType.None; //empty cell
 
+        // TODO: Remove object[] and use class
         object[] paramz = [
                               new object [] {DecorationType.Tilde,                  Position.Top },
                               new object [] {DecorationType.Hat,                    Position.Top },
@@ -491,10 +492,10 @@ public partial class EquationToolBar : UserControl
                               new object [] {DecorationType.LeftHarpoonDownBarb,    Position.Bottom },
                               new object [] {DecorationType.DoubleArrow,            Position.Bottom },
                               0, //empty cell
-                              new object [] {DecorationType.Cross,          Position.Middle },
-                              new object [] {DecorationType.LeftCross,      Position.Middle },
-                              new object [] {DecorationType.RightCross,     Position.Middle },
                               new object [] {DecorationType.StrikeThrough,  Position.Middle },
+                              new object [] {DecorationType.Cross,          Position.Middle },
+                              new object [] {DecorationType.RightCross,     Position.Middle },
+                              new object [] {DecorationType.LeftCross,      Position.Middle },
                           ];
         CreateImagePanel(imageUris, commands, paramz, decoratedEquationButton, 4);
     }

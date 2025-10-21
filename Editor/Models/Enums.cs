@@ -73,7 +73,7 @@ public enum DecorationType
     Bar, DoubleBar, RightArrow, LeftArrow,
     RightHarpoonUpBarb, LeftHarpoonUpBarb, DoubleArrow,
     RightHarpoonDownBarb, LeftHarpoonDownBarb,
-    Cross, LeftCross, RightCross, StrikeThrough
+    StrikeThrough, Cross, RightCross, LeftCross
 }
 
 public enum SignCompositeSymbol
