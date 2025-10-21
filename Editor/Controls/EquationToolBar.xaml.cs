@@ -114,43 +114,43 @@ public partial class EquationToolBar : UserControl
     private void CreateBracketsPanel()
     {
         Uri[] imageUris = [
+            CreateImageUri("Brackets", "Parentheses.png"),
+            CreateImageUri("Brackets", "SquareBracket.png"),
+            CreateImageUri("Brackets", "CurlyBracket.png"),
+            CreateImageUri("Brackets", "PointingAngles.png"),
+
             CreateImageUri("Brackets", "SingleBar.png"),
             CreateImageUri("Brackets", "DoubleBar.png"),
             CreateImageUri("Brackets", "Floor.png"),
             CreateImageUri("Brackets", "Ceiling.png"),
 
-            CreateImageUri("Brackets", "CurlyBracket.png"),
-            CreateImageUri("Brackets", "RightRightSquareBracket.png"),
-            CreateImageUri("Brackets", "Parentheses.png"),
-            CreateImageUri("Brackets", "SquareBracket.png"),
-
-            CreateImageUri("Brackets", "AngleBar.png"),
-            CreateImageUri("Brackets", "BarAngle.png"),
-            CreateImageUri("Brackets", "SquareBar.png"),
-            CreateImageUri("Brackets", "ParenthesisSquare.png"),
-
             CreateImageUri("Brackets", "SquareParenthesis.png"),
-            CreateImageUri("Brackets", "LeftLeftSquareBracket.png"),
-            CreateImageUri("Brackets", "PointingAngles.png"),
-            CreateImageUri("Brackets", "RightLeftSquareBracket.png"),
+            CreateImageUri("Brackets", "ParenthesisSquare.png"),
+            CreateImageUri("Brackets", "BarAngle.png"),
+            CreateImageUri("Brackets", "AngleBar.png"),
 
-            CreateImageUri("Brackets", "LeftCurlyBracket.png"),
-            CreateImageUri("Brackets", "RightCurlyBracket.png"),
-            CreateImageUri("Brackets", "LeftDoubleBar.png"),
-            CreateImageUri("Brackets", "RightDoubleBar.png"),
+            CreateImageUri("Brackets", "LeftLeftSquareBracket.png"),
+            CreateImageUri("Brackets", "RightRightSquareBracket.png"),
+            CreateImageUri("Brackets", "RightLeftSquareBracket.png"),
+            CreateImageUri("Brackets", "SquareBar.png"),
 
             CreateImageUri("Brackets", "LeftParenthesis.png"),
             CreateImageUri("Brackets", "RightParenthesis.png"),
-            CreateImageUri("Brackets", "LeftSquareBar.png"),
-            CreateImageUri("Brackets", "RightSquareBar.png"),
-
             CreateImageUri("Brackets", "LeftSquareBracket.png"),
             CreateImageUri("Brackets", "RightSquareBracket.png"),
+
+            CreateImageUri("Brackets", "LeftCurlyBracket.png"),
+            CreateImageUri("Brackets", "RightCurlyBracket.png"),
             CreateImageUri("Brackets", "LeftAngle.png"),
             CreateImageUri("Brackets", "RightAngle.png"),
 
             CreateImageUri("Brackets", "LeftBar.png"),
             CreateImageUri("Brackets", "RightBar.png"),
+            CreateImageUri("Brackets", "LeftDoubleBar.png"),
+            CreateImageUri("Brackets", "RightDoubleBar.png"),
+
+            CreateImageUri("Brackets", "LeftSquareBar.png"),
+            CreateImageUri("Brackets", "RightSquareBar.png"),
             CreateImageUri("Brackets", "DoubleArrowBarBracket.png"),
             CreateImageUri("Brackets", "DoubleArrowBarBracket.png"),  //empty cell
 
@@ -188,43 +188,43 @@ public partial class EquationToolBar : UserControl
             CommandType.TopBracket, CommandType.BottomBracket,
             ];
         object[] paramz = [
+            new BracketSignType [] {BracketSignType.LeftRound,     BracketSignType.RightRound},
+            new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.RightSquare},
+            new BracketSignType [] {BracketSignType.LeftCurly,     BracketSignType.RightCurly},
+            new BracketSignType [] {BracketSignType.LeftAngle,     BracketSignType.RightAngle},
+
             new BracketSignType [] {BracketSignType.LeftBar,       BracketSignType.RightBar},
             new BracketSignType [] {BracketSignType.LeftDoubleBar, BracketSignType.RightDoubleBar},
             new BracketSignType [] {BracketSignType.LeftFloor,     BracketSignType.RightFloor},
             new BracketSignType [] {BracketSignType.LeftCeiling,   BracketSignType.RightCeiling},
 
-            new BracketSignType [] {BracketSignType.LeftCurly,     BracketSignType.RightCurly},
-            new BracketSignType [] {BracketSignType.RightSquare,   BracketSignType.RightSquare},
-            new BracketSignType [] {BracketSignType.LeftRound,     BracketSignType.RightRound},
-            new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.RightSquare},
-
-            new BracketSignType [] {BracketSignType.LeftAngle,     BracketSignType.RightBar},
-            new BracketSignType [] {BracketSignType.LeftBar,       BracketSignType.RightAngle},
-            new BracketSignType [] {BracketSignType.LeftSquareBar, BracketSignType.RightSquareBar},
-            new BracketSignType [] {BracketSignType.LeftRound,     BracketSignType.RightSquare},
-
             new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.RightRound},
-            new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.LeftSquare},
-            new BracketSignType [] {BracketSignType.LeftAngle,     BracketSignType.RightAngle},
-            new BracketSignType [] {BracketSignType.RightSquare,   BracketSignType.LeftSquare},
+            new BracketSignType [] {BracketSignType.LeftRound,     BracketSignType.RightSquare},
+            new BracketSignType [] {BracketSignType.LeftBar,       BracketSignType.RightAngle},
+            new BracketSignType [] {BracketSignType.LeftAngle,     BracketSignType.RightBar},
 
-            BracketSignType.LeftCurly,
-            BracketSignType.RightCurly,
-            BracketSignType.LeftDoubleBar,
-            BracketSignType.RightDoubleBar,
+            new BracketSignType [] {BracketSignType.LeftSquare,    BracketSignType.LeftSquare},
+            new BracketSignType [] {BracketSignType.RightSquare,   BracketSignType.RightSquare},
+            new BracketSignType [] {BracketSignType.RightSquare,   BracketSignType.LeftSquare},
+            new BracketSignType [] {BracketSignType.LeftSquareBar, BracketSignType.RightSquareBar},
 
             BracketSignType.LeftRound,
             BracketSignType.RightRound,
-            BracketSignType.LeftSquareBar,
-            BracketSignType.RightSquareBar,
-
             BracketSignType.LeftSquare,
             BracketSignType.RightSquare,
+
+            BracketSignType.LeftCurly,
+            BracketSignType.RightCurly,
             BracketSignType.LeftAngle,
             BracketSignType.RightAngle,
 
             BracketSignType.LeftBar,
             BracketSignType.RightBar,
+            BracketSignType.LeftDoubleBar,
+            BracketSignType.RightDoubleBar,
+
+            BracketSignType.LeftSquareBar,
+            BracketSignType.RightSquareBar,
             0,
             0,  //empty cell
 
