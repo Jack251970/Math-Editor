@@ -46,6 +46,8 @@ public static class LatexConverter
 
     #endregion
 
+    #region Convert to Latex Symbol
+
     /// <summary>
     /// Convert to latex symbol.
     /// </summary>
@@ -94,6 +96,74 @@ public static class LatexConverter
         return escaped;
     }
 
+    /// <summary>
+    /// Converts a string to its Latex representation.
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="convertWrapper"></param>
+    /// <returns></returns>
+    public static StringBuilder? ConvertToLatexSymbol(string str, bool convertWrapper)
+    {
+        var sb = new StringBuilder();
+        foreach (var c in str)
+        {
+            sb.Append(ConvertToLatexSymbol(c, convertWrapper));
+        }
+        return sb;
+    }
+
+    /// <summary>
+    /// Converts a character to its Latex representation.
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="convertWrapper"></param>
+    /// <returns></returns>
+    private static readonly Dictionary<char, char[]> LatexSymbolMapping = new()
+    {
+        { '{', ToChars("\\{ ") },
+        { '}', ToChars("\\} ") },
+        { '\u2211', ToChars("\\sum") }, // ∑
+        { '\u220F', ToChars("\\prod") }, // ∏
+        { '\u2210', ToChars("\\coprod") }, // ∐
+        { '\u22C2', ToChars("\\bigcap") }, // ⋂
+        { '\u22C3', ToChars("\\bigcup") }, // ⋃
+        { '\u222B', ToChars("\\int") }, // ∫
+        { '\u222C', ToChars("\\iint") }, // ∬
+        { '\u222D', ToChars("\\iiint") }, // ∭
+        { '\u222E', ToChars("\\oint") }, // ∮
+        { '\u222F', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}") }, // ∯
+        { '\u2230', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}") }, // ∰
+        { '\u2232', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}") }, // ∲
+        { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
+    };
+    private static readonly char[] EscapedLeftBrace = ToChars("\\{ ");
+    private static readonly char[] EscapedRightBrace = ToChars("\\} ");
+    private static readonly char[] LeftBrace = ToChars("{");
+    private static readonly char[] RightBrace = ToChars("}");
+    private static char[] ConvertToLatexSymbol(char c, bool convertWrapper)
+    {
+        if (c == '{')
+        {
+            return convertWrapper ? EscapedLeftBrace : LeftBrace;
+        }
+        else if (c == '}')
+        {
+            return convertWrapper ? EscapedRightBrace : RightBrace;
+        }
+        else if (LatexSymbolMapping.TryGetValue(c, out var symbol))
+        {
+            return symbol;
+        }
+        else
+        {
+            return [c];
+        }
+    }
+
+    #endregion
+
+    #region Escape Rows
+
     private static readonly char[] BeginArray = ToChars("\\begin{array}{l}");
     private static readonly char[] EndArray = ToChars("\\end{array}");
     private static readonly char[] RowSeparator = ToChars("\\\\");
@@ -139,68 +209,9 @@ public static class LatexConverter
         return escaped;
     }
 
-    /// <summary>
-    /// Converts a string to its Latex representation.
-    /// </summary>
-    /// <param name="str"></param>
-    /// <param name="convertWrapper"></param>
-    /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(string str, bool convertWrapper)
-    {
-        var sb = new StringBuilder();
-        foreach (var c in str)
-        {
-            sb.Append(ConvertToLatexSymbol(c, convertWrapper));
-        }
-        return sb;
-    }
+    #endregion
 
-    /// <summary>
-    /// Converts a character to its Latex representation.
-    /// </summary>
-    /// <param name="c"></param>
-    /// <param name="convertWrapper"></param>
-    /// <returns></returns>
-    private static readonly char[] Sum = ToChars("\\sum");
-    private static readonly char[] Prod = ToChars("\\prod");
-    private static readonly char[] CoProd = ToChars("\\coprod");
-    private static readonly char[] BigCap = ToChars("\\bigcap");
-    private static readonly char[] BigCup = ToChars("\\bigcup");
-    private static readonly char[] Int = ToChars("\\int");
-    private static readonly char[] IInt = ToChars("\\iint");
-    private static readonly char[] IIInt = ToChars("\\iiint");
-    private static readonly char[] OInt = ToChars("\\oint");
-    private static readonly char[] IntBigCirc = ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}");
-    private static readonly char[] IntBigOdot = ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}");
-    private static readonly char[] IntCircleArrowLeft = ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}");
-    private static readonly char[] IntCircleArrowRight = ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}");
-    private static readonly char[] EscapedLeftBrace = ToChars("\\{ ");
-    private static readonly char[] EscapedRightBrace = ToChars("\\} ");
-    private static readonly char[] LeftBrace = ToChars("{");
-    private static readonly char[] RightBrace = ToChars("}");
-    private static char[] ConvertToLatexSymbol(char c, bool convertWrapper)
-    {
-        return c switch
-        {
-            // TODO: Handle more special characters for Latex
-            '{' => convertWrapper ? EscapedLeftBrace : LeftBrace,
-            '}' => convertWrapper ? EscapedRightBrace : RightBrace,
-            '\u2211' => Sum, // ∑
-            '\u220F' => Prod, // ∏
-            '\u2210' => CoProd, // ∐
-            '\u22C2' => BigCap, // ⋂
-            '\u22C3' => BigCup, // ⋃
-            '\u222B' => Int, // ∫
-            '\u222C' => IInt, // ∬
-            '\u222D' => IIInt, // ∭
-            '\u222E' => OInt, // ∮
-            '\u222F' => IntBigCirc, // ∯
-            '\u2230' => IntBigOdot, // ∰
-            '\u2232' => IntCircleArrowLeft, // ∲
-            '\u2233' => IntCircleArrowRight, // ∳
-            _ => [c],
-        };
-    }
+    #region Convert Equations
 
     private static readonly char[] SquareRoot = ToChars("\\sqrt");
     public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
@@ -1028,4 +1039,6 @@ public static class LatexConverter
             throw new NotImplementedException($"Unsupported left or right bracket types for LaTeX conversion: {bracketType}");
         }
     }
+
+    #endregion
 }
