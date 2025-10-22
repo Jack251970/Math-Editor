@@ -23,6 +23,9 @@ public static class Constants
     private static readonly string ImagesDirectory = Path.Combine(ProgramDirectory, Images);
     public static readonly string AppIcon = Path.Combine(ImagesDirectory, "icon.png");
 
+    private static readonly string ResourcesDirectory = Path.Combine(ProgramDirectory, "Resources");
+    public static readonly string Latex2UnicodePath = Path.Combine(ResourcesDirectory, "unicode2latex.json");
+
     public const string Settings = "Settings";
     public const string Logs = "Logs";
 

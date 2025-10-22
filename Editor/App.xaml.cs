@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Editor;
@@ -49,10 +50,14 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        LatexConverter.LoadPredefinedLatexUnicodeMapping();
+
         var strings = Environment.GetCommandLineArgs();
         var fileName = strings.Length > 1 ? strings[1] : string.Empty;
         Current.MainWindow = new MainWindow(fileName);
         Current.MainWindow.Show();
+
+        _ = Task.Run(LatexConverter.LoadUserUnicodeMapping);
     }
 
     public void OnSecondAppStarted()

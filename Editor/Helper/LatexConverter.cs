@@ -1,13 +1,78 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using iNKORE.UI.WPF.Modern.Controls;
+using System.Text.Json;
+using System.Threading.Tasks;
+using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
 // TODO: Convert to non-static and use App.LatexConverter?
 public static class LatexConverter
 {
+    #region Initialization
+
+    private static readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
+
+    public static void LoadPredefinedLatexUnicodeMapping()
+    {
+        foreach (var kvp in PredefinedLatexSymbolMapping)
+        {
+            LatexSymbolMapping.TryAdd(kvp.Key, kvp.Value);
+        }
+        try
+        {
+            var latexMappingJson = File.ReadAllText(Constants.Latex2UnicodePath);
+            var latexMapping = JsonSerializer.Deserialize<Dictionary<string, string>>(latexMappingJson);
+            LoadMapping(latexMapping!);
+        }
+        catch (FileNotFoundException ex)
+        {
+            MessageBox.Show($"Latex to Unicode mapping file not found: {Constants.Latex2UnicodePath}.\n{ex.Message}\n" +
+                $"Some Unicode characters may not be copied as Latex.", "Initialization Error");
+        }
+        catch (JsonException ex)
+        {
+            MessageBox.Show($"Failed to parse Latex to Unicode mapping from {Constants.Latex2UnicodePath}.\n{ex.Message}\n" +
+                $"Some Unicode characters may not be copied as Latex.", "Initialization Error");
+        }
+        catch (IOException ex)
+        {
+            MessageBox.Show($"I/O error while loading Latex to Unicode mapping from {Constants.Latex2UnicodePath}.\n{ex.Message}\n" +
+                $"Some Unicode characters may not be copied as Latex.", "Initialization Error");
+        }
+
+        catch (Exception)
+        {
+            MessageBox.Show($"Failed to load Latex to Unicode mapping from {Constants.Latex2UnicodePath}.\n" +
+                $"Some Unicode character may cannot be copied as Latex.", "Initialization Error");
+        }
+    }
+
+    public static void LoadUserUnicodeMapping()
+    {
+        // TODO: Add support for user-defined Latex to Unicode mapping
+    }
+
+    private static void LoadMapping(Dictionary<string, string> mapping)
+    {
+        Parallel.ForEach(mapping, kvp =>
+        {
+            if (kvp.Value.Length == 1)
+            {
+                LatexSymbolMapping.TryAdd(kvp.Value[0], ToChars(kvp.Key));
+            }
+            else
+            {
+                // TODO: Add support for multi-character Unicode mappings
+            }
+        });
+    }
+
+    #endregion
+
     #region Helpers
 
     private const char WhiteSpace = ' ';
@@ -118,7 +183,7 @@ public static class LatexConverter
     /// <param name="c"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    private static readonly Dictionary<char, char[]> LatexSymbolMapping = new()
+    private static readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
     {
         { '{', ToChars("\\{ ") },
         { '}', ToChars("\\} ") },
@@ -135,6 +200,7 @@ public static class LatexConverter
         { '\u2230', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}") }, // ∰
         { '\u2232', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}") }, // ∲
         { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
+        { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
     };
     private static readonly char[] EscapedLeftBrace = ToChars("\\{ ");
     private static readonly char[] EscapedRightBrace = ToChars("\\} ");
