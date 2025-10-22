@@ -94,7 +94,7 @@ public partial class CharacterToolBar : UserControl
     private void CreateSymbolsPanel()
     {
         string[] items = [
-            "\u00d7", "-", "\u2013", "\u2012", "\u2014", "\u00b7", "\u00f7", "\u00b1",
+            "\u00d7", "\u002d", "\u2013", "\u2012", "\u2014", "\u00b7", "\u00f7", "\u00b1",
             "\u00bd", "\u00bc", "\u00be", "\u2200", "\u2202", "\u2203", "\u2204",
             "\u2205", "\u2208", "\u2209", "\u220B", "\u220C", "\u220F", "\u2210",
             "\u2211", "\u2217", "\u221A", "\u221D", "\u221E", "\u2227", "\u2228",
