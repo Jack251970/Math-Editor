@@ -19,7 +19,7 @@ namespace Editor
         private readonly string sessionString = Guid.NewGuid().ToString();
 
         public EquationRoot(Caret vCaret, Caret hCaret)
-            : base(null)
+            : base(null!)
         {
             ApplySymbolGap = true;
             _vCaret = vCaret;
@@ -55,13 +55,13 @@ namespace Editor
             UndoManager.ClearAll();
             DeSelect();
             var xDoc = XDocument.Load(stream, LoadOptions.PreserveWhitespace);
-            XElement? root = xDoc.Root ?? throw new InvalidOperationException("File is empty or corrupted.");
+            var root = xDoc.Root ?? throw new InvalidOperationException("File is empty or corrupted.");
             XAttribute fileVersionAttribute;
             XAttribute appVersionAttribute;
 
             if (root.Name == GetType().Name)
             {
-                XElement formattingElement = root.Element("TextManager")!;
+                var formattingElement = root.Element("TextManager")!;
                 TextManager.DeSerialize(formattingElement);
                 fileVersionAttribute = root.Attributes("fileVersion").First();
                 appVersionAttribute = root.Attributes("appVersion").First();
@@ -72,7 +72,7 @@ namespace Editor
                 fileVersionAttribute = root.Attributes("fileVersion").First();
                 appVersionAttribute = root.Attributes("appVersion").First();
             }
-            string appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
+            var appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
             if (fileVersionAttribute == null || fileVersionAttribute.Value != fileVersion)
             {
                 MessageBox.Show("The file was created by a different version (v." + appVersion + ") of Math Editor and uses a different format." + Environment.NewLine + Environment.NewLine +
@@ -131,7 +131,7 @@ namespace Editor
             }
             else
             {
-                int undoCount = UndoManager.UndoCount + 1;
+                var undoCount = UndoManager.UndoCount + 1;
                 if (IsSelecting)
                 {
                     ActiveChild.RemoveSelection(true);
@@ -151,14 +151,14 @@ namespace Editor
         {
             _vCaret.Location = ActiveChild.GetVerticalCaretLocation();
             _vCaret.CaretLength = ActiveChild.GetVerticalCaretLength();
-            EquationContainer innerMost = ((RowContainer)ActiveChild).GetInnerMostEquationContainer();
+            var innerMost = ((RowContainer)ActiveChild).GetInnerMostEquationContainer();
             _hCaret.Location = innerMost.GetHorizontalCaretLocation();
             _hCaret.CaretLength = innerMost.GetHorizontalCaretLength();
         }
 
         public override CopyDataObject Copy(bool removeSelection)
         {
-            CopyDataObject? temp = base.Copy(removeSelection) ??
+            var temp = base.Copy(removeSelection) ??
                 throw new InvalidOperationException("Copy failed in EquationRoot.");
 
             // Prepare data object for clipboard
@@ -198,12 +198,12 @@ namespace Editor
             {
                 TextManager.ProcessPastedXML(xe);
             }
-            int undoCount = UndoManager.UndoCount + 1;
+            var undoCount = UndoManager.UndoCount + 1;
             if (IsSelecting)
             {
                 ActiveChild.RemoveSelection(true);
             }
-            ActiveChild.Paste(xe.Element("payload").Elements().First());
+            ActiveChild.Paste(xe.Element("payload")!.Elements().First());
             if (IsSelecting && undoCount < UndoManager.UndoCount)
             {
                 UndoManager.ChangeUndoCountOfLastAction(1);
@@ -215,10 +215,10 @@ namespace Editor
 
         public bool PasteFromClipBoard()
         {
-            bool success = false;
+            var success = false;
             MathEditorData? data = null;
-            string text = "";
-            for (int i = 0; i < 3; i++)
+            var text = "";
+            for (var i = 0; i < 3; i++)
             {
                 try
                 {
@@ -261,7 +261,7 @@ namespace Editor
 
         public override void ConsumeText(string text)
         {
-            int undoCount = UndoManager.UndoCount + 1;
+            var undoCount = UndoManager.UndoCount + 1;
             if (IsSelecting)
             {
                 ActiveChild.RemoveSelection(true);
@@ -292,9 +292,9 @@ namespace Editor
 
         public void SaveImageToFile(string path)
         {
-            string extension = Path.GetExtension(path).ToLower();
+            var extension = Path.GetExtension(path).ToLower();
             var dv = new DrawingVisual();
-            using (DrawingContext dc = dv.RenderOpen())
+            using (var dc = dv.RenderOpen())
             {
                 if (extension is ".bmp" or "jpg")
                 {
@@ -304,28 +304,16 @@ namespace Editor
             }
             var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)), (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
             bitmap.Render(dv);
-            BitmapEncoder encoder = null;
-            switch (extension)
+            BitmapEncoder encoder = extension switch
             {
-                case ".jpg":
-                    encoder = new JpegBitmapEncoder();
-                    break;
-                case ".gif":
-                    encoder = new GifBitmapEncoder();
-                    break;
-                case ".bmp":
-                    encoder = new BmpBitmapEncoder();
-                    break;
-                case ".png":
-                    encoder = new PngBitmapEncoder();
-                    break;
-                case ".wdp":
-                    encoder = new WmpBitmapEncoder();
-                    break;
-                case ".tif":
-                    encoder = new TiffBitmapEncoder();
-                    break;
-            }
+                ".jpg" => new JpegBitmapEncoder(),
+                ".gif" => new GifBitmapEncoder(),
+                ".bmp" => new BmpBitmapEncoder(),
+                ".png" => new PngBitmapEncoder(),
+                ".wdp" => new WmpBitmapEncoder(),
+                ".tif" => new TiffBitmapEncoder(),
+                _ => throw new InvalidOperationException("Unsupported image format."),
+            };
             try
             {
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
@@ -352,7 +340,7 @@ namespace Editor
                 return true;
             }
             Key[] handledKeys = [Key.Left, Key.Right, Key.Delete, Key.Up, Key.Down, Key.Enter, Key.Escape, Key.Back, Key.Home, Key.End];
-            bool result = false;
+            var result = false;
             if (handledKeys.Contains(key))
             {
                 result = true;

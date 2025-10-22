@@ -5,11 +5,12 @@ namespace Editor
 {
     public sealed class DecoratedCharacter : EquationBase
     {
-        List<CharacterDecorationInfo> decorations = [];
-        FormattedText charFt;
+        private readonly List<CharacterDecorationInfo> decorations = [];
+        private readonly FormattedText charFt;
         public TextEquation Previous { get; set; }
         public TextEquation Next { get; set; }
 
+        [System.Obsolete]
         public DecoratedCharacter(EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
             : base(parent)
         {
@@ -25,13 +26,8 @@ namespace Editor
         {
             base.DrawEquation(dc);
             charFt.DrawTextLeftAligned(dc, Location);
-            int done = 0;
-            double left = Left;
-            double hCenter;
-            FormattedText ft = null;
-            string text = "";
-            int count;
-            for (int i = 0; i < decorations.Count; i++)
+            var left = Left;
+            for (var i = 0; i < decorations.Count; i++)
             {
                 //var item = decorations[i];
                 //var charFt = textManager.GetFormattedText(character, 0);

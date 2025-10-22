@@ -129,7 +129,7 @@ public partial class EditorControl : UserControl, IDisposable
             var outputStream = new MemoryStream();
             if (zipEntry != null)
             {
-                byte[] buffer = new byte[4096];
+                var buffer = new byte[4096];
                 StreamUtils.Copy(zipInputStream, outputStream, buffer);
             }
             outputStream.Position = 0;
@@ -231,7 +231,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     private void EditorControl_KeyDown(object sender, KeyEventArgs e)
     {
-        bool handled = false;
+        var handled = false;
         if (e.Key == Key.Tab)
         {
             equationRoot.ConsumeText("    ");
@@ -266,14 +266,14 @@ public partial class EditorControl : UserControl, IDisposable
     {
         if (Parent is ScrollViewer scrollViewer)
         {
-            double left = scrollViewer.HorizontalOffset;
-            double top = scrollViewer.VerticalOffset;
-            double right = scrollViewer.ViewportWidth + scrollViewer.HorizontalOffset;
-            double bottom = scrollViewer.ViewportHeight + scrollViewer.VerticalOffset;
+            var left = scrollViewer.HorizontalOffset;
+            var top = scrollViewer.VerticalOffset;
+            var right = scrollViewer.ViewportWidth + scrollViewer.HorizontalOffset;
+            var bottom = scrollViewer.ViewportHeight + scrollViewer.VerticalOffset;
             double hOffset = 0;
             double vOffset = 0;
-            bool rightDone = false;
-            bool bottomDone = false;
+            var rightDone = false;
+            var bottomDone = false;
             while (vCaret.Left > right - 8)
             {
                 hOffset += 8;

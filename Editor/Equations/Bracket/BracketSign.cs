@@ -163,13 +163,13 @@ namespace Editor
             {
                 case BracketSignType.LeftRound:
                 case BracketSignType.RightRound:
-                    width = signText.GetFullWidth();
+                    width = signText!.GetFullWidth();
                     break;
                 case BracketSignType.LeftCurly:
                 case BracketSignType.RightCurly:
                     if (Height < BracketBreakLimit)
                     {
-                        width = signText.GetFullWidth();
+                        width = signText!.GetFullWidth();
                     }
                     else
                     {
@@ -376,11 +376,11 @@ namespace Editor
             {
                 if (SignType == BracketSignType.LeftRound)
                 {
-                    signText.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
+                    signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
                 }
                 else
                 {
-                    signText.DrawTextTopRightAligned(dc, new Point(SignRight, Top));
+                    signText!.DrawTextTopRightAligned(dc, new Point(SignRight, Top));
                 }
             }
             else
@@ -388,12 +388,12 @@ namespace Editor
                 if (SignType == BracketSignType.LeftRound)
                 {
                     var left = Math.Floor(SignLeft);
-                    signText.DrawTextTopLeftAligned(dc, new Point(left, Top));
-                    signText2.DrawTextBottomLeftAligned(dc, new Point(left, Bottom));
-                    var top = Top + signText.Extent * .9;
-                    var bottom = Bottom - signText2.Extent * .9;
+                    signText!.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                    signText2!.DrawTextBottomLeftAligned(dc, new Point(left, Bottom));
+                    var top = Top + signText!.Extent * .9;
+                    var bottom = Bottom - signText2!.Extent * .9;
                     //double topExtra = extension.Height + extension.OverhangAfter - extension.Extent;
-                    var padding = extension.OverhangLeading;
+                    var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
                     PointCollection points = [ new Point(geometry.Bounds.Right, top),
@@ -447,11 +447,11 @@ namespace Editor
                 }
                 else
                 {
-                    signText.DrawTextTopRightAligned(dc, new Point(SignRight, Top));
-                    signText2.DrawTextBottomRightAligned(dc, new Point(SignRight, Bottom));
-                    var top = Top + signText.Extent * .9;
-                    var bottom = Bottom - signText2.Extent * .9;
-                    var geometry = extension.BuildGeometry(new Point(SignRight - extension.GetFullWidth() - extension.OverhangLeading, 0));
+                    signText!.DrawTextTopRightAligned(dc, new Point(SignRight, Top));
+                    signText2!.DrawTextBottomRightAligned(dc, new Point(SignRight, Bottom));
+                    var top = Top + signText!.Extent * .9;
+                    var bottom = Bottom - signText2!.Extent * .9;
+                    var geometry = extension!.BuildGeometry(new Point(SignRight - extension.GetFullWidth() - extension.OverhangLeading, 0));
 
                     PointCollection points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
@@ -488,22 +488,22 @@ namespace Editor
         {
             if (Height < BracketBreakLimit)
             {
-                signText.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
+                signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
             }
             else
             {
                 if (SignType == BracketSignType.LeftCurly)
                 {
-                    var left = SignLeft + midText.GetFullWidth() - extension.GetFullWidth();
-                    signText.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                    var left = SignLeft + midText!.GetFullWidth() - extension!.GetFullWidth();
+                    signText!.DrawTextTopLeftAligned(dc, new Point(left, Top));
                     //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(left, Top), new Point(left, Bottom));
-                    midText.DrawTextTopLeftAligned(dc, new Point(SignLeft, MidY - midText.Extent / 2));
-                    signText2.DrawTextBottomLeftAligned(dc, new Point(left, Bottom));
-                    var top = Top + signText.Extent * .9;
+                    midText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, MidY - midText!.Extent / 2));
+                    signText2!.DrawTextBottomLeftAligned(dc, new Point(left, Bottom));
+                    var top = Top + signText!.Extent * .9;
                     var bottom = MidY - midText.Extent * .4;
 
 
-                    var padding = extension.OverhangLeading;
+                    var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
                     PointCollection points = [ new Point(geometry.Bounds.Right, top),
@@ -543,7 +543,7 @@ namespace Editor
                     //    }
                     //}
                     top = MidY + midText.Extent * .4;
-                    bottom = Bottom - signText2.Extent * .9;
+                    bottom = Bottom - signText2!.Extent * .9;
 
                     points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
@@ -569,14 +569,14 @@ namespace Editor
                 }
                 else
                 {
-                    var left = SignLeft + signText.GetFullWidth() - extension.GetFullWidth();
-                    signText.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
-                    midText.DrawTextTopLeftAligned(dc, new Point(left, MidY - midText.Extent / 2));
-                    signText2.DrawTextBottomLeftAligned(dc, new Point(SignLeft, Bottom));
-                    var top = Top + signText.Extent * .9;
+                    var left = SignLeft + signText!.GetFullWidth() - extension!.GetFullWidth();
+                    signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
+                    midText!.DrawTextTopLeftAligned(dc, new Point(left, MidY - midText!.Extent / 2));
+                    signText2!.DrawTextBottomLeftAligned(dc, new Point(SignLeft, Bottom));
+                    var top = Top + signText!.Extent * .9;
                     var bottom = MidY - midText.Extent * .4;
 
-                    var padding = extension.OverhangLeading;
+                    var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
                     PointCollection points = [ new Point(geometry.Bounds.Right, top),
@@ -606,7 +606,7 @@ namespace Editor
                     //    }
                     //}
                     top = MidY + midText.Extent * .4;
-                    bottom = Bottom - signText2.Extent * .9;
+                    bottom = Bottom - signText2!.Extent * .9;
                     points = [ new Point(geometry.Bounds.Right, top),
                                                                    new Point(geometry.Bounds.Right, bottom),
                                                                    new Point(geometry.Bounds.Left, bottom),

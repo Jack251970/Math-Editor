@@ -2,15 +2,15 @@
 {
     public sealed class EquationRowFormatAction : EquationAction
     {
-        public int SelectionStartIndex { get; set; }
-        public int SelectedItems { get; set; }
-        public int FirstChildSelectionStartIndex { get; set; }
-        public int FirstChildSelectedItems { get; set; }
-        public int LastChildSelectionStartIndex { get; set; }
-        public int LastChildSelectedItems { get; set; }
-        public string Operation { get; set; }
-        public string Argument { get; set; }
-        public bool Applied { get; set; }
+        public required int SelectionStartIndex { get; set; }
+        public required int SelectedItems { get; set; }
+        public required int FirstChildSelectionStartIndex { get; set; }
+        public required int FirstChildSelectedItems { get; set; }
+        public required int LastChildSelectionStartIndex { get; set; }
+        public required int LastChildSelectedItems { get; set; }
+        public required string Operation { get; set; }
+        public required string Argument { get; set; }
+        public required bool Applied { get; set; }
 
         public EquationRowFormatAction(ISupportsUndo executor)
             : base(executor)

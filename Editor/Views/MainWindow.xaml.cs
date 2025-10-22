@@ -17,7 +17,7 @@ public partial class MainWindow : Window
     private string _currentLocalFile = "";
     private const string MedExtension = "med";
     private static readonly string MedFileFilter = "Math Editor File (*." + MedExtension + ")|*." + MedExtension;
-    
+
     public MainWindow(string currentLocalFile)
     {
         _currentLocalFile = currentLocalFile;
@@ -198,7 +198,7 @@ public partial class MainWindow : Window
             CheckPathExists = true,
             Filter = MedFileFilter
         };
-        bool? result = ofd.ShowDialog();
+        var result = ofd.ShowDialog();
         if (result == true)
         {
             OpenFile(ofd.FileName);
@@ -254,7 +254,7 @@ public partial class MainWindow : Window
             DefaultExt = "." + extension,
             Filter = filter
         };
-        bool? result = sfd.ShowDialog(this);
+        var result = sfd.ShowDialog(this);
         if (result == true)
         {
             return Path.GetExtension(sfd.FileName) == "." + extension ? sfd.FileName : sfd.FileName + "." + extension;
@@ -361,7 +361,7 @@ public partial class MainWindow : Window
         var fileName = ShowSaveFileDialog(imageType, string.Format("Image File (*.{0})|*.{0}", imageType));
         if (!string.IsNullOrEmpty(fileName))
         {
-            string ext = Path.GetExtension(fileName);
+            var ext = Path.GetExtension(fileName);
             if (ext != "." + imageType)
                 fileName += "." + imageType;
             editor.ExportImage(fileName);
@@ -628,7 +628,7 @@ public partial class MainWindow : Window
         }
         else if (e.PropertyName == "FontType")
         {
-            string fontName = TextEquation.FontType.ToString();
+            var fontName = TextEquation.FontType.ToString();
             var t = equationFontCombo.Items;
             foreach (ComboBoxItem item in t)
             {

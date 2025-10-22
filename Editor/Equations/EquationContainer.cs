@@ -138,7 +138,7 @@ namespace Editor
 
         public override bool ConsumeKey(Key key)
         {
-            bool temp = ActiveChild.ConsumeKey(key);
+            var temp = ActiveChild.ConsumeKey(key);
             CalculateSize();
             return temp;
         }
@@ -213,7 +213,7 @@ namespace Editor
         {
             if (key == Key.Up)
             {
-                for (int i = childEquations.Count - 1; i >= 0; i--)
+                for (var i = childEquations.Count - 1; i >= 0; i--)
                 {
                     var type = childEquations[i].GetType();
                     if (type == typeof(RowContainer) || type == typeof(EquationRow))
@@ -226,7 +226,7 @@ namespace Editor
             }
             else
             {
-                for (int i = 0; i < childEquations.Count; i++)
+                for (var i = 0; i < childEquations.Count; i++)
                 {
                     var type = childEquations[i].GetType();
                     if (type == typeof(RowContainer) || type == typeof(EquationRow))
@@ -286,7 +286,7 @@ namespace Editor
                 var listFormats = eb.GetUsedTextFormats();
                 if (listFormats != null) //This check is necessary as the base returns 'null'
                 {
-                    foreach (int i in listFormats)
+                    foreach (var i in listFormats)
                     {
                         list.Add(i);
                     }

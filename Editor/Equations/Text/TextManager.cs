@@ -12,10 +12,10 @@ namespace Editor
     //Only those EquationBase classes should use it which are able to remeber the formats (as of May 15, 2013 only TextEquation)!!
     public sealed class TextManager
     {
-        List<TextFormat> formattingList = [];
-        List<TextDecorationCollection> decorations = [];
-        Dictionary<int, int> mapping = [];
-        List<TextFormat> formattingListBeforeSave = null;
+        private List<TextFormat> formattingList = [];
+        private readonly List<TextDecorationCollection> decorations = [];
+        private readonly Dictionary<int, int> mapping = [];
+        private List<TextFormat>? formattingListBeforeSave = null;
 
         public TextManager()
         {
@@ -30,10 +30,10 @@ namespace Editor
         {
             mapping.Clear();
             List<TextFormat> newList = [];
-            HashSet<int> usedOnes = root.GetUsedTextFormats();
-            foreach (int i in usedOnes)
+            var usedOnes = root.GetUsedTextFormats();
+            foreach (var i in usedOnes)
             {
-                TextFormat tf = formattingList[i];
+                var tf = formattingList[i];
                 tf.Index = newList.Count;
                 newList.Add(tf);
                 mapping.Add(i, tf.Index);
@@ -46,14 +46,14 @@ namespace Editor
         public void RestoreAfterSave(EquationRoot root)
         {
             Dictionary<int, int> oldMapping = [];
-            foreach (int i in mapping.Keys)
+            foreach (var i in mapping.Keys)
             {
                 oldMapping.Add(mapping[i], i);
-                TextFormat tf = formattingListBeforeSave[i];
+                var tf = formattingListBeforeSave![i];
                 tf.Index = i;
             }
             root.ResetTextFormats(oldMapping);
-            formattingList = formattingListBeforeSave;
+            formattingList = formattingListBeforeSave!;
         }
 
         public XElement Serialize(bool themeAwareBrush = false)
@@ -68,7 +68,7 @@ namespace Editor
             return thisElement;
         }
 
-        void AddToList(TextFormat tf)
+        private void AddToList(TextFormat tf)
         {
             tf.Index = formattingList.Count;
             formattingList.Add(tf);
@@ -87,29 +87,26 @@ namespace Editor
         public void ProcessPastedXML(XElement rootXE)
         {
             //XElement thisElement = rootXE.Element(GetType().Name);
-            XElement[] formatElements = [.. rootXE.Element(GetType().Name).Elements("Formats").Elements()];
-            IEnumerable<XElement> formats = rootXE.Descendants(typeof(TextEquation).Name).Descendants("Formats");
+            XElement[] formatElements = [.. rootXE.Element(GetType().Name)!.Elements("Formats").Elements()];
+            var formats = rootXE.Descendants(typeof(TextEquation).Name).Descendants("Formats");
             Dictionary<int, int> allFormatIds = [];
-            foreach (XElement xe in formats)
+            foreach (var xe in formats)
             {
                 if (xe.Value.Length > 0)
                 {
-                    string[] formatStrings = xe.Value.Split(',');
-                    foreach (string s in formatStrings)
+                    var formatStrings = xe.Value.Split(',');
+                    foreach (var s in formatStrings)
                     {
-                        int id = int.Parse(s);
-                        if (!allFormatIds.ContainsKey(id))
-                        {
-                            allFormatIds.Add(id, id);
-                        }
+                        var id = int.Parse(s);
+                        allFormatIds.TryAdd(id, id);
                     }
                 }
             }
-            for (int i = 0; i < allFormatIds.Count; i++)
+            for (var i = 0; i < allFormatIds.Count; i++)
             {
-                int key = allFormatIds.ElementAt(i).Key;
-                TextFormat tf = TextFormat.DeSerialize(formatElements[key]);
-                TextFormat match = formattingList.Where(x =>
+                var key = allFormatIds.ElementAt(i).Key;
+                var tf = TextFormat.DeSerialize(formatElements[key]);
+                var match = formattingList.Where(x =>
                     {
                         return x.FontSize == Math.Round(tf.FontSize, 1) &&
                                x.FontType == tf.FontType &&
@@ -120,7 +117,7 @@ namespace Editor
 
                     }).FirstOrDefault();
 
-                int newValue = 0;
+                var newValue = 0;
                 if (match == null)
                 {
                     AddToList(tf);
@@ -132,19 +129,19 @@ namespace Editor
                 }
                 allFormatIds[key] = newValue;
             }
-            IEnumerable<XElement> textElements = rootXE.Descendants(typeof(TextEquation).Name);
-            foreach (XElement xe in textElements)
+            var textElements = rootXE.Descendants(typeof(TextEquation).Name);
+            foreach (var xe in textElements)
             {
-                XElement formatsElement = xe.Elements("Formats").FirstOrDefault();
+                var formatsElement = xe.Elements("Formats").FirstOrDefault();
                 if (formatsElement != null)
                 {
-                    StringBuilder strBuilder = new StringBuilder();
-                    string[] formatStrings = formatsElement.Value.Split(',');
-                    foreach (string s in formatStrings)
+                    var strBuilder = new StringBuilder();
+                    var formatStrings = formatsElement.Value.Split(',');
+                    foreach (var s in formatStrings)
                     {
                         if (s.Length > 0)
                         {
-                            int id = int.Parse(s);
+                            var id = int.Parse(s);
                             strBuilder.Append(allFormatIds[id] + ",");
                         }
                     }
@@ -159,8 +156,8 @@ namespace Editor
 
         public int GetFormatId(double fontSize, FontType fontType, FontStyle fontStyle, FontWeight fontWeight, SolidColorBrush textBrush, bool useUnderline)
         {
-            double num = Math.Round(fontSize, 1);
-            TextFormat tf = formattingList.Where(x =>
+            var num = Math.Round(fontSize, 1);
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == Math.Round(fontSize, 1) &&
                        x.FontType == fontType &&
@@ -180,9 +177,9 @@ namespace Editor
 
         public int GetFormatIdForNewFont(int oldId, FontType fontType)
         {
-            TextFormat oldFormat = formattingList[oldId];
+            var oldFormat = formattingList[oldId];
 
-            TextFormat tf = formattingList.Where(x =>
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == oldFormat.FontSize &&
                        x.FontType == fontType &&
@@ -202,9 +199,9 @@ namespace Editor
 
         public int GetFormatIdForNewSolidBrush(int oldId, SolidColorBrush brush)
         {
-            TextFormat oldFormat = formattingList[oldId];
+            var oldFormat = formattingList[oldId];
 
-            TextFormat tf = formattingList.Where(x =>
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == oldFormat.FontSize &&
                        x.FontType == oldFormat.FontType &&
@@ -224,9 +221,9 @@ namespace Editor
 
         public int GetFormatIdForNewSize(int oldId, double newSize)
         {
-            TextFormat oldFormat = formattingList[oldId];
+            var oldFormat = formattingList[oldId];
 
-            TextFormat tf = formattingList.Where(x =>
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == Math.Round(newSize, 1) &&
                        x.FontType == oldFormat.FontType &&
@@ -246,9 +243,9 @@ namespace Editor
 
         public int GetFormatIdForNewStyle(int oldId, FontStyle newStyle)
         {
-            TextFormat oldFormat = formattingList[oldId];
+            var oldFormat = formattingList[oldId];
 
-            TextFormat tf = formattingList.Where(x =>
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == oldFormat.FontSize &&
                        x.FontType == oldFormat.FontType &&
@@ -268,9 +265,9 @@ namespace Editor
 
         public int GetFormatIdForNewWeight(int oldId, FontWeight newWeight)
         {
-            TextFormat oldFormat = formattingList[oldId];
+            var oldFormat = formattingList[oldId];
 
-            TextFormat tf = formattingList.Where(x =>
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == oldFormat.FontSize &&
                        x.FontType == oldFormat.FontType &&
@@ -290,9 +287,9 @@ namespace Editor
 
         public int GetFormatIdForNewUnderline(int oldId, bool newUnderline)
         {
-            TextFormat oldFormat = formattingList[oldId];
+            var oldFormat = formattingList[oldId];
 
-            TextFormat tf = formattingList.Where(x =>
+            var tf = formattingList.Where(x =>
             {
                 return x.FontSize == oldFormat.FontSize &&
                        x.FontType == oldFormat.FontType &&
@@ -312,13 +309,15 @@ namespace Editor
 
         public FormattedText GetFormattedText(string text, List<int> formats, bool forceBlackBrush = false)
         {
-            FormattedText formattedText = new FormattedText(text,
-                                                            CultureInfo.InvariantCulture,
-                                                            FlowDirection.LeftToRight,
-                                                            formattingList[formats[0]].TypeFace,
-                                                            formattingList[formats[0]].FontSize,
-                                                            forceBlackBrush ? Brushes.Black : formattingList[formats[0]].TextBrush);
-            for (int i = 0; i < formats.Count; i++)
+#pragma warning disable CS0618 // Type or member is obsolete
+            var formattedText = new FormattedText(text,
+                CultureInfo.InvariantCulture,
+                FlowDirection.LeftToRight,
+                formattingList[formats[0]].TypeFace,
+                formattingList[formats[0]].FontSize,
+                forceBlackBrush ? Brushes.Black : formattingList[formats[0]].TextBrush);
+#pragma warning restore CS0618 // Type or member is obsolete
+            for (var i = 0; i < formats.Count; i++)
             {
                 FormatText(formats, formattedText, i);
             }
@@ -360,14 +359,14 @@ namespace Editor
 
         public FormattedText GetFormattedText(string text, int format)
         {
-            FormattedText formattedText = new FormattedText(text,
-                                                            CultureInfo.InvariantCulture,
-                                                            FlowDirection.LeftToRight,
-                                                            formattingList[format].TypeFace,
-                                                            formattingList[format].FontSize,
-                                                            formattingList[format].TextBrush);
-
-
+#pragma warning disable CS0618 // Type or member is obsolete
+            var formattedText = new FormattedText(text,
+                CultureInfo.InvariantCulture,
+                FlowDirection.LeftToRight,
+                formattingList[format].TypeFace,
+                formattingList[format].FontSize,
+                formattingList[format].TextBrush);
+#pragma warning restore CS0618 // Type or member is obsolete
             formattedText.SetFontStyle(formattingList[format].FontStyle);
             formattedText.SetFontWeight(formattingList[format].FontWeight);
             return formattedText;

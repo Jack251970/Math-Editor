@@ -4,29 +4,29 @@ namespace Editor
 {
     public sealed class EquationRowPasteAction : EquationAction
     {
-        public TextEquation ActiveTextEquation { get; set; }
-        public int SelectedItems { get; set; }
-        public int SelectionStartIndex { get; set; }
+        public required TextEquation ActiveTextEquation { get; set; }
+        public required int SelectedItems { get; set; }
+        public required int SelectionStartIndex { get; set; }
 
-        public int ActiveChildCaretIndex { get; set; }
-        public int ActiveChildSelectedItems { get; set; }
-        public int ActiveChildSelectionStartIndex { get; set; }
-        public string ActiveChildText { get; set; }
-        public int[] ActiveChildFormats { get; set; }
-        public EditorMode[] ActiveChildModes { get; set; }
-        public CharacterDecorationInfo[] ActiveChildDecorations { get; set; }
+        public required int ActiveChildCaretIndex { get; set; }
+        public required int ActiveChildSelectedItems { get; set; }
+        public required int ActiveChildSelectionStartIndex { get; set; }
+        public required string ActiveChildText { get; set; }
+        public required int[] ActiveChildFormats { get; set; }
+        public required EditorMode[] ActiveChildModes { get; set; }
+        public required CharacterDecorationInfo[] ActiveChildDecorations { get; set; }
 
-        public string FirstNewText { get; set; }
-        public int[] FirstNewFormats { get; set; }
-        public EditorMode[] FirstNewModes { get; set; }
-        public CharacterDecorationInfo[] FirstNewDecorations { get; set; }
+        public required string FirstNewText { get; set; }
+        public required int[] FirstNewFormats { get; set; }
+        public required EditorMode[] FirstNewModes { get; set; }
+        public required CharacterDecorationInfo[] FirstNewDecorations { get; set; }
 
-        public string LastNewText { get; set; }
-        public int[] LastNewFormats { get; set; }
-        public EditorMode[] LastNewModes { get; set; }
-        public CharacterDecorationInfo[] LastNewDecorations { get; set; }
+        public required string LastNewText { get; set; }
+        public required int[] LastNewFormats { get; set; }
+        public required EditorMode[] LastNewModes { get; set; }
+        public required CharacterDecorationInfo[] LastNewDecorations { get; set; }
 
-        public List<EquationBase> Equations { get; set; }
+        public required List<EquationBase> Equations { get; set; }
 
         public EquationRowPasteAction(ISupportsUndo executor)
             : base(executor)

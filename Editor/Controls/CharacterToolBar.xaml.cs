@@ -84,7 +84,7 @@ public partial class CharacterToolBar : UserControl
     private void CreateTextPanel(string[] items, Button toolBarButton, int columns)
     {
         var list = new List<CommandDetails>();
-        foreach (string s in items)
+        foreach (var s in items)
         {
             list.Add(new CommandDetails { UnicodeString = s, CommandType = CommandType.Text });
         }

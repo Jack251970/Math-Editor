@@ -33,7 +33,8 @@
 
         private EquationBase? buddy = null;
         protected EquationBase Buddy
-        { get => buddy ?? ParentEquation.ActiveChild; set => buddy = value;
+        {
+            get => buddy ?? ParentEquation.ActiveChild; set => buddy = value;
         }
 
         public SubSuperBase(EquationRow parent, Position position)

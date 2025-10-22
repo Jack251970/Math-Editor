@@ -14,7 +14,7 @@ public sealed class FontFactory
 
     static FontFactory()
     {
-        foreach (FontType ft in Enum.GetValues<FontType>())
+        foreach (var ft in Enum.GetValues<FontType>())
         {
             fontFamilies.Add(ft, CreateFontFamily(ft));
         }

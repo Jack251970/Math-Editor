@@ -4,7 +4,7 @@
     {
         public CharacterDecorationType DecorationType { get; set; }
         public Position Position { get; set; }
-        public string UnicodeString { get; set; } //Only if DecorationType == CharacterDecorationType.Unicode
+        public required string UnicodeString { get; set; } //Only if DecorationType == CharacterDecorationType.Unicode
         public int Index { get; set; } //Should be -1 when not appplicable or invalid
 
         //public CharacterDecorationInfo(CharacterDecorationType decorationType, Position position)

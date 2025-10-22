@@ -83,7 +83,7 @@ public partial class EquationToolBar : UserControl
         bp.ButtonClick += (x, y) => { CommandCompleted(this, EventArgs.Empty); visiblePanel = null; };
         mainToolBarPanel.Children.Add(bp);
         Canvas.SetTop(bp, mainToolBarPanel.Height);
-        Vector offset = VisualTreeHelper.GetOffset(toolBarButton);
+        var offset = VisualTreeHelper.GetOffset(toolBarButton);
         Canvas.SetLeft(bp, offset.X + 2);
         bp.Visibility = Visibility.Collapsed;
         buttonPanelMapping.Add(toolBarButton, bp);
@@ -92,14 +92,14 @@ public partial class EquationToolBar : UserControl
     private void CreateImagePanel(Uri[] imageUris, CommandType[] commands, object[] paramz, Button toolBarButton, int columns)
     {
         var items = new Image[imageUris.Length];
-        for (int i = 0; i < items.Length; i++)
+        for (var i = 0; i < items.Length; i++)
         {
             items[i] = new Image();
             var bmi = new BitmapImage(imageUris[i]);
             items[i].Source = bmi;
         }
         List<CommandDetails> list = [];
-        for (int i = 0; i < items.Length; i++)
+        for (var i = 0; i < items.Length; i++)
         {
             list.Add(new CommandDetails { Image = items[i], CommandType = commands[i], CommandParam = paramz[i] });
         }
@@ -165,22 +165,22 @@ public partial class EquationToolBar : UserControl
 
             CommandType.LeftRightBracket, CommandType.LeftRightBracket,
             CommandType.LeftRightBracket, CommandType.LeftRightBracket,
-            
-            CommandType.LeftRightBracket, CommandType.LeftRightBracket,
-            CommandType.LeftRightBracket, CommandType.LeftRightBracket,
 
             CommandType.LeftRightBracket, CommandType.LeftRightBracket,
             CommandType.LeftRightBracket, CommandType.LeftRightBracket,
 
-            CommandType.LeftBracket,      CommandType.RightBracket,
-            CommandType.LeftBracket,      CommandType.RightBracket,
+            CommandType.LeftRightBracket, CommandType.LeftRightBracket,
+            CommandType.LeftRightBracket, CommandType.LeftRightBracket,
 
             CommandType.LeftBracket,      CommandType.RightBracket,
             CommandType.LeftBracket,      CommandType.RightBracket,
 
             CommandType.LeftBracket,      CommandType.RightBracket,
             CommandType.LeftBracket,      CommandType.RightBracket,
-            
+
+            CommandType.LeftBracket,      CommandType.RightBracket,
+            CommandType.LeftBracket,      CommandType.RightBracket,
+
             CommandType.LeftBracket,      CommandType.RightBracket,
             CommandType.DoubleArrowBarBracket, CommandType.None,  //empty cell
 

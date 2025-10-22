@@ -77,11 +77,11 @@ public partial class UnicodeSelectorWindow : Window
     private void SetupCategory(string categoryName, int start, int end)
     {
         ObservableCollection<UnicodeListItem> list = [];
-        for (int i = start; i <= end; i++)
+        for (var i = start; i <= end; i++)
         {
             if (TypefaceContainsCharacter(FontFactory.GetTypeface(FontType.STIXGeneral, FontStyles.Normal, FontWeights.Normal), Convert.ToChar(i)))
             {
-                UnicodeListItem item = new UnicodeListItem { /*FontFamily = family, HexString = "0x" + i.ToString("X4"),*/ CodePoint = i, UnicodeText = string.Format("{0}", Convert.ToChar(i)) };
+                var item = new UnicodeListItem { /*FontFamily = family, HexString = "0x" + i.ToString("X4"),*/ CodePoint = i, UnicodeText = string.Format("{0}", Convert.ToChar(i)) };
                 list.Add(item);
                 allList.Add(item);
             }
@@ -140,7 +140,7 @@ public partial class UnicodeSelectorWindow : Window
         }
         if (item != null)
         {
-            CommandDetails commandDetails = new CommandDetails { UnicodeString = item.UnicodeText, CommandType = CommandType.Text };
+            var commandDetails = new CommandDetails { UnicodeString = item.UnicodeText, CommandType = CommandType.Text };
             ((MainWindow)Application.Current.MainWindow).HandleToolBarCommand(commandDetails);
             if (!useRecentList)
             {
@@ -167,13 +167,13 @@ public partial class UnicodeSelectorWindow : Window
 
     private void symbolList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        UnicodeListItem? item = symbolListBox.SelectedItem as UnicodeListItem;
+        var item = symbolListBox.SelectedItem as UnicodeListItem;
         characterCodeChanged(item);
     }
 
     private void recentListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        UnicodeListItem? item = recentListBox.SelectedItem as UnicodeListItem;
+        var item = recentListBox.SelectedItem as UnicodeListItem;
         characterCodeChanged(item);
     }
 
@@ -181,8 +181,8 @@ public partial class UnicodeSelectorWindow : Window
     {
         if (item != null)
         {
-            int numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
-            string numberString = Convert.ToString(item.CodePoint, numberBase);
+            var numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
+            var numberString = Convert.ToString(item.CodePoint, numberBase);
             if (numberBase == 16)
             {
                 numberString = numberString.ToUpper().PadLeft(4, '0');
@@ -199,8 +199,8 @@ public partial class UnicodeSelectorWindow : Window
     {
         if (symbolListBox.SelectedItem is UnicodeListItem item)
         {
-            int numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
-            string numberString = Convert.ToString(item.CodePoint, numberBase);
+            var numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
+            var numberString = Convert.ToString(item.CodePoint, numberBase);
             if (numberBase == 16)
             {
                 numberString = numberString.ToUpper().PadLeft(4, '0');

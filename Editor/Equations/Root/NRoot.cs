@@ -82,13 +82,13 @@ namespace Editor
 
         protected override void CalculateWidth()
         {
-            Width = Math.Max(_nthRootEquation.Width + HGap, _radicalSign.Width) + 
+            Width = Math.Max(_nthRootEquation.Width + HGap, _radicalSign.Width) +
                 _insideEquation.Width + LeftPadding;
         }
 
         protected override void CalculateHeight()
         {
-            Height = _insideEquation.Height + Math.Max(0, _nthRootEquation.Height - 
+            Height = _insideEquation.Height + Math.Max(0, _nthRootEquation.Height -
                 _insideEquation.Height / 2 + FontSize * .05) + ExtraHeight;
         }
 
@@ -103,7 +103,7 @@ namespace Editor
             }
         }
 
-        public override double RefY => _insideEquation.RefY + 
+        public override double RefY => _insideEquation.RefY +
             Math.Max(0, _nthRootEquation.Height - _insideEquation.Height / 2 + FontSize * .05) + ExtraHeight;
 
         public override double Left

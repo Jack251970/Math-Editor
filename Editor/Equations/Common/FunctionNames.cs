@@ -2,9 +2,9 @@
 
 namespace Editor
 {
-    static class FunctionNames
+    internal static class FunctionNames
     {
-        static List<string> names = [];
+        private static readonly List<string> names = [];
 
         static FunctionNames()
         {
@@ -20,9 +20,9 @@ namespace Editor
             return names.Contains(text);
         }
 
-        public static string CheckForFunctionName(string text)
+        public static string? CheckForFunctionName(string text)
         {
-            foreach (string s in names)
+            foreach (var s in names)
             {
                 if (text.EndsWith(s))
                 {

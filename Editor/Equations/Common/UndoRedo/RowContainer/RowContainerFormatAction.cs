@@ -2,29 +2,29 @@
 {
     public sealed class RowContainerFormatAction : EquationAction
     {
-        public EquationBase ActiveChild { get; set; }
-        public int SelectionStartIndex { get; set; }
-        public int SelectedItems { get; set; }
+        public required EquationBase ActiveChild { get; set; }
+        public required int SelectionStartIndex { get; set; }
+        public required int SelectedItems { get; set; }
 
-        public int FirstRowActiveChildIndex { get; set; }
-        public int FirstRowSelectionStartIndex { get; set; }
-        public int FirstRowSelectedItems { get; set; }
+        public required int FirstRowActiveChildIndex { get; set; }
+        public required int FirstRowSelectionStartIndex { get; set; }
+        public required int FirstRowSelectedItems { get; set; }
 
-        public int LastRowActiveChildIndex { get; set; }
-        public int LastRowSelectionStartIndex { get; set; }
-        public int LastRowSelectedItems { get; set; }
+        public required int LastRowActiveChildIndex { get; set; }
+        public required int LastRowSelectionStartIndex { get; set; }
+        public required int LastRowSelectedItems { get; set; }
 
-        public int FirstTextCaretIndex { get; set; }
-        public int FirstTextSelectionStartIndex { get; set; }
-        public int FirstTextSelectedItems { get; set; }
+        public required int FirstTextCaretIndex { get; set; }
+        public required int FirstTextSelectionStartIndex { get; set; }
+        public required int FirstTextSelectedItems { get; set; }
 
-        public int LastTextCaretIndex { get; set; }
-        public int LastTextSelectionStartIndex { get; set; }
-        public int LastTextSelectedItems { get; set; }
+        public required int LastTextCaretIndex { get; set; }
+        public required int LastTextSelectionStartIndex { get; set; }
+        public required int LastTextSelectedItems { get; set; }
 
-        public string Operation { get; set; }
-        public string Argument { get; set; }
-        public bool Applied { get; set; }
+        public required string Operation { get; set; }
+        public required string Argument { get; set; }
+        public required bool Applied { get; set; }
 
         public RowContainerFormatAction(ISupportsUndo executor)
             : base(executor)

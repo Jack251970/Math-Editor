@@ -8,7 +8,7 @@ namespace Editor
 {
     public class DivHorizontal : DivBase
     {
-        double ExtraWidth { get { return FontSize * .3; } }
+        private double ExtraWidth => FontSize * .3;
 
         public DivHorizontal(EquationContainer parent)
             : base(parent, false)
@@ -33,7 +33,7 @@ namespace Editor
 
         public override double Left
         {
-            get { return base.Left; }
+            get => base.Left;
             set
             {
                 base.Left = value;
@@ -49,7 +49,7 @@ namespace Editor
         }
         public override double Top
         {
-            get { return base.Top; }
+            get => base.Top;
             set
             {
                 base.Top = value;
@@ -58,13 +58,7 @@ namespace Editor
             }
         }
 
-        public override double RefY
-        {
-            get
-            {
-                return Math.Max(_topEquation.RefY, _bottomEquation.RefY);
-            }
-        }
+        public override double RefY => Math.Max(_topEquation.RefY, _bottomEquation.RefY);
 
         protected override void CalculateWidth()
         {
