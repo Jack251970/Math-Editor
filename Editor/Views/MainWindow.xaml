@@ -11,6 +11,7 @@
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
+    Closed="Window_Closed"
     Closing="Window_Closing"
     GotFocus="Window_GotFocus"
     KeyDown="Window_KeyDown"

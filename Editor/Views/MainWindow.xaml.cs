@@ -176,6 +176,12 @@ public partial class MainWindow : Window
         App.Settings.Save();
     }
 
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        // Fix App abnormal exit when App displays MessageBox before MainWindow
+        Application.Current.Shutdown();
+    }
+
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
         if (editor.Dirty)
@@ -503,7 +509,7 @@ public partial class MainWindow : Window
 
     private void CustomZoomMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Window zoomWindow = new CustomZoomWindow
+        var zoomWindow = new CustomZoomWindow
         {
             Owner = this
         };
@@ -720,7 +726,7 @@ public partial class MainWindow : Window
 
     private void settingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Window settingsWindow = new SettingsWindow
+        var settingsWindow = new SettingsWindow
         {
             Owner = this
         };
