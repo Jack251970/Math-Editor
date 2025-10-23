@@ -6,6 +6,8 @@ namespace Editor;
 
 public class EditorJsonStorage<T> : JsonStorage<T> where T : new()
 {
+    private static readonly string ClassName = nameof(EditorJsonStorage<T>);
+
     public EditorJsonStorage()
     {
         DirectoryPath = Path.Combine(DataLocation.DataDirectory(), DirectoryName);
@@ -24,10 +26,9 @@ public class EditorJsonStorage<T> : JsonStorage<T> where T : new()
         {
             base.Save();
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // TODO: Handle exception
-            //App.API.LogFatal(ClassName, $"Failed to save settings to path: {FilePath}", e);
+            EditorLogger.Fatal(ClassName, $"Failed to save settings to path: {FilePath}", e);
         }
     }
 
@@ -37,10 +38,9 @@ public class EditorJsonStorage<T> : JsonStorage<T> where T : new()
         {
             await base.SaveAsync();
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // TODO: Handle exception
-            //App.API.LogFatal(ClassName, $"Failed to save settings to path: {FilePath}", e);
+            EditorLogger.Fatal(ClassName, $"Failed to save settings to path: {FilePath}", e);
         }
     }
 }

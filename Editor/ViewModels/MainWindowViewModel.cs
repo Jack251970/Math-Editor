@@ -85,7 +85,6 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         {
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
             TextEquation.InputBold = value;
-            // TODO: Use constant or nameof for these two strings
             Editor?.ChangeFormat(nameof(Format), Format.Bold, value);
             TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
         }
