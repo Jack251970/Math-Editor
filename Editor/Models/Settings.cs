@@ -24,6 +24,8 @@ public class Settings : ObservableObject
         }
     }
 
+    public string Language { get; set; } = Constants.SystemLanguageCode;
+
     public ObservableCollection<string> RecentSymbolList { get; set; } = [];
 
     public Dictionary<string, int> UsedSymbolList { get; set; } = [];

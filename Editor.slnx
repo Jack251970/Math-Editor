@@ -1,4 +1,12 @@
 <Solution>
+  <Folder Name="/Localization/">
+    <File Path="Localization/LICENSE" />
+    <File Path="Localization/README.md" />
+    <Project Path="Localization/Editor.Localization.Analyzers/Editor.Localization.Analyzers.csproj" />
+    <Project Path="Localization/Editor.Localization.Attributes/Editor.Localization.Attributes.csproj" />
+    <Project Path="Localization/Editor.Localization.Shared/Editor.Localization.Shared.csproj" />
+    <Project Path="Localization/Editor.Localization.SourceGenerators/Editor.Localization.SourceGenerators.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />

@@ -11,7 +11,8 @@
                 <!--  UI.WPF.Modern  -->
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
-
+                <!--  Languages  -->
+                <ResourceDictionary Source="/Languages/en.xaml" />
                 <!--  Main  -->
                 <ResourceDictionary Source="/Styles/MainDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>

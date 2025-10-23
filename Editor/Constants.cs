@@ -30,4 +30,6 @@ public static class Constants
     public const string Logs = "Logs";
 
     public const string SystemLanguageCode = "system";
+
+    public const string IssuesUrl = "https://github.com/Jack251970/Math-Editor/issues";
 }

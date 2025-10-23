@@ -1,4 +1,6 @@
-﻿namespace Editor;
+﻿using Editor.Localization.Attributes;
+
+namespace Editor;
 
 public enum CommandType
 {
@@ -117,13 +119,120 @@ public enum SignType
     Simple, Bottom, BottomTop, Sub, SubSuper
 }
 
+[EnumLocalize]
+public enum EditorMode
+{
+    [EnumLocalizeKey(nameof(Localize.EditorMode_Math))]
+    Math,
+    
+    [EnumLocalizeKey(nameof(Localize.EditorMode_Text))]
+    Text,
+}
+
+[EnumLocalize]
 public enum FontType
 {
-    SystemDefault, STIXGeneral, STIXIntegralsD, STIXIntegralsSm, STIXNonUnicode, STIXSizeThreeSym, STIXSizeTwoSym, STIXVariants,
-    STIXSizeFourSym, STIXIntegralsUpSm, STIXSizeOneSym, STIXIntegralsUpD, STIXIntegralsUp, STIXSizeFiveSym,
-    Segoe, Arial, TimesNewRoman, CourierNew, Courier, Georgia, Impact, LucidaSansUnicode, Tahoma, Verdana,
-    Webdings, Wingdings, MSSerif, MSSansSerif, ComicSansMS, ArialBlack, LucidaConsole, PalatinoLinotype,
-    TrebuchetMS, Symbol
+    [EnumLocalizeValue("SystemDefault")]
+    SystemDefault,
+
+    [EnumLocalizeValue("STIXGeneral")]
+    STIXGeneral,
+
+    [EnumLocalizeValue("STIXIntegralsD")]
+    STIXIntegralsD,
+
+    [EnumLocalizeValue("STIXIntegralsSm")]
+    STIXIntegralsSm,
+
+    [EnumLocalizeValue("STIXNonUnicode")]
+    STIXNonUnicode,
+
+    [EnumLocalizeValue("STIXSizeThreeSym")]
+    STIXSizeThreeSym,
+
+    [EnumLocalizeValue("STIXSizeTwoSym")]
+    STIXSizeTwoSym,
+
+    [EnumLocalizeValue("STIXVariants")]
+    STIXVariants,
+
+    [EnumLocalizeValue("STIXSizeFourSym")]
+    STIXSizeFourSym,
+
+    [EnumLocalizeValue("STIXIntegralsUpSm")]
+    STIXIntegralsUpSm,
+
+    [EnumLocalizeValue("STIXSizeOneSym")]
+    STIXSizeOneSym,
+
+    [EnumLocalizeValue("STIXIntegralsUpD")]
+    STIXIntegralsUpD,
+
+    [EnumLocalizeValue("STIXIntegralsUp")]
+    STIXIntegralsUp,
+
+    [EnumLocalizeValue("STIXSizeFiveSym")]
+    STIXSizeFiveSym,
+
+    [EnumLocalizeValue("Segoe")]
+    Segoe,
+
+    [EnumLocalizeValue("Arial")]
+    Arial,
+
+    [EnumLocalizeValue("TimesNewRoman")]
+    TimesNewRoman,
+
+    [EnumLocalizeValue("CourierNew")]
+    CourierNew,
+
+    [EnumLocalizeValue("Courier")]
+    Courier,
+
+    [EnumLocalizeValue("Georgia")]
+    Georgia,
+
+    [EnumLocalizeValue("Impact")]
+    Impact,
+
+    [EnumLocalizeValue("LucidaSansUnicode")]
+    LucidaSansUnicode,
+
+    [EnumLocalizeValue("Tahoma")]
+    Tahoma,
+
+    [EnumLocalizeValue("Verdana")]
+    Verdana,
+
+    [EnumLocalizeValue("Webdings")]
+    Webdings,
+
+    [EnumLocalizeValue("Wingdings")]
+    Wingdings,
+
+    [EnumLocalizeValue("MSSerif")]
+    MSSerif,
+
+    [EnumLocalizeValue("MSSansSerif")]
+    MSSansSerif,
+
+    [EnumLocalizeValue("ComicSansMS")]
+    ComicSansMS,
+
+    [EnumLocalizeValue("ArialBlack")]
+    ArialBlack,
+
+    [EnumLocalizeValue("LucidaConsole")]
+    LucidaConsole,
+
+    [EnumLocalizeValue("PalatinoLinotype")]
+    PalatinoLinotype,
+
+    [EnumLocalizeValue("TrebuchetMS")]
+    TrebuchetMS,
+
+    [EnumLocalizeValue("Symbol")]
+    Symbol,
 
     //STIXGeneral,        STIXGeneralBol,     STIXGeneralBolIta,  STIXGeneralItalic,
     //STIXIntDBol,        STIXIntDReg,        STIXIntSmBol,       STIXIntSmReg,       STIXIntUpBol, STIXIntUpDBol,
@@ -133,12 +242,12 @@ public enum FontType
     //STIXSizTwoSymBol,   STIXSizTwoSymReg,   STIXVar,            STIXVarBol,
 }
 
-public enum EditorMode
-{
-    Math, Text,
-}
-
+[EnumLocalize]
 public enum CopyType
 {
-    Image, Latex,
+    [EnumLocalizeKey(nameof(Localize.CopyType_Image))]
+    Image,
+    
+    [EnumLocalizeKey(nameof(Localize.CopyType_Latex))]
+    Latex,
 }
