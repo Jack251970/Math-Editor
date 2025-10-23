@@ -6,8 +6,6 @@ namespace Editor.Localization.Shared
     {
         public const string DefaultNamespace = "Editor";
         public const string ClassName = "Localize";
-        public const string PluginInterfaceName = "IPluginI18n";
-        public const string PluginContextTypeName = "PluginInitContext";
         public const string SystemPrefixUri = "clr-namespace:System;assembly=mscorlib";
         public const string XamlPrefixUri = "http://schemas.microsoft.com/winfx/2006/xaml";
         public const string XamlTag = "String";

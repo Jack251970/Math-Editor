@@ -56,7 +56,7 @@ public class Internationalization(Settings settings)
     }
 
     /// <summary>
-    /// Initialize language. Will change app language and plugin language based on settings.
+    /// Initialize language. Will change app language based on settings.
     /// </summary>
     public async Task InitializeLanguageAsync()
     {
@@ -95,7 +95,6 @@ public class Internationalization(Settings settings)
 
     private void LoadDefaultLanguage()
     {
-        // Removes language files loaded before any plugins were loaded.
         // Prevents the language app started in from overwriting English if the user switches back to English
         RemoveOldLanguageFiles();
         LoadLanguage(AvailableLanguages.English);
@@ -107,7 +106,7 @@ public class Internationalization(Settings settings)
     #region Change Language
 
     /// <summary>
-    /// Change language during runtime. Will change app language and plugin language & save settings.
+    /// Change language during runtime. Will change app language & save settings.
     /// </summary>
     /// <param name="languageCode"></param>
     public void ChangeLanguage(string languageCode)

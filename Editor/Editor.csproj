@@ -13,6 +13,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SignAssembly>false</SignAssembly>
+    <NoWarn>$(NoWarn);FLSG0002</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

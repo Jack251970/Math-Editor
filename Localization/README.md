@@ -8,28 +8,28 @@ Localization toolkit for Math Editor.
 
 You can simplify your code by replacing calls like:
 ```csharp
-Internationalization.GetTranslation("Editor_Plugin_Localization_Demo_Plugin_Name")
+Internationalization.GetTranslation("Editor_Localization_Demo_Name")
 ```
 with:
 ```csharp
-Localize.Editor_Plugin_Localization_Demo_Plugin_Name()
+Localize.Editor_Localization_Demo_Name()
 ```
 
 If your localization string uses variables, it becomes even simpler! From this:
 ```csharp
-Internationalization.GetTranslation("Editor_Plugin_Localization_Demo_Value_With_Keys"), firstName, lastName);
+Internationalization.GetTranslation("Editor_Localization_Demo_Value_With_Keys"), firstName, lastName);
 ```
 To this:
 ```csharp
-Localize.Editor_Plugin_Localization_Demo_Value_With_Keys(firstName, lastName);
+Localize.Editor_Localization_Demo_Value_With_Keys(firstName, lastName);
 ```
 
 If you would like to add summary for functions of localization strings, you need to comment strings in xaml files like this:
 ```xml
 <!--
-<summary>Demo plugin name</summary>
+<summary>Demo name</summary>
 -->
-<system:String x:Key="Editor_Plugin_Localization_Demo_Plugin_Name">Demo</system:String>
+<system:String x:Key="Editor_Localization_Demo_Name">Demo</system:String>
 ```
 
 Or if you would like to change the default types or names of variables in localization strings, you need to comment strings in xaml file like this:
@@ -39,7 +39,7 @@ Or if you would like to change the default types or names of variables in locali
 <param index="1" name="value1" type="string" />
 <param index="2" name="value2" type="int" />
 -->
-<system:String x:Key="Editor_Plugin_Localization_Demo_Value_With_Keys">Demo {2:00}, {1,-35:D} and {0}</system:String>
+<system:String x:Key="Editor_Localization_Demo_Value_With_Keys">Demo {2:00}, {1,-35:D} and {0}</system:String>
 ```
 
 ### Localized Enums
@@ -69,7 +69,7 @@ public enum DemoEnum
 
     // Using the Localize class. This way, you can't misspell localization keys, and if you rename
     // them in your .xaml file, you won't forget to rename them here as well because the build will fail.
-    [EnumLocalizeKey(nameof(Localize.Editor_Plugin_Localization_Demo_Plugin_Description))]
+    [EnumLocalizeKey(nameof(Localize.Editor_Localization_Demo_Description))]
     Value4,
 }
 ```
