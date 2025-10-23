@@ -35,10 +35,10 @@ public partial class HistoryToolBar : UserControl
 
     private void symbolClick(object sender, MouseButtonEventArgs e)
     {
-        if (((TextBlock)sender).DataContext is string str && Application.Current?.MainWindow is MainWindow window)
+        if (((TextBlock)sender).DataContext is string str)
         {
             var commandDetails = new CommandDetails { UnicodeString = str, CommandType = CommandType.Text };
-            window.HandleToolBarCommand(commandDetails);
+            ((MainWindow)Window.GetWindow(this)).HandleToolBarCommand(commandDetails);
         }
     }
 }

@@ -413,16 +413,13 @@ public partial class EditorControl : UserControl, IDisposable
         InvalidateVisual();
     }
 
-    public void ChangeFormat(string operation, string argument, bool applied)
+    public void ChangeFormat(string operation, object argument, bool applied)
     {
-        if (Application.Current?.MainWindow is MainWindow win)
+        equationRoot.ModifySelection(operation, argument, applied, true);
+        AdjustView();
+        if (((MainWindow)Window.GetWindow(this)).IsInialized)
         {
-            equationRoot.ModifySelection(operation, argument, applied, true);
-            AdjustView();
-            if (win.IsInialized)
-            {
-                Dirty = true;
-            }
+            Dirty = true;
         }
     }
 

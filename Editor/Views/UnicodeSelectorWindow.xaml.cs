@@ -141,7 +141,7 @@ public partial class UnicodeSelectorWindow : Window
         if (item != null)
         {
             var commandDetails = new CommandDetails { UnicodeString = item.UnicodeText, CommandType = CommandType.Text };
-            ((MainWindow)Application.Current.MainWindow).HandleToolBarCommand(commandDetails);
+            ((MainWindow)Owner).HandleToolBarCommand(commandDetails);
             if (!useRecentList)
             {
                 recentList.Remove(item);

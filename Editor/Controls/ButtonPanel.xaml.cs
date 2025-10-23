@@ -61,6 +61,6 @@ public sealed class EditorToolBarButton(CommandDetails commandDetails) : Button
     protected override void OnClick()
     {
         base.OnClick();
-        ((MainWindow)Application.Current.MainWindow).HandleToolBarCommand(commandDetails);
+        ((MainWindow)Window.GetWindow(this)).HandleToolBarCommand(commandDetails);
     }
 }
