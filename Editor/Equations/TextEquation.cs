@@ -746,47 +746,53 @@ namespace Editor
             UndoManager.AddUndoAction(new DecorationAction(this, [cdi]) { UndoFlag = false });
         }
 
-        public override void ModifySelection(string operation, string argument, bool applied, bool addUndo)
+        public override void ModifySelection(string operation, object argument, bool applied, bool addUndo)
         {
             if (SelectedItems != 0)
             {
                 switch (operation)
                 {
-                    // TODO: Use enum & nameof for code quality
-                    case "format":
-                        ModifyFormat(argument, applied, addUndo);
+                    case nameof(Format):
+                        if (argument is Format format)
+                        {
+                            ModifyFormat(format, applied, addUndo);
+                        }
                         break;
                     case nameof(FontType):
-                        ModifyFont(Enum.Parse<FontType>(argument), applied, addUndo);
+                        if (argument is FontType fontType)
+                        {
+                            ModifyFont(fontType, applied, addUndo);
+                        }
                         break;
                     case nameof(EditorMode):
-                        ModifyMode(argument, addUndo);
+                        if (argument is EditorMode mode)
+                        {
+                            ModifyMode(mode, addUndo);
+                        }
                         break;
                 }
                 FormatText();
             }
         }
 
-        private void ModifyFormat(string format, bool applied, bool addUndo)
+        private void ModifyFormat(Format format, bool applied, bool addUndo)
         {
             var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
             var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
             int[] oldFormats = [.. formats.GetRange(startIndex, count)];
             for (var i = startIndex; i < startIndex + count; i++)
             {
-                switch (format.ToLower())
+                switch (format)
                 {
-                    case "underline":
+                    case Format.Underline:
                         formats[i] = TextManager.GetFormatIdForNewUnderline(formats[i], applied);
                         break;
-                    case "bold":
+                    case Format.Bold:
                         formats[i] = TextManager.GetFormatIdForNewWeight(formats[i], applied ? FontWeights.Bold : FontWeights.Normal);
                         break;
-                    case "italic":
+                    case Format.Italic:
                         formats[i] = TextManager.GetFormatIdForNewStyle(formats[i], applied ? FontStyles.Italic : FontStyles.Normal);
                         break;
-                    default:
-                        throw new ArgumentException("Incorrect value passed with font format change request."); ;
                 }
             }
             if (addUndo)
@@ -796,19 +802,14 @@ namespace Editor
             }
         }
 
-        private void ModifyMode(string newMode, bool addUndo)
+        private void ModifyMode(EditorMode newMode, bool addUndo)
         {
             var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
             var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
             EditorMode[] oldModes = [.. modes.GetRange(startIndex, count)];
             for (var i = startIndex; i < startIndex + count; i++)
             {
-                modes[i] = newMode.ToLower() switch
-                {
-                    "math" => EditorMode.Math,
-                    "text" => EditorMode.Text,
-                    _ => throw new ArgumentException("Incorrect value passed with mode change request."),
-                };
+                modes[i] = newMode;
             }
             if (addUndo)
             {

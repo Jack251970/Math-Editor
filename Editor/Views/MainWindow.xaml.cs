@@ -43,13 +43,8 @@ public partial class MainWindow : Window
         OpenFile(_currentLocalFile);
 
         // Init editor mode & editor font
-        TextEquation.InputPropertyChanged -= _viewModel.TextEquation_InputPropertyChanged;
-        TextEquation.EditorMode = App.Settings.DefaultMode;
-        // TODO: Use enum type directly
-        editor.ChangeFormat(nameof(EditorMode), App.Settings.DefaultMode.ToString().ToLower(), true);
-        TextEquation.FontType = App.Settings.DefaultFont;
-        editor.ChangeFormat(nameof(FontType), App.Settings.DefaultFont.ToString(), true);
-        TextEquation.InputPropertyChanged += _viewModel.TextEquation_InputPropertyChanged;
+        _viewModel.ChangeEditorMode(App.Settings.DefaultMode);
+        _viewModel.ChangeEditorFont(App.Settings.DefaultFont);
         editor.Focus();
 
         IsInialized = true;

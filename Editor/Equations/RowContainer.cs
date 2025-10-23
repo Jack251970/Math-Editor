@@ -1043,7 +1043,7 @@ namespace Editor
             }
         }
 
-        public override void ModifySelection(string operation, string argument, bool applied, bool addUndo)
+        public override void ModifySelection(string operation, object argument, bool applied, bool addUndo)
         {
             if (IsSelecting)
             {

@@ -23,7 +23,7 @@
         public required int LastTextSelectedItems { get; set; }
 
         public required string Operation { get; set; }
-        public required string Argument { get; set; }
+        public required object Argument { get; set; }
         public required bool Applied { get; set; }
 
         public RowContainerFormatAction(ISupportsUndo executor)

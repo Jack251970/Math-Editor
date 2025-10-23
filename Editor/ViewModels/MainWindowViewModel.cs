@@ -86,7 +86,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
             TextEquation.InputBold = value;
             // TODO: Use constant or nameof for these two strings
-            Editor?.ChangeFormat("format", "bold", value);
+            Editor?.ChangeFormat(nameof(Format), Format.Bold, value);
             TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
         }
     }
@@ -98,7 +98,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         {
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
             TextEquation.InputItalic = value;
-            Editor?.ChangeFormat("format", "italic", value);
+            Editor?.ChangeFormat(nameof(Format), Format.Italic, value);
             TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
         }
     }
@@ -110,7 +110,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         {
             TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
             TextEquation.InputUnderline = value;
-            Editor?.ChangeFormat("format", "underline", value);
+            Editor?.ChangeFormat(nameof(Format), Format.Underline, value);
             TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
         }
     }
@@ -125,6 +125,40 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
             case nameof(FontType):
                 TextFontType = TextEquation.FontType;
                 break;
+        }
+    }
+
+    partial void OnTextEditorModeChanged(EditorMode value)
+    {
+        ChangeEditorMode(value);
+    }
+
+    public void ChangeEditorMode(EditorMode editorMode)
+    {
+        if (Editor != null)
+        {
+            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
+            TextEquation.EditorMode = editorMode;
+            Editor.ChangeFormat(nameof(EditorMode), editorMode, true);
+            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
+            Editor.Focus();
+        }
+    }
+
+    partial void OnTextFontTypeChanged(FontType value)
+    {
+        ChangeEditorFont(value);
+    }
+
+    public void ChangeEditorFont(FontType fontType)
+    {
+        if (Editor != null)
+        {
+            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
+            TextEquation.FontType = fontType;
+            Editor.ChangeFormat(nameof(FontType), fontType, true);
+            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
+            Editor.Focus();
         }
     }
 }

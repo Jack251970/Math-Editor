@@ -369,7 +369,7 @@
                         ToolTip="Bold">
                         <Image Source="/Images/GUI/bold.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
-                    <!--<ToggleButton IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}" x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding Path=InputItalic}" Style="{StaticResource ToolbarToggleButton}">-->
+                    <!--<ToggleButton IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}" x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding InputItalic}" Style="{StaticResource ToolbarToggleButton}">-->
                     <ToggleButton
                         x:Name="italicToggleButton"
                         IsChecked="{Binding InputItalic}"

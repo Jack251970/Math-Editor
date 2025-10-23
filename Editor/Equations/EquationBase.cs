@@ -112,7 +112,7 @@ namespace Editor
         public virtual CopyDataObject? Copy(bool removeSelection) { return null; } //copy & cut
         public virtual void Paste(XElement xe) { }
         public virtual void SetCursorOnKeyUpDown(Key key, Point point) { }
-        public virtual void ModifySelection(string operation, string argument, bool applied, bool addUndo) { }
+        public virtual void ModifySelection(string operation, object argument, bool applied, bool addUndo) { }
 
         public virtual void CalculateSize()
         {

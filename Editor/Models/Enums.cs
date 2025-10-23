@@ -114,6 +114,11 @@ public enum SubSuperType
     Sub, Super, SubAndSuper
 }
 
+public enum Format
+{
+    Bold, Italic, Underline
+}
+
 public enum SignType
 {
     Simple, Bottom, BottomTop, Sub, SubSuper
