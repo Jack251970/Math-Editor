@@ -132,58 +132,58 @@ public enum EditorMode
 [EnumLocalize]
 public enum FontType
 {
-    [EnumLocalizeValue("SystemDefault")]
+    [EnumLocalizeKey(nameof(Localize.FontType_SystemDefault))]
     SystemDefault,
 
-    [EnumLocalizeValue("STIXGeneral")]
+    [EnumLocalizeValue("STIX")]
     STIXGeneral,
 
-    [EnumLocalizeValue("STIXIntegralsD")]
+    [EnumLocalizeValue("STIX Integrals D")]
     STIXIntegralsD,
 
-    [EnumLocalizeValue("STIXIntegralsSm")]
+    [EnumLocalizeValue("STIX Integrals Sm")]
     STIXIntegralsSm,
 
-    [EnumLocalizeValue("STIXNonUnicode")]
+    [EnumLocalizeValue("STIX Non Unicode")]
     STIXNonUnicode,
 
-    [EnumLocalizeValue("STIXSizeThreeSym")]
+    [EnumLocalizeValue("STIX Size Three Sym")]
     STIXSizeThreeSym,
 
-    [EnumLocalizeValue("STIXSizeTwoSym")]
+    [EnumLocalizeValue("STIX Size Two Sym")]
     STIXSizeTwoSym,
 
-    [EnumLocalizeValue("STIXVariants")]
+    [EnumLocalizeValue("STIX Variants")]
     STIXVariants,
 
-    [EnumLocalizeValue("STIXSizeFourSym")]
+    [EnumLocalizeValue("STIX Size Four Sym")]
     STIXSizeFourSym,
 
-    [EnumLocalizeValue("STIXIntegralsUpSm")]
+    [EnumLocalizeValue("STIX Integrals Up Sm")]
     STIXIntegralsUpSm,
 
-    [EnumLocalizeValue("STIXSizeOneSym")]
+    [EnumLocalizeValue("STIX Size One Sym")]
     STIXSizeOneSym,
 
-    [EnumLocalizeValue("STIXIntegralsUpD")]
+    [EnumLocalizeValue("STIX Integrals Up D")]
     STIXIntegralsUpD,
 
-    [EnumLocalizeValue("STIXIntegralsUp")]
+    [EnumLocalizeValue("STIX Integrals Up")]
     STIXIntegralsUp,
 
-    [EnumLocalizeValue("STIXSizeFiveSym")]
+    [EnumLocalizeValue("STIX Size Five Sym")]
     STIXSizeFiveSym,
 
-    [EnumLocalizeValue("Segoe")]
+    [EnumLocalizeValue("Segoe UI")]
     Segoe,
 
     [EnumLocalizeValue("Arial")]
     Arial,
 
-    [EnumLocalizeValue("TimesNewRoman")]
+    [EnumLocalizeValue("Times New Roman")]
     TimesNewRoman,
 
-    [EnumLocalizeValue("CourierNew")]
+    [EnumLocalizeValue("Courier New")]
     CourierNew,
 
     [EnumLocalizeValue("Courier")]
@@ -195,7 +195,7 @@ public enum FontType
     [EnumLocalizeValue("Impact")]
     Impact,
 
-    [EnumLocalizeValue("LucidaSansUnicode")]
+    [EnumLocalizeValue("Lucida Sans Unicode")]
     LucidaSansUnicode,
 
     [EnumLocalizeValue("Tahoma")]
@@ -210,25 +210,25 @@ public enum FontType
     [EnumLocalizeValue("Wingdings")]
     Wingdings,
 
-    [EnumLocalizeValue("MSSerif")]
+    [EnumLocalizeValue("MS Serif")]
     MSSerif,
 
-    [EnumLocalizeValue("MSSansSerif")]
+    [EnumLocalizeValue("MS Sans Serif")]
     MSSansSerif,
 
-    [EnumLocalizeValue("ComicSansMS")]
+    [EnumLocalizeValue("Comic Sans MS")]
     ComicSansMS,
 
-    [EnumLocalizeValue("ArialBlack")]
+    [EnumLocalizeValue("Arial Black")]
     ArialBlack,
 
-    [EnumLocalizeValue("LucidaConsole")]
+    [EnumLocalizeValue("Lucida Console")]
     LucidaConsole,
 
-    [EnumLocalizeValue("PalatinoLinotype")]
+    [EnumLocalizeValue("Palatino Linotype")]
     PalatinoLinotype,
 
-    [EnumLocalizeValue("TrebuchetMS")]
+    [EnumLocalizeValue("Trebuchet MS")]
     TrebuchetMS,
 
     [EnumLocalizeValue("Symbol")]

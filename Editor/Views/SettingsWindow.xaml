@@ -2,94 +2,69 @@
     x:Class="Editor.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    Title="Math Editor Settings"
+    Title="{DynamicResource SettingsWindow_Title}"
     Width="485"
     Height="300"
+    d:DataContext="{d:DesignInstance Type=local:SettingsWindowViewModel}"
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
-    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Closed="Window_Closed"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterOwner">
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
     <Grid x:Name="MainGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <ScrollViewer Margin="15" VerticalScrollBarVisibility="Auto">
+        <ui:ScrollViewerEx Margin="15" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical">
                 <Grid HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label VerticalContentAlignment="Center" Content="Default Mode" />
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_DefaultMode}" />
                     <ComboBox
-                        Name="editorModeCombo"
                         Grid.Column="1"
                         Width="150"
-                        SelectedIndex="0">
-                        <ComboBoxItem Content="Math" Tag="Math" />
-                        <ComboBoxItem Content="Text" Tag="Text" />
-                    </ComboBox>
+                        DisplayMemberPath="Display"
+                        ItemsSource="{Binding AllEditModes, Mode=OneTime}"
+                        SelectedValue="{Binding Settings.DefaultMode, Mode=TwoWay}"
+                        SelectedValuePath="Value" />
                 </Grid>
                 <Grid Margin="0 12 0 0" HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label VerticalContentAlignment="Center" Content="Default Font" />
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_DefaultFont}" />
                     <ComboBox
-                        Name="equationFontCombo"
                         Grid.Column="1"
                         Width="150"
-                        SelectedIndex="0">
-                        <ComboBoxItem Tag="STIXGeneral">STIX</ComboBoxItem>
-                        <ComboBoxItem Tag="Arial">Arial</ComboBoxItem>
-                        <ComboBoxItem Tag="ArialBlack">Arial Black</ComboBoxItem>
-                        <ComboBoxItem Tag="ComicSansMS">Comic Sans MS</ComboBoxItem>
-                        <ComboBoxItem Tag="Courier">Courier</ComboBoxItem>
-                        <ComboBoxItem Tag="CourierNew">Courier New</ComboBoxItem>
-                        <ComboBoxItem Tag="Georgia">Georgia</ComboBoxItem>
-                        <ComboBoxItem Tag="Impact">Impact</ComboBoxItem>
-                        <ComboBoxItem Tag="LucidaConsole">Lucida Console</ComboBoxItem>
-                        <ComboBoxItem Tag="LucidaSansUnicode">Lucida Sans Unicode</ComboBoxItem>
-                        <ComboBoxItem Tag="PalatinoLinotype">Palatino Linotype</ComboBoxItem>
-                        <ComboBoxItem Tag="Segoe">Segoe UI</ComboBoxItem>
-                        <ComboBoxItem Tag="Tahoma">Tahoma</ComboBoxItem>
-                        <ComboBoxItem Tag="TimesNewRoman">Times New Roman</ComboBoxItem>
-                        <ComboBoxItem Tag="TrebuchetMS">Trebuchet MS</ComboBoxItem>
-                        <ComboBoxItem Tag="Verdana">Verdana</ComboBoxItem>
-                        <ComboBoxItem Tag="Symbol">Symbol</ComboBoxItem>
-                        <ComboBoxItem Tag="Webdings">Webdings</ComboBoxItem>
-                        <ComboBoxItem Tag="Wingdings">Wingdings</ComboBoxItem>
-                    </ComboBox>
+                        DisplayMemberPath="Display"
+                        ItemsSource="{Binding AllFontTypes, Mode=OneTime}"
+                        SelectedIndex="0"
+                        SelectedValue="{Binding Settings.DefaultFont, Mode=TwoWay}"
+                        SelectedValuePath="Value" />
+                </Grid>
+                <Grid Margin="0 12 0 0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_CopyType}" />
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="150"
+                        DisplayMemberPath="Display"
+                        ItemsSource="{Binding AllCopyTypes, Mode=OneTime}"
+                        SelectedIndex="0"
+                        SelectedValue="{Binding Settings.CopyType, Mode=TwoWay}"
+                        SelectedValuePath="Value" />
                 </Grid>
             </StackPanel>
-        </ScrollViewer>
-        <StackPanel
-            Grid.Row="1"
-            Margin="15"
-            HorizontalAlignment="Center"
-            Orientation="Horizontal">
-            <Button
-                Name="okButton"
-                Width="70"
-                Margin="5 0"
-                Click="okButton_Click"
-                FontSize="14"
-                IsDefault="True">
-                Save
-            </Button>
-            <Button
-                Name="cancelButton"
-                Width="70"
-                Margin="5 0"
-                Click="cancelButton_Click"
-                FontSize="14">
-                Cancel
-            </Button>
-        </StackPanel>
+        </ui:ScrollViewerEx>
     </Grid>
 </Window>

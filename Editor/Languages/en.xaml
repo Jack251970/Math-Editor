@@ -3,18 +3,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!--  Editor Mode  -->
+    <system:String x:Key="EditorMode_Math">Math</system:String>
+    <system:String x:Key="EditorMode_Text">Text</system:String>
+
+    <!--  Font Type  -->
+    <system:String x:Key="FontType_SystemDefault">System Default</system:String>
+
+    <!--  Copy Type  -->
+    <system:String x:Key="CopyType_Image">Image</system:String>
+    <system:String x:Key="CopyType_Latex">Latex</system:String>
+
+    <!--  Settings Window  -->
+    <system:String x:Key="SettingsWindow_Title">Math Editor Settings</system:String>
+    <system:String x:Key="SettingsWindow_DefaultMode">Default mode</system:String>
+    <system:String x:Key="SettingsWindow_DefaultFont">Default font</system:String>
+    <system:String x:Key="SettingsWindow_CopyType">Copy type</system:String>
+
     <!--  Report Window  -->
     <system:String x:Key="ReportWindow_AppGotError">App got an error</system:String>
     <system:String x:Key="ReportWindow_PleaseOpenIssue">Please open a new issue in</system:String>
     <system:String x:Key="ReportWindow_UploadLog">1. Upload this log file: {0}</system:String>
     <system:String x:Key="ReportWindow_CopyBelow">2. Copy exception messages below</system:String>
-
-    <!--  Editor Mode  -->
-    <system:String x:Key="EditorMode_Math">Math</system:String>
-    <system:String x:Key="EditorMode_Text">Text</system:String>
-
-    <!--  Copy Type  -->
-    <system:String x:Key="CopyType_Image">Image</system:String>
-    <system:String x:Key="CopyType_Latex">Latex</system:String>
 
 </ResourceDictionary>

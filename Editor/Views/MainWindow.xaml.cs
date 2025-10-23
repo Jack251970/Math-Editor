@@ -115,7 +115,6 @@ public partial class MainWindow : Window
             editor.HandleUserCommand(commandDetails);
             if (commandDetails.CommandType == CommandType.Text)
             {
-                // TODO: Can history toolbar work?
                 HistoryToolBar.AddItem(commandDetails.UnicodeString);
             }
         }
