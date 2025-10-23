@@ -57,7 +57,7 @@ public partial class MainWindow : Window
         var fonts = equationFontCombo.Items;
         foreach (ComboBoxItem item in fonts)
         {
-            if ((string)item.Tag == fontName)
+            if ((string)item.Tag == fontName.ToString())
             {
                 equationFontCombo.SelectedItem = item;
             }
@@ -172,7 +172,6 @@ public partial class MainWindow : Window
                 }
             }
         }
-        App.Settings.Save();
     }
 
     private void Window_Closed(object sender, EventArgs e)

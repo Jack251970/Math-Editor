@@ -30,11 +30,48 @@ public class Settings : ObservableObject
 
     public Dictionary<string, int> UsedSymbolList { get; set; } = [];
 
-    public string DefaultFont { get; set; } = "STIXGeneral";
-
+    private FontType _defaultFont = FontType.STIXGeneral;
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EditorMode DefaultMode { get; set; } = EditorMode.Math;
+    public FontType DefaultFont
+    {
+        get => _defaultFont;
+        set
+        {
+            if (_defaultFont != value)
+            {
+                _defaultFont = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
+    private EditorMode _defaultMode = EditorMode.Math;
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public CopyType CopyType { get; set; } = CopyType.Image;
+    public EditorMode DefaultMode
+    {
+        get => _defaultMode;
+        set
+        {
+            if (_defaultMode != value)
+            {
+                _defaultMode = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private CopyType _copyType = CopyType.Image;
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CopyType CopyType
+    {
+        get => _copyType;
+        set
+        {
+            if (_copyType != value)
+            {
+                _copyType = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 }
