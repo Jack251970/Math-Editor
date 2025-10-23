@@ -45,7 +45,6 @@
                         Width="150"
                         DisplayMemberPath="Display"
                         ItemsSource="{Binding AllFontTypes, Mode=OneTime}"
-                        SelectedIndex="0"
                         SelectedValue="{Binding Settings.DefaultFont, Mode=TwoWay}"
                         SelectedValuePath="Value" />
                 </Grid>

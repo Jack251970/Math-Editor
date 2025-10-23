@@ -7,8 +7,6 @@ public partial class SettingsWindowViewModel(Settings settings, Internationaliza
 {
     public Settings Settings { get; init; } = settings;
 
-    #region Language
-
     private readonly Internationalization _translater = translater;
 
     public List<Language> Languages => _translater.LoadAvailableLanguages();
@@ -29,23 +27,9 @@ public partial class SettingsWindowViewModel(Settings settings, Internationaliza
         FontTypeLocalized.UpdateLabels(AllFontTypes);
     }
 
-    #endregion
-
-    #region Editor Mode
-
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
-
-    #endregion
-
-    #region Font Type
 
     public List<FontTypeLocalized> AllFontTypes { get; } = FontTypeLocalized.GetValues();
 
-    #endregion
-
-    #region Copy Type
-
     public List<CopyTypeLocalized> AllCopyTypes { get; } = CopyTypeLocalized.GetValues();
-
-    #endregion
 }
