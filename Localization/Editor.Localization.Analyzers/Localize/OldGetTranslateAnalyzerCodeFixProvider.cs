@@ -59,27 +59,61 @@ namespace Editor.Localization.Analyzers.Localize
 
             if (invocationExpr is null) return context.Document;
 
-            var argumentList = invocationExpr.ArgumentList.Arguments;
+            var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+            if (semanticModel == null) return context.Document;
 
-            // Loop through the arguments to find the translation key.
-            for (var i = 0; i < argumentList.Count; i++)
+            var symbolInfo = semanticModel.GetSymbolInfo(invocationExpr, context.CancellationToken);
+            var methodSymbol = symbolInfo.Symbol as IMethodSymbol;
+
+            // Case A: string.Format(..., Internationalization.GetTranslation("key"), ...)
+            if (IsFormatStringCall(methodSymbol))
             {
-                var argument = argumentList[i].Expression;
-
-                // Case 1: The argument is a literal (direct GetTranslation("key"))
-                if (GetTranslationKey(argument) is string translationKey)
-                    return FixOldTranslationWithoutStringFormat(context, translationKey, root, invocationExpr);
-
-                // Case 2: The argument is itself an invocation (nested GetTranslation)
-                if (GetTranslationKeyFromInnerInvocation(argument) is string translationKeyInside)
+                var argumentList = invocationExpr.ArgumentList.Arguments;
+                for (var i =0; i < argumentList.Count; i++)
                 {
-                    // If there are arguments following this translation call, treat as a Format call.
-                    if (i < argumentList.Count - 1)
-                        return FixOldTranslationWithStringFormat(context, argumentList, translationKeyInside, root, invocationExpr, i);
+                    if (argumentList[i].Expression is InvocationExpressionSyntax innerInvocation)
+                    {
+                        var innerSymbol = semanticModel.GetSymbolInfo(innerInvocation, context.CancellationToken).Symbol as IMethodSymbol;
+                        if (IsTranslateCall(innerSymbol))
+                        {
+                            var translationKey = GetFirstArgumentStringValue(innerInvocation);
+                            if (translationKey == null) continue;
 
-                    // Otherwise, treat it as a direct translation call.
-                    return FixOldTranslationWithoutStringFormat(context, translationKeyInside, root, invocationExpr);
+                            // New args are all arguments after the translation call in the format call
+                            var newArguments = string.Join(
+                                ", ",
+                                argumentList.Skip(i +1).Select(a => a.Expression.ToString())
+                            );
+
+                            var newInvocationExpr = string.IsNullOrWhiteSpace(newArguments)
+                                ? SyntaxFactory.ParseExpression($"{Constants.ClassName}.{translationKey}()")
+                                : SyntaxFactory.ParseExpression($"{Constants.ClassName}.{translationKey}({newArguments})");
+
+                            var newRoot = root.ReplaceNode(invocationExpr, newInvocationExpr);
+                            return context.Document.WithSyntaxRoot(newRoot);
+                        }
+                    }
                 }
+            }
+
+            // Case B: Internationalization.GetTranslation("key", args...)
+            else if (IsTranslateCall(methodSymbol))
+            {
+                var args = invocationExpr.ArgumentList.Arguments;
+                var firstArgExpr = args.FirstOrDefault()?.Expression;
+                if (!(firstArgExpr is LiteralExpressionSyntax literal) || !(literal.Token.Value is string translationKey))
+                    return context.Document;
+
+                var remainingArgs = args.Skip(1).Select(a => a.Expression.ToString());
+                var remainingArgsJoined = string.Join(", ", remainingArgs);
+
+                var replacement = string.IsNullOrWhiteSpace(remainingArgsJoined)
+                    ? $"{Constants.ClassName}.{translationKey}()"
+                    : $"{Constants.ClassName}.{translationKey}({remainingArgsJoined})";
+
+                var newInvocationExpr2 = SyntaxFactory.ParseExpression(replacement);
+                var newRoot2 = root.ReplaceNode(invocationExpr, newInvocationExpr2);
+                return context.Document.WithSyntaxRoot(newRoot2);
             }
 
             // Fallback: leave unchanged if not recognized
@@ -88,51 +122,24 @@ namespace Editor.Localization.Analyzers.Localize
 
         #region Utils
 
-        private static string GetTranslationKey(ExpressionSyntax syntax)
+        private static string GetFirstArgumentStringValue(InvocationExpressionSyntax invocationExpr)
         {
-            if (syntax is LiteralExpressionSyntax literalExpressionSyntax &&
-                literalExpressionSyntax.Token.Value is string translationKey)
-                return translationKey;
+            if (invocationExpr.ArgumentList.Arguments.FirstOrDefault()?.Expression is LiteralExpressionSyntax syntax)
+                return syntax.Token.ValueText;
             return null;
         }
 
-        private static Document FixOldTranslationWithoutStringFormat(
-            CodeFixContext context, string translationKey, SyntaxNode root, InvocationExpressionSyntax invocationExpr)
+        private static bool IsFormatStringCall(IMethodSymbol methodSymbol)
         {
-            var newInvocationExpr = SyntaxFactory.ParseExpression(
-                $"{Constants.ClassName}.{translationKey}()"
-            );
-
-            var newRoot = root.ReplaceNode(invocationExpr, newInvocationExpr);
-            var newDocument = context.Document.WithSyntaxRoot(newRoot);
-            return newDocument;
+            return methodSymbol?.Name == Constants.StringFormatMethodName &&
+                   methodSymbol.ContainingType.ToDisplayString() == Constants.StringFormatTypeName;
         }
 
-        private static string GetTranslationKeyFromInnerInvocation(ExpressionSyntax syntax)
+        private static bool IsTranslateCall(IMethodSymbol methodSymbol)
         {
-            if (syntax is InvocationExpressionSyntax invocationExpressionSyntax &&
-                invocationExpressionSyntax.ArgumentList.Arguments.Count == 1)
-            {
-                var firstArgument = invocationExpressionSyntax.ArgumentList.Arguments.First().Expression;
-                return GetTranslationKey(firstArgument);
-            }
-            return null;
-        }
-
-        private static Document FixOldTranslationWithStringFormat(
-            CodeFixContext context,
-            SeparatedSyntaxList<ArgumentSyntax> argumentList,
-            string translationKey2,
-            SyntaxNode root,
-            InvocationExpressionSyntax invocationExpr,
-            int translationArgIndex)
-        {
-            // Skip all arguments before and including the translation call
-            var newArguments = string.Join(", ", argumentList.Skip(translationArgIndex + 1).Select(a => a.Expression));
-            var newInnerInvocationExpr = SyntaxFactory.ParseExpression($"{Constants.ClassName}.{translationKey2}({newArguments})");
-
-            var newRoot = root.ReplaceNode(invocationExpr, newInnerInvocationExpr);
-            return context.Document.WithSyntaxRoot(newRoot);
+            return methodSymbol?.Name == Constants.OldLocalizationMethodName &&
+                   methodSymbol.ContainingType != null &&
+                   Constants.OldLocalizationClasses.Contains(methodSymbol.ContainingType.Name);
         }
 
         #endregion
