@@ -34,7 +34,7 @@ namespace Editor.Localization.Analyzers.Localize
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: $"Replace with '{Constants.ClassName}.localization_key(...args)'",
-                    createChangedDocument: _ => Task.FromResult(FixOldTranslation(context, root, diagnostic)),
+                    createChangedDocument: _ => FixOldTranslationAsync(context, root, diagnostic),
                     equivalenceKey: AnalyzerDiagnostics.OldLocalizationApiUsed.Id
                 ),
                 diagnostic
@@ -45,7 +45,7 @@ namespace Editor.Localization.Analyzers.Localize
 
         #region Fix Methods
 
-        private static Document FixOldTranslation(CodeFixContext context, SyntaxNode root, Diagnostic diagnostic)
+        private static async Task<Document> FixOldTranslationAsync(CodeFixContext context, SyntaxNode root, Diagnostic diagnostic)
         {
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
@@ -82,6 +82,7 @@ namespace Editor.Localization.Analyzers.Localize
                 }
             }
 
+            // Fallback: leave unchanged if not recognized
             return context.Document;
         }
 
