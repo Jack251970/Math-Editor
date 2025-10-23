@@ -42,7 +42,7 @@ namespace Editor.Localization.Analyzers.Localize
             {
                 var arguments = invocationExpr.ArgumentList.Arguments;
                 // Check all arguments is an invocation (i.e. a candidate for Context.API.GetTranslation(…))
-                for (int i = 0; i < arguments.Count; i++)
+                for (var i = 0; i < arguments.Count; i++)
                 {
                     if (GetArgumentInvocationExpression(invocationExpr, i) is InvocationExpressionSyntax innerInvocationExpr &&
                         IsTranslateCall(semanticModel.GetSymbolInfo(innerInvocationExpr)) &&
@@ -76,8 +76,10 @@ namespace Editor.Localization.Analyzers.Localize
 
         #region Utils
 
-        private static string GetInvocationArguments(InvocationExpressionSyntax invocationExpr, int translateArgIndex) =>
-            string.Join(", ", invocationExpr.ArgumentList.Arguments.Skip(translateArgIndex + 1));
+        private static string GetInvocationArguments(InvocationExpressionSyntax invocationExpr, int translateArgIndex)
+        {
+            return string.Join(", ", invocationExpr.ArgumentList.Arguments.Skip(translateArgIndex + 1));
+        }
 
         /// <summary>
         /// Walk up the tree to see if we're already inside a Format call
@@ -100,21 +102,29 @@ namespace Editor.Localization.Analyzers.Localize
             return false;
         }
 
-        private static bool IsFormatStringCall(IMethodSymbol methodSymbol) =>
-            methodSymbol?.Name == Constants.StringFormatMethodName &&
+        private static bool IsFormatStringCall(IMethodSymbol methodSymbol)
+        {
+            return methodSymbol?.Name == Constants.StringFormatMethodName &&
             methodSymbol.ContainingType.ToDisplayString() == Constants.StringFormatTypeName;
+        }
 
-        private static InvocationExpressionSyntax GetArgumentInvocationExpression(InvocationExpressionSyntax invocationExpr, int index) =>
-            invocationExpr.ArgumentList.Arguments[index].Expression as InvocationExpressionSyntax;
+        private static InvocationExpressionSyntax GetArgumentInvocationExpression(InvocationExpressionSyntax invocationExpr, int index)
+        {
+            return invocationExpr.ArgumentList.Arguments[index].Expression as InvocationExpressionSyntax;
+        }
 
-        private static bool IsTranslateCall(SymbolInfo symbolInfo) =>
-            symbolInfo.Symbol is IMethodSymbol innerMethodSymbol &&
+        private static bool IsTranslateCall(SymbolInfo symbolInfo)
+        {
+            return symbolInfo.Symbol is IMethodSymbol innerMethodSymbol &&
             innerMethodSymbol.Name == Constants.OldLocalizationMethodName &&
             Constants.OldLocalizationClasses.Contains(innerMethodSymbol.ContainingType.Name);
+        }
 
-        private static bool IsTranslateCall(IMethodSymbol methodSymbol) =>
-            methodSymbol?.Name is Constants.OldLocalizationMethodName &&
+        private static bool IsTranslateCall(IMethodSymbol methodSymbol)
+        {
+            return methodSymbol?.Name is Constants.OldLocalizationMethodName &&
             Constants.OldLocalizationClasses.Contains(methodSymbol.ContainingType.Name);
+        }
 
         private static string GetFirstArgumentStringValue(InvocationExpressionSyntax invocationExpr)
         {

@@ -8,7 +8,7 @@ Localization toolkit for Math Editor.
 
 You can simplify your code by replacing calls like:
 ```csharp
-Ioc.Default.GetRequiredService<Internationalization>().GetTranslation("Editor_Plugin_Localization_Demo_Plugin_Name")
+Internationalization.GetTranslation("Editor_Plugin_Localization_Demo_Plugin_Name")
 ```
 with:
 ```csharp
@@ -17,7 +17,7 @@ Localize.Editor_Plugin_Localization_Demo_Plugin_Name()
 
 If your localization string uses variables, it becomes even simpler! From this:
 ```csharp
-string.Format(Ioc.Default.GetRequiredService<Internationalization>().GetTranslation("Editor_Plugin_Localization_Demo_Value_With_Keys"), firstName, lastName);
+Internationalization.GetTranslation("Editor_Plugin_Localization_Demo_Value_With_Keys"), firstName, lastName);
 ```
 To this:
 ```csharp

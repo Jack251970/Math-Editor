@@ -23,11 +23,19 @@ namespace Editor.Localization.Attributes
 
         protected string EnumLocalizeKey { get; set; }
 
-        public override bool Equals(object obj) =>
-            obj is EnumLocalizeKeyAttribute other && other.LocalizeKey == LocalizeKey;
+        public override bool Equals(object obj)
+        {
+            return obj is EnumLocalizeKeyAttribute other && other.LocalizeKey == LocalizeKey;
+        }
 
-        public override int GetHashCode() => LocalizeKey?.GetHashCode() ?? 0;
+        public override int GetHashCode()
+        {
+            return LocalizeKey?.GetHashCode() ?? 0;
+        }
 
-        public override bool IsDefaultAttribute() => Equals(Default);
+        public override bool IsDefaultAttribute()
+        {
+            return Equals(Default);
+        }
     }
 }

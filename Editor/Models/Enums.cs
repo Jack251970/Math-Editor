@@ -124,7 +124,7 @@ public enum EditorMode
 {
     [EnumLocalizeKey(nameof(Localize.EditorMode_Math))]
     Math,
-    
+
     [EnumLocalizeKey(nameof(Localize.EditorMode_Text))]
     Text,
 }
@@ -247,7 +247,7 @@ public enum CopyType
 {
     [EnumLocalizeKey(nameof(Localize.CopyType_Image))]
     Image,
-    
+
     [EnumLocalizeKey(nameof(Localize.CopyType_Latex))]
     Latex,
 }

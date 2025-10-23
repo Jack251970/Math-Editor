@@ -14,8 +14,8 @@ using Microsoft.CodeAnalysis.Text;
 namespace Editor.Localization.SourceGenerators.Localize
 {
     /// <summary>
-	/// Generates properties for strings based on resource files.
-	/// </summary>
+    /// Generates properties for strings based on resource files.
+    /// </summary>
     [Generator]
     public partial class LocalizeSourceGenerator : IIncrementalGenerator
     {
@@ -54,7 +54,7 @@ namespace Editor.Localization.SourceGenerators.Localize
             var compilation = context.CompilationProvider;
 
             var configOptions = context.AnalyzerConfigOptionsProvider;
-            
+
             var combined = localizedStrings.Combine(invocationKeys).Combine(configOptions).Combine(compilation).Combine(xamlFiles.Collect());
 
             context.RegisterSourceOutput(combined, Execute);
@@ -65,8 +65,8 @@ namespace Editor.Localization.SourceGenerators.Localize
         /// </summary>
         /// <param name="spc">The source production context.</param>
         /// <param name="data">The provided data.</param>
-        private void Execute(SourceProductionContext spc, 
-            ((((ImmutableArray<LocalizableString> LocalizableStrings, 
+        private void Execute(SourceProductionContext spc,
+            ((((ImmutableArray<LocalizableString> LocalizableStrings,
             ImmutableHashSet<string> InvocationKeys),
             AnalyzerConfigOptionsProvider ConfigOptionsProvider),
             Compilation Compilation),
@@ -88,7 +88,7 @@ namespace Editor.Localization.SourceGenerators.Localize
             var localizedStrings = data.Item1.Item1.Item1.LocalizableStrings;
 
             var assemblyNamespace = compilation.AssemblyName ?? Constants.DefaultNamespace;
-            
+
             GenerateSource(
                 spc,
                 xamlFiles[0],
@@ -125,8 +125,8 @@ namespace Editor.Localization.SourceGenerators.Localize
                 // Check if the attribute is a namespace declaration (xmlns:...)
                 if (attr.Name.NamespaceName == XNamespace.Xmlns.NamespaceName)
                 {
-                    string uri = attr.Value;
-                    string prefix = attr.Name.LocalName;
+                    var uri = attr.Value;
+                    var prefix = attr.Name.LocalName;
 
                     if (uri == Constants.SystemPrefixUri)
                     {
@@ -182,9 +182,9 @@ namespace Editor.Localization.SourceGenerators.Localize
         private static List<LocalizableStringParam> GetParameters(string format)
         {
             var parameters = new Dictionary<int, string>();
-            int maxIndex = -1;
-            int i = 0;
-            int len = format.Length;
+            var maxIndex = -1;
+            var i = 0;
+            var len = format.Length;
 
             while (i < len)
             {
@@ -200,8 +200,8 @@ namespace Editor.Localization.SourceGenerators.Localize
                     {
                         // Start of a format item, parse index and format
                         i++; // Move past '{'
-                        int index = 0;
-                        bool hasIndex = false;
+                        var index = 0;
+                        var hasIndex = false;
 
                         // Parse index
                         while (i < len && char.IsDigit(format[i]))
@@ -246,7 +246,7 @@ namespace Editor.Localization.SourceGenerators.Localize
                         if (i < len && format[i] == ':')
                         {
                             i++; // Move past ':'
-                            int start = i;
+                            var start = i;
                             while (i < len && format[i] != '}')
                             {
                                 i++;
@@ -307,7 +307,7 @@ namespace Editor.Localization.SourceGenerators.Localize
                 return result;
             }
 
-            for (int idx = 0; idx <= maxIndex; idx++)
+            for (var idx = 0; idx <= maxIndex; idx++)
             {
                 var formatValue = parameters.TryGetValue(idx, out var value) ? value : null;
                 result.Add(new LocalizableStringParam { Index = idx, Format = formatValue, Name = $"arg{idx}", Type = "object?" });
@@ -562,7 +562,7 @@ namespace Editor.Localization.SourceGenerators.Localize
             if (!(string.IsNullOrEmpty(getTranslation)))
             {
                 sb.AppendLine(parameters.Count > 0
-                    ? !ls.Format ? 
+                    ? !ls.Format ?
                         $"string.Format({getTranslation}(\"{ls.Key}\"){formatArgs});"
                         : $"string.Format(System.Globalization.CultureInfo.CurrentCulture, {getTranslation}(\"{ls.Key}\"){formatArgs});"
                     : $"{getTranslation}(\"{ls.Key}\");");
@@ -596,7 +596,7 @@ namespace Editor.Localization.SourceGenerators.Localize
             public string Value { get; }
             public string Summary { get; }
             public IEnumerable<LocalizableStringParam> Params { get; }
-            
+
             public bool Format => Params.Any(p => !string.IsNullOrEmpty(p.Format));
 
             public LocalizableString(string key, string value, string summary, IEnumerable<LocalizableStringParam> @params)
