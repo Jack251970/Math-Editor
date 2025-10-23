@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -37,7 +36,7 @@ namespace Editor
             '\u25E0', '\u25E1',
         ];
 
-        public static event PropertyChangedEventHandler InputPropertyChanged = (x, y) => { };
+        public static event EventHandler<string>? InputPropertyChanged;
         private static bool inputBold, inputItalic, inputUnderline;
         private static EditorMode editorMode = EditorMode.Math;
         public static bool InputBold
@@ -48,7 +47,7 @@ namespace Editor
                 if (inputBold != value)
                 {
                     inputBold = value;
-                    InputPropertyChanged(null, new PropertyChangedEventArgs("InputBold"));
+                    InputPropertyChanged?.Invoke(null, "InputBold");
                 }
             }
         }
@@ -60,7 +59,7 @@ namespace Editor
                 if (inputItalic != value)
                 {
                     inputItalic = value;
-                    InputPropertyChanged(null, new PropertyChangedEventArgs("InputItalic"));
+                    InputPropertyChanged?.Invoke(null, "InputItalic");
                 }
             }
         }
@@ -72,7 +71,7 @@ namespace Editor
                 if (inputUnderline != value)
                 {
                     inputUnderline = value;
-                    InputPropertyChanged(null, new PropertyChangedEventArgs("InputUnderline"));
+                    InputPropertyChanged?.Invoke(null, "InputUnderline");
                 }
             }
         }
@@ -84,7 +83,7 @@ namespace Editor
                 if (editorMode != value)
                 {
                     editorMode = value;
-                    InputPropertyChanged(null, new PropertyChangedEventArgs("EditorMode"));
+                    InputPropertyChanged?.Invoke(null, nameof(EditorMode));
                 }
             }
         }
@@ -135,7 +134,7 @@ namespace Editor
                 if (fontType != value)
                 {
                     fontType = value;
-                    InputPropertyChanged(null, new PropertyChangedEventArgs("FontType"));
+                    InputPropertyChanged?.Invoke(null, nameof(FontType));
                 }
             }
         }
@@ -751,17 +750,18 @@ namespace Editor
         {
             if (SelectedItems != 0)
             {
-                if (operation == "format")
+                switch (operation)
                 {
-                    ModifyFormat(argument, applied, addUndo);
-                }
-                else if (operation == "font")
-                {
-                    ModifyFont(Enum.Parse<FontType>(argument), applied, addUndo);
-                }
-                else if (operation == "mode")
-                {
-                    ModifyMode(argument, addUndo);
+                    // TODO: Use enum & nameof for code quality
+                    case "format":
+                        ModifyFormat(argument, applied, addUndo);
+                        break;
+                    case nameof(FontType):
+                        ModifyFont(Enum.Parse<FontType>(argument), applied, addUndo);
+                        break;
+                    case nameof(EditorMode):
+                        ModifyMode(argument, addUndo);
+                        break;
                 }
                 FormatText();
             }

@@ -31,5 +31,8 @@ public static class Constants
 
     public const string SystemLanguageCode = "system";
 
+    public const string MedExtension = "med";
+
     public const string IssuesUrl = "https://github.com/Jack251970/Math-Editor/issues";
+    public const string WikiUrl = "https://github.com/Jack251970/Math-Editor/wiki";
 }

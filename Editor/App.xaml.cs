@@ -89,6 +89,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
                 .ConfigureServices(services => services
                     .AddSingleton(_ => Settings)
                     .AddSingleton<Internationalization>()
+                    .AddTransient<MainWindowViewModel>()
                     .AddTransient<SettingsWindowViewModel>()
             ).Build();
             Ioc.Default.ConfigureServices(host.Services);

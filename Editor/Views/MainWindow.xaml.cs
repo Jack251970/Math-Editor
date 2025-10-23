@@ -4,24 +4,23 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
-[INotifyPropertyChanged]
 public partial class MainWindow : Window
 {
     public bool IsInialized { get; private set; } = false;
+    private readonly MainWindowViewModel _viewModel = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
-    private string _currentLocalFile = "";
-    private const string MedExtension = "med";
-    private static readonly string MedFileFilter = "Math Editor File (*." + MedExtension + ")|*." + MedExtension;
+    private string _currentLocalFile = string.Empty;
+    private static readonly string MedFileFilter = "Math Editor File (*." + Constants.MedExtension + ")|*." + Constants.MedExtension;
 
     public MainWindow(string currentLocalFile)
     {
         _currentLocalFile = currentLocalFile;
-        DataContext = this;
+        DataContext = _viewModel;
         InitializeComponent();
         StatusBarHelper.Init(this);
         characterToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
@@ -33,37 +32,24 @@ public partial class MainWindow : Window
         EquationBase.SelectionAvailable += new EventHandler<EventArgs>(editor_SelectionAvailable);
         EquationBase.SelectionUnavailable += new EventHandler<EventArgs>(editor_SelectionUnavailable);
         underbarToggle.IsChecked = true;
-        TextEquation.InputPropertyChanged += new PropertyChangedEventHandler(TextEquation_InputPropertyChanged);
         editor.ZoomChanged += new EventHandler(editor_ZoomChanged);
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private void editor_Loaded(object sender, RoutedEventArgs e)
     {
+        _viewModel.Editor = editor;
+
         // Check if we have a file to open
         OpenFile(_currentLocalFile);
 
-        // TODO: Use Binding here and make sure it follows settings window
-        var mode = App.Settings.DefaultMode.ToString();
-        var fontName = App.Settings.DefaultFont;
-
-        var modes = editorModeCombo.Items;
-        foreach (ComboBoxItem item in modes)
-        {
-            if ((string)item.Tag == mode)
-            {
-                editorModeCombo.SelectedItem = item;
-            }
-        }
-        var fonts = equationFontCombo.Items;
-        foreach (ComboBoxItem item in fonts)
-        {
-            if ((string)item.Tag == fontName.ToString())
-            {
-                equationFontCombo.SelectedItem = item;
-            }
-        }
-        ChangeEditorMode();
-        ChangeEditorFont();
+        // Init editor mode & editor font
+        TextEquation.InputPropertyChanged -= _viewModel.TextEquation_InputPropertyChanged;
+        TextEquation.EditorMode = App.Settings.DefaultMode;
+        // TODO: Use enum type directly
+        editor.ChangeFormat(nameof(EditorMode), App.Settings.DefaultMode.ToString().ToLower(), true);
+        TextEquation.FontType = App.Settings.DefaultFont;
+        editor.ChangeFormat(nameof(FontType), App.Settings.DefaultFont.ToString(), true);
+        TextEquation.InputPropertyChanged += _viewModel.TextEquation_InputPropertyChanged;
         editor.Focus();
 
         IsInialized = true;
@@ -176,6 +162,8 @@ public partial class MainWindow : Window
 
     private void Window_Closed(object sender, EventArgs e)
     {
+        TextEquation.InputPropertyChanged -= _viewModel.TextEquation_InputPropertyChanged;
+
         // Fix App abnormal exit when App displays MessageBox before MainWindow
         Application.Current.Shutdown();
     }
@@ -278,7 +266,7 @@ public partial class MainWindow : Window
     {
         if (!File.Exists(_currentLocalFile))
         {
-            var result = ShowSaveFileDialog(MedExtension, MedFileFilter);
+            var result = ShowSaveFileDialog(Constants.MedExtension, MedFileFilter);
             if (string.IsNullOrEmpty(result))
             {
                 return false;
@@ -312,7 +300,7 @@ public partial class MainWindow : Window
 
     private void SaveAsCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        var result = ShowSaveFileDialog(MedExtension, MedFileFilter);
+        var result = ShowSaveFileDialog(Constants.MedExtension, MedFileFilter);
         if (!string.IsNullOrEmpty(result))
         {
             _currentLocalFile = result;
@@ -389,6 +377,7 @@ public partial class MainWindow : Window
     private void ToolBar_Loaded(object sender, RoutedEventArgs e)
     {
         var toolBar = sender as ToolBar;
+        // TODO: This cannot work. We need to find another way to hide OverflowGrid automatically.
         if (toolBar?.Template.FindName("OverflowGrid", toolBar) is FrameworkElement overflowGrid)
         {
             overflowGrid.Visibility = Visibility.Collapsed;
@@ -398,26 +387,6 @@ public partial class MainWindow : Window
     private void UnderbarToggleCheckChanged(object sender, RoutedEventArgs e)
     {
         editor.ShowOverbar(underbarToggle.IsChecked == true);
-    }
-
-    private void contentsMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor/wiki");
-    }
-
-    private void aboutMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        Window aboutWindow = new AboutWindow
-        {
-            Owner = this
-        };
-        aboutWindow.ShowDialog();
-    }
-
-    private void videoMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        // TODO: Update link to actual video tutorials
-        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor");
     }
 
     private void deleteMenuItem_Click(object sender, RoutedEventArgs e)
@@ -469,12 +438,6 @@ public partial class MainWindow : Window
         ToggleFullScreen();
     }
 
-    private void fbMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        // TODO: Update link to actual Facebook page
-        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor");
-    }
-
     private MenuItem? lastZoomMenuItem = null;
 
     private void ZoomMenuItem_Click(object sender, RoutedEventArgs e)
@@ -505,15 +468,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private void CustomZoomMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        var zoomWindow = new CustomZoomWindow
-        {
-            Owner = this
-        };
-        zoomWindow.Show();
-    }
-
     public void SetFontSizePercentage(int number)
     {
         customZoomMenu.Header = "_Custom (" + number + "%)";
@@ -541,28 +495,6 @@ public partial class MainWindow : Window
         statusBarRightLabel.Content = coordinates;
     }
 
-    private Window? symbolWindow = null;
-    private void symbolMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        symbolWindow ??= new UnicodeSelectorWindow
-        {
-            Owner = this
-        };
-        symbolWindow.Show();
-        symbolWindow.Activate();
-    }
-
-    private Window? codePointWindow = null;
-    private void codePointMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        codePointWindow ??= new CodepointWindow
-        {
-            Owner = this
-        };
-        codePointWindow.Show();
-        codePointWindow.Activate();
-    }
-
     private void integralItalicCheckbox_Checked(object sender, RoutedEventArgs e)
     {
         EquationRow.UseItalicIntergalOnNew = true;
@@ -576,128 +508,6 @@ public partial class MainWindow : Window
     private void scrollViwer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
         editor.InvalidateVisual();
-    }
-
-    public IntPtr Handle => new System.Windows.Interop.WindowInteropHelper(this).Handle;
-
-    public bool InputBold
-    {
-        get => TextEquation.InputBold;
-        set
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.InputBold = value;
-            editor.ChangeFormat("format", "bold", value);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-        }
-    }
-
-    public bool InputItalic
-    {
-        get => TextEquation.InputItalic;
-        set
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.InputItalic = value;
-            editor.ChangeFormat("format", "italic", value);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-        }
-    }
-
-    public bool InputUnderline
-    {
-        get => TextEquation.InputUnderline;
-        set
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.InputUnderline = value;
-            editor.ChangeFormat("format", "underline", value);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-        }
-    }
-
-    private void TextEquation_InputPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == "EditorMode")
-        {
-            var mode = TextEquation.EditorMode.ToString();
-            var t = editorModeCombo.Items;
-            foreach (ComboBoxItem item in t)
-            {
-                if ((string)item.Tag == mode)
-                {
-                    editorModeCombo.SelectedItem = item;
-                }
-            }
-        }
-        else if (e.PropertyName == "FontType")
-        {
-            var fontName = TextEquation.FontType.ToString();
-            var t = equationFontCombo.Items;
-            foreach (ComboBoxItem item in t)
-            {
-                if ((string)item.Tag == fontName)
-                {
-                    equationFontCombo.SelectedItem = item;
-                }
-            }
-
-        }
-        else
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(e.PropertyName));
-        }
-    }
-
-    private void ChangeEditorFont()
-    {
-        if (editor != null)
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.FontType = (FontType)Enum.Parse(typeof(FontType), (string)((ComboBoxItem)equationFontCombo.SelectedItem).Tag);
-            editor.ChangeFormat("font", (string)((ComboBoxItem)equationFontCombo.SelectedItem).Tag, true);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-            editor.Focus();
-        }
-    }
-
-    private void EquationFontCombo_DropDownClosed(object sender, EventArgs e)
-    {
-        try
-        {
-            ChangeEditorFont();
-        }
-        catch
-        {
-            MessageBox.Show("Cannot switch to the selected font", "Unidentified Error");
-        }
-    }
-
-    // TODO: Check that we should follow the settings?
-    private void ChangeEditorMode()
-    {
-        if (editor != null)
-        {
-            var item = (ComboBoxItem)editorModeCombo.SelectedItem;
-            var mode = Enum.Parse<EditorMode>(item.Tag.ToString()!);
-
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.EditorMode = (EditorMode)Enum.Parse(typeof(EditorMode), (string)((ComboBoxItem)editorModeCombo.SelectedItem).Tag);
-            editor.ChangeFormat("mode", mode.ToString().ToLower(), true);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-            editor.Focus();
-        }
-    }
-
-    private void EditorModeCombo_DropDownClosed(object sender, EventArgs e)
-    {
-        ChangeEditorMode();
-    }
-
-    private void mvHelpMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        // TODO: Update link to actual discussion page
-        BrowserHelper.Open("https://github.com/Jack251970/Math-Editor/discussions");
     }
 
     private void NewCommandHandler(object sender, ExecutedRoutedEventArgs e)
@@ -720,15 +530,6 @@ public partial class MainWindow : Window
         _currentLocalFile = "";
         SetTitle();
         editor.Clear();
-    }
-
-    private void settingsMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        var settingsWindow = new SettingsWindow
-        {
-            Owner = this
-        };
-        settingsWindow.Show();
     }
 }
 public static class StatusBarHelper
