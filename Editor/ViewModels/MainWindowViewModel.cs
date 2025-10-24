@@ -28,15 +28,14 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         SingletonWindowOpener.Open<SettingsWindow>(Window.GetWindow(item));
     }
 
-    private UnicodeSelectorWindow? _unicodeSelectorWindow = null;
     [RelayCommand]
     private void OpenUnicodeSelectorWindow(MenuItem item)
     {
-        _unicodeSelectorWindow ??= new UnicodeSelectorWindow
+        var unicodeSelectorWindow = new UnicodeSelectorWindow
         {
             Owner = Window.GetWindow(item)
         };
-        _unicodeSelectorWindow.Show();
+        unicodeSelectorWindow.ShowDialog();
     }
 
     [RelayCommand]
@@ -46,7 +45,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         {
             Owner = Window.GetWindow(item)
         };
-        codepointWindow.Show();
+        codepointWindow.ShowDialog();
     }
 
     [RelayCommand]
@@ -56,7 +55,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         {
             Owner = Window.GetWindow(item)
         };
-        customZoomWindow.Show();
+        customZoomWindow.ShowDialog();
     }
 
     [RelayCommand]
