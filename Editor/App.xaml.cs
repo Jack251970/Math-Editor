@@ -90,6 +90,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
                     .AddSingleton(_ => Settings)
                     .AddSingleton<Internationalization>()
                     .AddSingleton<LatexConverter>()
+                    .AddSingleton<TextManager>()
                     .AddTransient<MainWindowViewModel>()
                     .AddTransient<SettingsWindowViewModel>()
             ).Build();

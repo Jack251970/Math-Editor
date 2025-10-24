@@ -1450,7 +1450,7 @@ namespace Editor
             }
         }
 
-        private static void DrawRightDecorations(DrawingContext dc, List<CharacterDecorationInfo> cdiList, double top, double right, int formatId)
+        private void DrawRightDecorations(DrawingContext dc, List<CharacterDecorationInfo> cdiList, double top, double right, int formatId)
         {
             var rightDecorations = (from x in cdiList where x.Position == Position.TopRight select x).ToList();
             if (rightDecorations.Count > 0)

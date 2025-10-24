@@ -11,8 +11,8 @@ namespace Editor
 {
     public abstract class EquationBase : EquationBox
     {
-        protected static TextManager TextManager { get; } = new();
-        protected static LatexConverter LatexConverter { get; } = Ioc.Default.GetRequiredService<LatexConverter>();
+        protected TextManager TextManager { get; } = Ioc.Default.GetRequiredService<TextManager>();
+        protected LatexConverter LatexConverter { get; } = Ioc.Default.GetRequiredService<LatexConverter>();
         protected const double LineFactor = 0.06;
 
         public virtual bool ApplySymbolGap { get; set; }
