@@ -57,7 +57,7 @@
                     <Border
                         Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=Self}}"
                         Margin="2"
-                        BorderBrush="White"
+                        BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"
                         BorderThickness="1">
                         <TextBlock
                             Margin="1"
@@ -91,7 +91,7 @@
                         <Border
                             Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=Self}}"
                             Margin="2"
-                            BorderBrush="White"
+                            BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"
                             BorderThickness="1">
                             <TextBlock
                                 Margin="1"
