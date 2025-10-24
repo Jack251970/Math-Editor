@@ -145,9 +145,6 @@ public partial class MainWindow : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         TextEquation.InputPropertyChanged -= _viewModel.TextEquation_InputPropertyChanged;
-
-        // Fix App abnormal exit when App displays MessageBox before MainWindow
-        Application.Current.Shutdown();
     }
 
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)

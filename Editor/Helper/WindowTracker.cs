@@ -13,7 +13,6 @@ public static class WindowTracker
     {
         owner.Closed += (sender, args) =>
         {
-            _ownerWindows.Remove(owner);
             var windowsToRemove = new List<Window>();
             foreach (var pair in _activeWindows)
             {
@@ -28,6 +27,11 @@ public static class WindowTracker
             {
                 window.Close();
                 _activeWindows.TryRemove(window, out var _);
+            }
+            _ownerWindows.Remove(owner);
+            if (_ownerWindows.Count == 0)
+            {
+                Application.Current.Shutdown();
             }
         };
         _ownerWindows.Add(owner);
