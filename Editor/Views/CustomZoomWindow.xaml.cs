@@ -1,17 +1,52 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
+[INotifyPropertyChanged]
 public partial class CustomZoomWindow : Window
 {
-    private readonly int maxPercentage = 9999;
+    private const int MaxPercentage = 9999;
+
+    [ObservableProperty]
+    private string _numberBoxText = string.Empty;
 
     public CustomZoomWindow()
     {
+        DataContext = this;
         InitializeComponent();
-        numberBox.Focus();
+    }
+
+    private void NumberBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    {
+        e.Handled = !AreAllValidNumericChars(e.Text) || NumberBoxText.Length > 3;
+        base.OnPreviewTextInput(e);
+    }
+
+    private void OkButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var number = int.Parse(NumberBoxText);
+            if (number <= 0 || number > MaxPercentage)
+            {
+                MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageRangeError(MaxPercentage), Localize.Error());
+                return;
+            }
+            ((MainWindow)Owner).SetFontSizePercentage(number);
+            Close();
+        }
+        catch
+        {
+            MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageFormatError(MaxPercentage), Localize.Error());
+        }
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 
     private static bool AreAllValidNumericChars(string str)
@@ -22,35 +57,5 @@ public partial class CustomZoomWindow : Window
         }
 
         return true;
-    }
-
-    private void numberBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        e.Handled = !AreAllValidNumericChars(e.Text) || numberBox.Text.Length > 3;
-        base.OnPreviewTextInput(e);
-    }
-
-    private void okButton_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var number = int.Parse(numberBox.Text);
-            if (number <= 0 || number > maxPercentage)
-            {
-                MessageBox.Show("Zoom percentage must be between 1 and " + maxPercentage + ".");
-                return;
-            }
-            ((MainWindow)Owner).SetFontSizePercentage(number);
-            Close();
-        }
-        catch
-        {
-            MessageBox.Show("Zoom percentage must be a number between 1 and " + maxPercentage + ".");
-        }
-    }
-
-    private void cancelButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

@@ -53,14 +53,15 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         _codepointWindow.Show();
     }
 
+    private CustomZoomWindow? _customZoomWindow = null;
     [RelayCommand]
     private void OpenCustomZoomWindow(MenuItem item)
     {
-        var zoomWindow = new CustomZoomWindow
+        _customZoomWindow = new CustomZoomWindow
         {
             Owner = Window.GetWindow(item)
         };
-        zoomWindow.Show();
+        _customZoomWindow.Show();
     }
 
     [RelayCommand]
