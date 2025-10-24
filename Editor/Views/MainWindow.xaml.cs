@@ -517,6 +517,7 @@ public partial class MainWindow : Window
         editor.Clear();
     }
 }
+
 public static class StatusBarHelper
 {
     private static MainWindow? window = null;
