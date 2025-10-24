@@ -62,4 +62,10 @@
     <system:String x:Key="SettingsWindow_DefaultFont">Default font</system:String>
     <system:String x:Key="SettingsWindow_CopyType">Copy type</system:String>
 
+    <!--  Unicode Selector Window  -->
+    <system:String x:Key="UnicodeSelectorWindow_Title">Insert Symbol</system:String>
+    <system:String x:Key="UnicodeSelectorWindow_Category">Category:</system:String>
+    <system:String x:Key="UnicodeSelectorWindow_RecentlyUsedSymbols">Recently used symbols:</system:String>
+    <system:String x:Key="UnicodeSelectorWindow_CharacterCode">Character code:</system:String>
+
 </ResourceDictionary>

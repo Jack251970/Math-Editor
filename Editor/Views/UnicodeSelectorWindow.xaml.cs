@@ -1,38 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Editor;
 
+[INotifyPropertyChanged]
 public partial class UnicodeSelectorWindow : Window
 {
-    private readonly Dictionary<string, ObservableCollection<UnicodeListItem>> categories = [];
-    //Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>> fontCache = new Dictionary<int, Dictionary<string, ObservableCollection<UnicodeListItem>>>();
-    private readonly ObservableCollection<UnicodeListItem> recentList = [];
-    private readonly ObservableCollection<UnicodeListItem> allList = [];
+    public List<string> Categories { get; } = [.. _categories.Keys];
 
-    public UnicodeSelectorWindow()
+    [ObservableProperty]
+    private string _selectedCategory = string.Empty;
+
+    public FontFamily SymbolFontFamily { get; } = FontFactory.GetFontFamily(FontType.STIXGeneral);
+
+    [ObservableProperty]
+    private List<UnicodeListItem> _categorySource = [];
+
+    [ObservableProperty]
+    private UnicodeListItem? _selectedSymbolItem = null;
+
+    public Settings Settings { get; } = App.Settings;
+
+    [ObservableProperty]
+    private UnicodeListItem? _selectedRecentSymbolItem = null;
+
+    [ObservableProperty]
+    private bool? _selectRecentList = null;
+
+    [ObservableProperty]
+    private string _characterCodeText = string.Empty;
+
+    // TODO: Update the localization when languages changes
+    public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
+
+    [ObservableProperty]
+    private UnicodeFormat _unicodeFormat = UnicodeFormat.Decimal;
+
+    private static readonly Dictionary<string, List<UnicodeListItem>> _categories = [];
+    private static readonly List<UnicodeListItem> _allList = [];
+
+    private const int MaxSymbols = 30;
+
+    static UnicodeSelectorWindow()
     {
-        DataContext = this;
-        InitializeComponent();
-        symbolListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
-        symbolListBox.FontSize = 18;
-        recentListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
-        recentListBox.FontSize = 16;
-        //List<string> names = Enum.GetNames(typeof(FontType)).ToList();
-        //names.Sort();
-        recentListBox.ItemsSource = recentList;
-        //fontBox.ItemsSource = names;
-        //fontBox.SelectedIndex = 0;
         SetupCategories();
     }
 
-    private void SetupCategories()
+    private static void SetupCategories()
     {
         SetupCategory("Mathematical Operators & Number Forms", 0x2150, 0x218F);
         SetupCategory("Mathematical Operators & Number Forms", 0x2200, 0x22FF); //Mathematical Operators    
@@ -67,26 +85,30 @@ public partial class UnicodeSelectorWindow : Window
         SetupCategory("Supplemental Mathematical Operators", 0x2A00, 0x2AFF);
         SetupCategory("Miscellaneous", 0x2B12, 0x2B54); //Miscellaneous Symbols and Arrows
         SetupCategory("Miscellaneous", 0xFB00, 0xFB4F); //Alphabetic Presentation Forms
-        //SetupCategory("Mathematical Alphanumeric Symbols", 0x1D400, 0x1D7FF);            
+        //SetupCategory("Mathematical Alphanumeric Symbols", 0x1D400, 0x1D7FF);
 
-        categories.Add("All", allList);
-        categoryBox.ItemsSource = categories.Keys;
-        categoryBox.SelectedIndex = 0;
+        _categories.Add("All", _allList);
     }
 
-    private void SetupCategory(string categoryName, int start, int end)
+    private static void SetupCategory(string categoryName, int start, int end)
     {
-        ObservableCollection<UnicodeListItem> list = [];
+        var list = new List<UnicodeListItem>();
         for (var i = start; i <= end; i++)
         {
             if (TypefaceContainsCharacter(FontFactory.GetTypeface(FontType.STIXGeneral, FontStyles.Normal, FontWeights.Normal), Convert.ToChar(i)))
             {
-                var item = new UnicodeListItem { /*FontFamily = family, HexString = "0x" + i.ToString("X4"),*/ CodePoint = i, UnicodeText = string.Format("{0}", Convert.ToChar(i)) };
+                var item = new UnicodeListItem
+                {
+                    //FontFamily = family,
+                    //HexString = "0x" + i.ToString("X4"),
+                    CodePoint = i,
+                    UnicodeText = string.Format("{0}", Convert.ToChar(i))
+                };
                 list.Add(item);
-                allList.Add(item);
+                _allList.Add(item);
             }
         }
-        if (categories.TryGetValue(categoryName, out var oldList))
+        if (_categories.TryGetValue(categoryName, out var oldList))
         {
             foreach (var item in list)
             {
@@ -95,161 +117,138 @@ public partial class UnicodeSelectorWindow : Window
         }
         else
         {
-            categories.Add(categoryName, list);
+            _categories.Add(categoryName, list);
         }
     }
 
     private static bool TypefaceContainsCharacter(Typeface typeface, char characterToCheck)
     {
-        int unicodeValue = Convert.ToUInt16(characterToCheck);
+        var unicodeValue = Convert.ToUInt16(characterToCheck);
         typeface.TryGetGlyphTypeface(out var glyph);
-        if (glyph != null && glyph.CharacterToGlyphMap.TryGetValue(unicodeValue, out var _))
+        return glyph != null && glyph.CharacterToGlyphMap.ContainsKey(unicodeValue);
+    }
+
+    public UnicodeSelectorWindow()
+    {
+        DataContext = this;
+        SelectedCategory = Categories[0];
+        InitializeComponent();
+    }
+
+    partial void OnSelectedCategoryChanged(string value)
+    {
+        CategorySource = _categories[value];
+    }
+
+    partial void OnCategorySourceChanged(List<UnicodeListItem> value)
+    {
+        SelectedSymbolItem = null;
+        // If the recent list has selected item, we should not clear it
+        // So the selected item is still valid and we do not reset this flag
+        if (SelectRecentList != true)
         {
-            return true;
+            SelectRecentList = null;
         }
-        return false;
     }
 
-    private void fontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    partial void OnSelectedSymbolItemChanged(UnicodeListItem? value)
     {
-
-    }
-
-    private void categoryBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        symbolListBox.ItemsSource = categories[(string)categoryBox.SelectedValue];
-        symbolListBox.SelectedIndex = 0;
-    }
-
-    private bool useRecentList = false;
-    private void insertButton_Click(object sender, RoutedEventArgs e)
-    {
-        InsertSymbol();
-    }
-
-    private void InsertSymbol()
-    {
-        UnicodeListItem? item;
-        if (useRecentList)
+        if (value != null)
         {
-            item = recentListBox.SelectedItem as UnicodeListItem;
+            ChangeCharacterCode(UnicodeFormat, value);
+            SelectRecentList = false;
+            SelectedRecentSymbolItem = null;
         }
-        else
+    }
+
+    partial void OnSelectedRecentSymbolItemChanged(UnicodeListItem? value)
+    {
+        if (value != null)
         {
-            item = symbolListBox.SelectedItem as UnicodeListItem;
+            ChangeCharacterCode(UnicodeFormat, value);
+            SelectRecentList = true;
+            SelectedSymbolItem = null;
         }
+    }
+
+    partial void OnUnicodeFormatChanged(UnicodeFormat value)
+    {
+        if (GetSelectedItem() is UnicodeListItem item)
+        {
+            ChangeCharacterCode(value, item);
+        }
+    }
+
+    private void ChangeCharacterCode(UnicodeFormat value, UnicodeListItem item)
+    {
+        var numberBase = value switch
+        {
+            UnicodeFormat.Octal => 8,
+            UnicodeFormat.Decimal => 10,
+            UnicodeFormat.Hexadecimal => 16,
+            _ => throw new NotImplementedException(),
+        };
+        var numberString = Convert.ToString(item.CodePoint, numberBase);
+        if (numberBase == 16)
+        {
+            numberString = numberString.ToUpper().PadLeft(4, '0');
+        }
+        else if (numberBase == 8)
+        {
+            numberString = numberString.PadLeft(6, '0');
+        }
+        CharacterCodeText = numberString;
+    }
+
+    private void InsertButton_Click(object sender, RoutedEventArgs e)
+    {
+        var item = GetSelectedItem();
         if (item != null)
         {
-            var commandDetails = new CommandDetails { UnicodeString = item.UnicodeText, CommandType = CommandType.Text };
-            ((MainWindow)Owner).HandleToolBarCommand(commandDetails);
-            if (!useRecentList)
+            var commandDetails = new CommandDetails
             {
-                recentList.Remove(item);
-                recentList.Insert(0, item);
-                if (recentList.Count > 20)
+                UnicodeString = item.UnicodeText,
+                CommandType = CommandType.Text
+            };
+            ((MainWindow)Owner).HandleToolBarCommand(commandDetails);
+            if (SelectRecentList == false)
+            {
+                var recentList = App.Settings.RecentUnicodeItems;
+                if (recentList.Count >= MaxSymbols)
                 {
                     recentList.RemoveAt(recentList.Count - 1);
                 }
+                recentList.Insert(0, item);
             }
         }
     }
 
-    private void closeButton_Click(object sender, RoutedEventArgs e)
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
-    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    private UnicodeListItem? GetSelectedItem()
     {
-        this.Hide();
-        e.Cancel = true;
-    }
-
-    private void symbolList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        var item = symbolListBox.SelectedItem as UnicodeListItem;
-        characterCodeChanged(item);
-    }
-
-    private void recentListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        var item = recentListBox.SelectedItem as UnicodeListItem;
-        characterCodeChanged(item);
-    }
-
-    private void characterCodeChanged(UnicodeListItem? item)
-    {
-        if (item != null)
+        if (SelectRecentList.HasValue)
         {
-            var numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
-            var numberString = Convert.ToString(item.CodePoint, numberBase);
-            if (numberBase == 16)
-            {
-                numberString = numberString.ToUpper().PadLeft(4, '0');
-            }
-            else if (numberBase == 8)
-            {
-                numberString = numberString.PadLeft(6, '0');
-            }
-            characterCode.Text = numberString;
-        }
-    }
-
-    private void codeFormatComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (symbolListBox.SelectedItem is UnicodeListItem item)
-        {
-            var numberBase = int.Parse((string)((ComboBoxItem)codeFormatComboBox.SelectedItem).Tag);
-            var numberString = Convert.ToString(item.CodePoint, numberBase);
-            if (numberBase == 16)
-            {
-                numberString = numberString.ToUpper().PadLeft(4, '0');
-            }
-            else if (numberBase == 8)
-            {
-                numberString = numberString.PadLeft(6, '0');
-            }
-            characterCode.Text = numberString;
-        }
-    }
-
-    private void Window_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        if (recentListBox.IsMouseOver)
-        {
-            useRecentList = true;
-        }
-        else if (symbolListBox.IsMouseOver)
-        {
-            useRecentList = false;
-        }
-    }
-
-
-
-    private void characterListBox_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        if (NativeMethods.doubleClickTimer.Enabled)
-        {
-            InsertSymbol();
-            NativeMethods.doubleClickTimer.Enabled = false;
+            return SelectRecentList.Value ? SelectedRecentSymbolItem : SelectedSymbolItem;
         }
         else
         {
-            NativeMethods.doubleClickTimer.Enabled = true;
+            return null;
         }
+    }
+
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        App.Settings.Save();
     }
 }
 
 public sealed class UnicodeListItem
 {
     public int CodePoint { get; set; }
-    public required string UnicodeText { get; set; }
-}
 
-public static class NativeMethods
-{
-    [DllImport("user32.dll")]
-    private static extern uint GetDoubleClickTime();//for emulating double-click events on elements that don't support it
-    internal static System.Timers.Timer doubleClickTimer = new((int)GetDoubleClickTime()) { AutoReset = false };
+    public required string UnicodeText { get; set; }
 }

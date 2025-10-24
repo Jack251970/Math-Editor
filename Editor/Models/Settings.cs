@@ -30,6 +30,8 @@ public class Settings : ObservableObject
 
     public Dictionary<string, int> UsedSymbolList { get; set; } = [];
 
+    public ObservableCollection<UnicodeListItem> RecentUnicodeItems { get; set; } = [];
+
     private FontType _defaultFont = FontType.STIXGeneral;
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public FontType DefaultFont
