@@ -9,14 +9,14 @@ using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
-// TODO: Convert to non-static and use App.LatexConverter?
-public static class LatexConverter
+// TODO: Convert to non-and use App.LatexConverter?
+public class LatexConverter
 {
     #region Initialization
 
-    private static readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
+    private readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
 
-    public static void LoadPredefinedLatexUnicodeMapping()
+    public void LoadPredefinedLatexUnicodeMapping()
     {
         foreach (var kvp in PredefinedLatexSymbolMapping)
         {
@@ -51,12 +51,12 @@ public static class LatexConverter
         }
     }
 
-    public static void LoadUserUnicodeMapping()
+    public void LoadUserUnicodeMapping()
     {
         // TODO: Add support for user-defined Latex to Unicode mapping
     }
 
-    private static void LoadMapping(Dictionary<string, string> mapping)
+    private void LoadMapping(Dictionary<string, string> mapping)
     {
         Parallel.ForEach(mapping, kvp =>
         {
@@ -73,9 +73,18 @@ public static class LatexConverter
 
     #endregion
 
-    #region Helpers
+    #region Constants
 
     private const char WhiteSpace = ' ';
+
+    private static readonly char[] EscapedLeftBrace = ToChars("\\{ ");
+    private static readonly char[] EscapedRightBrace = ToChars("\\} ");
+    private static readonly char[] LeftBrace = ToChars("{");
+    private static readonly char[] RightBrace = ToChars("}");
+
+    #endregion
+
+    #region Helpers
 
     private static char[] ToChars(string str)
     {
@@ -104,11 +113,6 @@ public static class LatexConverter
         return sb ?? new StringBuilder();
     }
 
-    private static StringBuilder AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
-    {
-        return sb.Append(LeftBrace).Append(equ).Append(RightBrace);
-    }
-
     #endregion
 
     #region Convert to Latex Symbol
@@ -121,7 +125,7 @@ public static class LatexConverter
     /// <param name="count"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper)
+    public StringBuilder? ConvertToLatexSymbol(StringBuilder sb, int start, int count, bool convertWrapper)
     {
         if (count <= 0 || start < 0 || start + count > sb.Length) return null;
 
@@ -142,7 +146,7 @@ public static class LatexConverter
     /// <param name="row"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(List<StringBuilder> row, bool convertWrapper)
+    public StringBuilder? ConvertToLatexSymbol(List<StringBuilder> row, bool convertWrapper)
     {
         if (row.Count == 0) return null;
         else if (row.Count == 1) return row[0];
@@ -167,7 +171,7 @@ public static class LatexConverter
     /// <param name="str"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    public static StringBuilder? ConvertToLatexSymbol(string str, bool convertWrapper)
+    public StringBuilder? ConvertToLatexSymbol(string str, bool convertWrapper)
     {
         var sb = new StringBuilder();
         foreach (var c in str)
@@ -183,7 +187,7 @@ public static class LatexConverter
     /// <param name="c"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    private static readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
+    private readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
     {
         { '{', ToChars("\\{ ") },
         { '}', ToChars("\\} ") },
@@ -202,11 +206,7 @@ public static class LatexConverter
         { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
         { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
     };
-    private static readonly char[] EscapedLeftBrace = ToChars("\\{ ");
-    private static readonly char[] EscapedRightBrace = ToChars("\\} ");
-    private static readonly char[] LeftBrace = ToChars("{");
-    private static readonly char[] RightBrace = ToChars("}");
-    private static char[] ConvertToLatexSymbol(char c, bool convertWrapper)
+    private char[] ConvertToLatexSymbol(char c, bool convertWrapper)
     {
         if (c == '{')
         {
@@ -230,9 +230,9 @@ public static class LatexConverter
 
     #region Escape Rows
 
-    private static readonly char[] BeginArray = ToChars("\\begin{array}{l}");
-    private static readonly char[] EndArray = ToChars("\\end{array}");
-    private static readonly char[] RowSeparator = ToChars("\\\\");
+    private readonly char[] BeginArray = ToChars("\\begin{array}{l}");
+    private readonly char[] EndArray = ToChars("\\end{array}");
+    private readonly char[] RowSeparator = ToChars("\\\\");
 
     /// <summary>
     /// Escapes a row of text parts with \begin{array}{l} and \end{array}.
@@ -250,7 +250,7 @@ public static class LatexConverter
     // 1111\\
     // 2222
     // \end{array}\]
-    public static StringBuilder? EscapeRows(List<StringBuilder> rows)
+    public StringBuilder? EscapeRows(List<StringBuilder> rows)
     {
         if (rows.Count == 0) return null;
         else if (rows.Count == 1) return rows[0];
@@ -279,18 +279,18 @@ public static class LatexConverter
 
     #region Convert Equations
 
-    private static readonly char[] SquareRoot = ToChars("\\sqrt");
-    public static StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
+    private readonly char[] SquareRoot = ToChars("\\sqrt");
+    public StringBuilder? ToSquareRoot(StringBuilder? insideEquation)
     {
         /// \sqrt{insideEquation}
         return Append(SquareRoot).Append(WhiteSpace).AppendWithWrapper(insideEquation);
     }
 
-    private static readonly char[] BeginMatrix = ToChars("\\begin{array}{*{20}{c}}");
-    private static char[] EndMatrix => EndArray;
-    private static char[] MatrixColumnSeparator => ToChars("&");
-    private static char[] MatrixRowSeparator => RowSeparator;
-    public static StringBuilder? ToMatrix(int rows, int columns, List<StringBuilder> matrix)
+    private readonly char[] BeginMatrix = ToChars("\\begin{array}{*{20}{c}}");
+    private char[] EndMatrix => EndArray;
+    private char[] MatrixColumnSeparator => ToChars("&");
+    private char[] MatrixRowSeparator => RowSeparator;
+    public StringBuilder? ToMatrix(int rows, int columns, List<StringBuilder> matrix)
     {
         /// \begin{array}{*{20}{c}}
         /// {cell}&{cell}&{cell}\\
@@ -323,11 +323,11 @@ public static class LatexConverter
         return sb;
     }
 
-    private static readonly char[] LeftSuper = ToChars("{}^");
-    private static readonly char[] Super = ToChars("^");
-    private static readonly char[] LeftSub = ToChars("{}_");
-    private static readonly char[] Sub = ToChars("_");
-    public static StringBuilder? ToSubOrSuper(SubSuperType type, Position position, StringBuilder? superEquation, StringBuilder? subEquation)
+    private readonly char[] LeftSuper = ToChars("{}^");
+    private readonly char[] Super = ToChars("^");
+    private readonly char[] LeftSub = ToChars("{}_");
+    private readonly char[] Sub = ToChars("_");
+    public StringBuilder? ToSubOrSuper(SubSuperType type, Position position, StringBuilder? superEquation, StringBuilder? subEquation)
     {
         return type switch
         {
@@ -359,17 +359,17 @@ public static class LatexConverter
         };
     }
 
-    private static readonly char[] Sqrt = ToChars("\\sqrt");
-    public static StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
+    private readonly char[] Sqrt = ToChars("\\sqrt");
+    public StringBuilder? ToNRoot(StringBuilder? insideEquation, StringBuilder? nthRootEquation)
     {
         /// \sqrt[nthRootEquation]{insideEquation}
         var sb = new StringBuilder();
         return sb.Append(Sqrt).Append('[').Append(nthRootEquation).Append(']').AppendWithWrapper(insideEquation);
     }
 
-    private static readonly char[] Limits = ToChars("\\limits");
-    private static readonly char[] NoLimits = ToChars("\\nolimits");
-    public static StringBuilder? ToSign(SignType type, StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
+    private readonly char[] Limits = ToChars("\\limits");
+    private readonly char[] NoLimits = ToChars("\\nolimits");
+    public StringBuilder? ToSign(SignType type, StringBuilder? sign, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
     {
         return type switch
         {
@@ -393,16 +393,16 @@ public static class LatexConverter
         };
     }
 
-    private static readonly char[] Boxed = ToChars("\\boxed");
-    private static readonly char[] LeftTopBox1 = ToChars("\\left| \\!{\\overline {\\, ");
-    private static readonly char[] LeftTopBox2 = ToChars(" \\,}} \\right.");
-    private static readonly char[] RightTopBox1 = ToChars("\\left. {\\overline {\\, ");
-    private static readonly char[] RightTopBox2 = ToChars(" \\,}}\\! \\right|");
-    private static readonly char[] LeftBottomBox1 = ToChars("\\left| \\!{\\underline {\\, ");
-    private static readonly char[] LeftBottomBox2 = ToChars(" \\,}} \\right.");
-    private static readonly char[] RightBottomBox1 = ToChars("\\left. {\\underline {\\, ");
-    private static readonly char[] RightBottomBox2 = ToChars(" \\,}}\\! \\right|");
-    public static StringBuilder? ToBox(BoxType type, StringBuilder? insideEquation)
+    private readonly char[] Boxed = ToChars("\\boxed");
+    private readonly char[] LeftTopBox1 = ToChars("\\left| \\!{\\overline {\\, ");
+    private readonly char[] LeftTopBox2 = ToChars(" \\,}} \\right.");
+    private readonly char[] RightTopBox1 = ToChars("\\left. {\\overline {\\, ");
+    private readonly char[] RightTopBox2 = ToChars(" \\,}}\\! \\right|");
+    private readonly char[] LeftBottomBox1 = ToChars("\\left| \\!{\\underline {\\, ");
+    private readonly char[] LeftBottomBox2 = ToChars(" \\,}} \\right.");
+    private readonly char[] RightBottomBox1 = ToChars("\\left. {\\underline {\\, ");
+    private readonly char[] RightBottomBox2 = ToChars(" \\,}}\\! \\right|");
+    public StringBuilder? ToBox(BoxType type, StringBuilder? insideEquation)
     {
         return type switch
         {
@@ -420,14 +420,14 @@ public static class LatexConverter
         };
     }
 
-    private static readonly char[] EmptyWrapper = ToChars("{}");
-    private static readonly char[] LeftArrow = ToChars("\\xleftarrow");
-    private static readonly char[] RightArrow = ToChars("\\xrightarrow");
-    private static readonly char[] OverSet = ToChars("\\overset");
-    private static readonly char[] UnderSet = ToChars("\\underset");
-    private static readonly char[] LongLeftRightArrow = ToChars("\\longleftrightarrow");
-    private static readonly char[] LeftRightArrows = ToChars("\\leftrightarrows");
-    public static StringBuilder? ToArrow(ArrowType type, Position position, StringBuilder? rowContainer1, StringBuilder? rowContainer2)
+    private readonly char[] EmptyWrapper = ToChars("{}");
+    private readonly char[] LeftArrow = ToChars("\\xleftarrow");
+    private readonly char[] RightArrow = ToChars("\\xrightarrow");
+    private readonly char[] OverSet = ToChars("\\overset");
+    private readonly char[] UnderSet = ToChars("\\underset");
+    private readonly char[] LongLeftRightArrow = ToChars("\\longleftrightarrow");
+    private readonly char[] LeftRightArrows = ToChars("\\leftrightarrows");
+    public StringBuilder? ToArrow(ArrowType type, Position position, StringBuilder? rowContainer1, StringBuilder? rowContainer2)
     {
         switch (type)
         {
@@ -564,20 +564,20 @@ public static class LatexConverter
         }
     }
 
-    private static readonly char[] WideTilde = ToChars("\\widetilde");
-    private static readonly char[] WideHat = ToChars("\\widehat");
-    private static readonly char[] OverLine = ToChars("\\overline");
-    private static readonly char[] UnderLine = ToChars("\\underline");
-    private static readonly char[] Cross = ToChars("\\xcancel");
-    private static readonly char[] RightCross = ToChars("\\cancel");
-    private static readonly char[] LeftCross = ToChars("\\bcancel");
-    private static readonly char[] OverRightArrow = ToChars("\\overrightarrow");
-    private static readonly char[] OverLeftArrow = ToChars("\\overleftarrow");
-    private static readonly char[] OverDoubleArrow = ToChars("\\overleftrightarrow");
-    private static readonly char[] UnderRightArrow = ToChars("\\underrightarrow");
-    private static readonly char[] UnderLeftArrow = ToChars("\\underleftarrow");
-    private static readonly char[] UnderDoubleArrow = ToChars("\\underleftrightarrow");
-    public static StringBuilder? ToDecorated(DecorationType type, Position position, StringBuilder? insideEquation)
+    private readonly char[] WideTilde = ToChars("\\widetilde");
+    private readonly char[] WideHat = ToChars("\\widehat");
+    private readonly char[] OverLine = ToChars("\\overline");
+    private readonly char[] UnderLine = ToChars("\\underline");
+    private readonly char[] Cross = ToChars("\\xcancel");
+    private readonly char[] RightCross = ToChars("\\cancel");
+    private readonly char[] LeftCross = ToChars("\\bcancel");
+    private readonly char[] OverRightArrow = ToChars("\\overrightarrow");
+    private readonly char[] OverLeftArrow = ToChars("\\overleftarrow");
+    private readonly char[] OverDoubleArrow = ToChars("\\overleftrightarrow");
+    private readonly char[] UnderRightArrow = ToChars("\\underrightarrow");
+    private readonly char[] UnderLeftArrow = ToChars("\\underleftarrow");
+    private readonly char[] UnderDoubleArrow = ToChars("\\underleftrightarrow");
+    public StringBuilder? ToDecorated(DecorationType type, Position position, StringBuilder? insideEquation)
     {
         switch (type)
         {
@@ -719,9 +719,9 @@ public static class LatexConverter
         }
     }
 
-    private static readonly char[] OverBrace = ToChars("\\overbrace");
-    private static readonly char[] UnderBrace = ToChars("\\underbrace");
-    public static StringBuilder? ToHorizontalBracket(HorizontalBracketSignType type, StringBuilder? topEquation,
+    private readonly char[] OverBrace = ToChars("\\overbrace");
+    private readonly char[] UnderBrace = ToChars("\\underbrace");
+    public StringBuilder? ToHorizontalBracket(HorizontalBracketSignType type, StringBuilder? topEquation,
         StringBuilder? bottomEquation)
     {
         switch (type)
@@ -745,8 +745,8 @@ public static class LatexConverter
         }
     }
 
-    private static readonly char[] MathOp = ToChars("\\mathop");
-    public static StringBuilder? ToComposite(bool isCompositeBig, Position position, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
+    private readonly char[] MathOp = ToChars("\\mathop");
+    public StringBuilder? ToComposite(bool isCompositeBig, Position position, StringBuilder? mainEquation, StringBuilder? topSuperEquation, StringBuilder? bottomSubEquation)
     {
         if (isCompositeBig)
         {
@@ -794,26 +794,26 @@ public static class LatexConverter
         }
     }
 
-    private static readonly char[] DivMath1 = ToChars("\\[\\left){\\vphantom{1");
-    private static readonly char[] DivMath2 = ToChars("}}\\right.\n\\!\\!\\!\\!\\overline{\\,\\,\\,\\vphantom 1");
-    private static readonly char[] DivMath3 = ToChars(" }\\]");
-    private static readonly char[] DivMathWithTop1 = ToChars("\\mathop{\\left){\\vphantom{1");
-    private static readonly char[] DivMathWithTop2 = ToChars("}}\\right.\n\\!\\!\\!\\!\\overline{\\,\\,\\,\\vphantom 1");
-    private static readonly char[] DivMathWithTop3 = ToChars("}}\n\\limits^{\\displaystyle\\hfill\\,\\,\\, ");
-    private static readonly char[] Frac = ToChars("\\frac");
-    private static readonly char[] DivRegularSmall1 = ToChars("{\\textstyle{");
-    private static readonly char[] DivRegularSmall2 = ToChars(" \\over ");
-    private static readonly char[] DivRegularSmall3 = ToChars("}}");
-    private static readonly char[] DivSlanted1 = ToChars("{\\raise0.7ex\\hbox{$");
-    private static readonly char[] DivSlanted2 = ToChars("$} \\!\\mathord{\\left/\n {\\vphantom {");
-    private static readonly char[] DivSlanted3 = ToChars("}}\\right.\\kern-\\nulldelimiterspace}\n\\!\\lower0.7ex\\hbox{$");
-    private static readonly char[] DivSlanted4 = ToChars("$}}");
-    private static readonly char[] DivSlantedSmall1 = ToChars("{\\raise0.5ex\\hbox{$\\scriptstyle ");
-    private static readonly char[] DivSlantedSmall2 = ToChars("\\kern-0.1em/\\kern-0.15em\n\\lower0.25ex\\hbox{$\\scriptstyle ");
-    private static readonly char[] DivSlantedSmall3 = ToChars("$}}");
-    private static readonly char[] DivHoriz1 = ToChars(" \\mathord{\\left/\n {\\vphantom {");
-    private static readonly char[] DivHoriz2 = ToChars("}} \\right.\n \\kern-\\nulldelimiterspace} ");
-    public static StringBuilder? ToDivision(DivisionType type, StringBuilder? insideOrTopEquation, StringBuilder? bottomEquation)
+    private readonly char[] DivMath1 = ToChars("\\[\\left){\\vphantom{1");
+    private readonly char[] DivMath2 = ToChars("}}\\right.\n\\!\\!\\!\\!\\overline{\\,\\,\\,\\vphantom 1");
+    private readonly char[] DivMath3 = ToChars(" }\\]");
+    private readonly char[] DivMathWithTop1 = ToChars("\\mathop{\\left){\\vphantom{1");
+    private readonly char[] DivMathWithTop2 = ToChars("}}\\right.\n\\!\\!\\!\\!\\overline{\\,\\,\\,\\vphantom 1");
+    private readonly char[] DivMathWithTop3 = ToChars("}}\n\\limits^{\\displaystyle\\hfill\\,\\,\\, ");
+    private readonly char[] Frac = ToChars("\\frac");
+    private readonly char[] DivRegularSmall1 = ToChars("{\\textstyle{");
+    private readonly char[] DivRegularSmall2 = ToChars(" \\over ");
+    private readonly char[] DivRegularSmall3 = ToChars("}}");
+    private readonly char[] DivSlanted1 = ToChars("{\\raise0.7ex\\hbox{$");
+    private readonly char[] DivSlanted2 = ToChars("$} \\!\\mathord{\\left/\n {\\vphantom {");
+    private readonly char[] DivSlanted3 = ToChars("}}\\right.\\kern-\\nulldelimiterspace}\n\\!\\lower0.7ex\\hbox{$");
+    private readonly char[] DivSlanted4 = ToChars("$}}");
+    private readonly char[] DivSlantedSmall1 = ToChars("{\\raise0.5ex\\hbox{$\\scriptstyle ");
+    private readonly char[] DivSlantedSmall2 = ToChars("\\kern-0.1em/\\kern-0.15em\n\\lower0.25ex\\hbox{$\\scriptstyle ");
+    private readonly char[] DivSlantedSmall3 = ToChars("$}}");
+    private readonly char[] DivHoriz1 = ToChars(" \\mathord{\\left/\n {\\vphantom {");
+    private readonly char[] DivHoriz2 = ToChars("}} \\right.\n \\kern-\\nulldelimiterspace} ");
+    public StringBuilder? ToDivision(DivisionType type, StringBuilder? insideOrTopEquation, StringBuilder? bottomEquation)
     {
         switch (type)
         {
@@ -882,11 +882,11 @@ public static class LatexConverter
         }
     }
 
-    private static readonly char[] DoubleArrowBarBracket1 = ToChars("\\left\\langle ");
-    private static readonly char[] DoubleArrowBarBracket2 = ToChars("\n \\mathrel{\\left | {\\vphantom {");
-    private static readonly char[] DoubleArrowBarBracket3 = ToChars("}}\n\\right. \\kern-\\nulldelimiterspace}\n ");
-    private static readonly char[] DoubleArrowBarBracket4 = ToChars(" \\right\\rangle ");
-    public static StringBuilder? ToDoubleArrowBarBracket(StringBuilder? leftEquation, StringBuilder? rightEquation)
+    private readonly char[] DoubleArrowBarBracket1 = ToChars("\\left\\langle ");
+    private readonly char[] DoubleArrowBarBracket2 = ToChars("\n \\mathrel{\\left | {\\vphantom {");
+    private readonly char[] DoubleArrowBarBracket3 = ToChars("}}\n\\right. \\kern-\\nulldelimiterspace}\n ");
+    private readonly char[] DoubleArrowBarBracket4 = ToChars(" \\right\\rangle ");
+    public StringBuilder? ToDoubleArrowBarBracket(StringBuilder? leftEquation, StringBuilder? rightEquation)
     {
         /// \left\langle {a}
         ///  \mathrel{\left | {\vphantom {a b}}
@@ -897,17 +897,17 @@ public static class LatexConverter
             .AppendWithWrapper(rightEquation).Append(DoubleArrowBarBracket4);
     }
 
-    private static readonly char[] Left = ToChars("\\left");
-    private static readonly char[] Right = ToChars("\\right");
-    private static readonly char[] Langle = ToChars("\\langle");
-    private static readonly char[] Rangle = ToChars("\\rangle");
-    private static readonly char[] LFloor = ToChars("\\lfloor");
-    private static readonly char[] RFloor = ToChars("\\rfloor");
-    private static readonly char[] LeftCeil = ToChars("\\lceil");
-    private static readonly char[] RightCeil = ToChars("\\rceil");
-    private static readonly char[] LeftSquareBar = ToChars("\\left[\\kern-0.15em\\left[ ");
-    private static readonly char[] RightSquareBar = ToChars("\\right]\\kern-0.15em\\right]");
-    public static StringBuilder? ToLeftRightBracket(BracketSignType leftBracketType, BracketSignType rightBracketType, StringBuilder? insideEquation)
+    private readonly char[] Left = ToChars("\\left");
+    private readonly char[] Right = ToChars("\\right");
+    private readonly char[] Langle = ToChars("\\langle");
+    private readonly char[] Rangle = ToChars("\\rangle");
+    private readonly char[] LFloor = ToChars("\\lfloor");
+    private readonly char[] RFloor = ToChars("\\rfloor");
+    private readonly char[] LeftCeil = ToChars("\\lceil");
+    private readonly char[] RightCeil = ToChars("\\rceil");
+    private readonly char[] LeftSquareBar = ToChars("\\left[\\kern-0.15em\\left[ ");
+    private readonly char[] RightSquareBar = ToChars("\\right]\\kern-0.15em\\right]");
+    public StringBuilder? ToLeftRightBracket(BracketSignType leftBracketType, BracketSignType rightBracketType, StringBuilder? insideEquation)
     {
         if (leftBracketType == BracketSignType.LeftRound && rightBracketType == BracketSignType.RightRound)
         {
@@ -1012,7 +1012,7 @@ public static class LatexConverter
         }
     }
 
-    public static StringBuilder? ToLeftOrRightBracket(BracketSignType bracketType, StringBuilder? insideEquation)
+    public StringBuilder? ToLeftOrRightBracket(BracketSignType bracketType, StringBuilder? insideEquation)
     {
         if (bracketType == BracketSignType.LeftRound)
         {
@@ -1107,4 +1107,12 @@ public static class LatexConverter
     }
 
     #endregion
+}
+
+public static class LatexExtensions
+{
+    public static StringBuilder AppendWithWrapper(this StringBuilder sb, StringBuilder? equ)
+    {
+        return sb.Append('{').Append(equ).Append('}');
+    }
 }

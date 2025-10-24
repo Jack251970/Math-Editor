@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml.Linq;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor
 {
@@ -70,6 +71,7 @@ namespace Editor
         public int SelectedItems { get; set; } //this is a directed value (as on a real line!!)
 
         protected Brush debugBrush;
+        protected LatexConverter LatexConverter = Ioc.Default.GetRequiredService<LatexConverter>();
         private readonly byte r = 80;
         private readonly byte g = 80;
         private readonly byte b = 80;

@@ -89,6 +89,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
                 .ConfigureServices(services => services
                     .AddSingleton(_ => Settings)
                     .AddSingleton<Internationalization>()
+                    .AddSingleton<LatexConverter>()
                     .AddTransient<MainWindowViewModel>()
                     .AddTransient<SettingsWindowViewModel>()
             ).Build();
@@ -115,7 +116,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
             RegisterDispatcherUnhandledException();
             RegisterTaskSchedulerUnhandledException();
 
-            LatexConverter.LoadPredefinedLatexUnicodeMapping();
+            Ioc.Default.GetRequiredService<LatexConverter>().LoadPredefinedLatexUnicodeMapping();
 
             var strings = Environment.GetCommandLineArgs();
             var fileName = strings.Length > 1 ? strings[1] : string.Empty;
@@ -128,7 +129,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
 
             EditorLogger.Info(ClassName, "End Editor startup ---------------------------------------------------");
 
-            _ = Task.Run(LatexConverter.LoadUserUnicodeMapping);
+            _ = Task.Run(Ioc.Default.GetRequiredService<LatexConverter>().LoadUserUnicodeMapping);
         });
     }
 
