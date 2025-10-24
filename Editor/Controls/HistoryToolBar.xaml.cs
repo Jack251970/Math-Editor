@@ -16,7 +16,7 @@ public partial class HistoryToolBar : UserControl
         recentListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
     }
 
-    public static void AddItem(string symbol)
+    public void AddItem(string symbol)
     {
         // Add to used list
         if (!App.Settings.UsedSymbolList.TryAdd(symbol, 1))

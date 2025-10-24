@@ -86,7 +86,7 @@ public partial class MainWindow : Window
             editor.HandleUserCommand(commandDetails);
             if (commandDetails.CommandType == CommandType.Text)
             {
-                HistoryToolBar.AddItem(commandDetails.UnicodeString);
+                historyToolBar.AddItem(commandDetails.UnicodeString);
             }
         }
     }
