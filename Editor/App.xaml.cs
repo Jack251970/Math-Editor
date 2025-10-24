@@ -119,8 +119,8 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
 
             var strings = Environment.GetCommandLineArgs();
             var fileName = strings.Length > 1 ? strings[1] : string.Empty;
-            Current.MainWindow = new MainWindow(fileName);
-            Current.MainWindow.Show();
+            var mainWindow = new MainWindow(fileName);
+            mainWindow.Show();
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
