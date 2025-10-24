@@ -27,12 +27,6 @@ public partial class CodepointWindow : Window
         InitializeComponent();
     }
 
-    private void Window_Closing(object sender, CancelEventArgs e)
-    {
-        Hide();
-        e.Cancel = true;
-    }
-
     private void NumberBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
         e.Handled = !ConvertToNumber(e.Text, out var _);
