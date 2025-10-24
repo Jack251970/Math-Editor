@@ -13,6 +13,7 @@ public partial class CodepointWindow : Window
 {
     private static readonly string ClassName = nameof(CodepointWindow);
 
+    // TODO: Update the localization when languages changes
     public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
 
     [ObservableProperty]
