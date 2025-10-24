@@ -12,7 +12,7 @@ namespace Editor
     public abstract class EquationBase : EquationBox
     {
         protected static TextManager TextManager { get; } = new();
-
+        protected LatexConverter LatexConverter = Ioc.Default.GetRequiredService<LatexConverter>();
         protected const double LineFactor = 0.06;
 
         public virtual bool ApplySymbolGap { get; set; }
@@ -71,7 +71,6 @@ namespace Editor
         public int SelectedItems { get; set; } //this is a directed value (as on a real line!!)
 
         protected Brush debugBrush;
-        protected LatexConverter LatexConverter = Ioc.Default.GetRequiredService<LatexConverter>();
         private readonly byte r = 80;
         private readonly byte g = 80;
         private readonly byte b = 80;
