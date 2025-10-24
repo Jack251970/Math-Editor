@@ -16,7 +16,6 @@ public partial class MainWindow : Window
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
     private string _currentLocalFile = string.Empty;
-    private static string MedFileFilter => $"{Constants.MathEditorFullName} {Localize.MainWindow_File()} (*.{Constants.MedExtension})|*.{Constants.MedExtension}";
 
     public EditorControl Editor { get; set; } = null!;
 
@@ -139,7 +138,8 @@ public partial class MainWindow : Window
     {
         if (Editor.Dirty)
         {
-            var result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
+            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
             {
                 e.Cancel = true;
@@ -158,7 +158,8 @@ public partial class MainWindow : Window
     {
         if (Editor.Dirty)
         {
-            var mbResult = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
+            var mbResult = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
             if (mbResult == MessageBoxResult.Cancel)
             {
                 return;
@@ -174,7 +175,7 @@ public partial class MainWindow : Window
         var ofd = new Microsoft.Win32.OpenFileDialog
         {
             CheckPathExists = true,
-            Filter = MedFileFilter
+            Filter = Localize.MainWindow_MedFileFilter(Constants.MedExtension)
         };
         var result = ofd.ShowDialog(this);
         if (result == true)
@@ -252,7 +253,8 @@ public partial class MainWindow : Window
     {
         if (!File.Exists(_currentLocalFile))
         {
-            var result = ShowSaveFileDialog(Constants.MedExtension, MedFileFilter);
+            var result = ShowSaveFileDialog(Constants.MedExtension,
+                Localize.MainWindow_MedFileFilter(Constants.MedExtension));
             if (string.IsNullOrEmpty(result))
             {
                 return false;
@@ -286,7 +288,8 @@ public partial class MainWindow : Window
 
     private void SaveAsCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        var result = ShowSaveFileDialog(Constants.MedExtension, MedFileFilter);
+        var result = ShowSaveFileDialog(Constants.MedExtension,
+            Localize.MainWindow_MedFileFilter(Constants.MedExtension));
         if (!string.IsNullOrEmpty(result))
         {
             _currentLocalFile = result;
@@ -500,7 +503,8 @@ public partial class MainWindow : Window
     {
         if (Editor.Dirty)
         {
-            var result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
+            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
             {
                 return;
