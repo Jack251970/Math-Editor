@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
-using iNKORE.UI.WPF.Modern;
 
 namespace Editor;
 
@@ -32,8 +31,7 @@ public sealed class FontFactory
 
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-            Brushes.Black : Brushes.White));
+        return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, PenManager.TextFillColorPrimaryBrush);
     }
 
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, Brush brush)

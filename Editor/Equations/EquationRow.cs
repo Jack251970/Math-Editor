@@ -7,24 +7,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
     public sealed class EquationRow : EquationContainer, ISupportsUndo
     {
         private EquationContainer? _deleteable = null;
-        private static readonly Pen boxPen = new((SolidColorBrush)Application.Current.Resources[ThemeKeys.AccentFillColorDefaultBrushKey], 1.1)
-        {
-            StartLineCap = PenLineCap.Flat,
-            EndLineCap = PenLineCap.Flat
-        };
-
-        static EquationRow()
-        {
-            boxPen.DashStyle = DashStyles.Dash;
-            //boxPen.Freeze();
-        }
 
         public EquationRow(EquationContainer parent)
             : base(parent)
@@ -484,6 +472,7 @@ namespace Editor
             base.DrawEquation(dc);
             if (_deleteable != null)
             {
+                // TODO: Use AppResources for all brushes?
                 Brush brush = new SolidColorBrush(Colors.Gray)
                 {
                     Opacity = 0.5
@@ -499,7 +488,7 @@ namespace Editor
                     {
                         //dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
                     }
-                    dc.DrawRectangle(null, boxPen, new Rect(Left, Top, Width, Height + ThinLineThickness));//new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
+                    dc.DrawRectangle(null, PenManager.RowBoxPen, new Rect(Left, Top, Width, Height + ThinLineThickness));//new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
                 }
             }
         }

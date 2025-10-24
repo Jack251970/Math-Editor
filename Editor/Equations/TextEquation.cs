@@ -432,8 +432,8 @@ namespace Editor
                 }
                 catch
                 {
-                    var formatId = TextManager.GetFormatId(FontSize, fontType, FontStyles.Normal, FontWeights.Normal, (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                        Brushes.Black : Brushes.White), false);
+                    var formatId = TextManager.GetFormatId(FontSize, fontType, FontStyles.Normal,
+                        FontWeights.Normal, PenManager.TextFillColorPrimaryBrush, false);
                     for (var i = 0; i < text.Length; i++)
                     {
                         formats[i] = formatId;
@@ -519,8 +519,8 @@ namespace Editor
                 formats.Clear();
                 modes.Clear();
                 decorations.Clear();
-                var formatId = TextManager.GetFormatId(FontSize, fontType, FontStyles.Normal, FontWeights.Normal, (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                    Brushes.Black : Brushes.White), false);
+                var formatId = TextManager.GetFormatId(FontSize, fontType, FontStyles.Normal,
+                    FontWeights.Normal, PenManager.TextFillColorPrimaryBrush, false);
                 for (var i = 0; i < textData.Length; i++)
                 {
                     formats.Add(formatId);
@@ -625,9 +625,9 @@ namespace Editor
                 }
             }
 
-            var formatId = TextManager.GetFormatId(FontSize, fontType, style, InputBold ? FontWeights.Bold : FontWeights.Normal,
-                (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                Brushes.Black : Brushes.White), InputUnderline);
+            var formatId = TextManager.GetFormatId(FontSize, fontType, style,
+                InputBold ? FontWeights.Bold : FontWeights.Normal,
+                PenManager.TextFillColorPrimaryBrush, InputUnderline);
             var tempFormats = new int[text.Length];
             var tempModes = new EditorMode[text.Length];
             for (var i = 0; i < text.Length; i++)
@@ -1078,9 +1078,9 @@ namespace Editor
             }
             else
             {
-                var formatId = TextManager.GetFormatId(FontSize, fontType, InputItalic ? FontStyles.Italic : FontStyles.Normal, InputBold ? FontWeights.Bold : FontWeights.Normal,
-                    (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                    Brushes.Black : Brushes.White), InputUnderline);
+                var formatId = TextManager.GetFormatId(FontSize, fontType,
+                    InputItalic ? FontStyles.Italic : FontStyles.Normal, InputBold ? FontWeights.Bold : FontWeights.Normal,
+                    PenManager.TextFillColorPrimaryBrush, InputUnderline);
                 var ft = TextManager.GetFormattedText("d", formatId);
                 //hm.TopExtra = Math.Min(ft.Baseline * .30, ft.TopExtra());
                 topExtra = ft.Baseline * .26;

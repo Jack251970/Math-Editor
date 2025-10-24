@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Media;
-using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
@@ -27,8 +26,7 @@ namespace Editor
             };
             var fig = new PathFigure(startPoint, [segment], true);
             geometry.Figures.Add(fig);
-            dc.DrawGeometry(ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                Brushes.Black : Brushes.White, null, geometry);
+            dc.DrawGeometry(PenManager.TextFillColorPrimaryBrush, null, geometry);
         }
     }
 }

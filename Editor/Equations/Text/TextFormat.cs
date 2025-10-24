@@ -2,13 +2,12 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
-using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
     public sealed class TextFormat
     {
-        private static readonly string ThemeAwareTextBrushString = new BrushConverter().ConvertToString(Brushes.Transparent);
+        private static readonly string ThemeAwareTextBrushString = new BrushConverter().ConvertToString(Brushes.Transparent)!;
 
         public double FontSize { get; private set; }
         public FontType FontType { get; private set; }
@@ -23,28 +22,29 @@ namespace Editor
 
         public TextFormat(double size, FontType ft, FontStyle fs, FontWeight fw, SolidColorBrush brush, bool useUnderline)
         {
-            this.FontSize = Math.Round(size, 1);
-            this.FontType = ft;
-            this.FontFamily = FontFactory.GetFontFamily(ft);
-            this.FontStyle = fs;
-            this.UseUnderline = useUnderline;
-            this.FontWeight = fw;
-            this.TextBrush = brush;
-            this.TypeFace = new Typeface(FontFamily, fs, fw, FontStretches.Normal, FontFactory.GetFontFamily(FontType.STIXGeneral));
+            FontSize = Math.Round(size, 1);
+            FontType = ft;
+            FontFamily = FontFactory.GetFontFamily(ft);
+            FontStyle = fs;
+            UseUnderline = useUnderline;
+            FontWeight = fw;
+            TextBrush = brush;
+            TypeFace = new Typeface(FontFamily, fs, fw, FontStretches.Normal,
+                FontFactory.GetFontFamily(FontType.STIXGeneral));
             var bc = new BrushConverter();
-            TextBrushString = bc.ConvertToString(brush);
+            TextBrushString = bc.ConvertToString(brush) ?? ThemeAwareTextBrushString;
         }
 
         public XElement Serialize(bool themeAwareBrush = false)
         {
             var thisElement = new XElement(GetType().Name);
             thisElement.Add(new XElement("FontSize", FontSize),
-                             new XElement("FontType", FontType),
-                             new XElement("FontStyle", FontStyle),
-                             new XElement("Underline", UseUnderline),
-                             new XElement("FontWeight", FontWeight),
-                             new XElement("Brush", themeAwareBrush ?
-                                 ThemeAwareTextBrushString : TextBrushString));
+                new XElement("FontType", FontType),
+                new XElement("FontStyle", FontStyle),
+                new XElement("Underline", UseUnderline),
+                new XElement("FontWeight", FontWeight),
+                new XElement("Brush", themeAwareBrush ?
+                    ThemeAwareTextBrushString : TextBrushString));
             return thisElement;
         }
 
@@ -59,8 +59,7 @@ namespace Editor
             SolidColorBrush brush;
             if (string.Equals(brushString, ThemeAwareTextBrushString, StringComparison.OrdinalIgnoreCase))
             {
-                brush = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                    Brushes.Black : Brushes.White;
+                brush = PenManager.TextFillColorPrimaryBrush;
             }
             else
             {

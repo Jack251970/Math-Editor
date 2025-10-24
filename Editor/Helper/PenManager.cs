@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows;
 using System.Windows.Media;
 using iNKORE.UI.WPF.Modern;
 
@@ -8,6 +9,10 @@ namespace Editor
 {
     public static class PenManager
     {
+        // TextFillColorPrimaryBrush
+        public static SolidColorBrush TextFillColorPrimaryBrush =>
+            ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ? Brushes.Black : Brushes.White;
+
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _bevelPens = [];
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _miterPens = [];
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _roundPens = [];
@@ -40,9 +45,7 @@ namespace Editor
                 var key = (thickness, ThemeManager.Current.ActualApplicationTheme);
                 if (!penDictionary.TryGetValue(key, out var value))
                 {
-                    var pen = new Pen(brush ??
-                        (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                            Brushes.Black : Brushes.White), thickness)
+                    var pen = new Pen(brush ?? TextFillColorPrimaryBrush, thickness)
                     {
                         LineJoin = lineJoin
                     };
@@ -51,6 +54,34 @@ namespace Editor
                     penDictionary.Add(key, value);
                 }
                 return value;
+            }
+        }
+
+        // AccentFillColorDefaultBrush
+        private static Pen? _rowBoxPen;
+        private static readonly object _rowBoxPenLock = new();
+
+        public static Pen RowBoxPen
+        {
+            get
+            {
+                if (_rowBoxPen is null)
+                {
+                    lock (_rowBoxPenLock)
+                    {
+                        _rowBoxPen = new(
+                            new SolidColorBrush(((SolidColorBrush)Application.Current.Resources[
+                                ThemeKeys.AccentFillColorDefaultBrushKey]).Color),
+                            1.1)
+                        {
+                            StartLineCap = PenLineCap.Flat,
+                            EndLineCap = PenLineCap.Flat,
+                            DashStyle = DashStyles.Dash
+                        };
+                        _rowBoxPen.Freeze();
+                    }
+                }
+                return _rowBoxPen;
             }
         }
     }
