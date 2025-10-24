@@ -7,13 +7,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
     public sealed class EquationRow : EquationContainer, ISupportsUndo
     {
         private EquationContainer? _deleteable = null;
-        private static readonly Pen boxPen = new(Brushes.Blue, 1.1)
+        private static readonly Pen boxPen = new((SolidColorBrush)Application.Current.Resources[ThemeKeys.AccentFillColorDefaultBrushKey], 1.1)
         {
             StartLineCap = PenLineCap.Flat,
             EndLineCap = PenLineCap.Flat
@@ -22,7 +23,7 @@ namespace Editor
         static EquationRow()
         {
             boxPen.DashStyle = DashStyles.Dash;
-            boxPen.Freeze();
+            //boxPen.Freeze();
         }
 
         public EquationRow(EquationContainer parent)
