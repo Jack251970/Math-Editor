@@ -25,43 +25,31 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     [RelayCommand]
     private void OpenSettingsWindow(MenuItem item)
     {
-        SingletonWindowOpener.Open<SettingsWindow>(Window.GetWindow(item));
+        WindowOpener.OpenSingle<SettingsWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]
     private void OpenUnicodeSelectorWindow(MenuItem item)
     {
-        var unicodeSelectorWindow = new UnicodeSelectorWindow
-        {
-            Owner = Window.GetWindow(item)
-        };
-        unicodeSelectorWindow.ShowDialog();
+        WindowOpener.OpenScoped<UnicodeSelectorWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]
     private void OpenCodepointWindow(MenuItem item)
     {
-        var codepointWindow = new CodepointWindow
-        {
-            Owner = Window.GetWindow(item)
-        };
-        codepointWindow.ShowDialog();
+        WindowOpener.OpenScoped<CodepointWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]
     private void OpenCustomZoomWindow(MenuItem item)
     {
-        var customZoomWindow = new CustomZoomWindow
-        {
-            Owner = Window.GetWindow(item)
-        };
-        customZoomWindow.ShowDialog();
+        WindowOpener.OpenScoped<CustomZoomWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]
     private void OpenAboutWindow(MenuItem item)
     {
-        SingletonWindowOpener.Open<AboutWindow>(Window.GetWindow(item));
+        WindowOpener.OpenSingle<AboutWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]

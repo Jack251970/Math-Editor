@@ -22,6 +22,7 @@ public partial class MainWindow : Window
         _currentLocalFile = currentLocalFile;
         DataContext = _viewModel;
         InitializeComponent();
+        WindowTracker.TrackOwner(this);
         StatusBarHelper.Init(this);
         characterToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
         equationToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
@@ -74,11 +75,7 @@ public partial class MainWindow : Window
         {
             if (commandDetails.CommandParam is int[] rowsAndColumns && rowsAndColumns.Length == 2)
             {
-                var matrixInputWindow = new MatrixInputWindow(rowsAndColumns[0], rowsAndColumns[1])
-                {
-                    Owner = this
-                };
-                matrixInputWindow.ShowDialog();
+                WindowOpener.OpenDialog<MatrixInputWindow>(this, rowsAndColumns[0], rowsAndColumns[1]);
             }
         }
         else
