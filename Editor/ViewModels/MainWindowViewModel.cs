@@ -28,14 +28,15 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         SingletonWindowOpener.Open<SettingsWindow>(Window.GetWindow(item));
     }
 
+    private UnicodeSelectorWindow? _unicodeSelectorWindow = null;
     [RelayCommand]
     private void OpenUnicodeSelectorWindow(MenuItem item)
     {
-        var symbolWindow = new UnicodeSelectorWindow
+        _unicodeSelectorWindow ??= new UnicodeSelectorWindow
         {
             Owner = Window.GetWindow(item)
         };
-        symbolWindow.Show();
+        _unicodeSelectorWindow.Show();
     }
 
     private CodepointWindow? _codepointWindow = null;
