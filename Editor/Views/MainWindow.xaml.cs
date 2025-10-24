@@ -78,15 +78,6 @@ public partial class MainWindow : Window
                 {
                     Owner = this
                 };
-                matrixInputWindow.ProcessRequest += (x, y) =>
-                {
-                    var newCommand = new CommandDetails
-                    {
-                        CommandType = CommandType.Matrix,
-                        CommandParam = new int[] { x, y }
-                    };
-                    editor.HandleUserCommand(newCommand);
-                };
                 matrixInputWindow.ShowDialog();
             }
         }

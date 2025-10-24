@@ -8,8 +8,6 @@ namespace Editor;
 [INotifyPropertyChanged]
 public partial class MatrixInputWindow : Window
 {
-    public event Action<int, int> ProcessRequest = (x, y) => { };
-
     [ObservableProperty]
     private string _rowsText = string.Empty;
 
@@ -38,7 +36,12 @@ public partial class MatrixInputWindow : Window
         if (int.TryParse(RowsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var rows)
             && int.TryParse(ColumnsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var columns))
         {
-            ProcessRequest(rows, columns);
+            var newCommand = new CommandDetails
+            {
+                CommandType = CommandType.Matrix,
+                CommandParam = new int[] { rows, columns }
+            };
+            ((MainWindow)Owner).editor.HandleUserCommand(newCommand);
             Close();
         }
     }
