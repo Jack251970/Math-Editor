@@ -15,7 +15,7 @@ public partial class MainWindow : Window
     private readonly MainWindowViewModel _viewModel = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
     private string _currentLocalFile = string.Empty;
-    private static string MedFileFilter => $"Math Editor {Localize.MainWindow_File()} (*.{Constants.MedExtension})|*.{Constants.MedExtension}";
+    private static string MedFileFilter => $"{Constants.MathEditorFullName} {Localize.MainWindow_File()} (*.{Constants.MedExtension})|*.{Constants.MedExtension}";
 
     public MainWindow(string currentLocalFile)
     {
