@@ -68,17 +68,18 @@ public partial class MainWindow : Window
         copyButton.IsEnabled = true;
     }
 
+    private MatrixInputWindow? _matrixInputWindow = null;
     public void HandleToolBarCommand(CommandDetails commandDetails)
     {
         if (commandDetails.CommandType == CommandType.CustomMatrix)
         {
             if (commandDetails.CommandParam is int[] rowsAndColumns && rowsAndColumns.Length == 2)
             {
-                var matrixInputWindow = new MatrixInputWindow(rowsAndColumns[0], rowsAndColumns[1])
+                _matrixInputWindow = new MatrixInputWindow(rowsAndColumns[0], rowsAndColumns[1])
                 {
                     Owner = this
                 };
-                matrixInputWindow.ProcessRequest += (x, y) =>
+                _matrixInputWindow.ProcessRequest += (x, y) =>
                 {
                     var newCommand = new CommandDetails
                     {
@@ -87,7 +88,7 @@ public partial class MainWindow : Window
                     };
                     editor.HandleUserCommand(newCommand);
                 };
-                matrixInputWindow.ShowDialog();
+                _matrixInputWindow.Show();
             }
         }
         else
@@ -184,7 +185,7 @@ public partial class MainWindow : Window
             CheckPathExists = true,
             Filter = MedFileFilter
         };
-        var result = ofd.ShowDialog();
+        var result = ofd.ShowDialog(this);
         if (result == true)
         {
             OpenFile(ofd.FileName);
