@@ -69,7 +69,7 @@ namespace Editor.Localization.Analyzers.Localize
             if (IsFormatStringCall(methodSymbol))
             {
                 var argumentList = invocationExpr.ArgumentList.Arguments;
-                for (var i =0; i < argumentList.Count; i++)
+                for (var i = 0; i < argumentList.Count; i++)
                 {
                     if (argumentList[i].Expression is InvocationExpressionSyntax innerInvocation)
                     {
@@ -82,7 +82,7 @@ namespace Editor.Localization.Analyzers.Localize
                             // New args are all arguments after the translation call in the format call
                             var newArguments = string.Join(
                                 ", ",
-                                argumentList.Skip(i +1).Select(a => a.Expression.ToString())
+                                argumentList.Skip(i + 1).Select(a => a.Expression.ToString())
                             );
 
                             var newInvocationExpr = string.IsNullOrWhiteSpace(newArguments)

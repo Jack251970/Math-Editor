@@ -25,6 +25,20 @@
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_Language}" />
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="150"
+                        DisplayMemberPath="Display"
+                        ItemsSource="{Binding Languages, Mode=OneTime}"
+                        SelectedValue="{Binding Language, Mode=TwoWay}"
+                        SelectedValuePath="LanguageCode" />
+                </Grid>
+                <Grid Margin="0 12 0 0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_DefaultMode}" />
                     <ComboBox
                         Grid.Column="1"

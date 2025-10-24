@@ -16,6 +16,7 @@
 
     <!--  Settings Window  -->
     <system:String x:Key="SettingsWindow_Title">Math Editor Settings</system:String>
+    <system:String x:Key="SettingsWindow_Language">Language</system:String>
     <system:String x:Key="SettingsWindow_DefaultMode">Default mode</system:String>
     <system:String x:Key="SettingsWindow_DefaultFont">Default font</system:String>
     <system:String x:Key="SettingsWindow_CopyType">Copy type</system:String>
