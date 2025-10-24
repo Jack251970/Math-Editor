@@ -7,8 +7,8 @@ namespace Editor
     {
         private static readonly double widthFactor = .9;
 
-        public RadicalSign(EquationContainer parent)
-            : base(parent)
+        public RadicalSign(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             Width = FontSize * widthFactor;
             IsStatic = true;

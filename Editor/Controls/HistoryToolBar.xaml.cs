@@ -39,7 +39,7 @@ public partial class HistoryToolBar : UserControl
         recentList.Insert(0, symbol);
     }
 
-    private void symbolClick(object sender, MouseButtonEventArgs e)
+    private void SymbolClick(object sender, MouseButtonEventArgs e)
     {
         if (((TextBlock)sender).DataContext is string str)
         {

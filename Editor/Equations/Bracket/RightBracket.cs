@@ -4,10 +4,10 @@ namespace Editor
 {
     public sealed class RightBracket : Bracket
     {
-        public RightBracket(EquationContainer parent, BracketSignType bracketType)
-            : base(parent)
+        public RightBracket(MainWindow owner, EquationContainer parent, BracketSignType bracketType)
+            : base(owner, parent)
         {
-            bracketSign = new BracketSign(this, bracketType);
+            bracketSign = new BracketSign(owner, this, bracketType);
             childEquations.AddRange([insideEq, bracketSign]);
         }
 

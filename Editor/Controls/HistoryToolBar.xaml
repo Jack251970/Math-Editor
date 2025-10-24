@@ -123,7 +123,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontSize="18"
-                            MouseUp="symbolClick"
+                            MouseUp="SymbolClick"
                             Text="{Binding}" />
                     </Border>
                     <DataTemplate.Triggers>

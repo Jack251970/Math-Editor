@@ -4,8 +4,8 @@ namespace Editor
 {
     public sealed class DivMathInverted : DivMath
     {
-        public DivMathInverted(EquationContainer parent)
-            : base(parent)
+        public DivMathInverted(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             _divMathSign.IsInverted = true;
         }

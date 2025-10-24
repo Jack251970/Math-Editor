@@ -16,7 +16,7 @@ public partial class EditorControl : UserControl, IDisposable
 {
     private readonly Timer timer;
     private const int BlinkPeriod = 600;
-    private MainWindow _mainWindow = null!;
+    private readonly MainWindow _mainWindow;
 
     public event EventHandler ZoomChanged = (x, y) => { };
 
@@ -32,23 +32,20 @@ public partial class EditorControl : UserControl, IDisposable
 
     public static double RootFontSize => rootFontSize;
 
-    public EditorControl()
+    public EditorControl(MainWindow mainWindow)
     {
+        _mainWindow = mainWindow;
         InitializeComponent();
         mainGrid.Children.Add(vCaret);
         mainGrid.Children.Add(hCaret);
-        equationRoot = new EquationRoot(vCaret, hCaret)
+        equationRoot = new EquationRoot(mainWindow, vCaret, hCaret)
         {
             FontSize = fontSize
         };
         timer = new Timer(BlinkCaret, null, BlinkPeriod, BlinkPeriod);
-    }
 
-    private void EditorControl_Loaded(object sender, RoutedEventArgs e)
-    {
         // ensure timer and carets are disposed when the window is closed.
-        _mainWindow = (MainWindow)Window.GetWindow(this);
-        _mainWindow.Closing += OnWindowClosing;
+        mainWindow.Closing += OnWindowClosing;
     }
 
     private void OnWindowClosing(object? sender, CancelEventArgs e)
@@ -420,7 +417,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void Clear()
     {
-        equationRoot = new EquationRoot(vCaret, hCaret)
+        equationRoot = new EquationRoot(_mainWindow, vCaret, hCaret)
         {
             FontSize = fontSize
         };

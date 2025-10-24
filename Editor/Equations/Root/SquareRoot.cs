@@ -12,11 +12,11 @@ namespace Editor
         private double ExtraHeight => FontSize * .15;
         private double LeftGap => FontSize * .1;
 
-        public SquareRoot(EquationContainer parent)
-            : base(parent)
+        public SquareRoot(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
-            _radicalSign = new RadicalSign(this);
-            ActiveChild = _insideEquation = new RowContainer(this);
+            _radicalSign = new RadicalSign(owner, this);
+            ActiveChild = _insideEquation = new RowContainer(owner, this);
             childEquations.Add(_insideEquation);
             childEquations.Add(_radicalSign);
         }

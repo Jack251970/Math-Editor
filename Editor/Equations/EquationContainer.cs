@@ -36,7 +36,7 @@ namespace Editor
             }
         }
 
-        public EquationContainer(EquationContainer parent) : base(parent) { }
+        public EquationContainer(MainWindow owner, EquationContainer parent) : base(owner, parent) { }
 
         public virtual void ExecuteCommand(CommandType commandType, object? data)
         {

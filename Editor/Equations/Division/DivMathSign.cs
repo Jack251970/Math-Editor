@@ -7,8 +7,8 @@ namespace Editor
     {
         public bool IsInverted { get; set; }
 
-        public DivMathSign(EquationContainer parent)
-            : base(parent)
+        public DivMathSign(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             IsStatic = true;
         }

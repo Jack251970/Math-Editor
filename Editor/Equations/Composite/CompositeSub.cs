@@ -10,11 +10,11 @@ namespace Editor
     {
         private readonly RowContainer bottomRowContainer;
 
-        public CompositeSub(EquationContainer parent, bool isCompositeBig)
-            : base(parent, isCompositeBig)
+        public CompositeSub(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+            : base(owner, parent, isCompositeBig)
         {
             SubLevel++;
-            bottomRowContainer = new RowContainer(this)
+            bottomRowContainer = new RowContainer(owner, this)
             {
                 FontFactor = SubFontFactor,
                 ApplySymbolGap = false

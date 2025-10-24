@@ -430,17 +430,18 @@
                 HorizontalAlignment="Right" />
         </Grid>
         <ui:ScrollViewerEx
-            x:Name="scrollViwer"
+            x:Name="ScrollViewer"
             FocusVisualStyle="{x:Null}"
             Focusable="True"
             HorizontalScrollBarVisibility="Auto"
-            ScrollChanged="scrollViwer_ScrollChanged">
-            <local:EditorControl
+            ScrollChanged="ScrollViewer_ScrollChanged">
+            <!--  We use codes to add EditorControl so that we can use Window reference in its constructor  -->
+            <!--<local:EditorControl
                 x:Name="editor"
                 Background="Transparent"
                 FocusVisualStyle="{x:Null}"
                 Focusable="True"
-                Loaded="editor_Loaded" />
+                Loaded="editor_Loaded" />-->
         </ui:ScrollViewerEx>
     </DockPanel>
 </Window>

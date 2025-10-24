@@ -15,11 +15,11 @@ namespace Editor
 
         protected double LeftGap => FontSize * .1;
 
-        public DivMath(EquationContainer parent)
-            : base(parent)
+        public DivMath(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
-            _divMathSign = new DivMathSign(this);
-            ActiveChild = _insideEquation = new RowContainer(this);
+            _divMathSign = new DivMathSign(owner, this);
+            ActiveChild = _insideEquation = new RowContainer(owner, this);
             childEquations.Add(_insideEquation);
             childEquations.Add(_divMathSign);
         }

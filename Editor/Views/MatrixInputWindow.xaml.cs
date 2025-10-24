@@ -40,7 +40,7 @@ public partial class MatrixInputWindow : Window
                 CommandType = CommandType.Matrix,
                 CommandParam = new int[] { rows, columns }
             };
-            ((MainWindow)Owner).editor.HandleUserCommand(newCommand);
+            ((MainWindow)Owner).Editor.HandleUserCommand(newCommand);
             Close();
         }
     }

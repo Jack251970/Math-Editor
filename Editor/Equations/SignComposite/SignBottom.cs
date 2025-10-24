@@ -14,16 +14,16 @@ namespace Editor
         private double HGap => FontSize * .02;
         private double VGap => FontSize * .05;
 
-        public SignBottom(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
-            : base(parent)
+        public SignBottom(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+            : base(owner, parent)
         {
-            ActiveChild = mainEquation = new RowContainer(this);
+            ActiveChild = mainEquation = new RowContainer(owner, this);
             SubLevel++;
-            bottomEquation = new RowContainer(this)
+            bottomEquation = new RowContainer(owner, this)
             {
                 ApplySymbolGap = false
             };
-            sign = new StaticSign(this, symbol, useUpright);
+            sign = new StaticSign(owner, this, symbol, useUpright);
             bottomEquation.FontFactor = SubFontFactor;
             childEquations.AddRange([mainEquation, bottomEquation, sign]);
         }

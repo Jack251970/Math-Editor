@@ -9,11 +9,11 @@ namespace Editor
         protected BracketSign bracketSign = null!;
         protected double ExtraHeight { get; set; }
 
-        public Bracket(EquationContainer parent)
-            : base(parent)
+        public Bracket(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             ExtraHeight = FontSize * 0.2;
-            ActiveChild = insideEq = new RowContainer(this);
+            ActiveChild = insideEq = new RowContainer(owner, this);
         }
 
         //public override void DrawEquation(DrawingContext dc)

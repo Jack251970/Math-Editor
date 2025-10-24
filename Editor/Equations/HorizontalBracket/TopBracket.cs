@@ -2,8 +2,8 @@
 {
     public sealed class TopBracket : HorizontalBracket
     {
-        public TopBracket(EquationContainer parent, HorizontalBracketSignType signType)
-             : base(parent, signType)
+        public TopBracket(MainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
+             : base(owner, parent, signType)
         {
             _topEquation.FontFactor = SubFontFactor;
             ActiveChild = _bottomEquation;

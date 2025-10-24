@@ -16,15 +16,15 @@ namespace Editor
         private double ExtraHeight { get; set; }
         private double MidSpace { get; set; }
 
-        public DoubleArrowBarBracket(EquationContainer parent)
-            : base(parent)
+        public DoubleArrowBarBracket(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             ExtraHeight = FontSize * 0.2;
             MidSpace = FontSize * 0.5;
-            leftArrowSign = new BracketSign(this, BracketSignType.LeftAngle);
-            rightArrowSign = new BracketSign(this, BracketSignType.RightAngle);
-            ActiveChild = leftEquation = new RowContainer(this);
-            rightEquation = new RowContainer(this);
+            leftArrowSign = new BracketSign(owner, this, BracketSignType.LeftAngle);
+            rightArrowSign = new BracketSign(owner, this, BracketSignType.RightAngle);
+            ActiveChild = leftEquation = new RowContainer(owner, this);
+            rightEquation = new RowContainer(owner, this);
             childEquations.AddRange([leftEquation, leftArrowSign, rightArrowSign, rightEquation]);
         }
 

@@ -7,10 +7,10 @@ namespace Editor
     {
         private readonly RowContainer rowContainer;
 
-        public Super(EquationRow parent, Position position)
-            : base(parent, position)
+        public Super(MainWindow owner, EquationRow parent, Position position)
+            : base(owner, parent, position)
         {
-            ActiveChild = rowContainer = new RowContainer(this);
+            ActiveChild = rowContainer = new RowContainer(owner, this);
             childEquations.Add(rowContainer);
             if (SubLevel == 1)
             {

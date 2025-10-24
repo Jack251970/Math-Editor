@@ -14,6 +14,7 @@ public partial class EquationToolBar : UserControl
     public event EventHandler CommandCompleted = (x, y) => { };
     private readonly Dictionary<object, ButtonPanel> buttonPanelMapping = [];
     private ButtonPanel? visiblePanel = null;
+    private MainWindow _mainWindow = null!;
 
     public EquationToolBar()
     {
@@ -64,6 +65,7 @@ public partial class EquationToolBar : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        _mainWindow = (MainWindow)Window.GetWindow(this);
         CreateBracketsPanel();
         CreateSumsProductsPanel();
         CreateIntegralsPanel();
@@ -79,7 +81,7 @@ public partial class EquationToolBar : UserControl
 
     private void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int margin)
     {
-        var bp = new ButtonPanel(list, columns, margin);
+        var bp = new ButtonPanel(_mainWindow, list, columns, margin);
         bp.ButtonClick += (x, y) => { CommandCompleted(this, EventArgs.Empty); visiblePanel = null; };
         mainToolBarPanel.Children.Add(bp);
         Canvas.SetTop(bp, mainToolBarPanel.Height);

@@ -16,16 +16,16 @@ namespace Editor
         private double SubMinus = 0;
         private double SuperMinus = 0;
 
-        public SignSubSuper(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
-            : base(parent)
+        public SignSubSuper(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+            : base(owner, parent)
         {
-            ActiveChild = mainEquation = new RowContainer(this);
+            ActiveChild = mainEquation = new RowContainer(owner, this);
             SubLevel++;
-            subEquation = new RowContainer(this);
-            superEquation = new RowContainer(this);
+            subEquation = new RowContainer(owner, this);
+            superEquation = new RowContainer(owner, this);
             subEquation.ApplySymbolGap = false;
             superEquation.ApplySymbolGap = false;
-            sign = new StaticSign(this, symbol, useUpright);
+            sign = new StaticSign(owner, this, symbol, useUpright);
             subEquation.FontFactor = SubFontFactor;
             superEquation.FontFactor = SubFontFactor;
             childEquations.AddRange([mainEquation, sign, superEquation, subEquation]);

@@ -12,6 +12,7 @@ public partial class CharacterToolBar : UserControl
     public event EventHandler CommandCompleted = (x, y) => { };
     private readonly Dictionary<object, ButtonPanel> buttonPanelMapping = [];
     private ButtonPanel? visiblePanel = null;
+    private MainWindow _mainWindow = null!;
 
     public CharacterToolBar()
     {
@@ -45,7 +46,6 @@ public partial class CharacterToolBar : UserControl
         ChangeActivePanel(sender);
     }
 
-
     private void toolBarButton_GotFocus(object sender, RoutedEventArgs e)
     {
         ChangeActivePanel(sender);
@@ -63,6 +63,7 @@ public partial class CharacterToolBar : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        _mainWindow = (MainWindow)Window.GetWindow(this);
         CreateSymbolsPanel();
         CreateGreekCapitalPanel();
         CreateGreekSmallPanel();
@@ -71,7 +72,7 @@ public partial class CharacterToolBar : UserControl
 
     private void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int margin)
     {
-        var bp = new ButtonPanel(list, columns, margin);
+        var bp = new ButtonPanel(_mainWindow, list, columns, margin);
         bp.ButtonClick += (x, y) => { CommandCompleted(this, EventArgs.Empty); visiblePanel = null; };
         mainToolBarPanel.Children.Add(bp);
         Canvas.SetTop(bp, mainToolBarPanel.Height);

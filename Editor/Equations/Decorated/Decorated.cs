@@ -11,13 +11,13 @@ namespace Editor
         private readonly DecorationType _decorationType;
         private readonly Position _decorationPosition;
 
-        public Decorated(EquationContainer parent, DecorationType decorationType, Position decorationPosition)
-            : base(parent)
+        public Decorated(MainWindow owner, EquationContainer parent, DecorationType decorationType, Position decorationPosition)
+            : base(owner, parent)
         {
-            ActiveChild = _rowContainer = new RowContainer(this);
+            ActiveChild = _rowContainer = new RowContainer(owner, this);
             _decorationType = decorationType;
             _decorationPosition = decorationPosition;
-            _decoration = new DecorationDrawing(this, decorationType);
+            _decoration = new DecorationDrawing(owner, this, decorationType);
             childEquations.Add(_rowContainer);
             childEquations.Add(_decoration);
         }

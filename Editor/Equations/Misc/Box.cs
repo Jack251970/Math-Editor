@@ -73,11 +73,11 @@ namespace Editor
         private Point LeftBottom => new(Left + LeftPadding / 2, Bottom - BottomPadding / 2);
         private Point RightBottom => new(Right - RightPadding / 2, Bottom - BottomPadding / 2);
 
-        public Box(EquationContainer parent, BoxType boxType)
-            : base(parent)
+        public Box(MainWindow owner, EquationContainer parent, BoxType boxType)
+            : base(owner, parent)
         {
             _boxType = boxType;
-            ActiveChild = _insideEq = new RowContainer(this);
+            ActiveChild = _insideEq = new RowContainer(owner, this);
             childEquations.Add(_insideEq);
         }
 

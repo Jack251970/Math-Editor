@@ -31,20 +31,20 @@ namespace Editor
             }
         }
 
-        public Arrow(EquationContainer parent, ArrowType arrowType, Position equationPosition)
-            : base(parent)
+        public Arrow(MainWindow owner, EquationContainer parent, ArrowType arrowType, Position equationPosition)
+            : base(owner, parent)
         {
             _arrowType = arrowType;
             _equationPosition = equationPosition;
             SubLevel++;
             ApplySymbolGap = false;
-            ActiveChild = _rowContainer1 = new RowContainer(this);
+            ActiveChild = _rowContainer1 = new RowContainer(owner, this);
             _rowContainer1.FontFactor = SubFontFactor;
             childEquations.Add(_rowContainer1);
             CreateDecorations();
             if (equationPosition == Position.BottomAndTop)
             {
-                _rowContainer2 = new RowContainer(this)
+                _rowContainer2 = new RowContainer(owner, this)
                 {
                     FontFactor = SubFontFactor
                 };
@@ -57,30 +57,30 @@ namespace Editor
             switch (_arrowType)
             {
                 case ArrowType.LeftArrow:
-                    _arrow1 = new DecorationDrawing(this, DecorationType.LeftArrow);
+                    _arrow1 = new DecorationDrawing(Owner, this, DecorationType.LeftArrow);
                     childEquations.Add(_arrow1);
                     break;
                 case ArrowType.RightArrow:
-                    _arrow1 = new DecorationDrawing(this, DecorationType.RightArrow);
+                    _arrow1 = new DecorationDrawing(Owner, this, DecorationType.RightArrow);
                     childEquations.Add(_arrow1);
                     break;
                 case ArrowType.DoubleArrow:
-                    _arrow1 = new DecorationDrawing(this, DecorationType.DoubleArrow);
+                    _arrow1 = new DecorationDrawing(Owner, this, DecorationType.DoubleArrow);
                     childEquations.Add(_arrow1);
                     break;
                 case ArrowType.RightLeftArrow:
                 case ArrowType.RightSmallLeftArrow:
                 case ArrowType.SmallRightLeftArrow:
-                    _arrow1 = new DecorationDrawing(this, DecorationType.RightArrow);
-                    _arrow2 = new DecorationDrawing(this, DecorationType.LeftArrow);
+                    _arrow1 = new DecorationDrawing(Owner, this, DecorationType.RightArrow);
+                    _arrow2 = new DecorationDrawing(Owner, this, DecorationType.LeftArrow);
                     childEquations.Add(_arrow1);
                     childEquations.Add(_arrow2);
                     break;
                 case ArrowType.RightLeftHarpoon:
                 case ArrowType.RightSmallLeftHarpoon:
                 case ArrowType.SmallRightLeftHarpoon:
-                    _arrow1 = new DecorationDrawing(this, DecorationType.RightHarpoonUpBarb);
-                    _arrow2 = new DecorationDrawing(this, DecorationType.LeftHarpoonDownBarb);
+                    _arrow1 = new DecorationDrawing(Owner, this, DecorationType.RightHarpoonUpBarb);
+                    _arrow2 = new DecorationDrawing(Owner, this, DecorationType.LeftHarpoonDownBarb);
                     childEquations.Add(_arrow1);
                     childEquations.Add(_arrow2);
                     break;

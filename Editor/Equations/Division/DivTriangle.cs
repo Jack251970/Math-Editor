@@ -16,12 +16,12 @@ namespace Editor
 
         private double LeftGap => FontSize * .1;
 
-        public DivTriangle(EquationContainer parent, bool isFixed)
-            : base(parent)
+        public DivTriangle(MainWindow owner, EquationContainer parent, bool isFixed)
+            : base(owner, parent)
         {
             _isFixed = isFixed;
-            _divTriangleSign = new DivTriangleSign(this);
-            ActiveChild = _insideEquation = new RowContainer(this);
+            _divTriangleSign = new DivTriangleSign(owner, this);
+            ActiveChild = _insideEquation = new RowContainer(owner, this);
             childEquations.Add(_insideEquation);
             childEquations.Add(_divTriangleSign);
         }

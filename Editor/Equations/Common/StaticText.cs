@@ -15,8 +15,8 @@ namespace Editor
 
         private FormattedText _formattedText = null!;
 
-        public StaticText(EquationContainer parent)
-            : base(parent)
+        public StaticText(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             IsStatic = true;
         }

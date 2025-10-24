@@ -11,8 +11,8 @@ namespace Editor
         private FormattedText _secondSign = null!; //only used by certain decorations
         private FormattedText _bar = null!;
 
-        public DecorationDrawing(EquationContainer parent, DecorationType decorationType)
-            : base(parent)
+        public DecorationDrawing(MainWindow owner, EquationContainer parent, DecorationType decorationType)
+            : base(owner, parent)
         {
             _decorationType = decorationType;
             IsStatic = true;

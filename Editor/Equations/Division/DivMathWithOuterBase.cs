@@ -8,10 +8,10 @@ namespace Editor
     {
         protected RowContainer outerEquation;
 
-        public DivMathWithOuterBase(EquationContainer parent)
-            : base(parent)
+        public DivMathWithOuterBase(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
-            outerEquation = new RowContainer(this)
+            outerEquation = new RowContainer(owner, this)
             {
                 HAlignment = HAlignment.Right
             };

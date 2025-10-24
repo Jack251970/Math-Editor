@@ -10,11 +10,11 @@ namespace Editor
         private readonly RowContainer superEquation;
         private readonly RowContainer subEquation;
 
-        public SubAndSuper(EquationRow parent, Position position)
-            : base(parent, position)
+        public SubAndSuper(MainWindow owner, EquationRow parent, Position position)
+            : base(owner, parent, position)
         {
-            ActiveChild = superEquation = new RowContainer(this);
-            subEquation = new RowContainer(this);
+            ActiveChild = superEquation = new RowContainer(owner, this);
+            subEquation = new RowContainer(owner, this);
             childEquations.Add(superEquation);
             childEquations.Add(subEquation);
             if (SubLevel == 1)

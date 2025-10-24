@@ -10,13 +10,13 @@ namespace Editor
     {
         private double ExtraWidth => FontSize * .3;
 
-        public DivHorizontal(EquationContainer parent)
-            : base(parent, false)
+        public DivHorizontal(MainWindow owner, EquationContainer parent)
+            : base(owner, parent, false)
         {
         }
 
-        public DivHorizontal(EquationContainer parent, bool isSmall)
-            : base(parent, isSmall)
+        public DivHorizontal(MainWindow owner, EquationContainer parent, bool isSmall)
+            : base(owner, parent, isSmall)
         {
         }
 
@@ -100,8 +100,8 @@ namespace Editor
 
     public sealed class DivHorizSmall : DivHorizontal
     {
-        public DivHorizSmall(EquationContainer parent)
-            : base(parent, true)
+        public DivHorizSmall(MainWindow owner, EquationContainer parent)
+            : base(owner, parent, true)
         {
         }
 

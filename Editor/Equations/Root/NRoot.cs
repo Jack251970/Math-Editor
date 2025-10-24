@@ -17,12 +17,12 @@ namespace Editor
         private double HGap => FontSize * .5;
         private double LeftPadding => FontSize * .1;
 
-        public NRoot(EquationContainer parent)
-            : base(parent)
+        public NRoot(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
-            _radicalSign = new RadicalSign(this);
-            ActiveChild = _insideEquation = new RowContainer(this);
-            _nthRootEquation = new RowContainer(this)
+            _radicalSign = new RadicalSign(owner, this);
+            ActiveChild = _insideEquation = new RowContainer(owner, this);
+            _nthRootEquation = new RowContainer(owner, this)
             {
                 ApplySymbolGap = false,
                 FontFactor = SubFontFactor

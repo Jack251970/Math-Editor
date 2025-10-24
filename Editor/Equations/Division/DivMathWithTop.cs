@@ -4,8 +4,8 @@ namespace Editor
 {
     public sealed class DivMathWithTop : DivMathWithOuterBase
     {
-        public DivMathWithTop(EquationContainer parent)
-            : base(parent)
+        public DivMathWithTop(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
         }
 

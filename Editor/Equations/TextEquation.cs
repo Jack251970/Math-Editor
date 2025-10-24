@@ -95,8 +95,8 @@ namespace Editor
         private readonly List<int> formats = [];
         private readonly List<EditorMode> modes = [];
 
-        public TextEquation(EquationContainer parent)
-            : base(parent)
+        public TextEquation(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
             CalculateSize();
             // TODO: Find correct way to unsubscribe this event
@@ -556,7 +556,7 @@ namespace Editor
 
         public override EquationBase Split(EquationContainer newParent)
         {
-            var newText = new TextEquation(newParent);
+            var newText = new TextEquation(Owner, newParent);
             var itemCount = textData.Length - caretIndex;
             newText.textData.Append(textData.ToString(caretIndex, itemCount));
             textData.Remove(caretIndex, itemCount);

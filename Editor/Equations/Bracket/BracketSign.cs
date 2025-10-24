@@ -22,8 +22,8 @@ namespace Editor
         private double LeftPadding => FontSize * leftPaddingFactor;
         private double RightPadding => FontSize * rightPaddingFactor;
 
-        public BracketSign(EquationContainer parent, BracketSignType entityType)
-            : base(parent)
+        public BracketSign(MainWindow owner, EquationContainer parent, BracketSignType entityType)
+            : base(owner, parent)
         {
             SignType = entityType;
             IsStatic = true;

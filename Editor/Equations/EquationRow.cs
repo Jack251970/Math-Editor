@@ -14,10 +14,10 @@ namespace Editor
     {
         private EquationContainer? _deleteable = null;
 
-        public EquationRow(EquationContainer parent)
-            : base(parent)
+        public EquationRow(MainWindow owner, EquationContainer parent)
+            : base(owner, parent)
         {
-            var textEq = new TextEquation(this);
+            var textEq = new TextEquation(owner, this);
             ActiveChild = textEq;
             AddChild(textEq);
             CalculateSize();
@@ -374,8 +374,8 @@ namespace Editor
                 var lastModes = ((TextEquation)childEquations[startIndex + count]).GetSelectedModes();
                 var lastDecorations = ((TextEquation)childEquations[startIndex + count]).GetSelectedDecorations();
 
-                var firstEquation = new TextEquation(this);
-                var lastEquation = new TextEquation(this);
+                var firstEquation = new TextEquation(Owner, this);
+                var lastEquation = new TextEquation(Owner, this);
                 firstEquation.ConsumeFormattedText(firstText, firstFormats, firstModes, firstDecorations, false);
                 lastEquation.ConsumeFormattedText(lastText, lastFormats, lastModes, lastDecorations, false);
 
@@ -515,7 +515,7 @@ namespace Editor
             }
             if (childEquations.Count == 0)
             {
-                childEquations.Add(new TextEquation(this));
+                childEquations.Add(new TextEquation(Owner, this));
             }
             ActiveChild = childEquations.First();
             CalculateSize();
@@ -577,61 +577,61 @@ namespace Editor
                 switch (commandType)
                 {
                     case CommandType.Composite:
-                        newEquation = CompositeFactory.CreateEquation(this, (Position)data);
+                        newEquation = CompositeFactory.CreateEquation(Owner, this, (Position)data);
                         break;
                     case CommandType.CompositeBig:
-                        newEquation = BigCompositeFactory.CreateEquation(this, (Position)data);
+                        newEquation = BigCompositeFactory.CreateEquation(Owner, this, (Position)data);
                         break;
                     case CommandType.Division:
-                        newEquation = DivisionFactory.CreateEquation(this, (DivisionType)data);
+                        newEquation = DivisionFactory.CreateEquation(Owner, this, (DivisionType)data);
                         break;
                     case CommandType.SquareRoot:
-                        newEquation = new SquareRoot(this);
+                        newEquation = new SquareRoot(Owner, this);
                         break;
                     case CommandType.nRoot:
-                        newEquation = new NRoot(this);
+                        newEquation = new NRoot(Owner, this);
                         break;
                     case CommandType.LeftBracket:
-                        newEquation = new LeftBracket(this, (BracketSignType)data);
+                        newEquation = new LeftBracket(Owner, this, (BracketSignType)data);
                         break;
                     case CommandType.RightBracket:
-                        newEquation = new RightBracket(this, (BracketSignType)data);
+                        newEquation = new RightBracket(Owner, this, (BracketSignType)data);
                         break;
                     case CommandType.LeftRightBracket:
-                        newEquation = new LeftRightBracket(this, ((BracketSignType[])data)[0], ((BracketSignType[])data)[1]);
+                        newEquation = new LeftRightBracket(Owner, this, ((BracketSignType[])data)[0], ((BracketSignType[])data)[1]);
                         break;
                     case CommandType.Sub:
-                        newEquation = new Sub(this, (Position)data);
+                        newEquation = new Sub(Owner, this, (Position)data);
                         break;
                     case CommandType.Super:
-                        newEquation = new Super(this, (Position)data);
+                        newEquation = new Super(Owner, this, (Position)data);
                         break;
                     case CommandType.SubAndSuper:
-                        newEquation = new SubAndSuper(this, (Position)data);
+                        newEquation = new SubAndSuper(Owner, this, (Position)data);
                         break;
                     case CommandType.TopBracket:
-                        newEquation = new TopBracket(this, (HorizontalBracketSignType)data);
+                        newEquation = new TopBracket(Owner, this, (HorizontalBracketSignType)data);
                         break;
                     case CommandType.BottomBracket:
-                        newEquation = new BottomBracket(this, (HorizontalBracketSignType)data);
+                        newEquation = new BottomBracket(Owner, this, (HorizontalBracketSignType)data);
                         break;
                     case CommandType.DoubleArrowBarBracket:
-                        newEquation = new DoubleArrowBarBracket(this);
+                        newEquation = new DoubleArrowBarBracket(Owner, this);
                         break;
                     case CommandType.SignComposite:
-                        newEquation = SignCompositeFactory.CreateEquation(this, (Position)(((object[])data)[0]), (SignCompositeSymbol)(((object[])data)[1]), UseItalicIntergalOnNew);
+                        newEquation = SignCompositeFactory.CreateEquation(Owner, this, (Position)(((object[])data)[0]), (SignCompositeSymbol)(((object[])data)[1]), UseItalicIntergalOnNew);
                         break;
                     case CommandType.Decorated:
-                        newEquation = new Decorated(this, (DecorationType)(((object[])data)[0]), (Position)(((object[])data)[1]));
+                        newEquation = new Decorated(Owner, this, (DecorationType)(((object[])data)[0]), (Position)(((object[])data)[1]));
                         break;
                     case CommandType.Arrow:
-                        newEquation = new Arrow(this, (ArrowType)(((object[])data)[0]), (Position)(((object[])data)[1]));
+                        newEquation = new Arrow(Owner, this, (ArrowType)(((object[])data)[0]), (Position)(((object[])data)[1]));
                         break;
                     case CommandType.Box:
-                        newEquation = new Box(this, (BoxType)data);
+                        newEquation = new Box(Owner, this, (BoxType)data);
                         break;
                     case CommandType.Matrix:
-                        newEquation = new MatrixEquation(this, ((int[])data)[0], ((int[])data)[1]);
+                        newEquation = new MatrixEquation(Owner, this, ((int[])data)[0], ((int[])data)[1]);
                         break;
                     case CommandType.DecoratedCharacter:
                         if (((TextEquation)ActiveChild).CaretIndex > 0)
@@ -985,7 +985,7 @@ namespace Editor
             EquationRow newRow = null;
             if (ActiveChild.GetType() == typeof(TextEquation))
             {
-                newRow = new EquationRow(newParent);
+                newRow = new EquationRow(Owner, newParent);
                 SplitRow(newRow);
                 newRow.CalculateSize();
             }

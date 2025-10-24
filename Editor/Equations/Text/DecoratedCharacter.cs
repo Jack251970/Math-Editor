@@ -11,11 +11,11 @@ namespace Editor
         public TextEquation Next { get; set; }
 
         [System.Obsolete]
-        public DecoratedCharacter(EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
-            : base(parent)
+        public DecoratedCharacter(MainWindow owner, EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
+            : base(owner, parent)
         {
-            this.Previous = previous;
-            this.charFt = TextManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
+            Previous = previous;
+            charFt = TextManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
             previous.ConsumeKey(System.Windows.Input.Key.Back);
             Height = FontSize;
             decorations.Add(new CharacterDecorationInfo() { DecorationType = cdt, Position = position, UnicodeString = sign });

@@ -27,7 +27,7 @@ namespace Editor
                 List<EquationRow> newRows = [];
                 foreach (var xElement in children.Elements())
                 {
-                    var row = new EquationRow(this);
+                    var row = new EquationRow(Owner, this);
                     row.DeSerialize(xElement);
                     newRows.Add(row);
                     row.FontSize = FontSize;
@@ -126,7 +126,7 @@ namespace Editor
                     var i = 1;
                     for (; i < lines.Count; i++)
                     {
-                        var row = new EquationRow(this);
+                        var row = new EquationRow(Owner, this);
                         row.ConsumeText(lines[i]);
                         childEquations.Insert(activeIndex + i, row);
                         newEquations.Add(row);
@@ -283,8 +283,8 @@ namespace Editor
                 var firstRowSelectedItems = firstRow.GetSelectedEquations();
                 var lastRowSelectedItems = lastRow.GetSelectedEquations();
 
-                var newFirstRow = new EquationRow(this);
-                var newLastRow = new EquationRow(this);
+                var newFirstRow = new EquationRow(Owner, this);
+                var newLastRow = new EquationRow(Owner, this);
                 newFirstRow.GetFirstTextEquation().ConsumeFormattedText(firstRowSelectedItems.First().GetSelectedText(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedFormats(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedModes(),
@@ -523,10 +523,10 @@ namespace Editor
             return false;
         }
 
-        public RowContainer(EquationContainer parent, double lineSpaceFactor = 0)
-            : base(parent)
+        public RowContainer(MainWindow owner, EquationContainer parent, double lineSpaceFactor = 0)
+            : base(owner, parent)
         {
-            var newLine = new EquationRow(this);
+            var newLine = new EquationRow(owner, this);
             AddLine(newLine);
             Height = newLine.Height;
             Width = newLine.Width;
@@ -551,13 +551,13 @@ namespace Editor
             childEquations.Clear();
             foreach (var xe in children.Elements())
             {
-                var row = new EquationRow(this);
+                var row = new EquationRow(Owner, this);
                 row.DeSerialize(xe);
                 childEquations.Add(row);
             }
             if (childEquations.Count == 0)
             {
-                childEquations.Add(new EquationRow(this));
+                childEquations.Add(new EquationRow(Owner, this));
             }
             ActiveChild = childEquations.First();
             CalculateSize();
@@ -674,7 +674,7 @@ namespace Editor
                 ActiveChild.HandleMouseDrag(mousePoint);
                 SelectedItems = childEquations.IndexOf(ActiveChild) - SelectionStartIndex;
             }
-            StatusBarHelper.PrintStatusMessage("ActiveStart " + ActiveChild.SelectionStartIndex + ", ActiveItems" + ActiveChild.SelectedItems);
+            Owner.SetStatusBarMessage("ActiveStart " + ActiveChild.SelectionStartIndex + ", ActiveItems" + ActiveChild.SelectedItems);
         }
 
         public override double Left
@@ -683,21 +683,21 @@ namespace Editor
             set
             {
                 base.Left = value;
-                if (HAlignment == Editor.HAlignment.Left)
+                if (HAlignment == HAlignment.Left)
                 {
                     foreach (var eb in childEquations)
                     {
                         eb.Left = value;
                     }
                 }
-                else if (HAlignment == Editor.HAlignment.Right)
+                else if (HAlignment == HAlignment.Right)
                 {
                     foreach (var eb in childEquations)
                     {
                         eb.Right = Right;
                     }
                 }
-                else if (HAlignment == Editor.HAlignment.Center)
+                else if (HAlignment == HAlignment.Center)
                 {
                     foreach (var eb in childEquations)
                     {

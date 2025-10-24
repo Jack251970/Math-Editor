@@ -10,8 +10,8 @@ namespace Editor
         private FormattedText leftCurlyPart = null!;
         private FormattedText rightCurlyPart = null!;
 
-        public HorizontalBracketSign(EquationContainer parent, HorizontalBracketSignType signType)
-            : base(parent)
+        public HorizontalBracketSign(MainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
+            : base(owner, parent)
         {
             SignType = signType;
             IsStatic = true;

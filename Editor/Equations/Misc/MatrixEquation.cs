@@ -16,8 +16,8 @@ namespace Editor
 
         public override Thickness Margin => new(FontSize * .15, 0, FontSize * .15, 0);
 
-        public MatrixEquation(EquationContainer parent, int rows, int columns)
-            : base(parent)
+        public MatrixEquation(MainWindow owner, EquationContainer parent, int rows, int columns)
+            : base(owner, parent)
         {
             _rows = rows;
             _columns = columns;
@@ -26,7 +26,7 @@ namespace Editor
             // 6 7 8
             for (var i = 0; i < columns * rows; i++)
             {
-                childEquations.Add(new RowContainer(this));
+                childEquations.Add(new RowContainer(owner, this));
             }
             ActiveChild = childEquations.First();
         }

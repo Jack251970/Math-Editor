@@ -14,13 +14,13 @@ namespace Editor
         private double slantXTop;
         private double slantXBottom;
 
-        public DivSlanted(EquationContainer parent)
-            : base(parent, false)
+        public DivSlanted(MainWindow owner, EquationContainer parent)
+            : base(owner, parent, false)
         {
         }
 
-        public DivSlanted(EquationContainer parent, bool isSmall)
-            : base(parent, isSmall)
+        public DivSlanted(MainWindow owner, EquationContainer parent, bool isSmall)
+            : base(owner, parent, isSmall)
         {
         }
 
@@ -90,8 +90,8 @@ namespace Editor
 
     public sealed class DivSlantedSmall : DivSlanted
     {
-        public DivSlantedSmall(EquationContainer parent)
-            : base(parent, true)
+        public DivSlantedSmall(MainWindow owner, EquationContainer parent)
+            : base(owner, parent, true)
         {
         }
 

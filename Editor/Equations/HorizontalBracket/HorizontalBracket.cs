@@ -10,12 +10,12 @@ namespace Editor
         protected HorizontalBracketSign _bracketSign;
         protected RowContainer _bottomEquation;
 
-        public HorizontalBracket(EquationContainer parent, HorizontalBracketSignType signType)
-            : base(parent)
+        public HorizontalBracket(MainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
+            : base(owner, parent)
         {
-            _topEquation = new RowContainer(this);
-            _bottomEquation = new RowContainer(this);
-            _bracketSign = new HorizontalBracketSign(this, signType);
+            _topEquation = new RowContainer(owner, this);
+            _bottomEquation = new RowContainer(owner, this);
+            _bracketSign = new HorizontalBracketSign(owner, this, signType);
             childEquations.Add(_topEquation);
             childEquations.Add(_bracketSign);
             childEquations.Add(_bottomEquation);

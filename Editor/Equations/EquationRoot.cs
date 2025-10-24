@@ -18,13 +18,13 @@ namespace Editor
         private readonly string fileVersion = "1.4";
         private readonly string sessionString = Guid.NewGuid().ToString();
 
-        public EquationRoot(Caret vCaret, Caret hCaret)
-            : base(null!)
+        public EquationRoot(MainWindow owner, Caret vCaret, Caret hCaret)
+            : base(owner, null!)
         {
             ApplySymbolGap = true;
             _vCaret = vCaret;
             _hCaret = hCaret;
-            ActiveChild = new RowContainer(this, 0.3);
+            ActiveChild = new RowContainer(owner, this, 0.3);
             childEquations.Add(ActiveChild);
             ActiveChild.Location = Location = new Point(15, 15);
             AdjustCarets();

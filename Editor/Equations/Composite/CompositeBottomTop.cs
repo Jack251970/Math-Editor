@@ -11,12 +11,12 @@ namespace Editor
         private readonly RowContainer topRow;
         private readonly RowContainer bottomRow;
 
-        public CompositeBottomTop(EquationContainer parent, bool isCompositeBig)
-            : base(parent, isCompositeBig)
+        public CompositeBottomTop(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+            : base(owner, parent, isCompositeBig)
         {
             SubLevel++;
-            bottomRow = new RowContainer(this);
-            topRow = new RowContainer(this)
+            bottomRow = new RowContainer(owner, this);
+            topRow = new RowContainer(owner, this)
             {
                 FontFactor = bottomRow.FontFactor = SubFontFactor,
                 ApplySymbolGap = bottomRow.ApplySymbolGap = false

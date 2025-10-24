@@ -9,11 +9,11 @@ namespace Editor
         private readonly RowContainer _mainEquation;
         private readonly StaticSign _sign;
 
-        public SignSimple(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
-            : base(parent)
+        public SignSimple(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+            : base(owner, parent)
         {
-            ActiveChild = _mainEquation = new RowContainer(this);
-            _sign = new StaticSign(this, symbol, useUpright);
+            ActiveChild = _mainEquation = new RowContainer(owner, this);
+            _sign = new StaticSign(owner, this, symbol, useUpright);
             childEquations.AddRange([_mainEquation, _sign]);
         }
 

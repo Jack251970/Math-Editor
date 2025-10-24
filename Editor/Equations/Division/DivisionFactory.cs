@@ -4,24 +4,24 @@ namespace Editor
 {
     public static class DivisionFactory
     {
-        public static EquationBase CreateEquation(EquationContainer equationParent, DivisionType divType)
+        public static EquationBase CreateEquation(MainWindow owner, EquationContainer equationParent, DivisionType divType)
         {
             EquationBase equation = divType switch
             {
-                DivisionType.DivRegular => new DivRegular(equationParent),
-                DivisionType.DivRegularSmall => new DivRegularSmall(equationParent),
-                DivisionType.DivDoubleBar => new DivDoubleBar(equationParent),
-                DivisionType.DivTripleBar => new DivTripleBar(equationParent),
-                DivisionType.DivHoriz => new DivHorizontal(equationParent),
-                DivisionType.DivHorizSmall => new DivHorizSmall(equationParent),
-                DivisionType.DivMath => new DivMath(equationParent),
-                DivisionType.DivMathWithTop => new DivMathWithTop(equationParent),
-                DivisionType.DivSlanted => new DivSlanted(equationParent),
-                DivisionType.DivSlantedSmall => new DivSlantedSmall(equationParent),
-                DivisionType.DivMathInverted => new DivMathInverted(equationParent),
-                DivisionType.DivInvertedWithBottom => new DivMathWithBottom(equationParent),
-                DivisionType.DivTriangleFixed => new DivTriangle(equationParent, true),
-                DivisionType.DivTriangleExpanding => new DivTriangle(equationParent, false),
+                DivisionType.DivRegular => new DivRegular(owner, equationParent),
+                DivisionType.DivRegularSmall => new DivRegularSmall(owner, equationParent),
+                DivisionType.DivDoubleBar => new DivDoubleBar(owner, equationParent),
+                DivisionType.DivTripleBar => new DivTripleBar(owner, equationParent),
+                DivisionType.DivHoriz => new DivHorizontal(owner, equationParent),
+                DivisionType.DivHorizSmall => new DivHorizSmall(owner, equationParent),
+                DivisionType.DivMath => new DivMath(owner, equationParent),
+                DivisionType.DivMathWithTop => new DivMathWithTop(owner, equationParent),
+                DivisionType.DivSlanted => new DivSlanted(owner, equationParent),
+                DivisionType.DivSlantedSmall => new DivSlantedSmall(owner, equationParent),
+                DivisionType.DivMathInverted => new DivMathInverted(owner, equationParent),
+                DivisionType.DivInvertedWithBottom => new DivMathWithBottom(owner, equationParent),
+                DivisionType.DivTriangleFixed => new DivTriangle(owner, equationParent, true),
+                DivisionType.DivTriangleExpanding => new DivTriangle(owner, equationParent, false),
                 _ => throw new InvalidOperationException("Unsupported DivisionType in DivisionFactory"),
             };
             return equation;

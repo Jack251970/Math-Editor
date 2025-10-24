@@ -12,13 +12,13 @@ namespace Editor
 
         protected int barCount = 1;
 
-        public DivRegular(EquationContainer parent)
-            : base(parent, false)
+        public DivRegular(MainWindow owner, EquationContainer parent)
+            : base(owner, parent, false)
         {
         }
 
-        public DivRegular(EquationContainer parent, bool isSmall)
-            : base(parent, isSmall)
+        public DivRegular(MainWindow owner, EquationContainer parent, bool isSmall)
+            : base(owner, parent, isSmall)
         {
         }
 

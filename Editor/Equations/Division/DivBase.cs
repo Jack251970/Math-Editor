@@ -10,15 +10,15 @@ namespace Editor
         protected RowContainer _topEquation;
         protected RowContainer _bottomEquation;
 
-        protected DivBase(EquationContainer parent, bool isSmall = false)
-            : base(parent)
+        protected DivBase(MainWindow owner, EquationContainer parent, bool isSmall = false)
+            : base(owner, parent)
         {
             if (isSmall)
             {
                 SubLevel++;
             }
-            ActiveChild = _topEquation = new RowContainer(this);
-            _bottomEquation = new RowContainer(this);
+            ActiveChild = _topEquation = new RowContainer(owner, this);
+            _bottomEquation = new RowContainer(owner, this);
             if (isSmall)
             {
                 _topEquation.FontFactor = SubFontFactor;

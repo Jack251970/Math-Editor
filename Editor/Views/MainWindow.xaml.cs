@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
@@ -17,16 +18,26 @@ public partial class MainWindow : Window
     private string _currentLocalFile = string.Empty;
     private static string MedFileFilter => $"{Constants.MathEditorFullName} {Localize.MainWindow_File()} (*.{Constants.MedExtension})|*.{Constants.MedExtension}";
 
+    public EditorControl Editor { get; set; } = null!;
+
     public MainWindow(string currentLocalFile)
     {
         _currentLocalFile = currentLocalFile;
         _viewModel.MainWindow = this;
         DataContext = _viewModel;
         InitializeComponent();
+        var editor = new EditorControl(this)
+        {
+            Background = Brushes.Transparent,
+            FocusVisualStyle = null,
+            Focusable = true,
+        };
+        editor.Loaded += Editor_Loaded;
+        Editor = editor;
+        ScrollViewer.Content = editor;
         WindowTracker.TrackOwner(this);
-        StatusBarHelper.Init(this);
-        characterToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
-        equationToolBar.CommandCompleted += (x, y) => { editor.Focus(); };
+        characterToolBar.CommandCompleted += (x, y) => { Editor.Focus(); };
+        equationToolBar.CommandCompleted += (x, y) => { Editor.Focus(); };
         SetTitle();
         AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
         UndoManager.CanUndo += (a, b) => { undoButton.IsEnabled = b.ActionPossible; };
@@ -34,12 +45,12 @@ public partial class MainWindow : Window
         EquationBase.SelectionAvailable += new EventHandler<EventArgs>(editor_SelectionAvailable);
         EquationBase.SelectionUnavailable += new EventHandler<EventArgs>(editor_SelectionUnavailable);
         underbarToggle.IsChecked = true;
-        editor.ZoomChanged += new EventHandler(editor_ZoomChanged);
+        Editor.ZoomChanged += new EventHandler(editor_ZoomChanged);
     }
 
-    private void editor_Loaded(object sender, RoutedEventArgs e)
+    private void Editor_Loaded(object sender, RoutedEventArgs e)
     {
-        _viewModel.Editor = editor;
+        _viewModel.Editor = Editor;
 
         // Check if we have a file to open
         OpenFile(_currentLocalFile);
@@ -47,7 +58,7 @@ public partial class MainWindow : Window
         // Init editor mode & editor font
         _viewModel.ChangeEditorMode(App.Settings.DefaultMode);
         _viewModel.ChangeEditorFont(App.Settings.DefaultFont);
-        editor.Focus();
+        Editor.Focus();
 
         IsInialized = true;
     }
@@ -81,7 +92,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            editor.HandleUserCommand(commandDetails);
+            Editor.HandleUserCommand(commandDetails);
             if (commandDetails.CommandType == CommandType.Text)
             {
                 historyToolBar.AddItem(commandDetails.UnicodeString);
@@ -97,10 +108,10 @@ public partial class MainWindow : Window
             {
                 return;
             }
-            else if (editor.IsMouseOver)
+            else if (Editor.IsMouseOver)
             {
                 //editor.HandleMouseDown();
-                editor.Focus();
+                Editor.Focus();
             }
             characterToolBar.HideVisiblePanel();
             equationToolBar.HideVisiblePanel();
@@ -109,11 +120,11 @@ public partial class MainWindow : Window
 
     private void Window_TextInput(object sender, TextCompositionEventArgs e)
     {
-        if (!editor.IsFocused)
+        if (!Editor.IsFocused)
         {
-            editor.Focus();
+            Editor.Focus();
             //editor.EditorControl_TextInput(null, e);
-            editor.ConsumeText(e.Text);
+            Editor.ConsumeText(e.Text);
             characterToolBar.HideVisiblePanel();
             equationToolBar.HideVisiblePanel();
         }
@@ -126,7 +137,7 @@ public partial class MainWindow : Window
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (editor.Dirty)
+        if (Editor.Dirty)
         {
             var result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
@@ -150,7 +161,7 @@ public partial class MainWindow : Window
 
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        if (editor.Dirty)
+        if (Editor.Dirty)
         {
             var mbResult = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
             if (mbResult == MessageBoxResult.Cancel)
@@ -187,7 +198,7 @@ public partial class MainWindow : Window
         {
             using (Stream stream = File.OpenRead(fileName))
             {
-                editor.LoadFile(stream);
+                Editor.LoadFile(stream);
             }
             _currentLocalFile = fileName;
         }
@@ -265,7 +276,7 @@ public partial class MainWindow : Window
         {
             using (Stream stream = File.Open(_currentLocalFile, FileMode.Create))
             {
-                editor.SaveFile(stream, _currentLocalFile);
+                Editor.SaveFile(stream, _currentLocalFile);
             }
             SetTitle();
             return true;
@@ -273,7 +284,7 @@ public partial class MainWindow : Window
         catch
         {
             MessageBox.Show("File could not be saved. Make sure you have permission to write the file to disk.", "Error");
-            editor.Dirty = true;
+            Editor.Dirty = true;
         }
         return false;
     }
@@ -290,17 +301,17 @@ public partial class MainWindow : Window
 
     private void CutCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        editor.Copy(true);
+        Editor.Copy(true);
     }
 
     private void CopyCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        editor.Copy(false);
+        Editor.Copy(false);
     }
 
     private void PasteCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        editor.Paste();
+        Editor.Paste();
     }
 
     private void PrintCommandHandler(object sender, ExecutedRoutedEventArgs e)
@@ -310,17 +321,17 @@ public partial class MainWindow : Window
 
     private void UndoCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        editor.Undo();
+        Editor.Undo();
     }
 
     private void RedoCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        editor.Redo();
+        Editor.Redo();
     }
 
     private void SelectAllCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        editor.SelectAll();
+        Editor.SelectAll();
     }
 
     private void Window_GotFocus(object sender, RoutedEventArgs e)
@@ -336,7 +347,7 @@ public partial class MainWindow : Window
             var ext = Path.GetExtension(fileName);
             if (ext != "." + imageType)
                 fileName += "." + imageType;
-            editor.ExportImage(fileName);
+            Editor.ExportImage(fileName);
         }
     }
 
@@ -351,7 +362,7 @@ public partial class MainWindow : Window
         {
             showNestingMenuItem.Header = "Show Nesting";
         }
-        editor.InvalidateVisual();
+        Editor.InvalidateVisual();
     }
 
     private void ToolBar_Loaded(object sender, RoutedEventArgs e)
@@ -366,19 +377,19 @@ public partial class MainWindow : Window
 
     private void UnderbarToggleCheckChanged(object sender, RoutedEventArgs e)
     {
-        editor.ShowOverbar(underbarToggle.IsChecked == true);
+        Editor.ShowOverbar(underbarToggle.IsChecked == true);
     }
 
     private void deleteMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        editor.DeleteSelection();
+        Editor.DeleteSelection();
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {
-        if (!editor.IsFocused)
+        if (!Editor.IsFocused)
         {
-            editor.Focus();
+            Editor.Focus();
             characterToolBar.HideVisiblePanel();
             equationToolBar.HideVisiblePanel();
         }
@@ -433,7 +444,7 @@ public partial class MainWindow : Window
         var percentage = lastZoomMenuItem.Header as string;
         if (!string.IsNullOrEmpty(percentage))
         {
-            editor.SetFontSizePercentage(int.Parse(percentage.Replace("%", "")));
+            Editor.SetFontSizePercentage(int.Parse(percentage.Replace("%", "")));
         }
     }
 
@@ -457,7 +468,7 @@ public partial class MainWindow : Window
             lastZoomMenuItem.IsChecked = false;
             lastZoomMenuItem = null;
         }
-        editor.SetFontSizePercentage(number);
+        Editor.SetFontSizePercentage(number);
     }
 
     private void exitFullScreenButton_Click(object sender, RoutedEventArgs e)
@@ -485,14 +496,14 @@ public partial class MainWindow : Window
         EquationRow.UseItalicIntergalOnNew = false;
     }
 
-    private void scrollViwer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        editor.InvalidateVisual();
+        Editor.InvalidateVisual();
     }
 
     private void NewCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        if (editor.Dirty)
+        if (Editor.Dirty)
         {
             var result = MessageBox.Show("Do you want to save the current document before closing?", "Please confirm", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
@@ -509,26 +520,6 @@ public partial class MainWindow : Window
         }
         _currentLocalFile = "";
         SetTitle();
-        editor.Clear();
-    }
-}
-
-public static class StatusBarHelper
-{
-    private static MainWindow? window = null;
-    public static void Init(MainWindow _window)
-    {
-        window = _window;
-    }
-
-    public static void PrintStatusMessage(string message)
-    {
-        // TODO: Implement this method
-        window?.SetStatusBarMessage(message);
-    }
-
-    public static void ShowCoordinates(string message)
-    {
-        window?.ShowCoordinates(message);
+        Editor.Clear();
     }
 }

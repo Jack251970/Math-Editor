@@ -9,56 +9,45 @@ public partial class ButtonPanel : UserControl
 {
     public event EventHandler ButtonClick = (x, y) => { };
 
-    private MainWindow _mainWindow = null!;
     private readonly List<CommandDetails> _commandDetails;
-    private readonly int _columns;
-    private readonly int _buttonMargin;
 
-    public ButtonPanel(List<CommandDetails> listCommandDetails, int columns, int buttonMargin)
+    public ButtonPanel(MainWindow mainWindow, List<CommandDetails> listCommandDetails, int columns, int buttonMargin)
     {
-        _commandDetails = listCommandDetails;
-        _columns = columns;
-        _buttonMargin = buttonMargin;
         InitializeComponent();
-    }
-
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
-    {
-        _mainWindow = (MainWindow)Window.GetWindow(this);
-        mainGrid.Columns = _columns;//listButtonDetails.Count < 5 ? listButtonDetails.Count : 5;
-        mainGrid.Rows = (int)Math.Ceiling(_commandDetails.Count / (double)mainGrid.Columns);
-        mainGrid.Width = 30 * mainGrid.Columns;
-        mainGrid.Height = 30 * mainGrid.Rows;
-
+        _commandDetails = listCommandDetails;
+        MainGrid.Columns = columns;//listButtonDetails.Count < 5 ? listButtonDetails.Count : 5;
+        MainGrid.Rows = (int)Math.Ceiling(listCommandDetails.Count / (double)MainGrid.Columns);
+        MainGrid.Width = 30 * MainGrid.Columns;
+        MainGrid.Height = 30 * MainGrid.Rows;
         for (var i = 0; i < _commandDetails.Count; i++)
         {
-            var b = new EditorToolBarButton(_mainWindow, _commandDetails[i])
+            var button = new EditorToolBarButton(mainWindow, _commandDetails[i])
             {
-                Margin = new Thickness(_buttonMargin)
+                Margin = new Thickness(buttonMargin)
             };
-            b.Click += new RoutedEventHandler(panelButton_Click);
-            b.Style = (Style)FindResource("MathToolBarButtonStyle");
-            b.SetValue(Grid.ColumnProperty, i % mainGrid.Columns);
-            b.SetValue(Grid.RowProperty, i / mainGrid.Columns);
-            b.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
+            button.Click += new RoutedEventHandler(PanelButton_Click);
+            button.Style = (Style)FindResource("MathToolBarButtonStyle");
+            button.SetValue(Grid.ColumnProperty, i % MainGrid.Columns);
+            button.SetValue(Grid.RowProperty, i / MainGrid.Columns);
+            button.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
             //b.FontSize = 10;
             if (_commandDetails[i].Image != null)
             {
-                b.Content = _commandDetails[i].Image;
+                button.Content = _commandDetails[i].Image;
             }
             else
             {
-                b.Content = _commandDetails[i].UnicodeString;
+                button.Content = _commandDetails[i].UnicodeString;
             }
-            mainGrid.Children.Add(b);
+            MainGrid.Children.Add(button);
             if (_commandDetails[i].CommandType == CommandType.None) //This is an ugly kludge!
             {
-                b.Visibility = Visibility.Hidden;
+                button.Visibility = Visibility.Hidden;
             }
         }
     }
 
-    private void panelButton_Click(object sender, RoutedEventArgs e)
+    private void PanelButton_Click(object sender, RoutedEventArgs e)
     {
         Visibility = Visibility.Collapsed;
         ButtonClick(this, EventArgs.Empty);

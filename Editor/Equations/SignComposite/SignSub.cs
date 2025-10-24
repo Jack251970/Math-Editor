@@ -18,16 +18,16 @@ namespace Editor
         private double LeftMinus { get; set; }
         private double MainLeft => Left + LeftMinus;
 
-        public SignSub(EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
-            : base(parent)
+        public SignSub(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+            : base(owner, parent)
         {
-            ActiveChild = mainEquation = new RowContainer(this);
-            this.SubLevel++;
-            subEquation = new RowContainer(this)
+            ActiveChild = mainEquation = new RowContainer(owner, this);
+            SubLevel++;
+            subEquation = new RowContainer(owner, this)
             {
                 ApplySymbolGap = false
             };
-            sign = new StaticSign(this, symbol, useUpright);
+            sign = new StaticSign(owner, this, symbol, useUpright);
             subEquation.FontFactor = SubFontFactor;
             childEquations.AddRange([mainEquation, sign, subEquation]);
         }

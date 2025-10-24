@@ -7,11 +7,12 @@ namespace Editor
     {
         private readonly BracketSign bracketSign2;
 
-        public LeftRightBracket(EquationContainer parent, BracketSignType leftBracketType, BracketSignType rightBracketType)
-            : base(parent)
+        public LeftRightBracket(MainWindow owner, EquationContainer parent,
+            BracketSignType leftBracketType, BracketSignType rightBracketType)
+            : base(owner, parent)
         {
-            bracketSign = new BracketSign(this, leftBracketType);
-            bracketSign2 = new BracketSign(this, rightBracketType);
+            bracketSign = new BracketSign(owner, this, leftBracketType);
+            bracketSign2 = new BracketSign(owner, this, rightBracketType);
             childEquations.AddRange([insideEq, bracketSign, bracketSign2]);
         }
 
