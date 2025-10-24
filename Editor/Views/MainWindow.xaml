@@ -160,12 +160,10 @@
                     <MenuItem
                         x:Name="symbolMenuItem"
                         Command="{Binding OpenUnicodeSelectorWindowCommand, Mode=OneTime}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                         Header="_Symbol" />
                     <MenuItem
                         x:Name="codePointMenuItem"
                         Command="{Binding OpenCodepointWindowCommand, Mode=OneTime}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                         Header="_Unicode Value" />
                 </MenuItem>
                 <MenuItem x:Name="viewMenuItem" Header="_View">
@@ -217,7 +215,6 @@
                         <MenuItem
                             Name="customZoomMenu"
                             Command="{Binding OpenCustomZoomWindowCommand, Mode=OneTime}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="_Custom"
                             IsCheckable="True" />
                     </MenuItem>
@@ -230,7 +227,6 @@
                     <MenuItem
                         x:Name="settingsMenuItem"
                         Command="{Binding OpenSettingsWindowCommand, Mode=OneTime}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                         Header="_Settings" />
                 </MenuItem>
                 <MenuItem x:Name="helpMenuItem" Header="_Help">
@@ -242,7 +238,6 @@
                     <MenuItem
                         x:Name="aboutMenuItem"
                         Command="{Binding OpenAboutWindowCommand, Mode=OneTime}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                         Header="_About" />
                 </MenuItem>
             </Menu>

@@ -16,6 +16,7 @@ public partial class EditorControl : UserControl, IDisposable
 {
     private readonly Timer timer;
     private readonly int blinkPeriod = 600;
+    private MainWindow _mainWindow = null!;
 
     public event EventHandler ZoomChanged = (x, y) => { };
 
@@ -41,15 +42,13 @@ public partial class EditorControl : UserControl, IDisposable
             FontSize = fontSize
         };
         timer = new Timer(BlinkCaret, null, blinkPeriod, blinkPeriod);
-
-        // ensure timer and carets are disposed when the window is closed.
-        Loaded += OnControlLoaded;
     }
 
-    private void OnControlLoaded(object sender, RoutedEventArgs e)
+    private void EditorControl_Loaded(object sender, RoutedEventArgs e)
     {
-        var window = Window.GetWindow(this);
-        window.Closing += OnWindowClosing;
+        // ensure timer and carets are disposed when the window is closed.
+        _mainWindow = (MainWindow)Window.GetWindow(this);
+        _mainWindow.Closing += OnWindowClosing;
     }
 
     private void OnWindowClosing(object? sender, CancelEventArgs e)
@@ -179,7 +178,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     private void EditorControl_MouseLeave(object sender, MouseEventArgs e)
     {
-        StatusBarHelper.ShowCoordinates("");
+        _mainWindow.ShowCoordinates("");
     }
 
     private Point lastMouseLocation = new();
@@ -187,7 +186,7 @@ public partial class EditorControl : UserControl, IDisposable
     private void EditorControl_MouseMove(object sender, MouseEventArgs e)
     {
         var mousePosition = e.GetPosition(this);
-        StatusBarHelper.ShowCoordinates((int)mousePosition.X + ", " + (int)mousePosition.Y);
+        _mainWindow.ShowCoordinates((int)mousePosition.X + ", " + (int)mousePosition.Y);
         if (isDragging)
         {
             if (Math.Abs(lastMouseLocation.X - mousePosition.X) > 2 /*SystemParameters.MinimumHorizontalDragDistance*/ ||
@@ -223,10 +222,6 @@ public partial class EditorControl : UserControl, IDisposable
         equationRoot.ConsumeText(text);
         AdjustView();
         Dirty = true;
-    }
-
-    private void EditorControl_Loaded(object sender, RoutedEventArgs e)
-    {
     }
 
     private void EditorControl_KeyDown(object sender, KeyEventArgs e)
@@ -417,7 +412,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         equationRoot.ModifySelection(operation, argument, applied, true);
         AdjustView();
-        if (((MainWindow)Window.GetWindow(this)).IsInialized)
+        if (_mainWindow.IsInialized)
         {
             Dirty = true;
         }

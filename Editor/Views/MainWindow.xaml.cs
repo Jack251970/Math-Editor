@@ -20,6 +20,7 @@ public partial class MainWindow : Window
     public MainWindow(string currentLocalFile)
     {
         _currentLocalFile = currentLocalFile;
+        _viewModel.MainWindow = this;
         DataContext = _viewModel;
         InitializeComponent();
         WindowTracker.TrackOwner(this);

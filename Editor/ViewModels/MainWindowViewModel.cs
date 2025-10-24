@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -9,6 +7,7 @@ namespace Editor;
 public partial class MainWindowViewModel(Settings settings) : ObservableObject
 {
     public Settings Settings { get; init; } = settings;
+    public MainWindow MainWindow = null!;
     public EditorControl? Editor { get; set; } = null;
 
     // TODO: Update the localization when languages changes
@@ -23,33 +22,33 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     private FontType _textFontType = settings.DefaultFont;
 
     [RelayCommand]
-    private void OpenSettingsWindow(MenuItem item)
+    private void OpenSettingsWindow()
     {
-        WindowOpener.OpenSingle<SettingsWindow>(Window.GetWindow(item));
+        WindowOpener.OpenSingle<SettingsWindow>(MainWindow);
     }
 
     [RelayCommand]
-    private void OpenUnicodeSelectorWindow(MenuItem item)
+    private void OpenUnicodeSelectorWindow()
     {
-        WindowOpener.OpenScoped<UnicodeSelectorWindow>(Window.GetWindow(item));
+        WindowOpener.OpenScoped<UnicodeSelectorWindow>(MainWindow);
     }
 
     [RelayCommand]
-    private void OpenCodepointWindow(MenuItem item)
+    private void OpenCodepointWindow()
     {
-        WindowOpener.OpenScoped<CodepointWindow>(Window.GetWindow(item));
+        WindowOpener.OpenScoped<CodepointWindow>(MainWindow);
     }
 
     [RelayCommand]
-    private void OpenCustomZoomWindow(MenuItem item)
+    private void OpenCustomZoomWindow()
     {
-        WindowOpener.OpenScoped<CustomZoomWindow>(Window.GetWindow(item));
+        WindowOpener.OpenScoped<CustomZoomWindow>(MainWindow);
     }
 
     [RelayCommand]
-    private void OpenAboutWindow(MenuItem item)
+    private void OpenAboutWindow()
     {
-        WindowOpener.OpenSingle<AboutWindow>(Window.GetWindow(item));
+        WindowOpener.OpenSingle<AboutWindow>(MainWindow);
     }
 
     [RelayCommand]

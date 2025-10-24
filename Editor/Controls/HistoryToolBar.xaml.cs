@@ -7,6 +7,7 @@ namespace Editor;
 public partial class HistoryToolBar : UserControl
 {
     private const int MaxSymbols = 30;
+    private MainWindow _mainWindow = null!;
 
     public HistoryToolBar()
     {
@@ -14,6 +15,11 @@ public partial class HistoryToolBar : UserControl
         InitializeComponent();
         recentListBox.ItemsSource = App.Settings.RecentSymbolList;
         recentListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
+    }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        _mainWindow = (MainWindow)Window.GetWindow(this);
     }
 
     public void AddItem(string symbol)
@@ -38,7 +44,7 @@ public partial class HistoryToolBar : UserControl
         if (((TextBlock)sender).DataContext is string str)
         {
             var commandDetails = new CommandDetails { UnicodeString = str, CommandType = CommandType.Text };
-            ((MainWindow)Window.GetWindow(this)).HandleToolBarCommand(commandDetails);
+            _mainWindow.HandleToolBarCommand(commandDetails);
         }
     }
 }
