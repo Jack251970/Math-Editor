@@ -21,6 +21,21 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     [ObservableProperty]
     private FontType _textFontType = settings.DefaultFont;
 
+    [ObservableProperty]
+    private bool _inputBold;
+
+    [ObservableProperty]
+    private bool _inputItalic;
+
+    [ObservableProperty]
+    private bool _inputUnderline;
+
+    public bool IgnoreTextEditorModeChange { get; set; } = false;
+    public bool IgnoreTextFontTypeChange { get; set; } = false;
+    public bool IgnoreInputBoldChange { get; set; } = false;
+    public bool IgnoreInputItalicChange { get; set; } = false;
+    public bool IgnoreInputUnderlineChange { get; set; } = false;
+
     [RelayCommand]
     private void OpenSettingsWindow()
     {
@@ -57,85 +72,77 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         BrowserHelper.Open(Constants.WikiUrl);
     }
 
-    public bool InputBold
-    {
-        get => TextEquation.InputBold;
-        set
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.InputBold = value;
-            Editor?.ChangeFormat(nameof(Format), Format.Bold, value);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-        }
-    }
-
-    public bool InputItalic
-    {
-        get => TextEquation.InputItalic;
-        set
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.InputItalic = value;
-            Editor?.ChangeFormat(nameof(Format), Format.Italic, value);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-        }
-    }
-
-    public bool InputUnderline
-    {
-        get => TextEquation.InputUnderline;
-        set
-        {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.InputUnderline = value;
-            Editor?.ChangeFormat(nameof(Format), Format.Underline, value);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
-        }
-    }
-
-    public void TextEquation_InputPropertyChanged(object? sender, string e)
-    {
-        switch (e)
-        {
-            case nameof(EditorMode):
-                TextEditorMode = TextEquation.EditorMode;
-                break;
-            case nameof(FontType):
-                TextFontType = TextEquation.FontType;
-                break;
-        }
-    }
-
     partial void OnTextEditorModeChanged(EditorMode value)
     {
+        if (IgnoreTextEditorModeChange) return;
         ChangeEditorMode(value);
+    }
+
+    partial void OnTextFontTypeChanged(FontType value)
+    {
+        if (IgnoreTextFontTypeChange) return;
+        ChangeEditorFont(value);
+    }
+
+    partial void OnInputBoldChanged(bool value)
+    {
+        if (IgnoreInputBoldChange) return;
+        ChangeInputBold(value);
+    }
+
+    partial void OnInputItalicChanged(bool value)
+    {
+        if (IgnoreInputItalicChange) return;
+        ChangeInputItalic(value);
+    }
+
+    partial void OnInputUnderlineChanged(bool value)
+    {
+        if (IgnoreInputUnderlineChange) return;
+        ChangeInputUnderline(value);
     }
 
     public void ChangeEditorMode(EditorMode editorMode)
     {
         if (Editor != null)
         {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.EditorMode = editorMode;
             Editor.ChangeFormat(nameof(EditorMode), editorMode, true);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
             Editor.Focus();
         }
-    }
-
-    partial void OnTextFontTypeChanged(FontType value)
-    {
-        ChangeEditorFont(value);
     }
 
     public void ChangeEditorFont(FontType fontType)
     {
         if (Editor != null)
         {
-            TextEquation.InputPropertyChanged -= TextEquation_InputPropertyChanged;
-            TextEquation.FontType = fontType;
             Editor.ChangeFormat(nameof(FontType), fontType, true);
-            TextEquation.InputPropertyChanged += TextEquation_InputPropertyChanged;
+            Editor.Focus();
+        }
+    }
+
+    private void ChangeInputBold(bool isBold)
+    {
+        if (Editor != null)
+        {
+            Editor.ChangeFormat(nameof(Format), Format.Bold, isBold);
+            Editor.Focus();
+        }
+    }
+
+    private void ChangeInputItalic(bool isItalic)
+    {
+        if (Editor != null)
+        {
+            Editor.ChangeFormat(nameof(Format), Format.Italic, isItalic);
+            Editor.Focus();
+        }
+    }
+
+    private void ChangeInputUnderline(bool isUnderline)
+    {
+        if (Editor != null)
+        {
+            Editor.ChangeFormat(nameof(Format), Format.Underline, isUnderline);
             Editor.Focus();
         }
     }

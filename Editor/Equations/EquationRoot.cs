@@ -392,7 +392,7 @@ namespace Editor
 
         public void ChangeFont(FontType fontType)
         {
-            TextEquation.FontType = fontType;
+            Owner.ViewModel.TextFontType = fontType;
             ActiveChild.FontSize = FontSize;
             CalculateSize();
             AdjustCarets();

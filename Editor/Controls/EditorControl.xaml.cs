@@ -409,7 +409,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         equationRoot.ModifySelection(operation, argument, applied, true);
         AdjustView();
-        if (_mainWindow.IsInialized)
+        if (_mainWindow.IsEditorLoaded)
         {
             Dirty = true;
         }

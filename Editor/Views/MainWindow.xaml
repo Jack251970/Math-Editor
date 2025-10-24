@@ -14,7 +14,6 @@
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Closed="Window_Closed"
     Closing="Window_Closing"
     GotFocus="Window_GotFocus"
     KeyDown="Window_KeyDown"
@@ -358,7 +357,7 @@
                         Style="{StaticResource DefaultComboBoxStyle}" />
                     <ToggleButton
                         x:Name="boldToggleButton"
-                        IsChecked="{Binding InputBold}"
+                        IsChecked="{Binding InputBold, Mode=TwoWay}"
                         IsThreeState="False"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Bold">
@@ -367,7 +366,7 @@
                     <!--<ToggleButton IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}" x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding InputItalic}" Style="{StaticResource ToolbarToggleButton}">-->
                     <ToggleButton
                         x:Name="italicToggleButton"
-                        IsChecked="{Binding InputItalic}"
+                        IsChecked="{Binding InputItalic, Mode=TwoWay}"
                         IsThreeState="False"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Italic">
@@ -375,7 +374,7 @@
                     </ToggleButton>
                     <ToggleButton
                         x:Name="underlineToggleButton"
-                        IsChecked="{Binding InputUnderline}"
+                        IsChecked="{Binding InputUnderline, Mode=TwoWay}"
                         IsThreeState="False"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Underline">

@@ -36,61 +36,63 @@ namespace Editor
             '\u25E0', '\u25E1',
         ];
 
-        public static event EventHandler<string>? InputPropertyChanged;
-        private static bool inputBold, inputItalic, inputUnderline;
-        private static EditorMode editorMode = EditorMode.Math;
-        public static bool InputBold
+        public bool InputBold
         {
-            get => inputBold;
+            get => Owner.ViewModel.InputBold;
             set
             {
-                if (inputBold != value)
-                {
-                    inputBold = value;
-                    InputPropertyChanged?.Invoke(null, "InputBold");
-                }
+                Owner.ViewModel.IgnoreInputBoldChange = true;
+                Owner.ViewModel.InputBold = value;
+                Owner.ViewModel.IgnoreInputBoldChange = false;
             }
         }
-        public static bool InputItalic
+
+        public bool InputItalic
         {
-            get => inputItalic;
+            get => Owner.ViewModel.InputItalic;
             set
             {
-                if (inputItalic != value)
-                {
-                    inputItalic = value;
-                    InputPropertyChanged?.Invoke(null, "InputItalic");
-                }
+                Owner.ViewModel.IgnoreInputItalicChange = true;
+                Owner.ViewModel.InputItalic = value;
+                Owner.ViewModel.IgnoreInputItalicChange = false;
             }
         }
-        public static bool InputUnderline
+
+        public bool InputUnderline
         {
-            get => inputUnderline;
+            get => Owner.ViewModel.InputUnderline;
             set
             {
-                if (inputUnderline != value)
-                {
-                    inputUnderline = value;
-                    InputPropertyChanged?.Invoke(null, "InputUnderline");
-                }
+                Owner.ViewModel.IgnoreInputUnderlineChange = true;
+                Owner.ViewModel.InputUnderline = value;
+                Owner.ViewModel.IgnoreInputUnderlineChange = false;
             }
         }
-        public static EditorMode EditorMode
+
+        public EditorMode EditorMode
         {
-            get => editorMode;
+            get => Owner.ViewModel.TextEditorMode;
             set
             {
-                if (editorMode != value)
-                {
-                    editorMode = value;
-                    InputPropertyChanged?.Invoke(null, nameof(EditorMode));
-                }
+                Owner.ViewModel.IgnoreTextEditorModeChange = true;
+                Owner.ViewModel.TextEditorMode = value;
+                Owner.ViewModel.IgnoreTextEditorModeChange = false;
+            }
+        }
+
+        public FontType FontType
+        {
+            get => Owner.ViewModel.TextFontType;
+            set
+            {
+                Owner.ViewModel.IgnoreTextFontTypeChange = true;
+                Owner.ViewModel.TextFontType = value;
+                Owner.ViewModel.IgnoreTextFontTypeChange = false;
             }
         }
 
         private readonly StringBuilder textData = new();
         private int caretIndex = 0;
-        private static FontType fontType = FontType.STIXGeneral;
         private readonly List<CharacterDecorationInfo> decorations = [];
         private readonly List<int> formats = [];
         private readonly List<EditorMode> modes = [];
@@ -123,19 +125,6 @@ namespace Editor
                 InputUnderline = TextManager.IsUnderline(formats[formatIndexToUse]);
                 EditorMode = modes[formatIndexToUse];
                 FontType = TextManager.GetFontType(formats[formatIndexToUse]);
-            }
-        }
-
-        public static FontType FontType
-        {
-            get => fontType;
-            set
-            {
-                if (fontType != value)
-                {
-                    fontType = value;
-                    InputPropertyChanged?.Invoke(null, nameof(FontType));
-                }
             }
         }
 
@@ -251,8 +240,8 @@ namespace Editor
             CaretIndex = textData.Length;
         }
 
-        public void ResetTextEquation(int caretIndex, int selectionStartIndex, int selectedItems, string text, int[] formats,
-                                      EditorMode[] modes, CharacterDecorationInfo[] cdiList)
+        public void ResetTextEquation(int caretIndex, int selectionStartIndex, int selectedItems,
+            string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] cdiList)
         {
             textData.Clear();
             textData.Append(text);
@@ -277,11 +266,11 @@ namespace Editor
                 if (registerUndo)
                 {
                     var textRemoveAction = new TextRemoveAction(this, startIndex, textData.ToString(startIndex, count),
-                                                                             SelectionStartIndex, SelectedItems, ParentEquation.SelectionStartIndex,
-                                                                             [.. formats.GetRange(startIndex, count)],
-                                                                             [.. modes.GetRange(startIndex, count)],
-                                                                             [.. (from d in decorations where d.Index >= startIndex && d.Index < startIndex + count select d)]
-                                                                             );
+                        SelectionStartIndex, SelectedItems, ParentEquation.SelectionStartIndex,
+                        [.. formats.GetRange(startIndex, count)],
+                        [.. modes.GetRange(startIndex, count)],
+                        [.. (from d in decorations where d.Index >= startIndex && d.Index < startIndex + count select d)]
+                        );
                     UndoManager.AddUndoAction(textRemoveAction);
                 }
                 RemoveContent(startIndex, count);
@@ -432,7 +421,7 @@ namespace Editor
                 }
                 catch
                 {
-                    var formatId = TextManager.GetFormatId(FontSize, fontType, FontStyles.Normal,
+                    var formatId = TextManager.GetFormatId(FontSize, FontType, FontStyles.Normal,
                         FontWeights.Normal, PenManager.TextFillColorPrimaryBrush, false);
                     for (var i = 0; i < text.Length; i++)
                     {
@@ -519,7 +508,7 @@ namespace Editor
                 formats.Clear();
                 modes.Clear();
                 decorations.Clear();
-                var formatId = TextManager.GetFormatId(FontSize, fontType, FontStyles.Normal,
+                var formatId = TextManager.GetFormatId(FontSize, FontType, FontStyles.Normal,
                     FontWeights.Normal, PenManager.TextFillColorPrimaryBrush, false);
                 for (var i = 0; i < textData.Length; i++)
                 {
@@ -625,7 +614,7 @@ namespace Editor
                 }
             }
 
-            var formatId = TextManager.GetFormatId(FontSize, fontType, style,
+            var formatId = TextManager.GetFormatId(FontSize, FontType, style,
                 InputBold ? FontWeights.Bold : FontWeights.Normal,
                 PenManager.TextFillColorPrimaryBrush, InputUnderline);
             var tempFormats = new int[text.Length];
@@ -788,10 +777,12 @@ namespace Editor
                         formats[i] = TextManager.GetFormatIdForNewUnderline(formats[i], applied);
                         break;
                     case Format.Bold:
-                        formats[i] = TextManager.GetFormatIdForNewWeight(formats[i], applied ? FontWeights.Bold : FontWeights.Normal);
+                        formats[i] = TextManager.GetFormatIdForNewWeight(formats[i],
+                            applied ? FontWeights.Bold : FontWeights.Normal);
                         break;
                     case Format.Italic:
-                        formats[i] = TextManager.GetFormatIdForNewStyle(formats[i], applied ? FontStyles.Italic : FontStyles.Normal);
+                        formats[i] = TextManager.GetFormatIdForNewStyle(formats[i],
+                            applied ? FontStyles.Italic : FontStyles.Normal);
                         break;
                 }
             }
@@ -1078,8 +1069,9 @@ namespace Editor
             }
             else
             {
-                var formatId = TextManager.GetFormatId(FontSize, fontType,
-                    InputItalic ? FontStyles.Italic : FontStyles.Normal, InputBold ? FontWeights.Bold : FontWeights.Normal,
+                var formatId = TextManager.GetFormatId(FontSize, FontType,
+                    InputItalic ? FontStyles.Italic : FontStyles.Normal,
+                    InputBold ? FontWeights.Bold : FontWeights.Normal,
                     PenManager.TextFillColorPrimaryBrush, InputUnderline);
                 var ft = TextManager.GetFormattedText("d", formatId);
                 //hm.TopExtra = Math.Min(ft.Baseline * .30, ft.TopExtra());

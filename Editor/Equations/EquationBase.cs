@@ -61,9 +61,7 @@ namespace Editor
         public static bool ShowNesting { get; set; }
         public MainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }
-        //protected static Pen BluePen = new Pen(Brushes.Blue, 1);
         private Point location = new();
-        //Point refPoint = new Point();
         private readonly double width;
         private readonly double height;
         private double fontSize = 20;

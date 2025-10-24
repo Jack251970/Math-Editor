@@ -12,8 +12,8 @@ namespace Editor;
 
 public partial class MainWindow : Window
 {
-    public bool IsInialized { get; private set; } = false;
-    private readonly MainWindowViewModel _viewModel = Ioc.Default.GetRequiredService<MainWindowViewModel>();
+    public bool IsEditorLoaded { get; private set; } = false;
+    public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
     private string _currentLocalFile = string.Empty;
     private static string MedFileFilter => $"{Constants.MathEditorFullName} {Localize.MainWindow_File()} (*.{Constants.MedExtension})|*.{Constants.MedExtension}";
@@ -23,8 +23,8 @@ public partial class MainWindow : Window
     public MainWindow(string currentLocalFile)
     {
         _currentLocalFile = currentLocalFile;
-        _viewModel.MainWindow = this;
-        DataContext = _viewModel;
+        ViewModel.MainWindow = this;
+        DataContext = ViewModel;
         InitializeComponent();
         var editor = new EditorControl(this)
         {
@@ -50,17 +50,17 @@ public partial class MainWindow : Window
 
     private void Editor_Loaded(object sender, RoutedEventArgs e)
     {
-        _viewModel.Editor = Editor;
+        ViewModel.Editor = Editor;
 
         // Check if we have a file to open
         OpenFile(_currentLocalFile);
 
         // Init editor mode & editor font
-        _viewModel.ChangeEditorMode(App.Settings.DefaultMode);
-        _viewModel.ChangeEditorFont(App.Settings.DefaultFont);
+        ViewModel.ChangeEditorMode(App.Settings.DefaultMode);
+        ViewModel.ChangeEditorFont(App.Settings.DefaultFont);
         Editor.Focus();
 
-        IsInialized = true;
+        IsEditorLoaded = true;
     }
 
     private void editor_SelectionUnavailable(object? sender, EventArgs e)
@@ -152,11 +152,6 @@ public partial class MainWindow : Window
                 }
             }
         }
-    }
-
-    private void Window_Closed(object sender, EventArgs e)
-    {
-        TextEquation.InputPropertyChanged -= _viewModel.TextEquation_InputPropertyChanged;
     }
 
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
