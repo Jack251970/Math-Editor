@@ -1,41 +1,50 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Editor;
 
+[INotifyPropertyChanged]
 public partial class MatrixInputWindow : Window
 {
     public event Action<int, int> ProcessRequest = (x, y) => { };
 
+    [ObservableProperty]
+    private string _rowsText = string.Empty;
+
+    [ObservableProperty]
+    private string _columnsText = string.Empty;
+
     public MatrixInputWindow()
     {
+        DataContext = this;
         InitializeComponent();
     }
 
     public MatrixInputWindow(int rows, int columns)
     {
+        DataContext = this;
         InitializeComponent();
-        rowsUpDown.Text = rows.ToString(CultureInfo.CurrentUICulture);
-        columnsUpDown.Text = columns.ToString(CultureInfo.CurrentUICulture);
+        RowsText = rows.ToString(CultureInfo.CurrentUICulture);
+        ColumnsText = columns.ToString(CultureInfo.CurrentUICulture);
     }
 
-    private void cancelButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
-
-    private void okButton_Click(object sender, RoutedEventArgs e)
+    private void OkButton_Click(object sender, RoutedEventArgs e)
     {
         // WPF does not provide a NumericUpDown control out of the box
         // The button click will be ignored, when the number cannot be parsed.
         // TODO: provide user feedback when the input is invalid or implement a proper NumericUpDownControl
-
-        if (int.TryParse(rowsUpDown.Text, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var rows)
-            && int.TryParse(columnsUpDown.Text, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var columns))
+        if (int.TryParse(RowsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var rows)
+            && int.TryParse(ColumnsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var columns))
         {
             ProcessRequest(rows, columns);
             Close();
         }
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

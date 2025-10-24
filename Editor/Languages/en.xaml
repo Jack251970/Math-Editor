@@ -50,6 +50,11 @@
     <system:String x:Key="ReportWindow_UploadLog">1. Upload this log file: {0}</system:String>
     <system:String x:Key="ReportWindow_CopyBelow">2. Copy exception messages below</system:String>
 
+    <!--  Matrix Input Window  -->
+    <system:String x:Key="MatrixInputWindow_Title">Input Matrix</system:String>
+    <system:String x:Key="MatrixInputWindow_Rows">Rows</system:String>
+    <system:String x:Key="MatrixInputWindow_Columns">Columns</system:String>
+
     <!--  Settings Window  -->
     <system:String x:Key="SettingsWindow_Title">Math Editor Settings</system:String>
     <system:String x:Key="SettingsWindow_Language">Language</system:String>

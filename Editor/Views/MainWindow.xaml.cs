@@ -74,8 +74,11 @@ public partial class MainWindow : Window
         {
             if (commandDetails.CommandParam is int[] rowsAndColumns && rowsAndColumns.Length == 2)
             {
-                var inputForm = new MatrixInputWindow(rowsAndColumns[0], rowsAndColumns[1]);
-                inputForm.ProcessRequest += (x, y) =>
+                var matrixInputWindow = new MatrixInputWindow(rowsAndColumns[0], rowsAndColumns[1])
+                {
+                    Owner = this
+                };
+                matrixInputWindow.ProcessRequest += (x, y) =>
                 {
                     var newCommand = new CommandDetails
                     {
@@ -84,11 +87,7 @@ public partial class MainWindow : Window
                     };
                     editor.HandleUserCommand(newCommand);
                 };
-                _ = inputForm.ShowDialog();
-            }
-            else
-            {
-                throw new Exception("Invalid parameters for CustomMatrix command");
+                matrixInputWindow.ShowDialog();
             }
         }
         else
