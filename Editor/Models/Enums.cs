@@ -14,8 +14,15 @@ public enum CommandType
     Decorated, Arrow, Box, Matrix, CustomMatrix, DecoratedCharacter
 }
 
-public enum HAlignment { Left, Center, Right }
-public enum VAlignment { Center, Top, Bottom }
+public enum HAlignment
+{
+    Left, Center, Right
+}
+
+public enum VAlignment
+{
+    Center, Top, Bottom
+}
 
 public enum Position
 {
@@ -255,4 +262,17 @@ public enum CopyType
 
     [EnumLocalizeKey(nameof(Localize.CopyType_Latex))]
     Latex,
+}
+
+[EnumLocalize]
+public enum UnicodeFormat
+{
+    [EnumLocalizeKey(nameof(Localize.UnicodeFormat_Decimal))]
+    Decimal,
+
+    [EnumLocalizeKey(nameof(Localize.UnicodeFormat_Octal))]
+    Octal,
+
+    [EnumLocalizeKey(nameof(Localize.UnicodeFormat_Hexadecimal))]
+    Hexadecimal
 }

@@ -42,14 +42,15 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         symbolWindow.Show();
     }
 
+    private CodepointWindow? _codepointWindow = null;
     [RelayCommand]
     private void OpenCodepointWindow(MenuItem item)
     {
-        var codePointWindow = new CodepointWindow
+        _codepointWindow ??= new CodepointWindow
         {
             Owner = Window.GetWindow(item)
         };
-        codePointWindow.Show();
+        _codepointWindow.Show();
     }
 
     [RelayCommand]

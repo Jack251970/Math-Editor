@@ -3,6 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!--  General  -->
+    <system:String x:Key="Error">Error</system:String>
+    <system:String x:Key="Close">Close</system:String>
+    <system:String x:Key="Ok">Ok</system:String>
+    <system:String x:Key="Cancel">Cancel</system:String>
+
     <!--  Editor Mode  -->
     <system:String x:Key="EditorMode_Math">Math</system:String>
     <system:String x:Key="EditorMode_Text">Text</system:String>
@@ -14,11 +20,24 @@
     <system:String x:Key="CopyType_Image">Image</system:String>
     <system:String x:Key="CopyType_Latex">Latex</system:String>
 
+    <!--  Unicode Format  -->
+    <system:String x:Key="UnicodeFormat_Decimal">Decimal</system:String>
+    <system:String x:Key="UnicodeFormat_Octal">Octal</system:String>
+    <system:String x:Key="UnicodeFormat_Hexadecimal">Hexadecimal</system:String>
+
     <!--  About Window  -->
     <system:String x:Key="AboutWindow_Title">About Math Editor</system:String>
     <system:String x:Key="AboutWindow_SourceRepository">Source repository</system:String>
     <system:String x:Key="AboutWindow_IssueReport">Issue report</system:String>
     <system:String x:Key="AboutWindow_SponsorAuthor">Sponsor author</system:String>
+
+    <!--  Codepoint Window  -->
+    <system:String x:Key="CodepointWindow_Title">Enter Unicode Value</system:String>
+    <system:String x:Key="CodepointWindow_UnicodeValue">Unicode Value:</system:String>
+    <system:String x:Key="CodepointWindow_Insert">Insert</system:String>
+    <system:String x:Key="CodepointWindow_GivenValueError">The given value is invalid</system:String>
+    <system:String x:Key="CodepointWindow_EnteredError">The entered value is invalid</system:String>
+    <system:String x:Key="CodepointWindow_NumberFormatError">The number is not in correct format</system:String>
 
     <!--  Report Window  -->
     <system:String x:Key="ReportWindow_AppGotError">App got an error</system:String>
