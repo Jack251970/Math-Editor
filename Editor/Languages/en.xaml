@@ -44,6 +44,10 @@
     <system:String x:Key="CustomZoomWindow_ZoomPercentageRangeError">Zoom percentage must be between 1 and {0}</system:String>
     <system:String x:Key="CustomZoomWindow_ZoomPercentageFormatError">Zoom percentage must be a number between 1 and {0}</system:String>
 
+    <!--  Main Window  -->
+    <system:String x:Key="MainWindow_Untitled">Untitled</system:String>
+    <system:String x:Key="MainWindow_File">File</system:String>
+
     <!--  Report Window  -->
     <system:String x:Key="ReportWindow_AppGotError">App got an error</system:String>
     <system:String x:Key="ReportWindow_PleaseOpenIssue">Please open a new issue in</system:String>

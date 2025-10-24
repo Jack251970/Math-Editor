@@ -15,7 +15,7 @@ public partial class MainWindow : Window
     private readonly MainWindowViewModel _viewModel = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
     private string _currentLocalFile = string.Empty;
-    private static readonly string MedFileFilter = "Math Editor File (*." + Constants.MedExtension + ")|*." + Constants.MedExtension;
+    private static string MedFileFilter => $"Math Editor {Localize.MainWindow_File()} (*.{Constants.MedExtension})|*.{Constants.MedExtension}";
 
     public MainWindow(string currentLocalFile)
     {
@@ -214,9 +214,9 @@ public partial class MainWindow : Window
         else
         {
 #if DEBUG
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - Untitled 1";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {Localize.MainWindow_Untitled()}";
 #else
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - Untitled 1";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {Localize.MainWindow_Untitled()}";
 #endif
         }
     }
