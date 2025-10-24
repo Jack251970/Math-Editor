@@ -30,7 +30,7 @@ public partial class CustomZoomWindow : Window
         try
         {
             var number = int.Parse(NumberBoxText);
-            if (number <= 0 || number > MaxPercentage)
+            if (number is <= 0 or > MaxPercentage)
             {
                 MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageRangeError(MaxPercentage), Localize.Error());
                 return;

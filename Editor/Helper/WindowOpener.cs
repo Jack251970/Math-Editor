@@ -33,7 +33,7 @@ public static class WindowOpener
 
         return ShowWindow(window, owner);
     }
-    
+
     /// <summary>
     /// Create new every time
     /// </summary>
