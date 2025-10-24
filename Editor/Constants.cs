@@ -33,6 +33,8 @@ public static class Constants
 
     public const string MedExtension = "med";
 
+    public const string RepositoryUrl = "https://github.com/Jack251970/Math-Editor";
     public const string IssuesUrl = "https://github.com/Jack251970/Math-Editor/issues";
     public const string WikiUrl = "https://github.com/Jack251970/Math-Editor/wiki";
+    public const string SponsorUrl = "https://ko-fi.com/jackye";
 }

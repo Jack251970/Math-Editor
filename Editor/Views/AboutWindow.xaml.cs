@@ -4,6 +4,10 @@ namespace Editor;
 
 public partial class AboutWindow : Window
 {
+    public string RepositoryUrl { get; } = Constants.RepositoryUrl;
+    public string IssuesUrl { get; } = Constants.IssuesUrl;
+    public string SponsorUrl { get; } = Constants.SponsorUrl;
+
     public AboutWindow()
     {
         DataContext = this;

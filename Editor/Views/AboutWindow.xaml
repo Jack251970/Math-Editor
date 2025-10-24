@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    Title="About Math Editor"
+    Title="{DynamicResource AboutWindow_Title}"
     Width="436"
     Height="262"
     ui:TitleBar.Height="36"
@@ -53,19 +53,19 @@
             <ui:HyperlinkButton
                 Grid.Column="0"
                 Padding="4"
-                Content="Source repository"
-                NavigateUri="https://github.com/Jack251970/Math-Editor" />
+                Content="{DynamicResource AboutWindow_SourceRepository}"
+                NavigateUri="{Binding RepositoryUrl, Mode=OneTime}" />
             <ui:HyperlinkButton
                 Grid.Column="1"
                 Padding="4"
                 HorizontalAlignment="Center"
-                Content="Issue Report"
-                NavigateUri="https://github.com/Jack251970/Math-Editor/issues" />
+                Content="{DynamicResource AboutWindow_IssueReport}"
+                NavigateUri="{Binding IssuesUrl, Mode=OneTime}" />
             <ui:HyperlinkButton
                 Grid.Column="2"
                 Padding="4"
-                Content="Sponsor Author"
-                NavigateUri="https://ko-fi.com/jackye" />
+                Content="{DynamicResource AboutWindow_SponsorAuthor}"
+                NavigateUri="{Binding SponsorUrl, Mode=OneTime}" />
         </Grid>
     </Grid>
 </Window>
