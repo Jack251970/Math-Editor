@@ -15,7 +15,7 @@ namespace Editor;
 public partial class EditorControl : UserControl, IDisposable
 {
     private readonly Timer timer;
-    private const int blinkPeriod = 600;
+    private const int BlinkPeriod = 600;
     private MainWindow _mainWindow = null!;
 
     public event EventHandler ZoomChanged = (x, y) => { };
@@ -41,7 +41,7 @@ public partial class EditorControl : UserControl, IDisposable
         {
             FontSize = fontSize
         };
-        timer = new Timer(BlinkCaret, null, blinkPeriod, blinkPeriod);
+        timer = new Timer(BlinkCaret, null, BlinkPeriod, BlinkPeriod);
     }
 
     private void EditorControl_Loaded(object sender, RoutedEventArgs e)
