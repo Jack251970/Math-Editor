@@ -25,11 +25,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     [RelayCommand]
     private void OpenSettingsWindow(MenuItem item)
     {
-        var settingsWindow = new SettingsWindow
-        {
-            Owner = Window.GetWindow(item)
-        };
-        settingsWindow.Show();
+        SingletonWindowOpener.Open<SettingsWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]
@@ -67,11 +63,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     [RelayCommand]
     private void OpenAboutWindow(MenuItem item)
     {
-        var aboutWindow = new AboutWindow
-        {
-            Owner = Window.GetWindow(item)
-        };
-        aboutWindow.ShowDialog();
+        SingletonWindowOpener.Open<AboutWindow>(Window.GetWindow(item));
     }
 
     [RelayCommand]
