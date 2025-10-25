@@ -156,6 +156,55 @@
     <system:String x:Key="CustomZoomWindow_ZoomPercentageFormatError">Zoom percentage must be a number between 1 and {0}</system:String>
 
     <!--  Main Window  -->
+    <system:String x:Key="MainWindow_File">File</system:String>
+    <system:String x:Key="MainWindow_New">New</system:String>
+    <system:String x:Key="MainWindow_Open">Open</system:String>
+    <system:String x:Key="MainWindow_Save">Save</system:String>
+    <system:String x:Key="MainWindow_SaveAs">Save as</system:String>
+    <system:String x:Key="MainWindow_Export">Export</system:String>
+    <system:String x:Key="MainWindow_Export_PNG">PNG</system:String>
+    <system:String x:Key="MainWindow_Export_JPG">JPG</system:String>
+    <system:String x:Key="MainWindow_Export_GIF">GIF</system:String>
+    <system:String x:Key="MainWindow_Export_BMP">BMP</system:String>
+    <system:String x:Key="MainWindow_Export_TIFF">TIFF</system:String>
+    <system:String x:Key="MainWindow_Export_WMP">WMP</system:String>
+    <system:String x:Key="MainWindow_Print">Print</system:String>
+    <system:String x:Key="MainWindow_Exit">Exit</system:String>
+
+    <system:String x:Key="MainWindow_Edit">Edit</system:String>
+    <system:String x:Key="MainWindow_Cut">Cut</system:String>
+    <system:String x:Key="MainWindow_Copy">Copy</system:String>
+    <system:String x:Key="MainWindow_Paste">Paste</system:String>
+    <system:String x:Key="MainWindow_SelectAll">Select all</system:String>
+    <system:String x:Key="MainWindow_Delete">Delete</system:String>
+
+    <system:String x:Key="MainWindow_Insert">Insert</system:String>
+    <system:String x:Key="MainWindow_Symbol">Symbol</system:String>
+    <system:String x:Key="MainWindow_UnicodeValue">Unicode value</system:String>
+
+    <system:String x:Key="MainWindow_View">View</system:String>
+    <system:String x:Key="MainWindow_FullScreen">Full screen</system:String>
+    <system:String x:Key="MainWindow_Zoom">Zoom</system:String>
+    <system:String x:Key="MainWindow_ZoomCustom">Custom</system:String>
+
+    <system:String x:Key="MainWindow_Tools">Tools</system:String>
+    <system:String x:Key="MainWindow_Settings">Settings</system:String>
+
+    <system:String x:Key="MainWindow_Help">Help</system:String>
+    <system:String x:Key="MainWindow_Contents">Contents</system:String>
+    <system:String x:Key="MainWindow_About">About</system:String>
+
+    <system:String x:Key="MainWindow_ExitFullScreen">Exit full screen</system:String>
+    <system:String x:Key="MainWindow_Close">Close</system:String>
+    <system:String x:Key="MainWindow_Undo">Undo</system:String>
+    <system:String x:Key="MainWindow_Redo">Redo</system:String>
+    <system:String x:Key="MainWindow_ZoomIn">Zoom in</system:String>
+    <system:String x:Key="MainWindow_ZoomOut">Zoom out</system:String>
+    <system:String x:Key="MainWindow_Bold">Bold</system:String>
+    <system:String x:Key="MainWindow_Italic">Italic</system:String>
+    <system:String x:Key="MainWindow_Underline">Underline</system:String>
+    <system:String x:Key="MainWindow_ShowHideUnderbar">Show/Hide underbar</system:String>
+
     <system:String x:Key="MainWindow_Untitled">Untitled</system:String>
     <system:String x:Key="MainWindow_ShowNesting">Show nesting</system:String>
     <system:String x:Key="MainWindow_HideNesting">Hide nesting</system:String>
