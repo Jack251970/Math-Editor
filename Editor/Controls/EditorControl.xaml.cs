@@ -60,6 +60,9 @@ public partial class EditorControl : UserControl, IDisposable
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         timer.Start();
+        // Here we set Editor later so that equationRoot will not call the methods related to timer
+        // which can cause null exception
+        equationRoot.Editor = this;
     }
 
     private void OnWindowClosing(object? sender, CancelEventArgs e)
@@ -171,21 +174,26 @@ public partial class EditorControl : UserControl, IDisposable
             InvalidateVisual();
         }
         Focus();
-        ForceCaretVisible();
+        ForceCaretVisible(false); // When we click, we want to see the caret immediately
         lastMouseLocation = e.GetPosition(this);
         isDragging = true;
     }
 
     private bool isForceVisible = false;
 
-    public void ForceCaretVisible()
+    public void ForceCaretVisible(bool render)
     {
-        if (isForceVisible) return;
+        if (isForceVisible && !render) return;
         isForceVisible = true;
         // Force the caret visible and then reset the timer
         timer.Stop();
-        vCaret.ForceVisible();
-        hCaret.ForceVisible();
+        if (render)
+        {
+            vCaret.ForceVisible(false);
+            hCaret.ForceVisible(false);
+        }
+        vCaret.ForceVisible(true);
+        hCaret.ForceVisible(true);
         timer.Start();
         isForceVisible = false;
     }

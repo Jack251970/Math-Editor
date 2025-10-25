@@ -15,6 +15,7 @@ namespace Editor
     {
         private static readonly string ClassName = nameof(EquationRoot);
 
+        public EditorControl? Editor { get; set; } = null;
         private readonly Caret _vCaret;
         private readonly Caret _hCaret;
         private readonly string fileVersion = "1.4";
@@ -155,6 +156,8 @@ namespace Editor
             var innerMost = ((RowContainer)ActiveChild).GetInnerMostEquationContainer();
             _hCaret.Location = innerMost.GetHorizontalCaretLocation();
             _hCaret.CaretLength = innerMost.GetHorizontalCaretLength();
+            // When the carets move, rerender them and force them to be visible
+            Editor?.ForceCaretVisible(true);
         }
 
         public override CopyDataObject Copy(bool removeSelection)

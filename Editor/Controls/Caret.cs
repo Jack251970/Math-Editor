@@ -35,11 +35,11 @@ public sealed class Caret : FrameworkElement, IDisposable
         }
     }
 
-    public void ForceVisible()
+    public void ForceVisible(bool visible)
     {
         if (!_isDisposed)
         {
-            Dispatcher.Invoke(() => { Visible = true; });
+            Dispatcher.Invoke(() => { Visible = visible; });
         }
     }
 
