@@ -14,6 +14,8 @@ namespace Editor;
 
 public partial class EditorControl : UserControl, IDisposable
 {
+    private static readonly string ClassName = nameof(EditorControl);
+
     private readonly Timer timer;
     private const int BlinkPeriod = 600;
     private readonly MainWindow _mainWindow;
@@ -94,9 +96,11 @@ public partial class EditorControl : UserControl, IDisposable
             memoryStream.Position = 0;
             ZipStream(memoryStream, stream, Path.GetFileNameWithoutExtension(fileName) + ".xml");
         }
-        catch
+        catch (Exception e)
         {
-            MessageBox.Show("Could not save file. Make sure the specified path is correct.", "Error");
+            EditorLogger.Fatal(ClassName, "Failed to save file", e);
+            MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
         Dirty = false;
     }
@@ -141,9 +145,11 @@ public partial class EditorControl : UserControl, IDisposable
                 stream.Position = 0;
                 equationRoot.LoadFile(stream);
             }
-            catch
+            catch (Exception e)
             {
-                MessageBox.Show("Cannot open the specified file. The file is not in correct format.", "Error");
+                EditorLogger.Fatal(ClassName, "Failed to load file", e);
+                MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         AdjustView();

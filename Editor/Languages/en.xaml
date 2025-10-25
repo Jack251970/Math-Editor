@@ -25,6 +25,117 @@
     <system:String x:Key="UnicodeFormat_Octal">Octal</system:String>
     <system:String x:Key="UnicodeFormat_Hexadecimal">Hexadecimal</system:String>
 
+    <!--  Editor Control  -->
+    <system:String x:Key="EditorControl_CannotOpenFile">Cannot open the specified file. The file is not in correct format.</system:String>
+    <system:String x:Key="EditorControl_CannotSaveFile">Cannot save the specified file. The path is invalid.</system:String>
+
+    <!--  Euqation Root  -->
+    <system:String x:Key="EquationRoot_FileVersionDifferent">The file was created by a different version (v{0}) of Math Editor and uses a different format.{1}{1}Math Editor will still try to open and convert the file to the current version. The operation may fail.{1}{1}Please create a backup if you want to keep the original file intact.</system:String>
+
+    <!--  Latex Converter  -->
+    <system:String x:Key="LatexConverter_InitializationFileNotFound">Latex to Unicode mapping file not found: {0}. Some Unicode characters may not be copied as Latex.</system:String>
+    <system:String x:Key="LatexConverter_InitializationJsonError">Failed to parse Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</system:String>
+    <system:String x:Key="LatexConverter_InitializationIOError">I/O error while loading Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</system:String>
+    <system:String x:Key="LatexConverter_InitializationError">Failed to load Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</system:String>
+    <system:String x:Key="LatexConverter_TranslationError">Translation Error</system:String>
+    <!--  Arrow  -->
+    <system:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowTop">
+        No translation available for Large over small arrow with upper text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowBottom">
+        No translation available for Large over small arrow with lower text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowBottomAndTop">
+        No translation available for Large over small arrow with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowTop">
+        No translation available for Small over large arrow with upper text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowBottom">
+        No translation available for Small over large arrow with lower text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowBottomAndTop">
+        No translation available for Small over large arrow with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonTop">
+        No translation available for Harpoons with upper text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonBottom">
+        No translation available for Harpoons with lower text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonBottomAndTop">
+        No translation available for Harpoons with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonTop">
+        No translation available for Large over small harpoon with upper text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonBottom">
+        No translation available for Large over small harpoon with lower text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonBottomAndTop">
+        No translation available for Large over small harpoon with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonTop">
+        No translation available for Small over large harpoon with upper text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottom">
+        No translation available for Small over large harpoon with lower text slot.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottomAndTop">
+        No translation available for Small over large harpoon with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </system:String>
+    <!--  Decorated  -->
+    <system:String x:Key="LatexConverter_TranslationErrorParenthesisTop">
+        No translation available for Arc.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorTortoiseTop">
+        No translation available for Joint status.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightHarpoonUpBarbTop">
+        No translation available for Right harpoon over-bar.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorRightHarpoonUpBarbBottom">
+        No translation available for Right harpoon under-bar.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorLeftHarpoonUpBarbTop">
+        No translation available for Left harpoon over-bar.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorLeftHarpoonUpBarbBottom">
+        No translation available for Left harpoon under-bar.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorStrikeThroughMiddle">
+        No translation available for Mid-line strike-through.{0}Please add a translation for it in the settings.
+    </system:String>
+    <!--  HorizontalBracket  -->
+    <system:String x:Key="LatexConverter_TranslationErrorTopSquare">
+        No translation available for Upper horizontal bracket.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorBottomSquare">
+        No translation available for Lower horizontal bracket.{0}Please add a translation for it in the settings.
+    </system:String>
+    <!--  Division  -->
+    <system:String x:Key="LatexConverter_TranslationErrorDivDoubleBar">
+        No translation available for Double bar division.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorDivTripleBar">
+        No translation available for Triple bar division.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorDivHorizSmall">
+        No translation available for Horizontal small division.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorDivMathInverted">
+        No translation available for Inverted division.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorDivInvertedWithBottom">
+        No translation available for Inverted division with bottom.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorDivTriangleFixed">
+        No translation available for Triangle fixed division.{0}Please add a translation for it in the settings.
+    </system:String>
+    <system:String x:Key="LatexConverter_TranslationErrorDivTriangleExpanding">
+        No translation available for Triangle expanding division.{0}Please add a translation for it in the settings.
+    </system:String>
+
     <!--  About Window  -->
     <system:String x:Key="AboutWindow_Title">About Math Editor</system:String>
     <system:String x:Key="AboutWindow_SourceRepository">Source repository</system:String>

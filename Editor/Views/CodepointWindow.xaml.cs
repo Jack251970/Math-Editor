@@ -49,12 +49,14 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
             }
             catch
             {
-                MessageBox.Show(Localize.CodepointWindow_GivenValueError(), Localize.Error());
+                MessageBox.Show(Localize.CodepointWindow_GivenValueError(), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         else
         {
-            MessageBox.Show(Localize.CodepointWindow_EnteredError(), Localize.Error());
+            MessageBox.Show(Localize.CodepointWindow_EnteredError(), Localize.Error(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -82,13 +84,15 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
                 }
                 else
                 {
-                    MessageBox.Show(Localize.CodepointWindow_EnteredError(), Localize.Error());
+                    MessageBox.Show(Localize.CodepointWindow_EnteredError(), Localize.Error(),
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to convert number on format change.", e);
-                MessageBox.Show(Localize.CodepointWindow_NumberFormatError(), Localize.Error());
+                MessageBox.Show(Localize.CodepointWindow_NumberFormatError(), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 NumberBoxText = string.Empty;
             }
         }

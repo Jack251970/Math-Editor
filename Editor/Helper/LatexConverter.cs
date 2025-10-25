@@ -5,13 +5,15 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
-// TODO: Convert to non-and use App.LatexConverter?
 public class LatexConverter
 {
+    private static readonly string ClassName = nameof(LatexConverter);
+
     #region Initialization
 
     private readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
@@ -22,33 +24,7 @@ public class LatexConverter
         {
             LatexSymbolMapping.TryAdd(kvp.Key, kvp.Value);
         }
-        try
-        {
-            var latexMappingJson = File.ReadAllText(Constants.Latex2UnicodePath);
-            var latexMapping = JsonSerializer.Deserialize<Dictionary<string, string>>(latexMappingJson);
-            LoadMapping(latexMapping!);
-        }
-        catch (FileNotFoundException ex)
-        {
-            MessageBox.Show($"Latex to Unicode mapping file not found: {Constants.Latex2UnicodePath}.\n{ex.Message}\n" +
-                $"Some Unicode characters may not be copied as Latex.", "Initialization Error");
-        }
-        catch (JsonException ex)
-        {
-            MessageBox.Show($"Failed to parse Latex to Unicode mapping from {Constants.Latex2UnicodePath}.\n{ex.Message}\n" +
-                $"Some Unicode characters may not be copied as Latex.", "Initialization Error");
-        }
-        catch (IOException ex)
-        {
-            MessageBox.Show($"I/O error while loading Latex to Unicode mapping from {Constants.Latex2UnicodePath}.\n{ex.Message}\n" +
-                $"Some Unicode characters may not be copied as Latex.", "Initialization Error");
-        }
-
-        catch (Exception)
-        {
-            MessageBox.Show($"Failed to load Latex to Unicode mapping from {Constants.Latex2UnicodePath}.\n" +
-                $"Some Unicode character may cannot be copied as Latex.", "Initialization Error");
-        }
+        LoadMapping(Constants.Latex2UnicodePath);
     }
 
     public void LoadUserUnicodeMapping()
@@ -56,19 +32,48 @@ public class LatexConverter
         // TODO: Add support for user-defined Latex to Unicode mapping
     }
 
-    private void LoadMapping(Dictionary<string, string> mapping)
+    private void LoadMapping(string path)
     {
-        Parallel.ForEach(mapping, kvp =>
+        try
         {
-            if (kvp.Value.Length == 1)
+            var latexMappingJson = File.ReadAllText(path);
+            var latexMapping = JsonSerializer.Deserialize<Dictionary<string, string>>(latexMappingJson);
+            Parallel.ForEach(latexMapping!, kvp =>
             {
-                LatexSymbolMapping.TryAdd(kvp.Value[0], ToChars(kvp.Key));
-            }
-            else
-            {
-                // TODO: Add support for multi-character Unicode mappings
-            }
-        });
+                if (kvp.Value.Length == 1)
+                {
+                    LatexSymbolMapping.TryAdd(kvp.Value[0], ToChars(kvp.Key));
+                }
+                else
+                {
+                    // TODO: Add support for multi-character Unicode mappings
+                }
+            });
+        }
+        catch (FileNotFoundException e)
+        {
+            EditorLogger.Fatal(ClassName, "Failed to initialize file due to file", e);
+            MessageBox.Show(Localize.LatexConverter_InitializationFileNotFound(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch (JsonException e)
+        {
+            EditorLogger.Fatal(ClassName, "Failed to initialize file due to Json", e);
+            MessageBox.Show(Localize.LatexConverter_InitializationJsonError(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch (IOException e)
+        {
+            EditorLogger.Fatal(ClassName, "Failed to initialize file due to IO", e);
+            MessageBox.Show(Localize.LatexConverter_InitializationIOError(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Fatal(ClassName, "Failed to initialize file", e);
+            MessageBox.Show(Localize.LatexConverter_InitializationError(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     #endregion
@@ -488,13 +493,22 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Large over small arrow with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftArrowTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Large over small arrow with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftArrowBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("No translation available for Large over small arrow with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftArrowBottomAndTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -503,13 +517,22 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Small over large arrow with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftArrowTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Small over large arrow with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftArrowBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("No translation available for Small over large arrow with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftArrowBottomAndTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -518,13 +541,22 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Harpoons with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightLeftHarpoonTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Harpoons with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightLeftHarpoonBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("No translation available for Harpoons with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightLeftHarpoonBottomAndTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -533,13 +565,22 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Large over small harpoon with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftHarpoonTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Large over small harpoon with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftHarpoonBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("No translation available for Large over small harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftHarpoonBottomAndTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -548,13 +589,22 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Small over large harpoon with upper text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftHarpoonTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Small over large harpoon with lower text slot.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftHarpoonBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.BottomAndTop:
-                        MessageBox.Show("No translation available for Small over large harpoon with upper and lower text slots.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftHarpoonBottomAndTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
@@ -599,7 +649,10 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Arc.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorParenthesisTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for Parenthesis decoration: {position}");
@@ -608,7 +661,10 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Joint status.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorTortoiseTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for Tortoise decoration: {position}");
@@ -655,10 +711,16 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Right harpoon over-bar.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightHarpoonUpBarbTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Right harpoon under-bar.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorRightHarpoonUpBarbBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for RightHarpoonUpBarb decoration: {position}");
@@ -667,10 +729,16 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Top:
-                        MessageBox.Show("No translation available for Left harpoon over-bar.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorLeftHarpoonUpBarbTop(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     case Position.Bottom:
-                        MessageBox.Show("No translation available for Left harpoon under-bar.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorLeftHarpoonUpBarbBottom(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for LeftHarpoonUpBarb decoration: {position}");
@@ -688,7 +756,10 @@ public class LatexConverter
                 switch (position)
                 {
                     case Position.Middle:
-                        MessageBox.Show("No translation available for Mid-line strike-through.\nPlease add a translation for it in the settings.", "Translation Error");
+                        MessageBox.Show(Localize.LatexConverter_TranslationErrorStrikeThroughMiddle(Environment.NewLine),
+                            Localize.LatexConverter_TranslationError(),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for StrikeThrough decoration: {position}");
@@ -735,10 +806,16 @@ public class LatexConverter
                 return Append(UnderBrace).Append(WhiteSpace).Append(topEquation).Append('_')
                     .Append(bottomEquation);
             case HorizontalBracketSignType.TopSquare:
-                MessageBox.Show("No translation available for Upper horizontal bracket.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorTopSquare(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case HorizontalBracketSignType.BottomSquare:
-                MessageBox.Show("No translation available for Lower horizontal bracket.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorBottomSquare(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             default:
                 throw new InvalidOperationException($"Invalid HorizontalBracketSignType: {type}");
@@ -833,10 +910,16 @@ public class LatexConverter
                 /// \frac{a}{b}
                 return Append(Frac).AppendWithWrapper(insideOrTopEquation).AppendWithWrapper(bottomEquation);
             case DivisionType.DivDoubleBar:
-                MessageBox.Show("No translation available for Double bar division.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivDoubleBar(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case DivisionType.DivTripleBar:
-                MessageBox.Show("No translation available for Triple bar division.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivTripleBar(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case DivisionType.DivRegularSmall:
                 /// {\textstyle{a \over b}}
@@ -863,19 +946,34 @@ public class LatexConverter
                     .Append(insideOrTopEquation).Append(WhiteSpace).Append(bottomEquation)
                     .Append(DivHoriz2).Append(bottomEquation).Append('}');
             case DivisionType.DivHorizSmall:
-                MessageBox.Show("No translation available for Horizontal small division.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivHorizSmall(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case DivisionType.DivMathInverted:
-                MessageBox.Show("No translation available for Inverted division.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivMathInverted(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case DivisionType.DivInvertedWithBottom:
-                MessageBox.Show("No translation available for Inverted division with bottom.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivInvertedWithBottom(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case DivisionType.DivTriangleFixed:
-                MessageBox.Show("No translation available for Triangle fixed division.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivTriangleFixed(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             case DivisionType.DivTriangleExpanding:
-                MessageBox.Show("No translation available for Triangle expanding division.\nPlease add a translation for it in the settings.", "Translation Error");
+                MessageBox.Show(Localize.LatexConverter_TranslationErrorDivTriangleExpanding(Environment.NewLine),
+                    Localize.LatexConverter_TranslationError(),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return null;
             default:
                 throw new InvalidOperationException($"Invalid DivisionType: {type}");

@@ -32,7 +32,8 @@ public partial class CustomZoomWindow : Window
             var number = int.Parse(NumberBoxText);
             if (number is <= 0 or > MaxPercentage)
             {
-                MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageRangeError(MaxPercentage), Localize.Error());
+                MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageRangeError(MaxPercentage), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             ((MainWindow)Owner).SetFontSizePercentage(number);
@@ -40,7 +41,8 @@ public partial class CustomZoomWindow : Window
         }
         catch
         {
-            MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageFormatError(MaxPercentage), Localize.Error());
+            MessageBox.Show(Localize.CustomZoomWindow_ZoomPercentageFormatError(MaxPercentage), Localize.Error(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

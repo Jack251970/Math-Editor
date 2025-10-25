@@ -13,6 +13,8 @@ namespace Editor
 {
     public sealed class EquationRoot : EquationContainer
     {
+        private static readonly string ClassName = nameof(EquationRoot);
+
         private readonly Caret _vCaret;
         private readonly Caret _hCaret;
         private readonly string fileVersion = "1.4";
@@ -75,9 +77,8 @@ namespace Editor
             var appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
             if (fileVersionAttribute == null || fileVersionAttribute.Value != fileVersion)
             {
-                MessageBox.Show("The file was created by a different version (v." + appVersion + ") of Math Editor and uses a different format." + Environment.NewLine + Environment.NewLine +
-                                "Math Editor will still try to open and convert the file to the current version. The operation may fail. " + Environment.NewLine + Environment.NewLine +
-                                "Please create a backup if you want to keep the original file intact.", "Message");
+                MessageBox.Show(Localize.EquationRoot_FileVersionDifferent(appVersion, Environment.NewLine),
+                    Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             ActiveChild.DeSerialize(root);
             CalculateSize();
@@ -320,9 +321,11 @@ namespace Editor
                 using Stream s = File.Create(path);
                 encoder.Save(s);
             }
-            catch
+            catch (Exception e)
             {
-                MessageBox.Show("File could not be saved. Please make sure the path you entered is correct", "Error");
+                EditorLogger.Fatal(ClassName, "Failed to save file", e);
+                MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

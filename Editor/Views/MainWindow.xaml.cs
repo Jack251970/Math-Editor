@@ -13,6 +13,8 @@ namespace Editor;
 
 public partial class MainWindow : Window, ICultureInfoChanged
 {
+    private static readonly string ClassName = nameof(MainWindow);
+
     public bool IsEditorLoaded { get; private set; } = false;
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
@@ -127,7 +129,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         if (Editor.Dirty)
         {
             var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Cancel)
             {
                 e.Cancel = true;
@@ -175,7 +177,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         if (Editor.Dirty)
         {
             var mbResult = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             if (mbResult == MessageBoxResult.Cancel)
             {
                 return;
@@ -214,10 +216,12 @@ public partial class MainWindow : Window, ICultureInfoChanged
             }
             _currentLocalFile = fileName;
         }
-        catch
+        catch (Exception e)
         {
-            _currentLocalFile = "";
-            MessageBox.Show("File is corrupt or inaccessible OR it was created by an incompatible version of Math Editor.", "Error");
+            _currentLocalFile = string.Empty;
+            EditorLogger.Fatal(ClassName, "Failed to load file", e);
+            MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
         SetTitle();
     }
@@ -303,9 +307,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
             SetTitle();
             return true;
         }
-        catch
+        catch (Exception e)
         {
-            MessageBox.Show("File could not be saved. Make sure you have permission to write the file to disk.", "Error");
+            EditorLogger.Fatal(ClassName, "Failed to save file", e);
+            MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
             Editor.Dirty = true;
         }
         return false;
