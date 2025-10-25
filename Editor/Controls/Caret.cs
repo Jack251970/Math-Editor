@@ -35,6 +35,14 @@ public sealed class Caret : FrameworkElement, IDisposable
         }
     }
 
+    public void ForceVisible()
+    {
+        if (!_isDisposed)
+        {
+            Dispatcher.Invoke(() => { Visible = true; });
+        }
+    }
+
     public static readonly DependencyProperty VisibleProperty = DependencyProperty.Register("Visible", typeof(bool), typeof(Caret), new FrameworkPropertyMetadata(false /* defaultValue */, FrameworkPropertyMetadataOptions.AffectsRender));
 
     private bool Visible

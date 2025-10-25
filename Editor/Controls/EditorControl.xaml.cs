@@ -8,7 +8,8 @@ using System.Windows.Media;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
-using Timer = System.Threading.Timer;
+using Timer = System.Timers.Timer;
+using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
 
 namespace Editor;
 
@@ -44,10 +45,21 @@ public partial class EditorControl : UserControl, IDisposable
         {
             FontSize = fontSize
         };
-        timer = new Timer(BlinkCaret, null, BlinkPeriod, BlinkPeriod);
-
+        timer = new Timer(BlinkPeriod);
+        timer.Elapsed += Timer_Elapsed;
         // ensure timer and carets are disposed when the window is closed.
         mainWindow.Closing += OnWindowClosing;
+    }
+
+    private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+    {
+        vCaret.ToggleVisibility();
+        hCaret.ToggleVisibility();
+    }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        timer.Start();
     }
 
     private void OnWindowClosing(object? sender, CancelEventArgs e)
@@ -72,12 +84,6 @@ public partial class EditorControl : UserControl, IDisposable
         {
             hCaret.Visibility = Visibility.Visible;
         }
-    }
-
-    private void BlinkCaret(object? state)
-    {
-        vCaret.ToggleVisibility();
-        hCaret.ToggleVisibility();
     }
 
     public void HandleUserCommand(CommandDetails commandDetails)
@@ -165,6 +171,13 @@ public partial class EditorControl : UserControl, IDisposable
             InvalidateVisual();
         }
         Focus();
+
+        // Force the caret visible and then reset the timer
+        timer.Stop();
+        vCaret.ForceVisible();
+        hCaret.ForceVisible();
+        timer.Start();
+
         lastMouseLocation = e.GetPosition(this);
         isDragging = true;
     }
