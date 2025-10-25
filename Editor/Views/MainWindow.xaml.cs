@@ -16,15 +16,16 @@ public partial class MainWindow : Window, ICultureInfoChanged
     private static readonly string ClassName = nameof(MainWindow);
 
     public bool IsEditorLoaded { get; private set; } = false;
+
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
-    private string _currentLocalFile = string.Empty;
+    public string CurrentLocalFile { get; private set; } = string.Empty;
 
     public EditorControl Editor { get; set; } = null!;
 
     public MainWindow(string currentLocalFile)
     {
-        _currentLocalFile = currentLocalFile;
+        CurrentLocalFile = currentLocalFile;
         ViewModel.MainWindow = this;
         DataContext = ViewModel;
         // Initialize all components
@@ -38,8 +39,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
         editor.Loaded += Editor_Loaded;
         Editor = editor;
         ScrollViewer.Content = editor;
-        // Set title
-        UpdateTitle();
         // Track this window
         WindowTracker.TrackOwner(this);
         // Add event handlers
@@ -56,7 +55,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         ViewModel.Editor = Editor;
 
         // Check if we have a file to open
-        OpenFile(_currentLocalFile);
+        OpenFile(CurrentLocalFile);
 
         // Init editor mode & editor font
         ViewModel.ChangeEditorMode(App.Settings.DefaultMode);
@@ -199,55 +198,25 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private void OpenFile(string fileName)
     {
-        if (string.IsNullOrEmpty(fileName))
+        if (!string.IsNullOrEmpty(fileName))
         {
-            return;
-        }
-        try
-        {
-            using (Stream stream = File.OpenRead(fileName))
+            try
             {
-                Editor.LoadFile(stream);
+                using (Stream stream = File.OpenRead(fileName))
+                {
+                    Editor.LoadFile(stream);
+                }
+                CurrentLocalFile = fileName;
             }
-            _currentLocalFile = fileName;
+            catch (Exception e)
+            {
+                CurrentLocalFile = string.Empty;
+                EditorLogger.Fatal(ClassName, "Failed to load file", e);
+                MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        catch (Exception e)
-        {
-            _currentLocalFile = string.Empty;
-            EditorLogger.Fatal(ClassName, "Failed to load file", e);
-            MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        UpdateTitle();
-    }
-
-    private void UpdateTitle()
-    {
-        var currentLocalFileName = string.Empty;
-        try
-        {
-            currentLocalFileName = Path.GetFileName(_currentLocalFile);
-        }
-        catch
-        {
-            // Ignore
-        }
-        if (!string.IsNullOrEmpty(currentLocalFileName))
-        {
-#if DEBUG
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFileName}";
-#else
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFileName}";
-#endif
-        }
-        else
-        {
-#if DEBUG
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {Localize.MainWindow_Untitled()}";
-#else
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {Localize.MainWindow_Untitled()}";
-#endif
-        }
+        ViewModel.UpdateTitle();
     }
 
     private string? ShowSaveFileDialog(string extension, string filter)
@@ -280,7 +249,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private bool ProcessFileSave()
     {
-        if (!File.Exists(_currentLocalFile))
+        if (!File.Exists(CurrentLocalFile))
         {
             var result = ShowSaveFileDialog(Constants.MedExtension,
                 Localize.MainWindow_MedFileFilter(Constants.MedExtension));
@@ -290,7 +259,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
             }
             else
             {
-                _currentLocalFile = result;
+                CurrentLocalFile = result;
             }
         }
         return SaveFile();
@@ -300,11 +269,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
     {
         try
         {
-            using (Stream stream = File.Open(_currentLocalFile, FileMode.Create))
+            using (Stream stream = File.Open(CurrentLocalFile, FileMode.Create))
             {
-                Editor.SaveFile(stream, _currentLocalFile);
+                Editor.SaveFile(stream, CurrentLocalFile);
             }
-            UpdateTitle();
+            ViewModel.UpdateTitle();
             return true;
         }
         catch (Exception e)
@@ -323,7 +292,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
             Localize.MainWindow_MedFileFilter(Constants.MedExtension));
         if (!string.IsNullOrEmpty(result))
         {
-            _currentLocalFile = result;
+            CurrentLocalFile = result;
             SaveFile();
         }
     }
@@ -460,7 +429,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
-        UpdateTitle();
         ViewModel.OnCultureInfoChanged(newCultureInfo);
     }
 }

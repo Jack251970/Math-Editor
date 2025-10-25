@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -9,8 +10,11 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
 {
     public Settings Settings { get; init; } = settings;
     public UndoManager UndoManager { get; init; } = undoManager;
-    public MainWindow MainWindow = null!;
+    public MainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
+
+    [ObservableProperty]
+    private string _mainWindowTitle = string.Empty;
 
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
 
@@ -247,10 +251,40 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
         WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
     }
 
+    public void UpdateTitle()
+    {
+        var currentLocalFileName = string.Empty;
+        try
+        {
+            currentLocalFileName = Path.GetFileName(MainWindow.CurrentLocalFile);
+        }
+        catch
+        {
+            // Ignore
+        }
+        if (!string.IsNullOrEmpty(currentLocalFileName))
+        {
+#if DEBUG
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFileName}";
+#else
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFileName}";
+#endif
+        }
+        else
+        {
+#if DEBUG
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {Localize.MainWindow_Untitled()}";
+#else
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} - {Localize.MainWindow_Untitled()}";
+#endif
+        }
+    }
+
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);
         UpdateShowNestingMenuItemHeader();
+        UpdateTitle();
     }
 }
