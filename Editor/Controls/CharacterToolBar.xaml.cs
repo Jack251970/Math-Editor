@@ -9,7 +9,7 @@ namespace Editor;
 
 public partial class CharacterToolBar : UserControl
 {
-    public event EventHandler CommandCompleted = (x, y) => { };
+    public event EventHandler? CommandCompleted = null;
     private readonly Dictionary<object, ButtonPanel> buttonPanelMapping = [];
     private ButtonPanel? visiblePanel = null;
     private MainWindow _mainWindow = null!;
@@ -73,7 +73,7 @@ public partial class CharacterToolBar : UserControl
     private void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int margin)
     {
         var bp = new ButtonPanel(_mainWindow, list, columns, margin);
-        bp.ButtonClick += (x, y) => { CommandCompleted(this, EventArgs.Empty); visiblePanel = null; };
+        bp.ButtonClick += (x, y) => { CommandCompleted?.Invoke(this, EventArgs.Empty); visiblePanel = null; };
         mainToolBarPanel.Children.Add(bp);
         Canvas.SetTop(bp, mainToolBarPanel.Height);
         var offset = VisualTreeHelper.GetOffset(toolBarButton);
