@@ -171,15 +171,23 @@ public partial class EditorControl : UserControl, IDisposable
             InvalidateVisual();
         }
         Focus();
+        ForceCaretVisible();
+        lastMouseLocation = e.GetPosition(this);
+        isDragging = true;
+    }
 
+    private bool isForceVisible = false;
+
+    public void ForceCaretVisible()
+    {
+        if (isForceVisible) return;
+        isForceVisible = true;
         // Force the caret visible and then reset the timer
         timer.Stop();
         vCaret.ForceVisible();
         hCaret.ForceVisible();
         timer.Start();
-
-        lastMouseLocation = e.GetPosition(this);
-        isDragging = true;
+        isForceVisible = false;
     }
 
     private void EditorControl_MouseUp(object sender, MouseButtonEventArgs e)
