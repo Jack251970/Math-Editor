@@ -160,6 +160,7 @@
     <system:String x:Key="MainWindow_ShowNesting">Show nesting</system:String>
     <system:String x:Key="MainWindow_HideNesting">Hide nesting</system:String>
     <system:String x:Key="MainWindow_MedFileFilter">Math Editor File (*.{0})|*.{0}</system:String>
+    <system:String x:Key="MainWindow_ImageFileFilter">Image File (*.{0})|*.{0}</system:String>
     <system:String x:Key="MainWindow_SaveCurrentDocument">Do you want to save the current document before closing?</system:String>
 
     <!--  Report Window  -->

@@ -193,6 +193,54 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
         mainWindow.Show();
     }
 
+    [RelayCommand]
+    private void Cut()
+    {
+        Editor?.Copy(true);
+    }
+
+    [RelayCommand]
+    private void Copy()
+    {
+        Editor?.Copy(false);
+    }
+
+    [RelayCommand]
+    private void Paste()
+    {
+        Editor?.Paste();
+    }
+
+    [RelayCommand]
+    private void Print()
+    {
+        // TODO: Add support for print
+    }
+
+    [RelayCommand]
+    private void SelectAll()
+    {
+        Editor?.SelectAll();
+    }
+
+    [RelayCommand]
+    private void Undo()
+    {
+        Editor?.Undo();
+    }
+
+    [RelayCommand]
+    private void Redo()
+    {
+        Editor?.Redo();
+    }
+
+    [RelayCommand]
+    private void Delete()
+    {
+        Editor?.DeleteSelection();
+    }
+
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
         EditorModeLocalized.UpdateLabels(AllEditModes);

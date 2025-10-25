@@ -39,7 +39,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         Editor = editor;
         ScrollViewer.Content = editor;
         // Set title
-        SetTitle();
+        UpdateTitle();
         // Track this window
         WindowTracker.TrackOwner(this);
         // Add event handlers
@@ -223,10 +223,10 @@ public partial class MainWindow : Window, ICultureInfoChanged
             MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        SetTitle();
+        UpdateTitle();
     }
 
-    private void SetTitle()
+    private void UpdateTitle()
     {
         var currentLocalFileName = string.Empty;
         try
@@ -304,7 +304,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
             {
                 Editor.SaveFile(stream, _currentLocalFile);
             }
-            SetTitle();
+            UpdateTitle();
             return true;
         }
         catch (Exception e)
@@ -328,49 +328,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void CutCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Editor.Copy(true);
-    }
-
-    private void CopyCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Editor.Copy(false);
-    }
-
-    private void PasteCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Editor.Paste();
-    }
-
-    private void PrintCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-
-    }
-
-    private void UndoCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Editor.Undo();
-    }
-
-    private void RedoCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Editor.Redo();
-    }
-
-    private void SelectAllCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Editor.SelectAll();
-    }
-
-    private void Window_GotFocus(object sender, RoutedEventArgs e)
-    {
-    }
-
     private void exportMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        var imageType = (string)((Control)sender).Tag ?? "png";
-        var fileName = ShowSaveFileDialog(imageType, string.Format("Image File (*.{0})|*.{0}", imageType));
+        var imageType = sender is Control control && control.Tag is string imageTypeStr ? imageTypeStr : "png";
+
+        var fileName = ShowSaveFileDialog(imageType, Localize.MainWindow_ImageFileFilter(imageType));
         if (!string.IsNullOrEmpty(fileName))
         {
             var ext = Path.GetExtension(fileName);
@@ -388,11 +350,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
         {
             overflowGrid.Visibility = Visibility.Collapsed;
         }
-    }
-
-    private void deleteMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        Editor.DeleteSelection();
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -449,7 +406,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         {
             lastZoomMenuItem.IsChecked = false;
         }
-        lastZoomMenuItem = ((MenuItem)sender);
+        lastZoomMenuItem = (MenuItem)sender;
         lastZoomMenuItem.IsChecked = true;
         var percentage = lastZoomMenuItem.Header as string;
         if (!string.IsNullOrEmpty(percentage))
@@ -503,6 +460,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
+        UpdateTitle();
         ViewModel.OnCultureInfoChanged(newCultureInfo);
     }
 }

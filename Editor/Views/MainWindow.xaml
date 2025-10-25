@@ -15,7 +15,6 @@
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
     Closing="Window_Closing"
-    GotFocus="Window_GotFocus"
     KeyDown="Window_KeyDown"
     KeyUp="Window_KeyUp"
     TextInput="Window_TextInput"
@@ -42,13 +41,6 @@
         <CommandBinding Command="Open" Executed="OpenCommandHandler" />
         <CommandBinding Command="Save" Executed="SaveCommandHandler" />
         <CommandBinding Command="SaveAs" Executed="SaveAsCommandHandler" />
-        <CommandBinding Command="Cut" Executed="CutCommandHandler" />
-        <CommandBinding Command="Copy" Executed="CopyCommandHandler" />
-        <CommandBinding Command="Paste" Executed="PasteCommandHandler" />
-        <CommandBinding Command="SelectAll" Executed="SelectAllCommandHandler" />
-        <CommandBinding Command="Print" Executed="PrintCommandHandler" />
-        <CommandBinding Command="Undo" Executed="UndoCommandHandler" />
-        <CommandBinding Command="Redo" Executed="RedoCommandHandler" />
     </Window.CommandBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
@@ -80,96 +72,99 @@
                 </Button>
             </StackPanel>
             <Menu DockPanel.Dock="Top">
-                <MenuItem x:Name="fileMenuItem" Header="_File">
+                <MenuItem x:Name="fileMenuItem" Header="File">
                     <MenuItem
                         x:Name="newMenuItem"
                         Command="{Binding NewWindowCommand, Mode=OneTime}"
-                        Header="_New" />
+                        Header="New" />
                     <MenuItem
                         x:Name="openMenuItem"
                         Command="Open"
-                        Header="_Open" />
+                        Header="Open" />
                     <MenuItem
                         x:Name="saveMenuItem"
                         Command="Save"
-                        Header="_Save" />
+                        Header="Save" />
                     <MenuItem
                         x:Name="saveAsMenuItem"
                         Command="SaveAs"
-                        Header="Save _As" />
-                    <MenuItem x:Name="exportMenuItem" Header="_Export">
+                        Header="Save As" />
+                    <MenuItem x:Name="exportMenuItem" Header="Export">
                         <MenuItem
                             Click="exportMenuItem_Click"
-                            Header="_PNG"
+                            Header="PNG"
                             Tag="png" />
                         <MenuItem
                             Click="exportMenuItem_Click"
-                            Header="_JPG"
+                            Header="JPG"
                             Tag="jpg" />
                         <MenuItem
                             Click="exportMenuItem_Click"
-                            Header="_GIF"
+                            Header="GIF"
                             Tag="gif" />
                         <MenuItem
                             Click="exportMenuItem_Click"
-                            Header="_BMP"
+                            Header="BMP"
                             Tag="bmp" />
                         <MenuItem
                             Click="exportMenuItem_Click"
-                            Header="_TIFF"
+                            Header="TIFF"
                             Tag="tif" />
                         <MenuItem
                             Click="exportMenuItem_Click"
-                            Header="_WMP"
+                            Header="WMP"
                             Tag="wdp" />
                     </MenuItem>
-                    <!--<MenuItem x:Name="printMenuItem" Header="_Print" Command="Print"/>-->
+                    <MenuItem
+                        x:Name="printMenuItem"
+                        Command="{Binding PrintCommand, Mode=OneTime}"
+                        Header="Print" />
                     <MenuItem
                         x:Name="exitMenuItem"
                         Command="Close"
                         Header="E_xit" />
                 </MenuItem>
-                <MenuItem x:Name="editMenuItem" Header="_Edit">
+                <MenuItem x:Name="editMenuItem" Header="Edit">
                     <MenuItem
                         x:Name="cutMenuItem"
-                        Command="Cut"
+                        Command="{Binding CutCommand, Mode=OneTime}"
                         Header="C_ut"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
                         x:Name="copyMenuItem"
-                        Command="Copy"
-                        Header="_Copy"
+                        Command="{Binding CopyCommand, Mode=OneTime}"
+                        Header="Copy"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
                         x:Name="pasteMenuItem"
-                        Command="Paste"
-                        Header="_Paste" />
+                        Command="{Binding PasteCommand, Mode=OneTime}"
+                        Header="Paste" />
                     <MenuItem
                         x:Name="selectAllMenuItem"
-                        Command="SelectAll"
+                        Command="{Binding SelectAllCommand, Mode=OneTime}"
                         Header="Select _All" />
                     <MenuItem
                         x:Name="deleteMenuItem"
-                        Click="deleteMenuItem_Click"
-                        Header="_Delete"
+                        Command="{Binding DeleteCommand, Mode=OneTime}"
+                        Header="Delete"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                 </MenuItem>
-                <MenuItem x:Name="insertMenuItem" Header="_Insert">
+                <MenuItem x:Name="insertMenuItem" Header="Insert">
                     <MenuItem
                         x:Name="symbolMenuItem"
                         Command="{Binding OpenUnicodeSelectorWindowCommand, Mode=OneTime}"
-                        Header="_Symbol" />
+                        Header="Symbol" />
                     <MenuItem
                         x:Name="codePointMenuItem"
                         Command="{Binding OpenCodepointWindowCommand, Mode=OneTime}"
-                        Header="_Unicode Value" />
+                        Header="Unicode Value" />
                 </MenuItem>
-                <MenuItem x:Name="viewMenuItem" Header="_View">
+                <MenuItem x:Name="viewMenuItem" Header="View">
                     <MenuItem
                         x:Name="fullScreenMenuItem"
                         Click="fullScreenMenuItem_Click"
-                        Header="_Full Screen" />
-                    <MenuItem Header="_Zoom">
+                        Header="Full Screen" />
+                    <MenuItem Header="Zoom">
                         <MenuItem
                             Click="ZoomMenuItem_Click"
                             Header="25%"
@@ -213,7 +208,7 @@
                         <MenuItem
                             Name="customZoomMenu"
                             Command="{Binding OpenCustomZoomWindowCommand, Mode=OneTime}"
-                            Header="_Custom"
+                            Header="Custom"
                             IsCheckable="True" />
                     </MenuItem>
                     <MenuItem
@@ -221,22 +216,22 @@
                         Command="{Binding ToggleShowNestingCommand, Mode=OneTime}"
                         Header="{Binding ShowNestingMenuItemHeader, Mode=OneWay}" />
                 </MenuItem>
-                <MenuItem x:Name="toolsMenuItem" Header="_Tools">
+                <MenuItem x:Name="toolsMenuItem" Header="Tools">
                     <MenuItem
                         x:Name="settingsMenuItem"
                         Command="{Binding OpenSettingsWindowCommand, Mode=OneTime}"
-                        Header="_Settings" />
+                        Header="Settings" />
                 </MenuItem>
-                <MenuItem x:Name="helpMenuItem" Header="_Help">
+                <MenuItem x:Name="helpMenuItem" Header="Help">
                     <MenuItem
                         x:Name="contentsMenuItem"
                         Command="{Binding OpenContentsCommand, Mode=OneTime}"
-                        Header="_Contents" />
+                        Header="Contents" />
                     <Separator />
                     <MenuItem
                         x:Name="aboutMenuItem"
                         Command="{Binding OpenAboutWindowCommand, Mode=OneTime}"
-                        Header="_About" />
+                        Header="About" />
                 </MenuItem>
             </Menu>
         </Grid>
@@ -275,7 +270,7 @@
                     </Button>
                     <Separator />
                     <Button
-                        Command="Undo"
+                        Command="{Binding UndoCommand, Mode=OneTime}"
                         IsEnabled="{Binding UndoButtonIsEnabled, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Undo"
@@ -283,7 +278,7 @@
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/undo.png" />
                     </Button>
                     <Button
-                        Command="Redo"
+                        Command="{Binding RedoCommand, Mode=OneTime}"
                         IsEnabled="{Binding RedoButtonIsEnabled, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Redo"
@@ -310,7 +305,7 @@
                     <Separator />
                     <Button
                         x:Name="cutButton"
-                        Command="Cut"
+                        Command="{Binding CutCommand, Mode=OneTime}"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Cut"
@@ -319,7 +314,7 @@
                     </Button>
                     <Button
                         x:Name="copyButton"
-                        Command="Copy"
+                        Command="{Binding CopyCommand, Mode=OneTime}"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Copy"
@@ -328,7 +323,7 @@
                     </Button>
                     <Button
                         x:Name="pasteButton"
-                        Command="Paste"
+                        Command="{Binding PasteCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Paste"
                         ToolTipService.ShowOnDisabled="True">
