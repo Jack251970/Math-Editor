@@ -43,6 +43,16 @@
         <CommandBinding Command="SaveAs" Executed="SaveAsCommandHandler" />
         <CommandBinding Command="New" Executed="NewCommandHandler" />
     </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding
+            Key="S"
+            Command="SaveAs"
+            Modifiers="Ctrl+Shift" />
+        <KeyBinding
+            Key="P"
+            Command="{Binding PrintCommand}"
+            Modifiers="Ctrl" />
+    </Window.InputBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
         <Grid DockPanel.Dock="Top">
@@ -92,7 +102,8 @@
                     <MenuItem
                         x:Name="saveAsMenuItem"
                         Command="SaveAs"
-                        Header="{DynamicResource MainWindow_SaveAs}" />
+                        Header="{DynamicResource MainWindow_SaveAs}"
+                        InputGestureText="Ctrl+Shift+S" />
                     <MenuItem x:Name="exportMenuItem" Header="{DynamicResource MainWindow_Export}">
                         <MenuItem
                             Click="exportMenuItem_Click"
@@ -119,10 +130,13 @@
                             Header="{DynamicResource MainWindow_Export_WMP}"
                             Tag="wdp" />
                     </MenuItem>
+                    <Separator />
                     <MenuItem
                         x:Name="printMenuItem"
                         Command="{Binding PrintCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_Print}" />
+                        Header="{DynamicResource MainWindow_Print}"
+                        InputGestureText="Ctrl+P" />
+                    <Separator />
                     <MenuItem
                         x:Name="exitMenuItem"
                         Command="{Binding ExitCommand, Mode=OneTime}"
