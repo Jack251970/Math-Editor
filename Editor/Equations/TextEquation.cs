@@ -543,7 +543,7 @@ namespace Editor
             }
         }
 
-        public override EquationBase Split(EquationContainer newParent)
+        public override EquationBase? Split(EquationContainer newParent)
         {
             var newText = new TextEquation(Owner, newParent);
             var itemCount = textData.Length - caretIndex;

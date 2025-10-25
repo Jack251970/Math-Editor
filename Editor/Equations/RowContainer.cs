@@ -23,7 +23,7 @@ namespace Editor
         {
             if (((EquationRow)ActiveChild).ActiveChild.GetType() == typeof(TextEquation) && xe.Name.LocalName == GetType().Name)
             {
-                var children = xe.Element("ChildRows");
+                var children = xe.Element("ChildRows") ?? throw new Exception("Invalid XML format");
                 List<EquationRow> newRows = [];
                 foreach (var xElement in children.Elements())
                 {
@@ -50,17 +50,17 @@ namespace Editor
                         SelectionStartIndex = SelectionStartIndex,
                         SelectedItemsOfTextEquation = activeText.SelectedItems,
                         SelectionStartIndexOfTextEquation = activeText.SelectionStartIndex,
-                        HeadTextOfPastedRows = newRows[0].GetFirstTextEquation().Text,
-                        TailTextOfPastedRows = newRows.Last().GetLastTextEquation().Text,
-                        HeadFormatsOfPastedRows = newRows[0].GetFirstTextEquation().GetFormats(),
-                        TailFormatsOfPastedRows = newRows.Last().GetLastTextEquation().GetFormats(),
-                        HeadModeOfPastedRows = newRows[0].GetFirstTextEquation().GetModes(),
-                        TailModesOfPastedRows = newRows.Last().GetLastTextEquation().GetModes(),
-                        HeadDecorationsOfPastedRows = newRows[0].GetFirstTextEquation().GetDecorations(),
-                        TailDecorationsOfPastedRows = newRows.Last().GetLastTextEquation().GetDecorations(),
+                        HeadTextOfPastedRows = newRows[0].GetFirstTextEquation()?.Text ?? string.Empty,
+                        TailTextOfPastedRows = newRows.Last().GetLastTextEquation()?.Text ?? string.Empty,
+                        HeadFormatsOfPastedRows = newRows[0].GetFirstTextEquation()?.GetFormats() ?? [],
+                        TailFormatsOfPastedRows = newRows.Last().GetLastTextEquation()?.GetFormats() ?? [],
+                        HeadModeOfPastedRows = newRows[0].GetFirstTextEquation()?.GetModes() ?? [],
+                        TailModesOfPastedRows = newRows.Last().GetLastTextEquation()?.GetModes() ?? [],
+                        HeadDecorationsOfPastedRows = newRows[0].GetFirstTextEquation()?.GetDecorations() ?? [],
+                        TailDecorationsOfPastedRows = newRows.Last().GetLastTextEquation()?.GetDecorations() ?? [],
                         Equations = newRows
                     };
-                    var newRow = (EquationRow)ActiveChild.Split(this);
+                    var newRow = (EquationRow)ActiveChild.Split(this)!;
                     ((EquationRow)ActiveChild).Merge(newRows[0]);
                     var index = childEquations.IndexOf(ActiveChild) + 1;
                     childEquations.InsertRange(index, newRows.Skip(1));
@@ -586,12 +586,11 @@ namespace Editor
             CalculateSize();
         }
 
-        public override EquationBase Split(EquationContainer newParent)
+        public override EquationBase? Split(EquationContainer newParent)
         {
-            var newRow = (EquationRow)ActiveChild.Split(this);
-            if (newRow != null)
+            var newRow = ActiveChild.Split(this) as EquationRow;
+            if (newRow != null && ActiveChild is EquationRow activeRow)
             {
-                var activeRow = ActiveChild as EquationRow;
                 var rca = new RowContainerAction(this, childEquations.IndexOf(activeRow), activeRow.ActiveChildIndex, activeRow.TextLength, newRow) { UndoFlag = false };
                 UndoManager.AddUndoAction(rca);
                 AddLine(newRow);

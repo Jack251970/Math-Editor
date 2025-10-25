@@ -3,10 +3,10 @@
     public sealed class TextAction : EquationAction
     {
         public int Index { get; set; }
-        public string Text { get; set; }
-        public int[] Formats { get; set; }
-        public EditorMode[] Modes { get; set; }
-        public CharacterDecorationInfo[] Decorations { get; set; }
+        public string Text { get; set; } = null!;
+        public int[] Formats { get; set; } = null!;
+        public EditorMode[] Modes { get; set; } = null!;
+        public CharacterDecorationInfo[] Decorations { get; set; } = null!;
         public bool Added { get; set; }
 
         public TextAction(ISupportsUndo executor)

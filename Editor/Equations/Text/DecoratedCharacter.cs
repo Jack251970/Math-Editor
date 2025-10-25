@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Media;
 
 namespace Editor
@@ -8,9 +9,9 @@ namespace Editor
         private readonly List<CharacterDecorationInfo> decorations = [];
         private readonly FormattedText charFt;
         public TextEquation Previous { get; set; }
-        public TextEquation Next { get; set; }
+        public TextEquation? Next { get; set; }
 
-        [System.Obsolete]
+        [Obsolete]
         public DecoratedCharacter(MainWindow owner, EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
             : base(owner, parent)
         {

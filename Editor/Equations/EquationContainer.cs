@@ -21,10 +21,10 @@ namespace Editor
         }
 
         protected List<EquationBase> childEquations = [];
-        private EquationBase active;
+        private EquationBase? active = null;
         public EquationBase ActiveChild
         {
-            get => active;
+            get => active!;
             set
             {
                 // Not sure if this is right - I think value == null is to temporarily set value to null
@@ -167,9 +167,9 @@ namespace Editor
 
         public Point GetHorizontalCaretLocation()
         {
-            if (ActiveChild is EquationContainer)
+            if (ActiveChild is EquationContainer container)
             {
-                return ((EquationContainer)ActiveChild).GetHorizontalCaretLocation();
+                return container.GetHorizontalCaretLocation();
             }
             else
             {
@@ -179,9 +179,9 @@ namespace Editor
 
         public double GetHorizontalCaretLength()
         {
-            if (ActiveChild is EquationContainer)
+            if (ActiveChild is EquationContainer container)
             {
-                return ((EquationContainer)ActiveChild).GetHorizontalCaretLength();
+                return container.GetHorizontalCaretLength();
             }
             else
             {

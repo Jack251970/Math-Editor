@@ -304,7 +304,7 @@ namespace Editor
         {
             if (ActiveChild.GetType() == typeof(TextEquation) && xe.Name.LocalName == GetType().Name)
             {
-                var children = xe.Element("ChildEquations");
+                var children = xe.Element("ChildEquations") ?? throw new Exception("Missing required 'ChildEquations' element in XML");
                 List<EquationBase> newChildren = [];
                 foreach (var xElement in children.Elements())
                 {
@@ -339,7 +339,7 @@ namespace Editor
                     newChildren.RemoveAt(0);
                     childEquations.InsertRange(index, newChildren);
                     ((TextEquation)ActiveChild).ConsumeFormattedText(action.FirstNewText, action.FirstNewFormats, action.FirstNewModes, action.FirstNewDecorations, false);
-                    ((TextEquation)newChildren.Last()).Merge((TextEquation)newChild);
+                    ((TextEquation)newChildren.Last()).Merge((TextEquation)newChild!);
                     ActiveChild = newChildren.Last();
                     UndoManager.AddUndoAction(action);
                 }
@@ -560,7 +560,9 @@ namespace Editor
                     }
                 }
             }
-            var child = (EquationBase)Activator.CreateInstance(type, [.. paramz]);
+            var child = Activator.CreateInstance(
+                type ?? throw new Exception($"Unknown type for XML element '{xElement.Name}'. Expected type: '{GetType().Namespace}.{xElement.Name}'. XML: {xElement}"),
+                [.. paramz]) as EquationBase ?? throw new Exception($"Failed to create EquationBase instance from type '{type?.FullName}' with provided parameters: [{string.Join(", ", paramz.Select(p => p?.ToString() ?? "null"))}]");
             child.DeSerialize(xElement);
             child.FontSize = FontSize;
             return child;
@@ -575,13 +577,13 @@ namespace Editor
                 switch (commandType)
                 {
                     case CommandType.Composite:
-                        newEquation = CompositeFactory.CreateEquation(Owner, this, (Position)data);
+                        newEquation = CompositeFactory.CreateEquation(Owner, this, (Position)data!);
                         break;
                     case CommandType.CompositeBig:
-                        newEquation = BigCompositeFactory.CreateEquation(Owner, this, (Position)data);
+                        newEquation = BigCompositeFactory.CreateEquation(Owner, this, (Position)data!);
                         break;
                     case CommandType.Division:
-                        newEquation = DivisionFactory.CreateEquation(Owner, this, (DivisionType)data);
+                        newEquation = DivisionFactory.CreateEquation(Owner, this, (DivisionType)data!);
                         break;
                     case CommandType.SquareRoot:
                         newEquation = new SquareRoot(Owner, this);
@@ -590,59 +592,59 @@ namespace Editor
                         newEquation = new NRoot(Owner, this);
                         break;
                     case CommandType.LeftBracket:
-                        newEquation = new LeftBracket(Owner, this, (BracketSignType)data);
+                        newEquation = new LeftBracket(Owner, this, (BracketSignType)data!);
                         break;
                     case CommandType.RightBracket:
-                        newEquation = new RightBracket(Owner, this, (BracketSignType)data);
+                        newEquation = new RightBracket(Owner, this, (BracketSignType)data!);
                         break;
                     case CommandType.LeftRightBracket:
-                        newEquation = new LeftRightBracket(Owner, this, ((BracketSignType[])data)[0], ((BracketSignType[])data)[1]);
+                        newEquation = new LeftRightBracket(Owner, this, ((BracketSignType[])data!)[0], ((BracketSignType[])data)[1]);
                         break;
                     case CommandType.Sub:
-                        newEquation = new Sub(Owner, this, (Position)data);
+                        newEquation = new Sub(Owner, this, (Position)data!);
                         break;
                     case CommandType.Super:
-                        newEquation = new Super(Owner, this, (Position)data);
+                        newEquation = new Super(Owner, this, (Position)data!);
                         break;
                     case CommandType.SubAndSuper:
-                        newEquation = new SubAndSuper(Owner, this, (Position)data);
+                        newEquation = new SubAndSuper(Owner, this, (Position)data!);
                         break;
                     case CommandType.TopBracket:
-                        newEquation = new TopBracket(Owner, this, (HorizontalBracketSignType)data);
+                        newEquation = new TopBracket(Owner, this, (HorizontalBracketSignType)data!);
                         break;
                     case CommandType.BottomBracket:
-                        newEquation = new BottomBracket(Owner, this, (HorizontalBracketSignType)data);
+                        newEquation = new BottomBracket(Owner, this, (HorizontalBracketSignType)data!);
                         break;
                     case CommandType.DoubleArrowBarBracket:
                         newEquation = new DoubleArrowBarBracket(Owner, this);
                         break;
                     case CommandType.SignComposite:
-                        newEquation = SignCompositeFactory.CreateEquation(Owner, this, (Position)(((object[])data)[0]),
+                        newEquation = SignCompositeFactory.CreateEquation(Owner, this, (Position)(((object[])data!)[0]),
                             (SignCompositeSymbol)(((object[])data)[1]), Owner.ViewModel.UseItalicIntergalOnNew);
                         break;
                     case CommandType.Decorated:
-                        newEquation = new Decorated(Owner, this, (DecorationType)(((object[])data)[0]), (Position)(((object[])data)[1]));
+                        newEquation = new Decorated(Owner, this, (DecorationType)(((object[])data!)[0]), (Position)(((object[])data)[1]));
                         break;
                     case CommandType.Arrow:
-                        newEquation = new Arrow(Owner, this, (ArrowType)(((object[])data)[0]), (Position)(((object[])data)[1]));
+                        newEquation = new Arrow(Owner, this, (ArrowType)(((object[])data!)[0]), (Position)(((object[])data)[1]));
                         break;
                     case CommandType.Box:
-                        newEquation = new Box(Owner, this, (BoxType)data);
+                        newEquation = new Box(Owner, this, (BoxType)data!);
                         break;
                     case CommandType.Matrix:
-                        newEquation = new MatrixEquation(Owner, this, ((int[])data)[0], ((int[])data)[1]);
+                        newEquation = new MatrixEquation(Owner, this, ((int[])data!)[0], ((int[])data)[1]);
                         break;
                     case CommandType.DecoratedCharacter:
                         if (((TextEquation)ActiveChild).CaretIndex > 0)
                         {
-                            //newEquation = new DecoratedCharacter(this,
-                            //                                     (TextEquation)ActiveChild,
-                            //                                     (CharacterDecorationType)((object[])data)[0],
-                            //                                     (Position)((object[])data)[1],
-                            //                                     (string)((object[])data)[2]);
-                            ((TextEquation)ActiveChild).AddDecoration((CharacterDecorationType)((object[])data)[0],
-                                                                      (Position)((object[])data)[1],
-                                                                      (string)((object[])data)[2]);
+                            //newEquation = new DecoratedCharacter(Owner, this,
+                            //    (TextEquation)ActiveChild,
+                            //    (CharacterDecorationType)((object[])data)[0],
+                            //    (Position)((object[])data)[1],
+                            //    (string)((object[])data)[2]);
+                            ((TextEquation)ActiveChild).AddDecoration((CharacterDecorationType)((object[])data!)[0],
+                                (Position)((object[])data)[1],
+                                (string)((object[])data)[2]);
                             CalculateSize();
                         }
                         break;
@@ -654,11 +656,11 @@ namespace Editor
                     var newText = ActiveChild.Split(this);
                     var caretIndex = ((TextEquation)ActiveChild).TextLength;
                     AddChild(newEquation);
-                    AddChild(newText);
+                    AddChild(newText!);
                     newEquation.CalculateSize();
                     ActiveChild = newEquation;
                     CalculateSize();
-                    UndoManager.AddUndoAction(new RowAction(this, ActiveChild, (TextEquation)newText, childEquations.IndexOf(ActiveChild), caretIndex));
+                    UndoManager.AddUndoAction(new RowAction(this, ActiveChild, (TextEquation)newText!, childEquations.IndexOf(ActiveChild), caretIndex));
                 }
             }
             else if (ActiveChild != null)
@@ -980,10 +982,10 @@ namespace Editor
             }
         }
 
-        public override EquationBase Split(EquationContainer newParent)
+        public override EquationBase? Split(EquationContainer newParent)
         {
             _deleteable = null;
-            EquationRow newRow = null;
+            EquationRow? newRow = null;
             if (ActiveChild.GetType() == typeof(TextEquation))
             {
                 newRow = new EquationRow(Owner, newParent);
@@ -1005,8 +1007,7 @@ namespace Editor
                 _deleteable = null;
                 ((TextEquation)ActiveChild).Truncate();
                 var index = childEquations.IndexOf(ActiveChild) + 1;
-                var i = index;
-                for (i = childEquations.Count - 1; i >= index; i--)
+                for (var i = childEquations.Count - 1; i >= index; i--)
                 {
                     RemoveChild(childEquations[i]);
                 }
@@ -1163,16 +1164,16 @@ namespace Editor
 
         public void ResetRowEquation(int activeChildIndex, int selectionStartIndex, int selectedItems)
         {
-            this.SelectionStartIndex = selectionStartIndex;
-            this.SelectedItems = selectedItems;
-            this.ActiveChild = childEquations[activeChildIndex];
+            SelectionStartIndex = selectionStartIndex;
+            SelectedItems = selectedItems;
+            ActiveChild = childEquations[activeChildIndex];
         }
 
         public void ResetRowEquation(EquationBase activeChild, int selectionStartIndex, int selectedItems)
         {
-            this.SelectionStartIndex = selectionStartIndex;
-            this.SelectedItems = selectedItems;
-            this.ActiveChild = activeChild;
+            SelectionStartIndex = selectionStartIndex;
+            SelectedItems = selectedItems;
+            ActiveChild = activeChild;
         }
 
         private void ProcessRowRemoveAction(EquationAction action)
@@ -1207,7 +1208,7 @@ namespace Editor
                     childEquations.RemoveAt(i);
                 }
                 ActiveChild = rowAction.HeadTextEquation;
-                this.SelectedItems = 0;
+                SelectedItems = 0;
                 Owner.ViewModel.IsSelecting = false;
             }
         }
