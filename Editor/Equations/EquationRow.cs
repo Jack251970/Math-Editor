@@ -566,8 +566,6 @@ namespace Editor
             return child;
         }
 
-        public static bool UseItalicIntergalOnNew { get; set; }
-
         public override void ExecuteCommand(CommandType commandType, object? data)
         {
             _deleteable = null;
@@ -619,7 +617,8 @@ namespace Editor
                         newEquation = new DoubleArrowBarBracket(Owner, this);
                         break;
                     case CommandType.SignComposite:
-                        newEquation = SignCompositeFactory.CreateEquation(Owner, this, (Position)(((object[])data)[0]), (SignCompositeSymbol)(((object[])data)[1]), UseItalicIntergalOnNew);
+                        newEquation = SignCompositeFactory.CreateEquation(Owner, this, (Position)(((object[])data)[0]),
+                            (SignCompositeSymbol)(((object[])data)[1]), Owner.ViewModel.UseItalicIntergalOnNew);
                         break;
                     case CommandType.Decorated:
                         newEquation = new Decorated(Owner, this, (DecorationType)(((object[])data)[0]), (Position)(((object[])data)[1]));

@@ -450,16 +450,6 @@ public partial class MainWindow : Window
         statusBarRightLabel.Content = coordinates;
     }
 
-    private void integralItalicCheckbox_Checked(object sender, RoutedEventArgs e)
-    {
-        EquationRow.UseItalicIntergalOnNew = true;
-    }
-
-    private void integralItalicCheckbox_Unchecked(object sender, RoutedEventArgs e)
-    {
-        EquationRow.UseItalicIntergalOnNew = false;
-    }
-
     private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
         Editor.InvalidateVisual();

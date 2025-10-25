@@ -389,13 +389,23 @@
                         Unchecked="UnderbarToggleCheckChanged">
                         <Image Source="/Images/GUI/underbar.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
-                    <!--
-                    <Separator/>
-                    <StackPanel Orientation="Horizontal" Height="30" Margin="3,0,3,0">
-                        <Label VerticalAlignment="Center" Margin="0,0,3,0" Content="New Integral Italic"/>
-                        <CheckBox Grid.Column="1" Height="30" Width="30" Name="integralItalicCheckbox" VerticalAlignment="Center" HorizontalAlignment="Left" Checked="integralItalicCheckbox_Checked" Unchecked="integralItalicCheckbox_Unchecked"/>
-                    </StackPanel>
-                    -->
+                    <Separator />
+                    <!--<StackPanel
+                        Height="30"
+                        Margin="3 0 3 0"
+                        Orientation="Horizontal">
+                        <Label
+                            Margin="0 0 3 0"
+                            VerticalAlignment="Center"
+                            Content="New Integral Italic" />
+                        <CheckBox
+                            Grid.Column="1"
+                            Width="30"
+                            Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding UseItalicIntergalOnNew, Mode=TwoWay}" />
+                    </StackPanel>-->
                 </ToolBar>
             </ToolBarTray>
         </Grid>
