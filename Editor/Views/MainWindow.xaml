@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:trace="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    Title="MainWindow"
+    Title="Math Editor"
     Width="928"
     Height="550"
     d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"

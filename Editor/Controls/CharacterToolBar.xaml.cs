@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -63,6 +64,7 @@ public partial class CharacterToolBar : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        if (DesignerProperties.GetIsInDesignMode(this)) return;
         _mainWindow = (MainWindow)Window.GetWindow(this);
         CreateSymbolsPanel();
         CreateGreekCapitalPanel();
