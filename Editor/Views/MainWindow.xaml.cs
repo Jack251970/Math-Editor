@@ -224,12 +224,21 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private void SetTitle()
     {
-        if (!string.IsNullOrEmpty(_currentLocalFile))
+        var currentLocalFileName = string.Empty;
+        try
+        {
+            currentLocalFileName = Path.GetFileName(_currentLocalFile);
+        }
+        catch
+        {
+            // Ignore
+        }
+        if (!string.IsNullOrEmpty(currentLocalFileName))
         {
 #if DEBUG
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {_currentLocalFile}";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFileName}";
 #else
-            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {_currentLocalFile}";
+            Title = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFileName}";
 #endif
         }
         else
