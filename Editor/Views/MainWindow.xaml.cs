@@ -349,20 +349,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private void showNestingMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        TextEquation.ShowNesting = !TextEquation.ShowNesting;
-        if (TextEquation.ShowNesting)
-        {
-            showNestingMenuItem.Header = "Hide Nesting";
-        }
-        else
-        {
-            showNestingMenuItem.Header = "Show Nesting";
-        }
-        Editor.InvalidateVisual();
-    }
-
     private void ToolBar_Loaded(object sender, RoutedEventArgs e)
     {
         var toolBar = sender as ToolBar;

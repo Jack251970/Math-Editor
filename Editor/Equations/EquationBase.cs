@@ -58,7 +58,6 @@ namespace Editor
             }
         }
 
-        public static bool ShowNesting { get; set; }
         public MainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }
         private Point location = new();
@@ -125,7 +124,7 @@ namespace Editor
 
         public virtual void DrawEquation(DrawingContext dc)
         {
-            if (ShowNesting)
+            if (App.Settings.ShowNesting)
             {
                 dc.DrawRectangle(debugBrush, null, Bounds);
             }

@@ -32,6 +32,8 @@ public class Settings : ObservableObject
 
     public ObservableCollection<UnicodeListItem> RecentUnicodeItems { get; set; } = [];
 
+    public bool ShowNesting { get; set; } = false;
+
     private FontType _defaultFont = FontType.STIXGeneral;
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public FontType DefaultFont

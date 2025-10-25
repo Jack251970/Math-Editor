@@ -219,8 +219,8 @@
                     </MenuItem>
                     <MenuItem
                         x:Name="showNestingMenuItem"
-                        Click="showNestingMenuItem_Click"
-                        Header="Show Nesting" />
+                        Command="{Binding ToggleShowNestingCommand, Mode=OneTime}"
+                        Header="{Binding ShowNestingMenuItemHeader, Mode=OneWay}" />
                 </MenuItem>
                 <MenuItem x:Name="toolsMenuItem" Header="_Tools">
                     <MenuItem

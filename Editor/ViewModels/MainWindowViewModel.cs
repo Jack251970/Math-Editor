@@ -22,6 +22,10 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     private FontType _textFontType = settings.DefaultFont;
 
     [ObservableProperty]
+    private string _showNestingMenuItemHeader = settings.ShowNesting ?
+        Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
+
+    [ObservableProperty]
     private bool _inputBold;
 
     [ObservableProperty]
@@ -70,6 +74,20 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     private void OpenContents()
     {
         BrowserHelper.Open(Constants.WikiUrl);
+    }
+
+    [RelayCommand]
+    private void ToggleShowNesting()
+    {
+        Settings.ShowNesting = !Settings.ShowNesting;
+        UpdateShowNestingMenuItemHeader();
+        Editor?.InvalidateVisual();
+    }
+
+    private void UpdateShowNestingMenuItemHeader()
+    {
+        ShowNestingMenuItemHeader = Settings.ShowNesting ?
+            Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
     }
 
     partial void OnTextEditorModeChanged(EditorMode value)
