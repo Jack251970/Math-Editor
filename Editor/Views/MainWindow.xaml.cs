@@ -24,6 +24,7 @@ public partial class MainWindow : Window
         _currentLocalFile = currentLocalFile;
         ViewModel.MainWindow = this;
         DataContext = ViewModel;
+        // Initialize all components
         InitializeComponent();
         var editor = new EditorControl(this)
         {
@@ -34,15 +35,17 @@ public partial class MainWindow : Window
         editor.Loaded += Editor_Loaded;
         Editor = editor;
         ScrollViewer.Content = editor;
-        WindowTracker.TrackOwner(this);
-        characterToolBar.CommandCompleted += (x, y) => { Editor.Focus(); };
-        equationToolBar.CommandCompleted += (x, y) => { Editor.Focus(); };
+        // Set title
         SetTitle();
+        // Track this window
+        WindowTracker.TrackOwner(this);
+        // Add event handlers
         AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
-        UndoManager.CanUndo += (a, b) => { undoButton.IsEnabled = b.ActionPossible; };
-        UndoManager.CanRedo += (a, b) => { redoButton.IsEnabled = b.ActionPossible; };
-        underbarToggle.IsChecked = true;
-        Editor.ZoomChanged += new EventHandler(editor_ZoomChanged);
+        ViewModel.UndoManager.CanUndo += UndoManager_CanUndo;
+        ViewModel.UndoManager.CanRedo += UndoManager_CanRedo;
+        Editor.ZoomChanged += Editor_ZoomChanged;
+        CharacterToolBar.CommandCompleted += CharacterToolBar_CommandCompleted;
+        EquationToolBar.CommandCompleted += EquationToolBar_CommandCompleted;
     }
 
     private void Editor_Loaded(object sender, RoutedEventArgs e)
@@ -55,6 +58,10 @@ public partial class MainWindow : Window
         // Init editor mode & editor font
         ViewModel.ChangeEditorMode(App.Settings.DefaultMode);
         ViewModel.ChangeEditorFont(App.Settings.DefaultFont);
+        // No need to change them since they are already false by default
+        /*ViewModel.ChangeInputBold(false);
+        ViewModel.ChangeInputItalic(false);
+        ViewModel.ChangeInputUnderline(false);*/
         Editor.Focus();
 
         IsEditorLoaded = true;
@@ -74,7 +81,7 @@ public partial class MainWindow : Window
             Editor.HandleUserCommand(commandDetails);
             if (commandDetails.CommandType == CommandType.Text)
             {
-                historyToolBar.AddItem(commandDetails.UnicodeString);
+                HistoryToolBar.AddItem(commandDetails.UnicodeString);
             }
         }
     }
@@ -92,8 +99,8 @@ public partial class MainWindow : Window
                 //editor.HandleMouseDown();
                 Editor.Focus();
             }
-            characterToolBar.HideVisiblePanel();
-            equationToolBar.HideVisiblePanel();
+            CharacterToolBar.HideVisiblePanel();
+            EquationToolBar.HideVisiblePanel();
         }
     }
 
@@ -104,8 +111,8 @@ public partial class MainWindow : Window
             Editor.Focus();
             //editor.EditorControl_TextInput(null, e);
             Editor.ConsumeText(e.Text);
-            characterToolBar.HideVisiblePanel();
-            equationToolBar.HideVisiblePanel();
+            CharacterToolBar.HideVisiblePanel();
+            EquationToolBar.HideVisiblePanel();
         }
     }
 
@@ -123,15 +130,43 @@ public partial class MainWindow : Window
             if (result == MessageBoxResult.Cancel)
             {
                 e.Cancel = true;
+                return;
             }
             else if (result == MessageBoxResult.Yes)
             {
                 if (!ProcessFileSave())
                 {
                     e.Cancel = true;
+                    return;
                 }
             }
         }
+
+        ViewModel.UndoManager.CanUndo -= UndoManager_CanUndo;
+        ViewModel.UndoManager.CanRedo -= UndoManager_CanRedo;
+        Editor.ZoomChanged -= Editor_ZoomChanged;
+        CharacterToolBar.CommandCompleted -= CharacterToolBar_CommandCompleted;
+        EquationToolBar.CommandCompleted -= EquationToolBar_CommandCompleted;
+    }
+
+    private void UndoManager_CanUndo(object? sender, UndoEventArgs e)
+    {
+        ViewModel.UndoButtonIsEnabled = e.ActionPossible;
+    }
+
+    private void UndoManager_CanRedo(object? sender, UndoEventArgs e)
+    {
+        ViewModel.RedoButtonIsEnabled = e.ActionPossible;
+    }
+
+    private void EquationToolBar_CommandCompleted(object? sender, EventArgs e)
+    {
+        Editor.Focus();
+    }
+
+    private void CharacterToolBar_CommandCompleted(object? sender, EventArgs e)
+    {
+        Editor.Focus();
     }
 
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
@@ -339,11 +374,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private void UnderbarToggleCheckChanged(object sender, RoutedEventArgs e)
-    {
-        Editor.ShowOverbar(underbarToggle.IsChecked == true);
-    }
-
     private void deleteMenuItem_Click(object sender, RoutedEventArgs e)
     {
         Editor.DeleteSelection();
@@ -354,8 +384,8 @@ public partial class MainWindow : Window
         if (!Editor.IsFocused)
         {
             Editor.Focus();
-            characterToolBar.HideVisiblePanel();
-            equationToolBar.HideVisiblePanel();
+            CharacterToolBar.HideVisiblePanel();
+            EquationToolBar.HideVisiblePanel();
         }
     }
 
@@ -412,7 +442,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void editor_ZoomChanged(object? sender, EventArgs e)
+    private void Editor_ZoomChanged(object? sender, EventArgs e)
     {
         customZoomMenu.Header = "_Custom";
         customZoomMenu.IsChecked = false;

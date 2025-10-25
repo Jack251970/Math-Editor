@@ -276,18 +276,16 @@
                     </Button>
                     <Separator />
                     <Button
-                        x:Name="undoButton"
                         Command="Undo"
-                        IsEnabled="False"
+                        IsEnabled="{Binding UndoButtonIsEnabled, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Undo"
                         ToolTipService.ShowOnDisabled="True">
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/undo.png" />
                     </Button>
                     <Button
-                        x:Name="redoButton"
                         Command="Redo"
-                        IsEnabled="False"
+                        IsEnabled="{Binding RedoButtonIsEnabled, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Redo"
                         ToolTipService.ShowOnDisabled="True">
@@ -382,11 +380,9 @@
                     </ToggleButton>
                     <Separator />
                     <ToggleButton
-                        x:Name="underbarToggle"
-                        Checked="UnderbarToggleCheckChanged"
+                        IsChecked="{Binding ShowUnderbar, Mode=TwoWay}"
                         Style="{StaticResource ToolbarToggleButton}"
-                        ToolTip="Show/Hide Underbar"
-                        Unchecked="UnderbarToggleCheckChanged">
+                        ToolTip="Show/Hide Underbar">
                         <Image Source="/Images/GUI/underbar.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <Separator />
@@ -414,15 +410,15 @@
             DockPanel.ZIndex="100"
             Orientation="Vertical">
             <local:CharacterToolBar
-                x:Name="characterToolBar"
+                x:Name="CharacterToolBar"
                 Padding="0 4"
                 Panel.ZIndex="100" />
             <local:EquationToolBar
-                x:Name="equationToolBar"
+                x:Name="EquationToolBar"
                 Padding="0 6"
                 Panel.ZIndex="99" />
             <local:HistoryToolBar
-                x:Name="historyToolBar"
+                x:Name="HistoryToolBar"
                 BorderBrush="#FFB6B6B6"
                 BorderThickness="0 0 0 1" />
         </StackPanel>

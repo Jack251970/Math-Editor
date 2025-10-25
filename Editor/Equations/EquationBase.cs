@@ -13,6 +13,7 @@ namespace Editor
     {
         protected TextManager TextManager { get; } = Ioc.Default.GetRequiredService<TextManager>();
         protected LatexConverter LatexConverter { get; } = Ioc.Default.GetRequiredService<LatexConverter>();
+        protected UndoManager UndoManager { get; }
         protected const double LineFactor = 0.06;
 
         public virtual bool ApplySymbolGap { get; set; }
@@ -56,6 +57,7 @@ namespace Editor
         public EquationBase(MainWindow owner, EquationContainer parent)
         {
             Owner = owner;
+            UndoManager = owner.ViewModel.UndoManager;
             ParentEquation = parent;
             if (parent != null)
             {

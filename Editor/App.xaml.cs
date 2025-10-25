@@ -91,6 +91,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
                     .AddSingleton<Internationalization>()
                     .AddSingleton<LatexConverter>()
                     .AddSingleton<TextManager>()
+                    .AddTransient<UndoManager>()
                     .AddTransient<MainWindowViewModel>()
                     .AddTransient<SettingsWindowViewModel>()
             ).Build();

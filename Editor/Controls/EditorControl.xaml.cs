@@ -60,7 +60,7 @@ public partial class EditorControl : UserControl, IDisposable
         AdjustView();
     }
 
-    public void ShowOverbar(bool show)
+    public void ShowUnderbar(bool show)
     {
         if (!show)
         {
@@ -295,7 +295,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void Undo()
     {
-        UndoManager.Undo();
+        _mainWindow.ViewModel.UndoManager.Undo();
         AdjustView();
         Dirty = true;
         equationRoot.AdjustCarets();
@@ -303,7 +303,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void Redo()
     {
-        UndoManager.Redo();
+        _mainWindow.ViewModel.UndoManager.Redo();
         AdjustView();
         Dirty = true;
         equationRoot.AdjustCarets();

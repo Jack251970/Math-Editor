@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 namespace Editor
 {
-    public static class UndoManager
+    public class UndoManager
     {
-        public static bool DisableAddingActions { get; set; }
-        private static readonly Stack<EquationAction> undoStack = new();
-        private static readonly Stack<EquationAction> redoStack = new();
+        public bool DisableAddingActions { get; set; }
+        private readonly Stack<EquationAction> undoStack = new();
+        private readonly Stack<EquationAction> redoStack = new();
 
-        public static event EventHandler<UndoEventArgs> CanUndo = (a, b) => { };
-        public static event EventHandler<UndoEventArgs> CanRedo = (a, b) => { };
+        public event EventHandler<UndoEventArgs>? CanUndo;
+        public event EventHandler<UndoEventArgs>? CanRedo;
 
-        public static void AddUndoAction(EquationAction equationAction)
+        public void AddUndoAction(EquationAction equationAction)
         {
             if (!DisableAddingActions)
             {
                 undoStack.Push(equationAction);
                 redoStack.Clear();
-                CanUndo(null, new UndoEventArgs(true));
-                CanRedo(null, new UndoEventArgs(false));
+                CanUndo?.Invoke(this, new UndoEventArgs(true));
+                CanRedo?.Invoke(this, new UndoEventArgs(false));
             }
         }
 
-        public static void Undo()
+        public void Undo()
         {
             if (undoStack.Count > 0)
             {
@@ -37,13 +37,13 @@ namespace Editor
                 }
                 if (undoStack.Count == 0)
                 {
-                    CanUndo(null, new UndoEventArgs(false));
+                    CanUndo?.Invoke(this, new UndoEventArgs(false));
                 }
-                CanRedo(null, new UndoEventArgs(true));
+                CanRedo?.Invoke(this, new UndoEventArgs(true));
             }
         }
 
-        public static void Redo()
+        public void Redo()
         {
             if (redoStack.Count > 0)
             {
@@ -57,23 +57,23 @@ namespace Editor
                 }
                 if (redoStack.Count == 0)
                 {
-                    CanRedo(null, new UndoEventArgs(false));
+                    CanRedo?.Invoke(this, new UndoEventArgs(false));
                 }
-                CanUndo(null, new UndoEventArgs(true));
+                CanUndo?.Invoke(this, new UndoEventArgs(true));
             }
         }
 
-        public static void ClearAll()
+        public void ClearAll()
         {
             undoStack.Clear();
             redoStack.Clear();
-            CanUndo(null, new UndoEventArgs(false));
-            CanRedo(null, new UndoEventArgs(false));
+            CanUndo?.Invoke(this, new UndoEventArgs(false));
+            CanRedo?.Invoke(this, new UndoEventArgs(false));
         }
 
-        public static int UndoCount => undoStack.Count;
+        public int UndoCount => undoStack.Count;
 
-        public static void ChangeUndoCountOfLastAction(int newCount)
+        public void ChangeUndoCountOfLastAction(int newCount)
         {
             undoStack.Peek().FurtherUndoCount = newCount;
             for (var i = 0; i < newCount; i++)

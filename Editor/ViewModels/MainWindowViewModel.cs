@@ -4,9 +4,10 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Editor;
 
-public partial class MainWindowViewModel(Settings settings) : ObservableObject
+public partial class MainWindowViewModel(Settings settings, UndoManager undoManager) : ObservableObject
 {
     public Settings Settings { get; init; } = settings;
+    public UndoManager UndoManager { get; init; } = undoManager;
     public MainWindow MainWindow = null!;
     public EditorControl? Editor { get; set; } = null;
 
@@ -39,6 +40,15 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
 
     [ObservableProperty]
     private bool _useItalicIntergalOnNew;
+
+    [ObservableProperty]
+    private bool _undoButtonIsEnabled = false;
+
+    [ObservableProperty]
+    private bool _redoButtonIsEnabled = false;
+
+    [ObservableProperty]
+    private bool _showUnderbar = true;
 
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
@@ -144,7 +154,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         }
     }
 
-    private void ChangeInputBold(bool isBold)
+    public void ChangeInputBold(bool isBold)
     {
         if (Editor != null)
         {
@@ -153,7 +163,7 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         }
     }
 
-    private void ChangeInputItalic(bool isItalic)
+    public void ChangeInputItalic(bool isItalic)
     {
         if (Editor != null)
         {
@@ -162,12 +172,17 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
         }
     }
 
-    private void ChangeInputUnderline(bool isUnderline)
+    public void ChangeInputUnderline(bool isUnderline)
     {
         if (Editor != null)
         {
             Editor.ChangeFormat(nameof(Format), Format.Underline, isUnderline);
             Editor.Focus();
         }
+    }
+
+    partial void OnShowUnderbarChanged(bool value)
+    {
+        Editor?.ShowUnderbar(value);
     }
 }
