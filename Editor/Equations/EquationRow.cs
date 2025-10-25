@@ -535,7 +535,7 @@ namespace Editor
         private EquationBase CreateChild(XElement xElement)
         {
             var type = Type.GetType(GetType().Namespace + "." + xElement.Name);
-            List<object> paramz = [this];
+            List<object> paramz = [Owner, this];
             var parameters = xElement.Element("parameters");
             if (parameters != null)
             {
