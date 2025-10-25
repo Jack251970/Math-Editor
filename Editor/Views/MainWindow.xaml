@@ -37,21 +37,36 @@
         </Style>
     </Window.Resources>
     <Window.CommandBindings>
-        <CommandBinding Command="Close" Executed="CloseCommandHandler" />
         <CommandBinding Command="Open" Executed="OpenCommandHandler" />
         <CommandBinding Command="Save" Executed="SaveCommandHandler" />
         <CommandBinding Command="SaveAs" Executed="SaveAsCommandHandler" />
-        <CommandBinding Command="New" Executed="NewCommandHandler" />
+        <CommandBinding Command="Close" Executed="CloseCommandHandler" />
     </Window.CommandBindings>
     <Window.InputBindings>
+        <KeyBinding
+            Key="N"
+            Command="{Binding NewCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="O"
+            Command="Open"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="S"
+            Command="Save"
+            Modifiers="Ctrl" />
         <KeyBinding
             Key="S"
             Command="SaveAs"
             Modifiers="Ctrl+Shift" />
         <KeyBinding
             Key="P"
-            Command="{Binding PrintCommand}"
+            Command="{Binding PrintCommand, Mode=OneTime}"
             Modifiers="Ctrl" />
+        <KeyBinding
+            Key="W"
+            Command="Close"
+            Modifiers="Ctrl+Shift" />
     </Window.InputBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
@@ -79,7 +94,7 @@
                     Padding="2"
                     Command="Close"
                     Style="{DynamicResource FullScreenButtonStyle}"
-                    ToolTip="{DynamicResource MainWindow_Close}"
+                    ToolTip="{DynamicResource Close}"
                     Visibility="Collapsed">
                     <Image Source="/Images/GUI/delete.png" />
                 </Button>
@@ -89,16 +104,19 @@
                 <MenuItem x:Name="fileMenuItem" Header="{DynamicResource MainWindow_File}">
                     <MenuItem
                         x:Name="newMenuItem"
-                        Command="New"
-                        Header="{DynamicResource MainWindow_New}" />
+                        Command="{Binding NewCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_New}"
+                        InputGestureText="Ctrl+N" />
                     <MenuItem
                         x:Name="openMenuItem"
                         Command="Open"
-                        Header="{DynamicResource MainWindow_Open}" />
+                        Header="{DynamicResource MainWindow_Open}"
+                        InputGestureText="Ctrl+O" />
                     <MenuItem
                         x:Name="saveMenuItem"
                         Command="Save"
-                        Header="{DynamicResource MainWindow_Save}" />
+                        Header="{DynamicResource MainWindow_Save}"
+                        InputGestureText="Ctrl+S" />
                     <MenuItem
                         x:Name="saveAsMenuItem"
                         Command="SaveAs"
@@ -137,6 +155,11 @@
                         Header="{DynamicResource MainWindow_Print}"
                         InputGestureText="Ctrl+P" />
                     <Separator />
+                    <MenuItem
+                        x:Name="closeMenuItem"
+                        Command="Close"
+                        Header="{DynamicResource Close}"
+                        InputGestureText="Ctrl+Shift+W" />
                     <MenuItem
                         x:Name="exitMenuItem"
                         Command="{Binding ExitCommand, Mode=OneTime}"

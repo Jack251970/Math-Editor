@@ -268,12 +268,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void NewCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        var mainWindow = new MainWindow(string.Empty);
-        mainWindow.Show();
-    }
-
     private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
         Close();
