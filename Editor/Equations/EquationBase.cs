@@ -37,26 +37,6 @@ namespace Editor
         public int SubLevel { get; set; }
         protected double SubFontFactor = 0.6;
         protected double SubSubFontFactor = 0.7;
-        public static event EventHandler<EventArgs>? SelectionAvailable;
-        public static event EventHandler<EventArgs>? SelectionUnavailable;
-
-        private static bool isSelecting;
-        protected static bool IsSelecting
-        {
-            get => isSelecting;
-            set
-            {
-                isSelecting = value;
-                if (isSelecting)
-                {
-                    SelectionAvailable?.Invoke(null, EventArgs.Empty); //there MUST always be one handler attached!
-                }
-                else
-                {
-                    SelectionUnavailable?.Invoke(null, EventArgs.Empty); //there MUST always be one handler attached!
-                }
-            }
-        }
 
         public MainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }

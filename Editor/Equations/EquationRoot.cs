@@ -86,10 +86,10 @@ namespace Editor
 
         public override void HandleMouseDrag(Point mousePoint)
         {
-            if (!IsSelecting)
+            if (!Owner.ViewModel.IsSelecting)
             {
                 ActiveChild.StartSelection();
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
             }
             ActiveChild.HandleMouseDrag(mousePoint);
             AdjustCarets();
@@ -99,14 +99,14 @@ namespace Editor
         {
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
                 ActiveChild.StartSelection();
                 ActiveChild.HandleMouseDrag(mousePoint);
             }
             else
             {
                 ActiveChild.ConsumeMouseClick(mousePoint); //never forget, EquationRoot has only one child at all times!!                
-                IsSelecting = true; //else DeSelect() might not work!
+                Owner.ViewModel.IsSelecting = true; //else DeSelect() might not work!
                 DeSelect();
             }
             AdjustCarets();
@@ -117,9 +117,9 @@ namespace Editor
         {
             DeSelect();
             ActiveChild.SelectAll();
-            if (!IsSelecting)
+            if (!Owner.ViewModel.IsSelecting)
             {
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
             }
         }
 
@@ -132,12 +132,12 @@ namespace Editor
             else
             {
                 var undoCount = UndoManager.UndoCount + 1;
-                if (IsSelecting)
+                if (Owner.ViewModel.IsSelecting)
                 {
                     ActiveChild.RemoveSelection(true);
                 }
                 ((EquationContainer)ActiveChild).ExecuteCommand(commandDetails.CommandType, commandDetails.CommandParam);
-                if (IsSelecting && undoCount < UndoManager.UndoCount)
+                if (Owner.ViewModel.IsSelecting && undoCount < UndoManager.UndoCount)
                 {
                     UndoManager.ChangeUndoCountOfLastAction(1);
                 }
@@ -199,12 +199,12 @@ namespace Editor
                 TextManager.ProcessPastedXML(xe);
             }
             var undoCount = UndoManager.UndoCount + 1;
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 ActiveChild.RemoveSelection(true);
             }
             ActiveChild.Paste(xe.Element("payload")!.Elements().First());
-            if (IsSelecting && undoCount < UndoManager.UndoCount)
+            if (Owner.ViewModel.IsSelecting && undoCount < UndoManager.UndoCount)
             {
                 UndoManager.ChangeUndoCountOfLastAction(1);
             }
@@ -262,12 +262,12 @@ namespace Editor
         public override void ConsumeText(string text)
         {
             var undoCount = UndoManager.UndoCount + 1;
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 ActiveChild.RemoveSelection(true);
             }
             ActiveChild.ConsumeText(text);
-            if (IsSelecting && undoCount < UndoManager.UndoCount)
+            if (Owner.ViewModel.IsSelecting && undoCount < UndoManager.UndoCount)
             {
                 UndoManager.ChangeUndoCountOfLastAction(1);
             }
@@ -278,10 +278,10 @@ namespace Editor
 
         public override void DeSelect()
         {
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 base.DeSelect();
-                IsSelecting = false;
+                Owner.ViewModel.IsSelecting = false;
             }
         }
 
@@ -330,9 +330,9 @@ namespace Editor
         {
             if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && (new[] { Key.Right, Key.Left, Key.Up, Key.Down, Key.Home, Key.End }).Contains(key))
             {
-                if (!IsSelecting)
+                if (!Owner.ViewModel.IsSelecting)
                 {
-                    IsSelecting = true;
+                    Owner.ViewModel.IsSelecting = true;
                     ((RowContainer)ActiveChild).StartSelection();
                 }
                 ActiveChild.Select(key);
@@ -344,7 +344,7 @@ namespace Editor
             if (handledKeys.Contains(key))
             {
                 result = true;
-                if (IsSelecting && (new[] { Key.Delete, Key.Enter, Key.Back }).Contains(key))
+                if (Owner.ViewModel.IsSelecting && (new[] { Key.Delete, Key.Enter, Key.Back }).Contains(key))
                 {
                     ActiveChild.RemoveSelection(true);
                 }
@@ -361,7 +361,7 @@ namespace Editor
 
         public override void RemoveSelection(bool registerUndo)
         {
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 ActiveChild.RemoveSelection(registerUndo);
                 CalculateSize();

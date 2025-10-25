@@ -1152,7 +1152,7 @@ namespace Editor
             {
                 caretIndex = tfa.Index;
                 formats.RemoveRange(tfa.Index, tfa.NewFormats.Length);
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
                 if (tfa.UndoFlag)
                 {
                     for (var i = 0; i < tfa.OldFormats.Length; i++)
@@ -1231,7 +1231,7 @@ namespace Editor
                 SelectionStartIndex = textAction.SelectionStartIndex;
                 ParentEquation.SelectionStartIndex = textAction.ParentSelectionStartIndex;
                 ParentEquation.SelectedItems = 0;
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
             }
             else
             {
@@ -1246,7 +1246,7 @@ namespace Editor
                 }
                 SelectedItems = 0;
                 SelectionStartIndex = textAction.Index;
-                IsSelecting = false;
+                Owner.ViewModel.IsSelecting = false;
             }
             SetCaretIndex(textAction.Index);
         }
@@ -1284,7 +1284,7 @@ namespace Editor
                 }
                 SetCaretIndex(textAction.Index);
             }
-            IsSelecting = false;
+            Owner.ViewModel.IsSelecting = false;
         }
 
         public void Truncate(int keepCount)

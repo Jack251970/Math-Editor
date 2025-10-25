@@ -149,7 +149,7 @@ namespace Editor
 
         public void DrawVisibleRows(DrawingContext dc, double top, double bottom)
         {
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 try { DrawSelectionRegion(dc); }
                 catch { }
@@ -169,7 +169,7 @@ namespace Editor
 
         public override void DrawEquation(DrawingContext dc)
         {
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 DrawSelectionRegion(dc);
             }
@@ -336,7 +336,7 @@ namespace Editor
 
                     bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)), (int)(Math.Ceiling(height + 2)), 96, 96, PixelFormats.Default);
                     var dv = new DrawingVisual();
-                    IsSelecting = false;
+                    Owner.ViewModel.IsSelecting = false;
                     using (var dc = dv.RenderOpen())
                     {
                         dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
@@ -345,7 +345,7 @@ namespace Editor
                             eb.DrawEquation(dc);
                         }
                     }
-                    IsSelecting = true;
+                    Owner.ViewModel.IsSelecting = true;
                     bitmap.Render(dv);
                 }
 
@@ -877,7 +877,7 @@ namespace Editor
             if (type == typeof(RowContainerAction))
             {
                 ProcessRowContainerAction(action);
-                IsSelecting = false;
+                Owner.ViewModel.IsSelecting = false;
             }
             else if (type == typeof(RowContainerTextAction))
             {
@@ -998,7 +998,7 @@ namespace Editor
                 SelectedItems = rowAction.SelectedItems;
                 SelectionStartIndex = rowAction.SelectionStartIndex;
                 ActiveChild = rowAction.ActiveEquation;
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
             }
             else
             {
@@ -1018,7 +1018,7 @@ namespace Editor
                 }
                 ActiveChild = rowAction.HeadEquationRow;
                 SelectedItems = 0;
-                IsSelecting = false;
+                Owner.ViewModel.IsSelecting = false;
             }
         }
 
@@ -1045,7 +1045,7 @@ namespace Editor
 
         public override void ModifySelection(string operation, object argument, bool applied, bool addUndo)
         {
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                 var endIndex = SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex;
@@ -1093,7 +1093,7 @@ namespace Editor
         {
             if (action is RowContainerFormatAction rcfa)
             {
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
                 ActiveChild = rcfa.ActiveChild;
                 this.SelectedItems = rcfa.SelectedItems;
                 this.SelectionStartIndex = rcfa.SelectionStartIndex;

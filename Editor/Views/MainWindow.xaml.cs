@@ -41,8 +41,6 @@ public partial class MainWindow : Window
         AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
         UndoManager.CanUndo += (a, b) => { undoButton.IsEnabled = b.ActionPossible; };
         UndoManager.CanRedo += (a, b) => { redoButton.IsEnabled = b.ActionPossible; };
-        EquationBase.SelectionAvailable += new EventHandler<EventArgs>(editor_SelectionAvailable);
-        EquationBase.SelectionUnavailable += new EventHandler<EventArgs>(editor_SelectionUnavailable);
         underbarToggle.IsChecked = true;
         Editor.ZoomChanged += new EventHandler(editor_ZoomChanged);
     }
@@ -60,24 +58,6 @@ public partial class MainWindow : Window
         Editor.Focus();
 
         IsEditorLoaded = true;
-    }
-
-    private void editor_SelectionUnavailable(object? sender, EventArgs e)
-    {
-        copyMenuItem.IsEnabled = false;
-        cutMenuItem.IsEnabled = false;
-        deleteMenuItem.IsEnabled = false;
-        cutButton.IsEnabled = false;
-        copyButton.IsEnabled = false;
-    }
-
-    private void editor_SelectionAvailable(object? sender, EventArgs e)
-    {
-        copyMenuItem.IsEnabled = true;
-        cutMenuItem.IsEnabled = true;
-        deleteMenuItem.IsEnabled = true;
-        cutButton.IsEnabled = true;
-        copyButton.IsEnabled = true;
     }
 
     public void HandleToolBarCommand(CommandDetails commandDetails)

@@ -135,12 +135,12 @@
                         x:Name="cutMenuItem"
                         Command="Cut"
                         Header="C_ut"
-                        IsEnabled="False" />
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
                         x:Name="copyMenuItem"
                         Command="Copy"
                         Header="_Copy"
-                        IsEnabled="False" />
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
                         x:Name="pasteMenuItem"
                         Command="Paste"
@@ -153,7 +153,7 @@
                         x:Name="deleteMenuItem"
                         Click="deleteMenuItem_Click"
                         Header="_Delete"
-                        IsEnabled="False" />
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                 </MenuItem>
                 <MenuItem x:Name="insertMenuItem" Header="_Insert">
                     <MenuItem
@@ -314,7 +314,7 @@
                     <Button
                         x:Name="cutButton"
                         Command="Cut"
-                        IsEnabled="False"
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Cut"
                         ToolTipService.ShowOnDisabled="True">
@@ -323,7 +323,7 @@
                     <Button
                         x:Name="copyButton"
                         Command="Copy"
-                        IsEnabled="False"
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="Copy"
                         ToolTipService.ShowOnDisabled="True">

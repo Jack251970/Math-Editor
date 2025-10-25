@@ -267,7 +267,7 @@ namespace Editor
         {
             try
             {
-                if (IsSelecting)
+                if (Owner.ViewModel.IsSelecting)
                 {
                     var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                     var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
@@ -413,7 +413,7 @@ namespace Editor
                     bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)),
                         (int)(Math.Ceiling(maxUpperHalf + maxBottomHalf + 2)), 96, 96, PixelFormats.Default);
                     var dv = new DrawingVisual();
-                    IsSelecting = false;
+                    Owner.ViewModel.IsSelecting = false;
                     using (var dc = dv.RenderOpen())
                     {
                         dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
@@ -422,7 +422,7 @@ namespace Editor
                             eb.DrawEquation(dc);
                         }
                     }
-                    IsSelecting = true;
+                    Owner.ViewModel.IsSelecting = true;
                     bitmap.Render(dv);
                 }
 
@@ -484,7 +484,7 @@ namespace Editor
                 var firstEquation = (TextEquation)childEquations.First();
                 if (firstEquation.TextLength == 0)
                 {
-                    if (IsSelecting)
+                    if (Owner.ViewModel.IsSelecting)
                     {
                         //dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
                     }
@@ -1126,7 +1126,7 @@ namespace Editor
             if (action.GetType() == typeof(RowAction))
             {
                 ProcessRowAction(action);
-                IsSelecting = false;
+                Owner.ViewModel.IsSelecting = false;
             }
             else if (action.GetType() == typeof(EquationRowPasteAction))
             {
@@ -1193,7 +1193,7 @@ namespace Editor
                 }
                 SelectedItems = rowAction.SelectedItems;
                 SelectionStartIndex = rowAction.SelectionStartIndex;
-                IsSelecting = true;
+                Owner.ViewModel.IsSelecting = true;
             }
             else
             {
@@ -1207,7 +1207,7 @@ namespace Editor
                 }
                 ActiveChild = rowAction.HeadTextEquation;
                 this.SelectedItems = 0;
-                IsSelecting = false;
+                Owner.ViewModel.IsSelecting = false;
             }
         }
 
@@ -1261,8 +1261,8 @@ namespace Editor
                 childEquations.Insert(rowAction.Index, rowAction.Equation);
                 childEquations.Insert(rowAction.Index + 1, rowAction.EquationAfter);
                 ActiveChild = rowAction.Equation;
-                rowAction.Equation.FontSize = this.FontSize;
-                rowAction.EquationAfter.FontSize = this.FontSize;
+                rowAction.Equation.FontSize = FontSize;
+                rowAction.EquationAfter.FontSize = FontSize;
             }
         }
 
@@ -1270,9 +1270,9 @@ namespace Editor
         {
             if (action is EquationRowFormatAction ecfa)
             {
-                IsSelecting = true;
-                this.SelectedItems = ecfa.SelectedItems;
-                this.SelectionStartIndex = ecfa.SelectionStartIndex;
+                Owner.ViewModel.IsSelecting = true;
+                SelectedItems = ecfa.SelectedItems;
+                SelectionStartIndex = ecfa.SelectionStartIndex;
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                 var endIndex = SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex;
                 childEquations[startIndex].SelectionStartIndex = ecfa.FirstChildSelectionStartIndex;
@@ -1452,7 +1452,7 @@ namespace Editor
 
         public override void ModifySelection(string operation, object argument, bool applied, bool addUndo)
         {
-            if (IsSelecting)
+            if (Owner.ViewModel.IsSelecting)
             {
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                 var endIndex = SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex;

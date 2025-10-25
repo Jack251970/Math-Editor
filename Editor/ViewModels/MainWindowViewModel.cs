@@ -34,6 +34,9 @@ public partial class MainWindowViewModel(Settings settings) : ObservableObject
     [ObservableProperty]
     private bool _inputUnderline;
 
+    [ObservableProperty]
+    private bool _isSelecting;
+
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
     public bool IgnoreInputBoldChange { get; set; } = false;
