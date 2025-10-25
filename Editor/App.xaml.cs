@@ -184,7 +184,8 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
 
     public void OnSecondAppStarted()
     {
-        // TODO: Open a new window
+        var mainWindow = new MainWindow(string.Empty);
+        mainWindow.Show();
     }
 
     protected virtual void Dispose(bool disposing)

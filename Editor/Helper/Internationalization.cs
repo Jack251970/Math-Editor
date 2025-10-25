@@ -155,6 +155,20 @@ public class Internationalization(Settings settings)
 
         // Change culture info
         ChangeCultureInfo(language.LanguageCode);
+
+        // Update translations for all windows
+        await Application.Current.Dispatcher.InvokeAsync(UpdateAllWindowsTranslations);
+    }
+
+    private void UpdateAllWindowsTranslations()
+    {
+        foreach (Window window in Application.Current.Windows)
+        {
+            if (window is ICultureInfoChanged localizable)
+            {
+                localizable.OnCultureInfoChanged(CultureInfo.CurrentCulture);
+            }
+        }
     }
 
     public static void ChangeCultureInfo(string languageCode)

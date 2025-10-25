@@ -34,7 +34,7 @@ namespace Editor
                 case DecorationType.RightArrow:
                     _firstSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
                     break;
-                // TODO: Looks like it is unnecessary?
+                // It looks like it is unnecessary?
                 //case DecorationType.RightHarpoonUpBarb:
                 //case DecorationType.LeftHarpoonUpBarb:
                 //case DecorationType.RightHarpoonDownBarb:

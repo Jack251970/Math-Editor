@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,7 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Editor;
 
 [INotifyPropertyChanged]
-public partial class UnicodeSelectorWindow : Window
+public partial class UnicodeSelectorWindow : Window, ICultureInfoChanged
 {
     public List<string> Categories { get; } = [.. _categories.Keys];
 
@@ -34,7 +35,6 @@ public partial class UnicodeSelectorWindow : Window
     [ObservableProperty]
     private string _characterCodeText = string.Empty;
 
-    // TODO: Update the localization when languages changes
     public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
 
     [ObservableProperty]
@@ -243,6 +243,11 @@ public partial class UnicodeSelectorWindow : Window
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         App.Settings.Save();
+    }
+
+    public void OnCultureInfoChanged(CultureInfo newCultureInfo)
+    {
+        UnicodeFormatLocalized.UpdateLabels(AllUnicodeFormats);
     }
 }
 

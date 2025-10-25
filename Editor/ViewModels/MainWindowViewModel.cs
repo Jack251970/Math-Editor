@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Editor;
 
-public partial class MainWindowViewModel(Settings settings, UndoManager undoManager) : ObservableObject
+public partial class MainWindowViewModel(Settings settings, UndoManager undoManager) : ObservableObject, ICultureInfoChanged
 {
     public Settings Settings { get; init; } = settings;
     public UndoManager UndoManager { get; init; } = undoManager;
     public MainWindow MainWindow = null!;
     public EditorControl? Editor { get; set; } = null;
 
-    // TODO: Update the localization when languages changes
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
 
     [ObservableProperty]
@@ -191,5 +191,12 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
     {
         var mainWindow = new MainWindow(string.Empty);
         mainWindow.Show();
+    }
+
+    public void OnCultureInfoChanged(CultureInfo newCultureInfo)
+    {
+        EditorModeLocalized.UpdateLabels(AllEditModes);
+        FontTypeLocalized.UpdateLabels(AllFontTypes);
+        UpdateShowNestingMenuItemHeader();
     }
 }

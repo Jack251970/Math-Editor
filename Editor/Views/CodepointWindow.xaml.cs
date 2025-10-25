@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,11 +10,10 @@ using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 namespace Editor;
 
 [INotifyPropertyChanged]
-public partial class CodepointWindow : Window
+public partial class CodepointWindow : Window, ICultureInfoChanged
 {
     private static readonly string ClassName = nameof(CodepointWindow);
 
-    // TODO: Update the localization when languages changes
     public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
 
     [ObservableProperty]
@@ -118,5 +118,10 @@ public partial class CodepointWindow : Window
             number = 0;
             return false;
         }
+    }
+
+    public void OnCultureInfoChanged(CultureInfo newCultureInfo)
+    {
+        UnicodeFormatLocalized.UpdateLabels(AllUnicodeFormats);
     }
 }

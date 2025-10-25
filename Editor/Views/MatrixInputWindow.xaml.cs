@@ -31,14 +31,17 @@ public partial class MatrixInputWindow : Window
     {
         // WPF does not provide a NumericUpDown control out of the box
         // The button click will be ignored, when the number cannot be parsed.
-        // TODO: provide user feedback when the input is invalid or implement a proper NumericUpDownControl
+        // TODO: Provide user feedback when the input is invalid or implement a proper NumericUpDownControl.
         if (int.TryParse(RowsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var rows)
             && int.TryParse(ColumnsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var columns))
         {
             var newCommand = new CommandDetails
             {
                 CommandType = CommandType.Matrix,
-                CommandParam = new int[] { rows, columns }
+                CommandParam = new int[]
+                {
+                    rows, columns
+                }
             };
             ((MainWindow)Owner).Editor.HandleUserCommand(newCommand);
             Close();

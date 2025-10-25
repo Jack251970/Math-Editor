@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +11,7 @@ using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, ICultureInfoChanged
 {
     public bool IsEditorLoaded { get; private set; } = false;
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
@@ -483,5 +484,10 @@ public partial class MainWindow : Window
     private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
         Editor.InvalidateVisual();
+    }
+
+    public void OnCultureInfoChanged(CultureInfo newCultureInfo)
+    {
+        ViewModel.OnCultureInfoChanged(newCultureInfo);
     }
 }
