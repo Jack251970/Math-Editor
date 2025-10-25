@@ -252,7 +252,7 @@ public class Internationalization(Settings settings)
 
     #region Available Languages
 
-    public List<Language> LoadAvailableLanguages()
+    public static List<Language> LoadAvailableLanguages()
     {
         var list = AvailableLanguages.GetAvailableLanguages();
         list.Insert(0, new Language(Constants.SystemLanguageCode, AvailableLanguages.GetSystemTranslation(SystemLanguageCode)));

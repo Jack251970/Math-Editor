@@ -9,7 +9,7 @@ public partial class SettingsWindowViewModel(Settings settings, Internationaliza
 
     private readonly Internationalization _translater = translater;
 
-    public List<Language> Languages => _translater.LoadAvailableLanguages();
+    public List<Language> Languages { get; } = Internationalization.LoadAvailableLanguages();
 
     public string Language
     {
@@ -21,10 +21,11 @@ public partial class SettingsWindowViewModel(Settings settings, Internationaliza
         }
     }
 
-    private void UpdateTranslations()
+    public void UpdateTranslations()
     {
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);
+        CopyTypeLocalized.UpdateLabels(AllCopyTypes);
     }
 
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
