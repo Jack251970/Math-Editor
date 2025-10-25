@@ -50,6 +50,11 @@ public static class WindowTracker
         _activeWindows.TryAdd(window, owner);
     }
 
+    public static List<Window> GetOwnerWindows()
+    {
+        return [.. _ownerWindows];
+    }
+
     public static List<Window> GetActiveWindows()
     {
         return [.. _activeWindows.Keys];

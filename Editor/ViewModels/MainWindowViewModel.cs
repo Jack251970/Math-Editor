@@ -234,6 +234,12 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
         Editor?.DeleteSelection();
     }
 
+    [RelayCommand]
+    private void Exit()
+    {
+        WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
+    }
+
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
         EditorModeLocalized.UpdateLabels(AllEditModes);

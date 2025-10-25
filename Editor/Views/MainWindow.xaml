@@ -125,7 +125,7 @@
                         Header="{DynamicResource MainWindow_Print}" />
                     <MenuItem
                         x:Name="exitMenuItem"
-                        Command="Close"
+                        Command="{Binding ExitCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Exit}" />
                 </MenuItem>
 
