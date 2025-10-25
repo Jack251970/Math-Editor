@@ -484,27 +484,4 @@ public partial class MainWindow : Window
     {
         Editor.InvalidateVisual();
     }
-
-    private void NewCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        if (Editor.Dirty)
-        {
-            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
-            if (result == MessageBoxResult.Cancel)
-            {
-                return;
-            }
-            else if (result == MessageBoxResult.Yes)
-            {
-                if (!ProcessFileSave())
-                {
-                    return;
-                }
-            }
-        }
-        _currentLocalFile = "";
-        SetTitle();
-        Editor.Clear();
-    }
 }

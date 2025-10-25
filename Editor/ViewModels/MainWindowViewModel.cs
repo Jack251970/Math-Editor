@@ -56,56 +56,6 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
     public bool IgnoreInputItalicChange { get; set; } = false;
     public bool IgnoreInputUnderlineChange { get; set; } = false;
 
-    [RelayCommand]
-    private void OpenSettingsWindow()
-    {
-        WindowOpener.OpenSingle<SettingsWindow>(MainWindow);
-    }
-
-    [RelayCommand]
-    private void OpenUnicodeSelectorWindow()
-    {
-        WindowOpener.OpenScoped<UnicodeSelectorWindow>(MainWindow);
-    }
-
-    [RelayCommand]
-    private void OpenCodepointWindow()
-    {
-        WindowOpener.OpenScoped<CodepointWindow>(MainWindow);
-    }
-
-    [RelayCommand]
-    private void OpenCustomZoomWindow()
-    {
-        WindowOpener.OpenScoped<CustomZoomWindow>(MainWindow);
-    }
-
-    [RelayCommand]
-    private void OpenAboutWindow()
-    {
-        WindowOpener.OpenSingle<AboutWindow>(MainWindow);
-    }
-
-    [RelayCommand]
-    private void OpenContents()
-    {
-        BrowserHelper.Open(Constants.WikiUrl);
-    }
-
-    [RelayCommand]
-    private void ToggleShowNesting()
-    {
-        Settings.ShowNesting = !Settings.ShowNesting;
-        UpdateShowNestingMenuItemHeader();
-        Editor?.InvalidateVisual();
-    }
-
-    private void UpdateShowNestingMenuItemHeader()
-    {
-        ShowNestingMenuItemHeader = Settings.ShowNesting ?
-            Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
-    }
-
     partial void OnTextEditorModeChanged(EditorMode value)
     {
         if (IgnoreTextEditorModeChange) return;
@@ -184,5 +134,62 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
     partial void OnShowUnderbarChanged(bool value)
     {
         Editor?.ShowUnderbar(value);
+    }
+
+    [RelayCommand]
+    private void OpenSettingsWindow()
+    {
+        WindowOpener.OpenSingle<SettingsWindow>(MainWindow);
+    }
+
+    [RelayCommand]
+    private void OpenUnicodeSelectorWindow()
+    {
+        WindowOpener.OpenScoped<UnicodeSelectorWindow>(MainWindow);
+    }
+
+    [RelayCommand]
+    private void OpenCodepointWindow()
+    {
+        WindowOpener.OpenScoped<CodepointWindow>(MainWindow);
+    }
+
+    [RelayCommand]
+    private void OpenCustomZoomWindow()
+    {
+        WindowOpener.OpenScoped<CustomZoomWindow>(MainWindow);
+    }
+
+    [RelayCommand]
+    private void OpenAboutWindow()
+    {
+        WindowOpener.OpenSingle<AboutWindow>(MainWindow);
+    }
+
+    [RelayCommand]
+    private void OpenContents()
+    {
+        BrowserHelper.Open(Constants.WikiUrl);
+    }
+
+    [RelayCommand]
+    private void ToggleShowNesting()
+    {
+        Settings.ShowNesting = !Settings.ShowNesting;
+        UpdateShowNestingMenuItemHeader();
+        Editor?.InvalidateVisual();
+    }
+
+    private void UpdateShowNestingMenuItemHeader()
+    {
+        ShowNestingMenuItemHeader = Settings.ShowNesting ?
+            Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
+    }
+
+    [RelayCommand]
+    private void NewWindow()
+    {
+        var mainWindow = new MainWindow(string.Empty);
+        mainWindow.Show();
     }
 }

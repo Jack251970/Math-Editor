@@ -49,7 +49,6 @@
         <CommandBinding Command="Print" Executed="PrintCommandHandler" />
         <CommandBinding Command="Undo" Executed="UndoCommandHandler" />
         <CommandBinding Command="Redo" Executed="RedoCommandHandler" />
-        <CommandBinding Command="New" Executed="NewCommandHandler" />
     </Window.CommandBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
@@ -84,7 +83,7 @@
                 <MenuItem x:Name="fileMenuItem" Header="_File">
                     <MenuItem
                         x:Name="newMenuItem"
-                        Command="New"
+                        Command="{Binding NewWindowCommand, Mode=OneTime}"
                         Header="_New" />
                     <MenuItem
                         x:Name="openMenuItem"
@@ -361,7 +360,13 @@
                         ToolTip="Bold">
                         <Image Source="/Images/GUI/bold.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
-                    <!--<ToggleButton IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}" x:Name="italicToggleButton" IsThreeState="False" ToolTip="Italic" IsChecked="{Binding InputItalic}" Style="{StaticResource ToolbarToggleButton}">-->
+                    <!--<ToggleButton
+                        x:Name="italicToggleButton"
+                        IsChecked="{Binding InputItalic}"
+                        IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}"
+                        IsThreeState="False"
+                        Style="{StaticResource ToolbarToggleButton}"
+                        ToolTip="Italic" />-->
                     <ToggleButton
                         x:Name="italicToggleButton"
                         IsChecked="{Binding InputItalic, Mode=TwoWay}"
