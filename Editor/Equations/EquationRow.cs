@@ -573,7 +573,7 @@ namespace Editor
             _deleteable = null;
             if (ActiveChild.GetType() == typeof(TextEquation))
             {
-                EquationBase newEquation = null;
+                EquationBase? newEquation = null;
                 switch (commandType)
                 {
                     case CommandType.Composite:
@@ -647,6 +647,8 @@ namespace Editor
                             CalculateSize();
                         }
                         break;
+                    default:
+                        throw new InvalidOperationException("Invalid command type for EquationRow");
                 }
                 if (newEquation != null)
                 {
