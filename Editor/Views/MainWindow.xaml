@@ -41,6 +41,7 @@
         <CommandBinding Command="Open" Executed="OpenCommandHandler" />
         <CommandBinding Command="Save" Executed="SaveCommandHandler" />
         <CommandBinding Command="SaveAs" Executed="SaveAsCommandHandler" />
+        <CommandBinding Command="New" Executed="NewCommandHandler" />
     </Window.CommandBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
@@ -78,7 +79,7 @@
                 <MenuItem x:Name="fileMenuItem" Header="{DynamicResource MainWindow_File}">
                     <MenuItem
                         x:Name="newMenuItem"
-                        Command="{Binding NewWindowCommand, Mode=OneTime}"
+                        Command="New"
                         Header="{DynamicResource MainWindow_New}" />
                     <MenuItem
                         x:Name="openMenuItem"

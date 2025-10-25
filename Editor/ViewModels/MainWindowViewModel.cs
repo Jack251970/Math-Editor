@@ -187,13 +187,6 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
     }
 
     [RelayCommand]
-    private void NewWindow()
-    {
-        var mainWindow = new MainWindow(string.Empty);
-        mainWindow.Show();
-    }
-
-    [RelayCommand]
     private void Cut()
     {
         Editor?.Copy(true);

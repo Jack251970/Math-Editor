@@ -119,11 +119,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Close();
-    }
-
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         if (Editor.Dirty)
@@ -271,6 +266,17 @@ public partial class MainWindow : Window, ICultureInfoChanged
         {
             return null;
         }
+    }
+
+    private void NewCommandHandler(object sender, ExecutedRoutedEventArgs e)
+    {
+        var mainWindow = new MainWindow(string.Empty);
+        mainWindow.Show();
+    }
+
+    private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
+    {
+        Close();
     }
 
     private void SaveCommandHandler(object sender, ExecutedRoutedEventArgs e)
