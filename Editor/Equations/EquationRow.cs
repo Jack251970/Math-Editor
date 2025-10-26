@@ -1042,11 +1042,11 @@ namespace Editor
                     var subSuperBase = (SubSuperBase)eb;
                     if (subSuperBase.Position == Position.Right)
                     {
-                        subSuperBase.SetBuddy(PreviousNonEmptyChild(subSuperBase));
+                        subSuperBase.SetBuddy(PreviousNonEmptyChild(subSuperBase)!);
                     }
                     else
                     {
-                        subSuperBase.SetBuddy(NextNonEmptyChild(subSuperBase));
+                        subSuperBase.SetBuddy(NextNonEmptyChild(subSuperBase)!);
                     }
                 }
                 var childRefY = eb.RefY;
@@ -1178,7 +1178,7 @@ namespace Editor
 
         private void ProcessRowRemoveAction(EquationAction action)
         {
-            var rowAction = action as RowRemoveAction;
+            var rowAction = (RowRemoveAction)action;
             rowAction.HeadTextEquation.ResetTextEquation(rowAction.FirstTextCaretIndex, rowAction.FirstTextSelectionIndex,
                                                          rowAction.FirstTextSelectedItems, rowAction.FirstText, rowAction.FirstFormats,
                                                          rowAction.FirstModes, rowAction.FirstDecorations);
@@ -1215,7 +1215,7 @@ namespace Editor
 
         private void ProcessRowPasteAction(EquationAction action)
         {
-            var pasteAction = action as EquationRowPasteAction;
+            var pasteAction = (EquationRowPasteAction)action;
             var activeText = pasteAction.ActiveTextEquation;
             activeText.ResetTextEquation(pasteAction.ActiveChildCaretIndex, pasteAction.ActiveChildSelectionStartIndex, pasteAction.ActiveChildSelectedItems,
                                          pasteAction.ActiveChildText, pasteAction.ActiveChildFormats, pasteAction.ActiveChildModes, pasteAction.ActiveChildDecorations);
@@ -1236,7 +1236,7 @@ namespace Editor
                 var index = childEquations.IndexOf(ActiveChild) + 1;
                 childEquations.InsertRange(index, pasteAction.Equations);
                 ((TextEquation)ActiveChild).ConsumeFormattedText(pasteAction.FirstNewText, pasteAction.FirstNewFormats, pasteAction.FirstNewModes, pasteAction.FirstNewDecorations, false);
-                ((TextEquation)pasteAction.Equations.Last()).Merge((TextEquation)newChild);
+                ((TextEquation)pasteAction.Equations.Last()).Merge((TextEquation)newChild!);
                 ActiveChild = childEquations[index + pasteAction.Equations.Count - 1];
                 foreach (var eb in pasteAction.Equations)
                 {
@@ -1248,7 +1248,7 @@ namespace Editor
 
         private void ProcessRowAction(EquationAction action)
         {
-            var rowAction = action as RowAction;
+            var rowAction = (RowAction)action;
             if (rowAction.UndoFlag)
             {
                 childEquations.Remove(rowAction.Equation);
@@ -1303,7 +1303,7 @@ namespace Editor
 
         public void SetCurrentChild(int childIndex, int caretIndex)
         {
-            var textEquation = childEquations[childIndex] as TextEquation;
+            var textEquation = (TextEquation)childEquations[childIndex];
             textEquation.CaretIndex = caretIndex;
             ActiveChild = textEquation;
         }
