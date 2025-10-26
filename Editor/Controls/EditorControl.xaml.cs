@@ -50,7 +50,7 @@ public partial class EditorControl : UserControl, IDisposable
         hCaret.ToggleVisibility();
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void EditorControl_Loaded(object sender, RoutedEventArgs e)
     {
         timer.Start();
         // Here we set Editor later so that equationRoot will not call the methods related to timer

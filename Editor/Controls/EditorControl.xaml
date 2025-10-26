@@ -8,7 +8,7 @@
     MinWidth="20"
     MinHeight="200"
     KeyDown="EditorControl_KeyDown"
-    Loaded="UserControl_Loaded"
+    Loaded="EditorControl_Loaded"
     MouseDown="EditorControl_MouseDown"
     MouseEnter="EditorControl_MouseEnter"
     MouseLeave="EditorControl_MouseLeave"
