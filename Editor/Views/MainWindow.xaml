@@ -146,27 +146,27 @@
                         InputGestureText="Ctrl+Shift+S" />
                     <MenuItem x:Name="exportMenuItem" Header="{DynamicResource MainWindow_Export}">
                         <MenuItem
-                            Click="exportMenuItem_Click"
+                            Click="ExportMenuItem_Click"
                             Header="{DynamicResource MainWindow_Export_PNG}"
                             Tag="png" />
                         <MenuItem
-                            Click="exportMenuItem_Click"
+                            Click="ExportMenuItem_Click"
                             Header="{DynamicResource MainWindow_Export_JPG}"
                             Tag="jpg" />
                         <MenuItem
-                            Click="exportMenuItem_Click"
+                            Click="ExportMenuItem_Click"
                             Header="{DynamicResource MainWindow_Export_GIF}"
                             Tag="gif" />
                         <MenuItem
-                            Click="exportMenuItem_Click"
+                            Click="ExportMenuItem_Click"
                             Header="{DynamicResource MainWindow_Export_BMP}"
                             Tag="bmp" />
                         <MenuItem
-                            Click="exportMenuItem_Click"
+                            Click="ExportMenuItem_Click"
                             Header="{DynamicResource MainWindow_Export_TIFF}"
                             Tag="tif" />
                         <MenuItem
-                            Click="exportMenuItem_Click"
+                            Click="ExportMenuItem_Click"
                             Header="{DynamicResource MainWindow_Export_WMP}"
                             Tag="wdp" />
                     </MenuItem>

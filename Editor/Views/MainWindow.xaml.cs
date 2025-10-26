@@ -96,7 +96,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
             }
             else if (Editor.IsMouseOver)
             {
-                //editor.HandleMouseDown();
+                //Editor.HandleMouseDown();
                 Editor.Focus();
             }
             CharacterToolBar.HideVisiblePanel();
@@ -109,32 +109,37 @@ public partial class MainWindow : Window, ICultureInfoChanged
         if (!Editor.IsFocused)
         {
             Editor.Focus();
-            //editor.EditorControl_TextInput(null, e);
+            //Editor.EditorControl_TextInput(null, e);
             Editor.ConsumeText(e.Text);
             CharacterToolBar.HideVisiblePanel();
             EquationToolBar.HideVisiblePanel();
         }
     }
 
+    private void Window_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (!Editor.IsFocused)
+        {
+            Editor.Focus();
+            CharacterToolBar.HideVisiblePanel();
+            EquationToolBar.HideVisiblePanel();
+        }
+    }
+
+    private void Window_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (WindowStyle == WindowStyle.None && e.Key == Key.Escape)
+        {
+            ToggleFullScreen();
+        }
+    }
+
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (Editor.Dirty)
+        if (!CheckSaveCurrentDocument())
         {
-            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Cancel)
-            {
-                e.Cancel = true;
-                return;
-            }
-            else if (result == MessageBoxResult.Yes)
-            {
-                if (!ProcessFileSave())
-                {
-                    e.Cancel = true;
-                    return;
-                }
-            }
+            e.Cancel = true;
+            return;
         }
 
         ViewModel.UndoManager.CanUndo -= UndoManager_CanUndo;
@@ -166,22 +171,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
     {
-        if (Editor.Dirty)
+        if (!CheckSaveCurrentDocument())
         {
-            var mbResult = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-            if (mbResult == MessageBoxResult.Cancel)
-            {
-                return;
-            }
-            else if (mbResult == MessageBoxResult.Yes)
-            {
-                if (!ProcessFileSave())
-                {
-                    return;
-                }
-            }
+            return;
         }
+
         var ofd = new Microsoft.Win32.OpenFileDialog
         {
             CheckPathExists = true,
@@ -192,6 +186,30 @@ public partial class MainWindow : Window, ICultureInfoChanged
         {
             OpenFile(ofd.FileName);
         }
+    }
+
+    #region Open & Save & Save As & Export
+
+    private bool CheckSaveCurrentDocument()
+    {
+        if (Editor.Dirty)
+        {
+            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+            else if (result == MessageBoxResult.Yes)
+            {
+                if (!ProcessFileSave())
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private void OpenFile(string filePath)
@@ -294,7 +312,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void exportMenuItem_Click(object sender, RoutedEventArgs e)
+    private void ExportMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var imageType = sender is Control control && control.Tag is string imageTypeStr ? imageTypeStr : "png";
 
@@ -308,23 +326,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void Window_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (!Editor.IsFocused)
-        {
-            Editor.Focus();
-            CharacterToolBar.HideVisiblePanel();
-            EquationToolBar.HideVisiblePanel();
-        }
-    }
-
-    private void Window_KeyUp(object sender, KeyEventArgs e)
-    {
-        if (WindowStyle == WindowStyle.None && e.Key == Key.Escape)
-        {
-            ToggleFullScreen();
-        }
-    }
+    #endregion
 
     private void ToggleFullScreen()
     {
