@@ -52,7 +52,7 @@ namespace Editor
         public EquationContainer ParentEquation { get; set; }
         private Point location = new();
         /*private readonly double width;*/
-        private readonly double height;
+        private const double height = 0;
         private double fontSize = 20;
         private double fontFactor = 1;
         public int SelectionStartIndex { get; set; }
