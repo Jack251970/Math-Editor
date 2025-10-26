@@ -352,10 +352,10 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void Editor_ZoomChanged(object? sender, EventArgs e)
+    private void Editor_ZoomChanged(object? sender, int number)
     {
-        customZoomMenu.Header = "_Custom";
-        customZoomMenu.IsChecked = false;
+        customZoomMenu.Header = "_Custom (" + number + "%)";
+        customZoomMenu.IsChecked = true;
         if (lastZoomMenuItem != null)
         {
             lastZoomMenuItem.IsChecked = false;

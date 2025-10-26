@@ -21,7 +21,7 @@ public partial class EditorControl : UserControl, IDisposable
     private const int BlinkPeriod = 600;
     private readonly MainWindow _mainWindow;
 
-    public event EventHandler ZoomChanged = (x, y) => { };
+    public event EventHandler<int>? ZoomChanged;
 
     public bool Dirty { get; set; } = false;
 
@@ -29,11 +29,7 @@ public partial class EditorControl : UserControl, IDisposable
     private readonly Caret vCaret = new(false);
     private readonly Caret hCaret = new(true);
 
-    public const double RootFontBaseSize = 40;
-    private static double rootFontSize = RootFontBaseSize;
-    private readonly double fontSize = RootFontBaseSize;
-
-    public static double RootFontSize => rootFontSize;
+    public const double RootFontSize = 40;
 
     public EditorControl(MainWindow mainWindow)
     {
@@ -43,7 +39,7 @@ public partial class EditorControl : UserControl, IDisposable
         MainGrid.Children.Add(hCaret);
         equationRoot = new EquationRoot(mainWindow, vCaret, hCaret)
         {
-            FontSize = fontSize
+            FontSize = RootFontSize
         };
         timer = new Timer(BlinkPeriod);
         timer.Elapsed += Timer_Elapsed;
@@ -72,8 +68,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void SetFontSizePercentage(int percentage)
     {
-        equationRoot.FontSize = fontSize * percentage / 100;
-        rootFontSize = equationRoot.FontSize;
+        equationRoot.FontSize = RootFontSize * percentage / 100;
         AdjustView();
     }
 
@@ -147,16 +142,17 @@ public partial class EditorControl : UserControl, IDisposable
                 equationRoot.LoadFile(outputStream);
             }
         }
-        catch
+        catch (Exception e)
         {
+            EditorLogger.Fatal(ClassName, "Failed to load file from zip stream", e);
             try
             {
                 stream.Position = 0;
                 equationRoot.LoadFile(stream);
             }
-            catch (Exception e)
+            catch (Exception e1)
             {
-                EditorLogger.Fatal(ClassName, "Failed to load file", e);
+                EditorLogger.Fatal(ClassName, "Failed to load file from stream", e1);
                 MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -386,17 +382,17 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void ZoomOut()
     {
-        ZoomChanged(this, EventArgs.Empty);
         equationRoot.ZoomOut(4);
-        rootFontSize = equationRoot.FontSize;
+        var percentage = (int)(equationRoot.FontSize * 100 / RootFontSize);
+        ZoomChanged?.Invoke(this, percentage);
         AdjustView();
     }
 
     public void ZoomIn()
     {
-        ZoomChanged(this, EventArgs.Empty);
         equationRoot.ZoomIn(4);
-        rootFontSize = equationRoot.FontSize;
+        var percentage = (int)(equationRoot.FontSize * 100 / RootFontSize);
+        ZoomChanged?.Invoke(this, percentage);
         AdjustView();
     }
 
@@ -454,9 +450,8 @@ public partial class EditorControl : UserControl, IDisposable
     {
         equationRoot = new EquationRoot(_mainWindow, vCaret, hCaret)
         {
-            FontSize = fontSize
+            FontSize = RootFontSize
         };
-        rootFontSize = fontSize;
         Dirty = false;
         AdjustView();
     }

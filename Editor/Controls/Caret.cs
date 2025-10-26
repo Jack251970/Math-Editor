@@ -23,7 +23,7 @@ public sealed class Caret : FrameworkElement, IDisposable
     {
         if (Visible)
         {
-            dc.DrawLine(PenManager.GetPen(Math.Max(1, EditorControl.RootFontSize * .8 / EditorControl.RootFontBaseSize)), Location, OtherPoint);
+            dc.DrawLine(PenManager.GetPen(1), Location, OtherPoint);
         }
     }
 
