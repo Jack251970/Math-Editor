@@ -305,17 +305,31 @@ namespace Editor
         public void SaveImageToFile(string path)
         {
             var extension = Path.GetExtension(path).ToLower();
+
             var dv = new DrawingVisual();
-            using (var dc = dv.RenderOpen())
+            // Disable selection highlight during printing
+            var oldSelecting = Owner.ViewModel.IsSelecting;
+            Owner.ViewModel.IsSelecting = false;
+            try
             {
-                if (extension is ".bmp" or "jpg")
+                using (var dc = dv.RenderOpen())
                 {
-                    dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
+                    if (extension is ".bmp" or "jpg")
+                    {
+                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
+                    }
+                    ActiveChild.DrawEquation(dc, true);
                 }
-                ActiveChild.DrawEquation(dc, true);
             }
-            var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)), (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
+            finally
+            {
+                Owner.ViewModel.IsSelecting = oldSelecting;
+            }
+
+            var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)),
+                (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
             bitmap.Render(dv);
+
             BitmapEncoder encoder = extension switch
             {
                 ".jpg" => new JpegBitmapEncoder(),
@@ -326,6 +340,7 @@ namespace Editor
                 ".tif" => new TiffBitmapEncoder(),
                 _ => throw new InvalidOperationException("Unsupported image format."),
             };
+
             try
             {
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
