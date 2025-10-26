@@ -209,22 +209,13 @@
                         InputGestureText="Ctrl+A" />
                 </MenuItem>
 
-                <MenuItem x:Name="insertMenuItem" Header="{DynamicResource MainWindow_Insert}">
-                    <MenuItem
-                        x:Name="symbolMenuItem"
-                        Command="{Binding OpenUnicodeSelectorWindowCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_Symbol}" />
-                    <MenuItem
-                        x:Name="codePointMenuItem"
-                        Command="{Binding OpenCodepointWindowCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_UnicodeValue}" />
+                <MenuItem Header="{DynamicResource MainWindow_Insert}">
+                    <MenuItem Command="{Binding OpenUnicodeSelectorWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Symbol}" />
+                    <MenuItem Command="{Binding OpenCodepointWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_UnicodeValue}" />
                 </MenuItem>
 
-                <MenuItem x:Name="viewMenuItem" Header="{DynamicResource MainWindow_View}">
-                    <MenuItem
-                        x:Name="fullScreenMenuItem"
-                        Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}"
-                        Header="{Binding FullScreenMenuItemHeader, Mode=OneWay}" />
+                <MenuItem Header="{DynamicResource MainWindow_View}">
+                    <MenuItem Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}" Header="{Binding FullScreenMenuItemHeader, Mode=OneWay}" />
                     <MenuItem Header="{DynamicResource MainWindow_Zoom}">
                         <MenuItem
                             Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
@@ -293,29 +284,17 @@
                             IsCheckable="True"
                             IsChecked="{Binding CustomZoomMenuChecked, Mode=OneWay}" />
                     </MenuItem>
-                    <MenuItem
-                        x:Name="showNestingMenuItem"
-                        Command="{Binding ToggleShowNestingCommand, Mode=OneTime}"
-                        Header="{Binding ShowNestingMenuItemHeader, Mode=OneWay}" />
+                    <MenuItem Command="{Binding ToggleShowNestingCommand, Mode=OneTime}" Header="{Binding ShowNestingMenuItemHeader, Mode=OneWay}" />
                 </MenuItem>
 
-                <MenuItem x:Name="toolsMenuItem" Header="{DynamicResource MainWindow_Tools}">
-                    <MenuItem
-                        x:Name="settingsMenuItem"
-                        Command="{Binding OpenSettingsWindowCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_Settings}" />
+                <MenuItem Header="{DynamicResource MainWindow_Tools}">
+                    <MenuItem Command="{Binding OpenSettingsWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Settings}" />
                 </MenuItem>
 
-                <MenuItem x:Name="helpMenuItem" Header="{DynamicResource MainWindow_Help}">
-                    <MenuItem
-                        x:Name="contentsMenuItem"
-                        Command="{Binding OpenContentsCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_Contents}" />
+                <MenuItem Header="{DynamicResource MainWindow_Help}">
+                    <MenuItem Command="{Binding OpenContentsCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Contents}" />
                     <Separator />
-                    <MenuItem
-                        x:Name="aboutMenuItem"
-                        Command="{Binding OpenAboutWindowCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_About}" />
+                    <MenuItem Command="{Binding OpenAboutWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_About}" />
                 </MenuItem>
             </Menu>
         </Grid>
@@ -366,7 +345,6 @@
                     </Button>
                     <Separator />
                     <Button
-                        x:Name="zoomoutButton"
                         Command="DecreaseZoom"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_ZoomOut}"
@@ -374,7 +352,6 @@
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/zoomout.png" />
                     </Button>
                     <Button
-                        x:Name="zoominButton"
                         Command="IncreaseZoom"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_ZoomIn}"
@@ -383,7 +360,6 @@
                     </Button>
                     <Separator />
                     <Button
-                        x:Name="cutButton"
                         Command="{Binding CutCommand, Mode=OneTime}"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
@@ -392,7 +368,6 @@
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/cut.png" />
                     </Button>
                     <Button
-                        x:Name="copyButton"
                         Command="{Binding CopyCommand, Mode=OneTime}"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
@@ -401,7 +376,6 @@
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/copy.png" />
                     </Button>
                     <Button
-                        x:Name="pasteButton"
                         Command="{Binding PasteCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_Paste}"
@@ -427,27 +401,23 @@
                         SelectedValuePath="Value"
                         Style="{StaticResource DefaultComboBoxStyle}" />
                     <ToggleButton
-                        x:Name="boldToggleButton"
                         IsChecked="{Binding InputBold, Mode=TwoWay}"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="{DynamicResource MainWindow_Bold}">
                         <Image Source="/Images/GUI/bold.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <!--<ToggleButton
-                        x:Name="italicToggleButton"
                         IsChecked="{Binding InputItalic}"
                         IsEnabled="{Binding Path=EditorMode, Converter={StaticResource EditorModeToBoolConverter}}"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Italic" />-->
                     <ToggleButton
-                        x:Name="italicToggleButton"
                         IsChecked="{Binding InputItalic, Mode=TwoWay}"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="{DynamicResource MainWindow_Italic}">
                         <Image Source="/Images/GUI/italic.png" Style="{StaticResource ToolbarImage}" />
                     </ToggleButton>
                     <ToggleButton
-                        x:Name="underlineToggleButton"
                         IsChecked="{Binding InputUnderline, Mode=TwoWay}"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="{DynamicResource MainWindow_Underline}">
@@ -521,11 +491,11 @@
             ScrollChanged="ScrollViewer_ScrollChanged">
             <!--  We use codes to add EditorControl so that we can use Window reference in its constructor  -->
             <!--<local:EditorControl
-                x:Name="editor"
+                x:Name="Editor"
                 Background="Transparent"
                 FocusVisualStyle="{x:Null}"
                 Focusable="True"
-                Loaded="editor_Loaded" />-->
+                Loaded="Editor_Loaded" />-->
         </ui:ScrollViewerEx>
     </DockPanel>
 </Window>
