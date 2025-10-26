@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -334,8 +335,74 @@ namespace Editor
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to save file", e);
-                MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Localize.EditorControl_CannotSaveFile(),
+                    Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void Print(PrintDialog printDialog)
+        {
+            try
+            {
+                // Determine printable area
+                var printableWidth = printDialog.PrintableAreaWidth;
+                var printableHeight = printDialog.PrintableAreaHeight;
+                if (printableWidth <= 0 || printableHeight <= 0)
+                {
+                    // Fallback to page media size if printable area is not provided
+                    var pageSize = printDialog.PrintQueue?.DefaultPrintTicket?.PageMediaSize;
+                    printableWidth = pageSize?.Width ?? (Width + Location.X * 2 + 50);
+                    printableHeight = pageSize?.Height ?? (Height + Location.Y * 2 + 50);
+                }
+
+                // Content bounds (same as used for exporting image)
+                var contentWidth = Math.Ceiling(Width + Location.X * 2);
+                var contentHeight = Math.Ceiling(Height + Location.Y * 2);
+
+                // Scale to fit
+                var scaleX = printableWidth / contentWidth;
+                var scaleY = printableHeight / contentHeight;
+                var scale = Math.Min(scaleX, scaleY);
+
+                var dv = new DrawingVisual();
+                // Disable selection highlight during printing
+                var oldSelecting = Owner.ViewModel.IsSelecting;
+                Owner.ViewModel.IsSelecting = false;
+                try
+                {
+                    using (var dc = dv.RenderOpen())
+                    {
+                        // Center after scaling
+                        var translateX = (printableWidth / scale - contentWidth) / 2.0;
+                        var translateY = (printableHeight / scale - contentHeight) / 2.0;
+
+                        var tg = new TransformGroup();
+                        tg.Children.Add(new ScaleTransform(scale, scale));
+                        tg.Children.Add(new TranslateTransform(translateX, translateY));
+
+                        dc.PushTransform(tg);
+
+                        // Optional: white background for better print contrast
+                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, contentWidth, contentHeight));
+
+                        // Draw entire document in black for printing
+                        ActiveChild.DrawEquation(dc, true);
+
+                        dc.Pop();
+                    }
+                }
+                finally
+                {
+                    Owner.ViewModel.IsSelecting = oldSelecting;
+                }
+
+                printDialog.PrintVisual(dv, Constants.MathEditorFullName);
+            }
+            catch (Exception e)
+            {
+                EditorLogger.Fatal(ClassName, "Failed to print document", e);
+                MessageBox.Show(Localize.EditorControl_CannotPrintFile(),
+                    Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

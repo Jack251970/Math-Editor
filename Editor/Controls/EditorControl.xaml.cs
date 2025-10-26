@@ -374,7 +374,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void Print(PrintDialog printDialog)
     {
-
+        equationRoot.Print(printDialog);
     }
 
     public void ZoomOut()
