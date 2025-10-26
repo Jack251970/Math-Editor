@@ -673,7 +673,8 @@ namespace Editor
                 ActiveChild.HandleMouseDrag(mousePoint);
                 SelectedItems = childEquations.IndexOf(ActiveChild) - SelectionStartIndex;
             }
-            Owner.SetStatusBarMessage("ActiveStart " + ActiveChild.SelectionStartIndex + ", ActiveItems" + ActiveChild.SelectedItems);
+            Owner.ViewModel.ActiveChildSelectionStartIndex = ActiveChild.SelectionStartIndex;
+            Owner.ViewModel.ActiveChildSelectedItems = ActiveChild.SelectedItems;
         }
 
         public override double Left

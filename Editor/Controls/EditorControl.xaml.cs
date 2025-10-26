@@ -210,7 +210,7 @@ public partial class EditorControl : UserControl, IDisposable
 
     private void EditorControl_MouseLeave(object sender, MouseEventArgs e)
     {
-        _mainWindow.ShowCoordinates("");
+        _mainWindow.ViewModel.StatusBarRightMessage = string.Empty;
     }
 
     private Point lastMouseLocation = new();
@@ -218,7 +218,7 @@ public partial class EditorControl : UserControl, IDisposable
     private void EditorControl_MouseMove(object sender, MouseEventArgs e)
     {
         var mousePosition = e.GetPosition(this);
-        _mainWindow.ShowCoordinates((int)mousePosition.X + ", " + (int)mousePosition.Y);
+        _mainWindow.ViewModel.StatusBarRightMessage = (int)mousePosition.X + ", " + (int)mousePosition.Y;
         if (isDragging)
         {
             if (Math.Abs(lastMouseLocation.X - mousePosition.X) > 2 /*SystemParameters.MinimumHorizontalDragDistance*/ ||

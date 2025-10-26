@@ -66,6 +66,18 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [ObservableProperty]
     private bool _showUnderbar = true;
 
+    [ObservableProperty]
+    private string _statusBarLeftMessage = string.Empty;
+
+    [ObservableProperty]
+    private string _statusBarRightMessage = string.Empty;
+
+    [ObservableProperty]
+    private int _activeChildSelectionStartIndex = 0;
+
+    [ObservableProperty]
+    private int _activeChildSelectedItems = 0;
+
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
     public bool IgnoreInputBoldChange { get; set; } = false;
@@ -155,6 +167,57 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     partial void OnShowUnderbarChanged(bool value)
     {
         Editor?.ShowUnderbar(value);
+    }
+
+    private void UpdateMainWindowTitle()
+    {
+        var currentLocalFileName = TryGetFileName(CurrentLocalFile);
+        if (!string.IsNullOrEmpty(currentLocalFileName))
+        {
+#if DEBUG
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFileName}";
+#else
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFileName}";
+#endif
+        }
+        else
+        {
+#if DEBUG
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {Localize.MainWindow_Untitled()}";
+#else
+            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} - {Localize.MainWindow_Untitled()}";
+#endif
+        }
+    }
+
+    private static string TryGetFileName(string filePath)
+    {
+        var currentLocalFileName = string.Empty;
+        try
+        {
+            currentLocalFileName = Path.GetFileName(filePath);
+        }
+        catch
+        {
+            // Ignore
+        }
+        return currentLocalFileName;
+    }
+
+    partial void OnActiveChildSelectionStartIndexChanged(int value)
+    {
+        UpdateStatusBarLeftMessage();
+    }
+
+    partial void OnActiveChildSelectedItemsChanged(int value)
+    {
+        UpdateStatusBarLeftMessage();
+    }
+
+    private void UpdateStatusBarLeftMessage()
+    {
+        StatusBarLeftMessage = Localize.MainWindow_StatusBarLeftMessage(ActiveChildSelectionStartIndex,
+            ActiveChildSelectedItems);
     }
 
     [RelayCommand]
@@ -268,45 +331,11 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
     }
 
-    private void UpdateMainWindowTitle()
-    {
-        var currentLocalFileName = TryGetFileName(CurrentLocalFile);
-        if (!string.IsNullOrEmpty(currentLocalFileName))
-        {
-#if DEBUG
-            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {currentLocalFileName}";
-#else
-            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} - {currentLocalFileName}";
-#endif
-        }
-        else
-        {
-#if DEBUG
-            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} ({Constants.Dev}) - {Localize.MainWindow_Untitled()}";
-#else
-            MainWindowTitle = $"{Constants.MathEditorFullName} v{Constants.Version} - {Localize.MainWindow_Untitled()}";
-#endif
-        }
-    }
-
-    private static string TryGetFileName(string filePath)
-    {
-        var currentLocalFileName = string.Empty;
-        try
-        {
-            currentLocalFileName = Path.GetFileName(filePath);
-        }
-        catch
-        {
-            // Ignore
-        }
-        return currentLocalFileName;
-    }
-
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
         UpdateMainWindowTitle();
         UpdateShowNestingMenuItemHeader();
+        UpdateStatusBarLeftMessage();
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);
     }

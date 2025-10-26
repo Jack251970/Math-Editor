@@ -401,16 +401,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
         ToggleFullScreen();
     }
 
-    public void SetStatusBarMessage(string message)
-    {
-        statusBarLeftLabel.Content = message;
-    }
-
-    public void ShowCoordinates(string coordinates)
-    {
-        statusBarRightLabel.Content = coordinates;
-    }
-
     private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
         Editor.InvalidateVisual();

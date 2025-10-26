@@ -506,12 +506,16 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Label Name="statusBarLeftLabel" Height="25" />
             <Label
-                Name="statusBarRightLabel"
+                Grid.Column="0"
+                Height="25"
+                HorizontalAlignment="Left"
+                Content="{Binding StatusBarLeftMessage, Mode=OneWay}" />
+            <Label
                 Grid.Column="1"
                 Height="25"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Right"
+                Content="{Binding StatusBarRightMessage, Mode=OneWay}" />
         </Grid>
         <ui:ScrollViewerEx
             x:Name="ScrollViewer"
