@@ -34,12 +34,6 @@
             <Setter Property="Height" Value="24" />
         </Style>
     </Window.Resources>
-    <Window.CommandBindings>
-        <CommandBinding Command="Open" Executed="OpenCommandHandler" />
-        <CommandBinding Command="Save" Executed="SaveCommandHandler" />
-        <CommandBinding Command="SaveAs" Executed="SaveAsCommandHandler" />
-        <CommandBinding Command="Close" Executed="CloseCommandHandler" />
-    </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding
             Key="N"
@@ -47,15 +41,15 @@
             Modifiers="Ctrl" />
         <KeyBinding
             Key="O"
-            Command="Open"
+            Command="{Binding OpenCommand, Mode=OneTime}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="S"
-            Command="Save"
+            Command="{Binding SaveCommand, Mode=OneTime}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="S"
-            Command="SaveAs"
+            Command="{Binding SaveAsCommand, Mode=OneTime}"
             Modifiers="Ctrl+Shift" />
         <KeyBinding
             Key="P"
@@ -63,7 +57,7 @@
             Modifiers="Ctrl" />
         <KeyBinding
             Key="W"
-            Command="Close"
+            Command="{Binding CloseCommand, Mode=OneTime}"
             Modifiers="Ctrl+Shift" />
         <KeyBinding
             Key="Z"
@@ -112,7 +106,7 @@
                     Height="26"
                     Margin="5 0"
                     Padding="2"
-                    Command="Close"
+                    Command="{Binding CloseCommand, Mode=OneTime}"
                     Style="{DynamicResource FullScreenButtonStyle}"
                     ToolTip="{DynamicResource Close}"
                     Visibility="{Binding FullScreenButtonVisibility, Mode=OneWay}">
@@ -121,72 +115,63 @@
             </StackPanel>
 
             <Menu DockPanel.Dock="Top">
-                <MenuItem x:Name="fileMenuItem" Header="{DynamicResource MainWindow_File}">
+                <MenuItem Header="{DynamicResource MainWindow_File}">
                     <MenuItem
-                        x:Name="newMenuItem"
                         Command="{Binding NewCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_New}"
                         InputGestureText="Ctrl+N" />
                     <MenuItem
-                        x:Name="openMenuItem"
-                        Command="Open"
+                        Command="{Binding OpenCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Open}"
                         InputGestureText="Ctrl+O" />
                     <MenuItem
-                        x:Name="saveMenuItem"
-                        Command="Save"
+                        Command="{Binding SaveCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Save}"
                         InputGestureText="Ctrl+S" />
                     <MenuItem
-                        x:Name="saveAsMenuItem"
-                        Command="SaveAs"
+                        Command="{Binding SaveAsCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_SaveAs}"
                         InputGestureText="Ctrl+Shift+S" />
-                    <MenuItem x:Name="exportMenuItem" Header="{DynamicResource MainWindow_Export}">
+                    <MenuItem Header="{DynamicResource MainWindow_Export}">
                         <MenuItem
-                            Click="ExportMenuItem_Click"
-                            Header="{DynamicResource MainWindow_Export_PNG}"
-                            Tag="png" />
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter="png"
+                            Header="{DynamicResource MainWindow_Export_PNG}" />
                         <MenuItem
-                            Click="ExportMenuItem_Click"
-                            Header="{DynamicResource MainWindow_Export_JPG}"
-                            Tag="jpg" />
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter="jpg"
+                            Header="{DynamicResource MainWindow_Export_JPG}" />
                         <MenuItem
-                            Click="ExportMenuItem_Click"
-                            Header="{DynamicResource MainWindow_Export_GIF}"
-                            Tag="gif" />
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter="gif"
+                            Header="{DynamicResource MainWindow_Export_GIF}" />
                         <MenuItem
-                            Click="ExportMenuItem_Click"
-                            Header="{DynamicResource MainWindow_Export_BMP}"
-                            Tag="bmp" />
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter="bmp"
+                            Header="{DynamicResource MainWindow_Export_BMP}" />
                         <MenuItem
-                            Click="ExportMenuItem_Click"
-                            Header="{DynamicResource MainWindow_Export_TIFF}"
-                            Tag="tif" />
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter="tif"
+                            Header="{DynamicResource MainWindow_Export_TIFF}" />
                         <MenuItem
-                            Click="ExportMenuItem_Click"
-                            Header="{DynamicResource MainWindow_Export_WMP}"
-                            Tag="wdp" />
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter="wdp"
+                            Header="{DynamicResource MainWindow_Export_WMP}" />
                     </MenuItem>
                     <Separator />
                     <MenuItem
-                        x:Name="printMenuItem"
                         Command="{Binding PrintCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Print}"
                         InputGestureText="Ctrl+P" />
                     <Separator />
                     <MenuItem
-                        x:Name="closeMenuItem"
-                        Command="Close"
+                        Command="{Binding CloseCommand, Mode=OneTime}"
                         Header="{DynamicResource Close}"
                         InputGestureText="Ctrl+Shift+W" />
-                    <MenuItem
-                        x:Name="exitMenuItem"
-                        Command="{Binding ExitCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_Exit}" />
+                    <MenuItem Command="{Binding ExitCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Exit}" />
                 </MenuItem>
 
-                <MenuItem x:Name="editMenuItem" Header="{DynamicResource MainWindow_Edit}">
+                <MenuItem Header="{DynamicResource MainWindow_Edit}">
                     <MenuItem
                         Command="{Binding UndoCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Undo}"
@@ -199,31 +184,26 @@
                         IsEnabled="{Binding RedoButtonIsEnabled, Mode=OneWay}" />
                     <Separator />
                     <MenuItem
-                        x:Name="cutMenuItem"
                         Command="{Binding CutCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Cut}"
                         InputGestureText="Ctrl+X"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
-                        x:Name="copyMenuItem"
                         Command="{Binding CopyCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Copy}"
                         InputGestureText="Ctrl+C"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
-                        x:Name="pasteMenuItem"
                         Command="{Binding PasteCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Paste}"
                         InputGestureText="Ctrl+V" />
                     <MenuItem
-                        x:Name="deleteMenuItem"
                         Command="{Binding DeleteCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Delete}"
                         InputGestureText="Del"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <Separator />
                     <MenuItem
-                        x:Name="selectAllMenuItem"
                         Command="{Binding SelectAllCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_SelectAll}"
                         InputGestureText="Ctrl+A" />
@@ -347,24 +327,21 @@
             <ToolBarTray IsLocked="True">
                 <ToolBar Band="0" BandIndex="1">
                     <Button
-                        x:Name="saveButton"
-                        Command="Save"
+                        Command="{Binding SaveCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_Save}"
                         ToolTipService.ShowOnDisabled="True">
                         <Image Source="/Images/GUI/save.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Button
-                        x:Name="saveAsButton"
-                        Command="SaveAs"
+                        Command="{Binding SaveAsCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_SaveAs}"
                         ToolTipService.ShowOnDisabled="True">
                         <Image Source="/Images/GUI/saveas.png" Style="{StaticResource ToolbarImage}" />
                     </Button>
                     <Button
-                        x:Name="openButton"
-                        Command="Open"
+                        Command="{Binding OpenCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_Open}"
                         ToolTipService.ShowOnDisabled="True">

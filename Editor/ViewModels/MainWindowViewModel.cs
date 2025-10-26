@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 
 namespace Editor;
 
 public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
 {
+    private static readonly string ClassName = nameof(MainWindowViewModel);
+
     public Settings Settings { get; init; }
     public UndoManager UndoManager { get; init; }
     public MainWindow MainWindow { get; set; } = null!;
@@ -391,57 +395,219 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     }
 
     [RelayCommand]
+    private void Open()
+    {
+        if (!CheckSaveCurrentDocument())
+        {
+            return;
+        }
+
+        var ofd = new OpenFileDialog
+        {
+            CheckPathExists = true,
+            Filter = Localize.MainWindow_MedFileFilter(Constants.MedExtension)
+        };
+        var result = ofd.ShowDialog(MainWindow);
+        if (result == true)
+        {
+            OpenFile(ofd.FileName);
+        }
+    }
+
+    [RelayCommand]
+    private void Save()
+    {
+        ProcessFileSave();
+    }
+
+    [RelayCommand]
+    private void SaveAs()
+    {
+        var result = ShowSaveFileDialog(Constants.MedExtension,
+            Localize.MainWindow_MedFileFilter(Constants.MedExtension));
+        if (!string.IsNullOrEmpty(result))
+        {
+            SaveFile(result);
+        }
+    }
+
+    [RelayCommand]
     private void Cut()
     {
-        Editor?.Copy(true);
+        Editor!.Copy(true);
     }
 
     [RelayCommand]
     private void Copy()
     {
-        Editor?.Copy(false);
+        Editor!.Copy(false);
     }
 
     [RelayCommand]
     private void Paste()
     {
-        Editor?.Paste();
+        Editor!.Paste();
+    }
+
+    [RelayCommand]
+    private void Export(string imageType)
+    {
+        var extension = $".{imageType}";
+        var fileName = ShowSaveFileDialog(imageType, Localize.MainWindow_ImageFileFilter(imageType));
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            var ext = Path.GetExtension(fileName);
+            if (ext != extension) fileName += extension;
+            Editor!.ExportImage(fileName);
+        }
     }
 
     [RelayCommand]
     private void Print()
     {
-        // TODO: Add support for print
+        var printDialog = new PrintDialog();
+        if (printDialog.ShowDialog() == true)
+        {
+            Editor!.Print(printDialog);
+        }
     }
 
     [RelayCommand]
     private void SelectAll()
     {
-        Editor?.SelectAll();
+        Editor!.SelectAll();
     }
 
     [RelayCommand]
     private void Undo()
     {
-        Editor?.Undo();
+        Editor!.Undo();
     }
 
     [RelayCommand]
     private void Redo()
     {
-        Editor?.Redo();
+        Editor!.Redo();
     }
 
     [RelayCommand]
     private void Delete()
     {
-        Editor?.DeleteSelection();
+        Editor!.DeleteSelection();
+    }
+
+    [RelayCommand]
+    private void Close()
+    {
+        MainWindow.Close();
     }
 
     [RelayCommand]
     private void Exit()
     {
         WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
+    }
+
+    public void OpenFile(string filePath)
+    {
+        if (!string.IsNullOrEmpty(filePath))
+        {
+            try
+            {
+                using (Stream stream = File.OpenRead(filePath))
+                {
+                    Editor!.LoadFile(stream);
+                }
+                CurrentLocalFile = filePath;
+            }
+            catch (Exception e)
+            {
+                CurrentLocalFile = string.Empty;
+                EditorLogger.Fatal(ClassName, "Failed to load file", e);
+                MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
+    private bool SaveFile(string filePath)
+    {
+        try
+        {
+            using (Stream stream = File.Open(filePath, FileMode.Create))
+            {
+                Editor!.SaveFile(stream, filePath);
+            }
+            CurrentLocalFile = filePath;
+            return true;
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Fatal(ClassName, "Failed to save file", e);
+            MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            Editor!.Dirty = true;
+        }
+        return false;
+    }
+
+    public bool CheckSaveCurrentDocument()
+    {
+        if (Editor!.Dirty)
+        {
+            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+            else if (result == MessageBoxResult.Yes)
+            {
+                if (!ProcessFileSave())
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private bool ProcessFileSave()
+    {
+        var savePath = CurrentLocalFile;
+        if (!File.Exists(savePath))
+        {
+            var result = ShowSaveFileDialog(Constants.MedExtension,
+                Localize.MainWindow_MedFileFilter(Constants.MedExtension));
+            if (string.IsNullOrEmpty(result))
+            {
+                return false;
+            }
+            else
+            {
+                savePath = result;
+            }
+        }
+        return SaveFile(savePath);
+    }
+
+    private string? ShowSaveFileDialog(string extension, string filter)
+    {
+        var sfd = new SaveFileDialog
+        {
+            DefaultExt = "." + extension,
+            Filter = filter
+        };
+        var result = sfd.ShowDialog(MainWindow);
+        if (result == true)
+        {
+            return Path.GetExtension(sfd.FileName) == "." + extension ? sfd.FileName : sfd.FileName + "." + extension;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)

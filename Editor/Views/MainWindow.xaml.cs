@@ -1,20 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
 public partial class MainWindow : Window, ICultureInfoChanged
 {
-    private static readonly string ClassName = nameof(MainWindow);
-
     public bool IsEditorLoaded { get; private set; } = false;
 
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
@@ -53,7 +49,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         ViewModel.Editor = Editor;
 
         // Check if we have a file to open
-        OpenFile(ViewModel.CurrentLocalFile);
+        ViewModel.OpenFile(ViewModel.CurrentLocalFile);
 
         // Init editor mode & editor font
         ViewModel.ChangeEditorMode(App.Settings.DefaultMode);
@@ -144,7 +140,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (!CheckSaveCurrentDocument())
+        if (!ViewModel.CheckSaveCurrentDocument())
         {
             e.Cancel = true;
             return;
@@ -184,165 +180,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
     {
         Editor.Focus();
     }
-
-    private void OpenCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        if (!CheckSaveCurrentDocument())
-        {
-            return;
-        }
-
-        var ofd = new Microsoft.Win32.OpenFileDialog
-        {
-            CheckPathExists = true,
-            Filter = Localize.MainWindow_MedFileFilter(Constants.MedExtension)
-        };
-        var result = ofd.ShowDialog(this);
-        if (result == true)
-        {
-            OpenFile(ofd.FileName);
-        }
-    }
-
-    #region Open & Save & Save As & Export
-
-    private bool CheckSaveCurrentDocument()
-    {
-        if (Editor.Dirty)
-        {
-            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Cancel)
-            {
-                return false;
-            }
-            else if (result == MessageBoxResult.Yes)
-            {
-                if (!ProcessFileSave())
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private void OpenFile(string filePath)
-    {
-        if (!string.IsNullOrEmpty(filePath))
-        {
-            try
-            {
-                using (Stream stream = File.OpenRead(filePath))
-                {
-                    Editor.LoadFile(stream);
-                }
-                ViewModel.CurrentLocalFile = filePath;
-            }
-            catch (Exception e)
-            {
-                ViewModel.CurrentLocalFile = string.Empty;
-                EditorLogger.Fatal(ClassName, "Failed to load file", e);
-                MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-    }
-
-    private string? ShowSaveFileDialog(string extension, string filter)
-    {
-        var sfd = new Microsoft.Win32.SaveFileDialog
-        {
-            DefaultExt = "." + extension,
-            Filter = filter
-        };
-        var result = sfd.ShowDialog(this);
-        if (result == true)
-        {
-            return Path.GetExtension(sfd.FileName) == "." + extension ? sfd.FileName : sfd.FileName + "." + extension;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        Close();
-    }
-
-    private void SaveCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        ProcessFileSave();
-    }
-
-    private bool ProcessFileSave()
-    {
-        var savePath = ViewModel.CurrentLocalFile;
-        if (!File.Exists(savePath))
-        {
-            var result = ShowSaveFileDialog(Constants.MedExtension,
-                Localize.MainWindow_MedFileFilter(Constants.MedExtension));
-            if (string.IsNullOrEmpty(result))
-            {
-                return false;
-            }
-            else
-            {
-                savePath = result;
-            }
-        }
-        return SaveFile(savePath);
-    }
-
-    private bool SaveFile(string filePath)
-    {
-        try
-        {
-            using (Stream stream = File.Open(filePath, FileMode.Create))
-            {
-                Editor.SaveFile(stream, filePath);
-            }
-            ViewModel.CurrentLocalFile = filePath;
-            return true;
-        }
-        catch (Exception e)
-        {
-            EditorLogger.Fatal(ClassName, "Failed to save file", e);
-            MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
-                MessageBoxButton.OK, MessageBoxImage.Error);
-            Editor.Dirty = true;
-        }
-        return false;
-    }
-
-    private void SaveAsCommandHandler(object sender, ExecutedRoutedEventArgs e)
-    {
-        var result = ShowSaveFileDialog(Constants.MedExtension,
-            Localize.MainWindow_MedFileFilter(Constants.MedExtension));
-        if (!string.IsNullOrEmpty(result))
-        {
-            SaveFile(result);
-        }
-    }
-
-    private void ExportMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        var imageType = sender is Control control && control.Tag is string imageTypeStr ? imageTypeStr : "png";
-
-        var fileName = ShowSaveFileDialog(imageType, Localize.MainWindow_ImageFileFilter(imageType));
-        if (!string.IsNullOrEmpty(fileName))
-        {
-            var ext = Path.GetExtension(fileName);
-            if (ext != "." + imageType)
-                fileName += "." + imageType;
-            Editor.ExportImage(fileName);
-        }
-    }
-
-    #endregion
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {

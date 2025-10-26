@@ -372,6 +372,11 @@ public partial class EditorControl : UserControl, IDisposable
         */
     }
 
+    public void Print(PrintDialog printDialog)
+    {
+
+    }
+
     public void ZoomOut()
     {
         equationRoot.ZoomOut(4);
