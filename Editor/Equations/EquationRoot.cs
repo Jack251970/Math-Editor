@@ -15,6 +15,8 @@ namespace Editor
     {
         private static readonly string ClassName = nameof(EquationRoot);
 
+        private static readonly string ClipboardXmlFormat = $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
+
         public EditorControl? Editor { get; set; } = null;
         private readonly Caret _vCaret;
         private readonly Caret _hCaret;
@@ -171,8 +173,7 @@ namespace Editor
             rootElement.Add(new XElement("SessionId", sessionString));
             rootElement.Add(TextManager.Serialize(true));
             rootElement.Add(new XElement("payload", temp.XElement));
-            var med = new MathEditorData { XmlString = rootElement.ToString() };
-            data.SetData(med);
+            data.SetData(ClipboardXmlFormat, rootElement.ToString());
             if (temp.Image != null)
             {
                 data.SetImage(temp.Image);
@@ -221,14 +222,17 @@ namespace Editor
         {
             var success = false;
             MathEditorData? data = null;
-            var text = "";
+            var text = string.Empty;
             for (var i = 0; i < 3; i++)
             {
                 try
                 {
-                    if (Clipboard.ContainsData(typeof(MathEditorData).FullName))
+                    if (Clipboard.ContainsData(ClipboardXmlFormat))
                     {
-                        data = Clipboard.GetData(typeof(MathEditorData).FullName) as MathEditorData;
+                        if (Clipboard.GetData(ClipboardXmlFormat) is string xmlString)
+                        {
+                            data = new MathEditorData { XmlString = xmlString };
+                        }
                         break;
                     }
                     else if (Clipboard.ContainsText())
@@ -237,8 +241,9 @@ namespace Editor
                         break;
                     }
                 }
-                catch
+                catch (Exception e)
                 {
+                    EditorLogger.Error(ClassName, "Failed to paste from clipboard", e);
                     Thread.Sleep(100);
                 }
             }
@@ -256,8 +261,10 @@ namespace Editor
                     success = true;
                 }
             }
-            catch
+            catch (Exception e)
             {
+                var dataType = data != null ? "XML Data" : "Text Data";
+                EditorLogger.Error(ClassName, $"Failed to parse from {dataType} data", e);
                 success = false;
             }
             return success;
