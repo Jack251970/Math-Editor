@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -30,6 +31,8 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         TextFontType = settings.DefaultFont;
         UpdateMainWindowTitle();
         UpdateShowNestingMenuItemHeader();
+        UpdateFullScreenMenuItemHeader();
+        UpdateStatusBarLeftMessage();
     }
 
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
@@ -77,6 +80,15 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
 
     [ObservableProperty]
     private int _activeChildSelectedItems = 0;
+
+    [ObservableProperty]
+    private bool _fullScreenMode = false;
+
+    [ObservableProperty]
+    private string _fullScreenMenuItemHeader = null!;
+
+    [ObservableProperty]
+    private Visibility _fullScreenButtonVisibility = Visibility.Collapsed;
 
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
@@ -221,6 +233,49 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     }
 
     [RelayCommand]
+    private void ToggleShowNesting()
+    {
+        Settings.ShowNesting = !Settings.ShowNesting;
+        UpdateShowNestingMenuItemHeader();
+        Editor?.InvalidateVisual();
+    }
+
+    private void UpdateShowNestingMenuItemHeader()
+    {
+        ShowNestingMenuItemHeader = Settings.ShowNesting ?
+            Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
+    }
+
+    [RelayCommand]
+    private void ToggleFullScreenMode()
+    {
+        FullScreenMode = !FullScreenMode;
+    }
+
+    partial void OnFullScreenModeChanged(bool value)
+    {
+        if (value)
+        {
+            MainWindow.WindowStyle = WindowStyle.None;
+            MainWindow.WindowState = WindowState.Normal;
+            MainWindow.WindowState = WindowState.Maximized;
+            FullScreenButtonVisibility = Visibility.Visible;
+        }
+        else
+        {
+            MainWindow.WindowStyle = WindowStyle.ThreeDBorderWindow;
+            MainWindow.WindowState = WindowState.Normal;
+            FullScreenButtonVisibility = Visibility.Collapsed;
+        }
+        UpdateFullScreenMenuItemHeader();
+    }
+
+    private void UpdateFullScreenMenuItemHeader()
+    {
+        FullScreenMenuItemHeader = FullScreenMode ? Localize.MainWindow_NormalScreen() : Localize.MainWindow_FullScreen();
+    }
+
+    [RelayCommand]
     private void OpenSettingsWindow()
     {
         WindowOpener.OpenSingle<SettingsWindow>(MainWindow);
@@ -254,20 +309,6 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     private void OpenContents()
     {
         BrowserHelper.Open(Constants.WikiUrl);
-    }
-
-    [RelayCommand]
-    private void ToggleShowNesting()
-    {
-        Settings.ShowNesting = !Settings.ShowNesting;
-        UpdateShowNestingMenuItemHeader();
-        Editor?.InvalidateVisual();
-    }
-
-    private void UpdateShowNestingMenuItemHeader()
-    {
-        ShowNestingMenuItemHeader = Settings.ShowNesting ?
-            Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
     }
 
     [RelayCommand]
@@ -335,6 +376,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     {
         UpdateMainWindowTitle();
         UpdateShowNestingMenuItemHeader();
+        UpdateFullScreenMenuItemHeader();
         UpdateStatusBarLeftMessage();
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);

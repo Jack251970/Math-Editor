@@ -67,6 +67,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
         IsEditorLoaded = true;
     }
 
+    private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        Editor.InvalidateVisual();
+    }
+
     public void HandleToolBarCommand(CommandDetails commandDetails)
     {
         if (commandDetails.CommandType == CommandType.CustomMatrix)
@@ -128,9 +133,9 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private void Window_KeyUp(object sender, KeyEventArgs e)
     {
-        if (WindowStyle == WindowStyle.None && e.Key == Key.Escape)
+        if (e.Key == Key.Escape && ViewModel.FullScreenMode)
         {
-            ToggleFullScreen();
+            ViewModel.FullScreenMode = false;
         }
     }
 
@@ -328,32 +333,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     #endregion
 
-    private void ToggleFullScreen()
-    {
-        if (WindowStyle == WindowStyle.None)
-        {
-            fullScreenMenuItem.Header = "_Full Screen";
-            WindowStyle = WindowStyle.ThreeDBorderWindow;
-            WindowState = WindowState.Normal;
-            exitFullScreenButton.Visibility = Visibility.Collapsed;
-            closeApplictionButton.Visibility = Visibility.Collapsed;
-        }
-        else
-        {
-            fullScreenMenuItem.Header = "_Normal Screen";
-            WindowStyle = WindowStyle.None;
-            WindowState = WindowState.Normal; //extral call to be on safe side. windows is funky
-            WindowState = WindowState.Maximized;
-            exitFullScreenButton.Visibility = Visibility.Visible;
-            closeApplictionButton.Visibility = Visibility.Visible;
-        }
-    }
-
-    private void fullScreenMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        ToggleFullScreen();
-    }
-
     private MenuItem? lastZoomMenuItem = null;
 
     private void ZoomMenuItem_Click(object sender, RoutedEventArgs e)
@@ -394,16 +373,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
             lastZoomMenuItem = null;
         }
         Editor.SetFontSizePercentage(number);
-    }
-
-    private void exitFullScreenButton_Click(object sender, RoutedEventArgs e)
-    {
-        ToggleFullScreen();
-    }
-
-    private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-    {
-        Editor.InvalidateVisual();
     }
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)

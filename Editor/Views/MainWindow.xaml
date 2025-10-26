@@ -98,18 +98,16 @@
                 Panel.ZIndex="10"
                 Orientation="Horizontal">
                 <Button
-                    x:Name="exitFullScreenButton"
                     Width="26"
                     Height="26"
                     Padding="2"
-                    Click="exitFullScreenButton_Click"
+                    Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}"
                     Style="{DynamicResource FullScreenButtonStyle}"
                     ToolTip="{DynamicResource MainWindow_ExitFullScreen}"
-                    Visibility="Collapsed">
+                    Visibility="{Binding FullScreenButtonVisibility, Mode=OneWay}">
                     <Image Source="/Images/GUI/exitfullscreen.png" />
                 </Button>
                 <Button
-                    x:Name="closeApplictionButton"
                     Width="26"
                     Height="26"
                     Margin="5 0"
@@ -117,7 +115,7 @@
                     Command="Close"
                     Style="{DynamicResource FullScreenButtonStyle}"
                     ToolTip="{DynamicResource Close}"
-                    Visibility="Collapsed">
+                    Visibility="{Binding FullScreenButtonVisibility, Mode=OneWay}">
                     <Image Source="/Images/GUI/delete.png" />
                 </Button>
             </StackPanel>
@@ -245,8 +243,8 @@
                 <MenuItem x:Name="viewMenuItem" Header="{DynamicResource MainWindow_View}">
                     <MenuItem
                         x:Name="fullScreenMenuItem"
-                        Click="fullScreenMenuItem_Click"
-                        Header="{DynamicResource MainWindow_FullScreen}" />
+                        Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}"
+                        Header="{Binding FullScreenMenuItemHeader, Mode=OneWay}" />
                     <MenuItem Header="{DynamicResource MainWindow_Zoom}">
                         <MenuItem
                             Click="ZoomMenuItem_Click"

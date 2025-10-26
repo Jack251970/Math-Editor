@@ -184,6 +184,7 @@
 
     <system:String x:Key="MainWindow_View">View</system:String>
     <system:String x:Key="MainWindow_FullScreen">Full screen</system:String>
+    <system:String x:Key="MainWindow_NormalScreen">Normal screen</system:String>
     <system:String x:Key="MainWindow_Zoom">Zoom</system:String>
     <system:String x:Key="MainWindow_ZoomCustom">Custom</system:String>
 
