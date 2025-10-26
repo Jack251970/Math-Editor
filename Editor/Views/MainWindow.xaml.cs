@@ -19,13 +19,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
-    public string CurrentLocalFile { get; private set; } = string.Empty;
-
     public EditorControl Editor { get; set; } = null!;
 
     public MainWindow(string currentLocalFile)
     {
-        CurrentLocalFile = currentLocalFile;
+        ViewModel.CurrentLocalFile = currentLocalFile;
         ViewModel.MainWindow = this;
         DataContext = ViewModel;
         // Initialize all components
@@ -55,7 +53,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         ViewModel.Editor = Editor;
 
         // Check if we have a file to open
-        OpenFile(CurrentLocalFile);
+        OpenFile(ViewModel.CurrentLocalFile);
 
         // Init editor mode & editor font
         ViewModel.ChangeEditorMode(App.Settings.DefaultMode);
@@ -196,27 +194,26 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void OpenFile(string fileName)
+    private void OpenFile(string filePath)
     {
-        if (!string.IsNullOrEmpty(fileName))
+        if (!string.IsNullOrEmpty(filePath))
         {
             try
             {
-                using (Stream stream = File.OpenRead(fileName))
+                using (Stream stream = File.OpenRead(filePath))
                 {
                     Editor.LoadFile(stream);
                 }
-                CurrentLocalFile = fileName;
+                ViewModel.CurrentLocalFile = filePath;
             }
             catch (Exception e)
             {
-                CurrentLocalFile = string.Empty;
+                ViewModel.CurrentLocalFile = string.Empty;
                 EditorLogger.Fatal(ClassName, "Failed to load file", e);
                 MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        ViewModel.UpdateTitle();
     }
 
     private string? ShowSaveFileDialog(string extension, string filter)
@@ -249,7 +246,8 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     private bool ProcessFileSave()
     {
-        if (!File.Exists(CurrentLocalFile))
+        var savePath = ViewModel.CurrentLocalFile;
+        if (!File.Exists(savePath))
         {
             var result = ShowSaveFileDialog(Constants.MedExtension,
                 Localize.MainWindow_MedFileFilter(Constants.MedExtension));
@@ -259,21 +257,21 @@ public partial class MainWindow : Window, ICultureInfoChanged
             }
             else
             {
-                CurrentLocalFile = result;
+                savePath = result;
             }
         }
-        return SaveFile();
+        return SaveFile(savePath);
     }
 
-    private bool SaveFile()
+    private bool SaveFile(string filePath)
     {
         try
         {
-            using (Stream stream = File.Open(CurrentLocalFile, FileMode.Create))
+            using (Stream stream = File.Open(filePath, FileMode.Create))
             {
-                Editor.SaveFile(stream, CurrentLocalFile);
+                Editor.SaveFile(stream, filePath);
             }
-            ViewModel.UpdateTitle();
+            ViewModel.CurrentLocalFile = filePath;
             return true;
         }
         catch (Exception e)
@@ -292,8 +290,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
             Localize.MainWindow_MedFileFilter(Constants.MedExtension));
         if (!string.IsNullOrEmpty(result))
         {
-            CurrentLocalFile = result;
-            SaveFile();
+            SaveFile(result);
         }
     }
 
@@ -308,16 +305,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
             if (ext != "." + imageType)
                 fileName += "." + imageType;
             Editor.ExportImage(fileName);
-        }
-    }
-
-    private void ToolBar_Loaded(object sender, RoutedEventArgs e)
-    {
-        var toolBar = sender as ToolBar;
-        // TODO: This cannot work. We need to find another way to hide OverflowGrid automatically.
-        if (toolBar?.Template.FindName("OverflowGrid", toolBar) is FrameworkElement overflowGrid)
-        {
-            overflowGrid.Visibility = Visibility.Collapsed;
         }
     }
 

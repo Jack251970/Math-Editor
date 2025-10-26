@@ -287,10 +287,7 @@
             HorizontalAlignment="Stretch"
             DockPanel.Dock="Top">
             <ToolBarTray IsLocked="True">
-                <ToolBar
-                    Band="0"
-                    BandIndex="1"
-                    Loaded="ToolBar_Loaded">
+                <ToolBar Band="0" BandIndex="1">
                     <Button
                         x:Name="saveButton"
                         Command="Save"

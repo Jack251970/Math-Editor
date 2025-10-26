@@ -6,29 +6,41 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Editor;
 
-public partial class MainWindowViewModel(Settings settings, UndoManager undoManager) : ObservableObject, ICultureInfoChanged
+public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
 {
-    public Settings Settings { get; init; } = settings;
-    public UndoManager UndoManager { get; init; } = undoManager;
+    public Settings Settings { get; init; }
+    public UndoManager UndoManager { get; init; }
     public MainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
 
     [ObservableProperty]
-    private string _mainWindowTitle = string.Empty;
+    private string _mainWindowTitle = null!;
+
+    [ObservableProperty]
+    private string _currentLocalFile = null!;
+
+    [ObservableProperty]
+    private string _showNestingMenuItemHeader = null!;
+
+    public MainWindowViewModel(Settings settings, UndoManager undoManager)
+    {
+        Settings = settings;
+        UndoManager = undoManager;
+        TextEditorMode = settings.DefaultMode;
+        TextFontType = settings.DefaultFont;
+        UpdateMainWindowTitle();
+        UpdateShowNestingMenuItemHeader();
+    }
 
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
 
     [ObservableProperty]
-    private EditorMode _textEditorMode = settings.DefaultMode;
+    private EditorMode _textEditorMode;
 
     public List<FontTypeLocalized> AllFontTypes { get; } = FontTypeLocalized.GetValues();
 
     [ObservableProperty]
-    private FontType _textFontType = settings.DefaultFont;
-
-    [ObservableProperty]
-    private string _showNestingMenuItemHeader = settings.ShowNesting ?
-        Localize.MainWindow_HideNesting() : Localize.MainWindow_ShowNesting();
+    private FontType _textFontType;
 
     [ObservableProperty]
     private bool _inputBold;
@@ -59,6 +71,11 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
     public bool IgnoreInputBoldChange { get; set; } = false;
     public bool IgnoreInputItalicChange { get; set; } = false;
     public bool IgnoreInputUnderlineChange { get; set; } = false;
+
+    partial void OnCurrentLocalFileChanged(string value)
+    {
+        UpdateMainWindowTitle();
+    }
 
     partial void OnTextEditorModeChanged(EditorMode value)
     {
@@ -251,17 +268,9 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
         WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
     }
 
-    public void UpdateTitle()
+    private void UpdateMainWindowTitle()
     {
-        var currentLocalFileName = string.Empty;
-        try
-        {
-            currentLocalFileName = Path.GetFileName(MainWindow.CurrentLocalFile);
-        }
-        catch
-        {
-            // Ignore
-        }
+        var currentLocalFileName = TryGetFileName(CurrentLocalFile);
         if (!string.IsNullOrEmpty(currentLocalFileName))
         {
 #if DEBUG
@@ -280,11 +289,25 @@ public partial class MainWindowViewModel(Settings settings, UndoManager undoMana
         }
     }
 
+    private static string TryGetFileName(string filePath)
+    {
+        var currentLocalFileName = string.Empty;
+        try
+        {
+            currentLocalFileName = Path.GetFileName(filePath);
+        }
+        catch
+        {
+            // Ignore
+        }
+        return currentLocalFileName;
+    }
+
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
+        UpdateMainWindowTitle();
+        UpdateShowNestingMenuItemHeader();
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);
-        UpdateShowNestingMenuItemHeader();
-        UpdateTitle();
     }
 }
