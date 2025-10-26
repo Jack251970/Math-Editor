@@ -25,5 +25,5 @@
         <MouseBinding Command="IncreaseZoom" Gesture="{x:Static local:MouseWheelGesture.CtrlUp}" />
         <MouseBinding Command="DecreaseZoom" Gesture="{x:Static local:MouseWheelGesture.CtrlDown}" />
     </UserControl.InputBindings>
-    <Grid Name="mainGrid" />
+    <Grid Name="MainGrid" />
 </UserControl>

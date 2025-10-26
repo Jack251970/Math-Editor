@@ -39,8 +39,8 @@ public partial class EditorControl : UserControl, IDisposable
     {
         _mainWindow = mainWindow;
         InitializeComponent();
-        mainGrid.Children.Add(vCaret);
-        mainGrid.Children.Add(hCaret);
+        MainGrid.Children.Add(vCaret);
+        MainGrid.Children.Add(hCaret);
         equationRoot = new EquationRoot(mainWindow, vCaret, hCaret)
         {
             FontSize = fontSize
