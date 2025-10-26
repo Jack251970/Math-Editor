@@ -147,7 +147,7 @@ namespace Editor
             }
         }
 
-        public void DrawVisibleRows(DrawingContext dc, double top, double bottom)
+        public void DrawVisibleRows(DrawingContext dc, double top, double bottom, bool forceBlackBrush)
         {
             if (Owner.ViewModel.IsSelecting)
             {
@@ -158,7 +158,7 @@ namespace Editor
             {
                 if (eb.Bottom >= top)
                 {
-                    eb.DrawEquation(dc);
+                    eb.DrawEquation(dc, forceBlackBrush);
                 }
                 if (eb.Bottom >= bottom)
                 {
@@ -167,13 +167,13 @@ namespace Editor
             }
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
             if (Owner.ViewModel.IsSelecting)
             {
                 DrawSelectionRegion(dc);
             }
-            base.DrawEquation(dc);
+            base.DrawEquation(dc, forceBlackBrush);
         }
 
         private void DrawSelectionRegion(DrawingContext dc)
@@ -342,7 +342,7 @@ namespace Editor
                         dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
                         foreach (var eb in equations)
                         {
-                            eb.DrawEquation(dc);
+                            eb.DrawEquation(dc, true);
                         }
                     }
                     Owner.ViewModel.IsSelecting = true;

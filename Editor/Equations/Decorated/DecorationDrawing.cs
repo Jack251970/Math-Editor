@@ -16,23 +16,23 @@ namespace Editor
         {
             _decorationType = decorationType;
             IsStatic = true;
-            CreateDecorations();
-            DetermineHeight();
+            CreateDecorations(false);
+            DetermineHeight(false);
         }
 
-        private void CreateDecorations()
+        private void CreateDecorations(bool forceBlackBrush)
         {
             switch (_decorationType)
             {
                 case DecorationType.DoubleArrow:
-                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7);
-                    _secondSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
+                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
+                    _secondSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
                     break;
                 case DecorationType.LeftArrow:
-                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7);
+                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
                     break;
                 case DecorationType.RightArrow:
-                    _firstSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7);
+                    _firstSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
                     break;
                 // It looks like it is unnecessary?
                 //case DecorationType.RightHarpoonUpBarb:
@@ -42,33 +42,33 @@ namespace Editor
                 //    _firstSign = FontFactory.GetFormattedText("\u21BC", FontType.STIXGeneral, FontSize);
                 //    break;
                 case DecorationType.Parenthesis:
-                    CreateParenthesisSigns();
+                    CreateParenthesisSigns(forceBlackBrush);
                     break;
                 case DecorationType.Tilde:
-                    CreateTildeText();
+                    CreateTildeText(forceBlackBrush);
                     break;
             }
         }
 
-        private void CreateParenthesisSigns()
+        private void CreateParenthesisSigns(bool forceBlackBrush)
         {
             if (Width < FontSize * .8)
             {
-                FitFirstSignToWidth(FontType.STIXGeneral, "\u23DC", FontWeights.Bold);
+                FitFirstSignToWidth(FontType.STIXGeneral, "\u23DC", FontWeights.Bold, forceBlackBrush);
             }
             else if (Width < FontSize * 2)
             {
-                FitFirstSignToWidth(FontType.STIXSizeOneSym, "\u23DC");
+                FitFirstSignToWidth(FontType.STIXSizeOneSym, "\u23DC", forceBlackBrush);
             }
             else if (Width < FontSize * 3)
             {
-                FitFirstSignToWidth(FontType.STIXSizeTwoSym, "\u23DC");
+                FitFirstSignToWidth(FontType.STIXSizeTwoSym, "\u23DC", forceBlackBrush);
             }
             else
             {
-                _firstSign = FontFactory.GetFormattedText("\uE142", FontType.STIXNonUnicode, FontSize * .55);
-                _secondSign = FontFactory.GetFormattedText("\uE143", FontType.STIXNonUnicode, FontSize * .55);
-                _bar = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55);
+                _firstSign = FontFactory.GetFormattedText("\uE142", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                _secondSign = FontFactory.GetFormattedText("\uE143", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                _bar = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
             }
         }
 
@@ -81,51 +81,51 @@ namespace Editor
                 if (_decorationType is DecorationType.Tilde or DecorationType.Parenthesis or
                     DecorationType.Hat)
                 {
-                    CreateDecorations();
-                    DetermineHeight();
+                    CreateDecorations(false);
+                    DetermineHeight(false);
                 }
             }
         }
 
-        private void CreateTildeText()
+        private void CreateTildeText(bool forceBlackBrush)
         {
             if (Width < FontSize / 2)
             {
-                FitFirstSignToWidth(FontType.STIXGeneral, "\u0303");
+                FitFirstSignToWidth(FontType.STIXGeneral, "\u0303", forceBlackBrush);
             }
             else if (Width < FontSize)
             {
-                FitFirstSignToWidth(FontType.STIXSizeOneSym, "\u0303");
+                FitFirstSignToWidth(FontType.STIXSizeOneSym, "\u0303", forceBlackBrush);
             }
             else if (Width < FontSize * 2)
             {
-                FitFirstSignToWidth(FontType.STIXSizeTwoSym, "\u0303");
+                FitFirstSignToWidth(FontType.STIXSizeTwoSym, "\u0303", forceBlackBrush);
             }
             else if (Width < FontSize * 3)
             {
-                FitFirstSignToWidth(FontType.STIXSizeThreeSym, "\u0303");
+                FitFirstSignToWidth(FontType.STIXSizeThreeSym, "\u0303", forceBlackBrush);
             }
             else if (Width < FontSize * 4)
             {
-                FitFirstSignToWidth(FontType.STIXSizeFourSym, "\u0303");
+                FitFirstSignToWidth(FontType.STIXSizeFourSym, "\u0303", forceBlackBrush);
             }
             else
             {
-                FitFirstSignToWidth(FontType.STIXSizeFiveSym, "\u0303");
+                FitFirstSignToWidth(FontType.STIXSizeFiveSym, "\u0303", forceBlackBrush);
             }
         }
 
-        private void FitFirstSignToWidth(FontType fontType, string unicodeChar)
+        private void FitFirstSignToWidth(FontType fontType, string unicodeChar, bool forceBlackBrush)
         {
-            FitFirstSignToWidth(fontType, unicodeChar, FontWeights.Normal);
+            FitFirstSignToWidth(fontType, unicodeChar, FontWeights.Normal, forceBlackBrush);
         }
 
-        private void FitFirstSignToWidth(FontType fontType, string unicodeChar, FontWeight weight)
+        private void FitFirstSignToWidth(FontType fontType, string unicodeChar, FontWeight weight, bool forceBlackBrush)
         {
             var factor = .1;
             do
             {
-                _firstSign = FontFactory.GetFormattedText(unicodeChar, fontType, FontSize * factor);
+                _firstSign = FontFactory.GetFormattedText(unicodeChar, fontType, FontSize * factor, forceBlackBrush);
                 factor += .1;
             }
             while (Width > _firstSign.Width - _firstSign.OverhangLeading - _firstSign.OverhangTrailing);
@@ -133,7 +133,7 @@ namespace Editor
 
         protected override void CalculateHeight()
         {
-            DetermineHeight();
+            DetermineHeight(false);
         }
 
         public override double Left
@@ -156,13 +156,14 @@ namespace Editor
             set
             {
                 base.FontSize = value;
-                CreateDecorations();
-                DetermineHeight();
+                CreateDecorations(false);
+                DetermineHeight(false);
             }
         }
 
-        private void DetermineHeight()
+        private void DetermineHeight(bool forceBlackBrush)
         {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             switch (_decorationType)
             {
                 case DecorationType.Cross:
@@ -172,10 +173,10 @@ namespace Editor
                     Height = 0;
                     break;
                 case DecorationType.Bar:
-                    Height = ThinPen.Thickness;
+                    Height = pen.Thickness;
                     break;
                 case DecorationType.DoubleBar:
-                    Height = ThinPen.Thickness * 2 + FontSize * .1;
+                    Height = pen.Thickness * 2 + FontSize * .1;
                     break;
                 case DecorationType.Hat:
                     Height = FontSize * .2 + Width * .02;
@@ -206,125 +207,129 @@ namespace Editor
             }
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             switch (_decorationType)
             {
                 case DecorationType.Bar:
-                    dc.DrawLine(ThinPen, Location, new Point(Right, Top));
+                    dc.DrawLine(pen, Location, new Point(Right, Top));
                     break;
                 case DecorationType.DoubleBar:
-                    dc.DrawLine(ThinPen, Location, new Point(Right, Top));
-                    dc.DrawLine(ThinPen, new Point(Left, Bottom - ThinPen.Thickness),
-                                             new Point(Right, Bottom - ThinPen.Thickness));
+                    dc.DrawLine(pen, Location, new Point(Right, Top));
+                    dc.DrawLine(pen,
+                        new Point(Left, Bottom - pen.Thickness), new Point(Right, Bottom - pen.Thickness));
                     break;
                 case DecorationType.Hat:
                     dc.DrawPolyline(new Point(Left, Bottom - FontSize * .02),
-                                    [
-                                        new Point(MidX, Top + FontSize * .03),
-                                        new Point(Right, Bottom - FontSize * .02)
-                                    ],
-                                    ThinPen);
+                        [
+                            new Point(MidX, Top + FontSize * .03),
+                            new Point(Right, Bottom - FontSize * .02)
+                        ],
+                        pen);
                     break;
                 case DecorationType.LeftArrow:
-                    _firstSign.DrawTextTopLeftAligned(dc, Location);
-                    dc.DrawLine(ThinPen, new Point(Left + FontSize * .06, MidY), new Point(Right, MidY));
+                    _firstSign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
+                    dc.DrawLine(pen,
+                        new Point(Left + FontSize * .06, MidY), new Point(Right, MidY));
                     break;
                 case DecorationType.RightArrow:
-                    _firstSign.DrawTextTopRightAligned(dc, new Point(Right, Top));
-                    dc.DrawLine(ThinPen, new Point(Left, MidY), new Point(Right - FontSize * .06, MidY));
+                    _firstSign.DrawTextTopRightAligned(dc, new Point(Right, Top), forceBlackBrush);
+                    dc.DrawLine(pen,
+                        new Point(Left, MidY), new Point(Right - FontSize * .06, MidY));
                     break;
                 case DecorationType.DoubleArrow:
-                    DrawDoubleArrow(dc);
+                    DrawDoubleArrow(dc, forceBlackBrush);
                     break;
                 case DecorationType.Parenthesis:
-                    DrawParentheses(dc);
+                    DrawParentheses(dc, forceBlackBrush);
                     break;
                 case DecorationType.RightHarpoonUpBarb:
-                    DrawRightHarpoonUpBarb(dc);
+                    DrawRightHarpoonUpBarb(dc, forceBlackBrush);
                     break;
                 case DecorationType.RightHarpoonDownBarb:
-                    DrawRightHarpoonDownBarb(dc);
+                    DrawRightHarpoonDownBarb(dc, forceBlackBrush);
                     break;
                 case DecorationType.LeftHarpoonUpBarb:
-                    DrawLeftHarpoonUpBarb(dc);
+                    DrawLeftHarpoonUpBarb(dc, forceBlackBrush);
                     break;
                 case DecorationType.LeftHarpoonDownBarb:
-                    DrawLeftHarpoonDownBarb(dc);
+                    DrawLeftHarpoonDownBarb(dc, forceBlackBrush);
                     break;
                 case DecorationType.Tilde:
-                    _firstSign.DrawTextTopLeftAligned(dc, Location);
+                    _firstSign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
                     break;
                 case DecorationType.Tortoise:
-                    DrawTortoise(dc);
+                    DrawTortoise(dc, forceBlackBrush);
                     break;
                 case DecorationType.Cross:
-                    dc.DrawLine(ThinPen, ParentEquation.Location, new Point(Right, ParentEquation.Bottom));
-                    dc.DrawLine(ThinPen, new Point(Left, ParentEquation.Bottom), new Point(Right, ParentEquation.Top));
+                    dc.DrawLine(pen, ParentEquation.Location, new Point(Right, ParentEquation.Bottom));
+                    dc.DrawLine(pen, new Point(Left, ParentEquation.Bottom), new Point(Right, ParentEquation.Top));
                     break;
                 case DecorationType.LeftCross:
-                    dc.DrawLine(ThinPen, ParentEquation.Location, new Point(Right, ParentEquation.Bottom));
+                    dc.DrawLine(pen, ParentEquation.Location, new Point(Right, ParentEquation.Bottom));
                     break;
                 case DecorationType.RightCross:
-                    dc.DrawLine(ThinPen, new Point(Left, ParentEquation.Bottom), new Point(Right, ParentEquation.Top));
+                    dc.DrawLine(pen, new Point(Left, ParentEquation.Bottom), new Point(Right, ParentEquation.Top));
                     break;
                 case DecorationType.StrikeThrough:
-                    dc.DrawLine(ThinPen, new Point(Left, ParentEquation.MidY), new Point(Right, ParentEquation.MidY));
+                    dc.DrawLine(pen, new Point(Left, ParentEquation.MidY), new Point(Right, ParentEquation.MidY));
                     break;
             }
         }
 
-        private void DrawDoubleArrow(DrawingContext dc)
+        private void DrawDoubleArrow(DrawingContext dc, bool forceBlackBrush)
         {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             if (Width < FontSize * 0.8)
             {
-                var text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, Width * 1.5);
+                var text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, Width * 1.5, forceBlackBrush);
                 var factor = .1;
                 do
                 {
-                    text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, FontSize * factor);
+                    text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, FontSize * factor, forceBlackBrush);
                     factor += .1;
                 }
                 while (Width > text.GetFullWidth());
-                text.DrawTextTopLeftAligned(dc, Location);
+                text.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
             }
             else
             {
-                _firstSign.DrawTextTopLeftAligned(dc, Location);
-                _secondSign.DrawTextTopRightAligned(dc, new Point(Right, Top));
-                dc.DrawLine(ThinPen, new Point(Left + FontSize * .06, MidY), new Point(Right - FontSize * .06, MidY));
+                _firstSign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
+                _secondSign.DrawTextTopRightAligned(dc, new Point(Right, Top), forceBlackBrush);
+                dc.DrawLine(pen, new Point(Left + FontSize * .06, MidY), new Point(Right - FontSize * .06, MidY));
             }
         }
 
-        private void DrawParentheses(DrawingContext dc)
+        private void DrawParentheses(DrawingContext dc, bool forceBlackBrush)
         {
             if (Width < FontSize * 3)
             {
-                _firstSign.DrawTextTopLeftAligned(dc, Location);
+                _firstSign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
             }
             else
             {
-                _firstSign.DrawTextTopLeftAligned(dc, Location);
-                _secondSign.DrawTextTopLeftAligned(dc, new Point(Right - _secondSign.Width + _secondSign.OverhangLeading, Top));
+                _firstSign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
+                _secondSign.DrawTextTopLeftAligned(dc, new Point(Right - _secondSign.Width + _secondSign.OverhangLeading, Top), forceBlackBrush);
                 //dc.DrawLine(StandardPen, new Point(Left + secondSign.Width + secondSign.OverhangLeading, Top + FontSize * .03), new Point(Right - (secondSign.Width + secondSign.OverhangLeading), Top + FontSize * .03));
                 var left = Left + _firstSign.GetFullWidth() * .85;
                 var right = Right - _secondSign.GetFullWidth() * .85;
                 while (left < right)
                 {
-                    _bar.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                    _bar.DrawTextTopLeftAligned(dc, new Point(left, Top), forceBlackBrush);
                     left += _bar.GetFullWidth() * .8;
                     var shoot = (left + _bar.GetFullWidth() * .8) - right;
                     if (shoot > 0)
                     {
                         left -= shoot;
-                        _bar.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                        _bar.DrawTextTopLeftAligned(dc, new Point(left, Top), forceBlackBrush);
                         break;
                     }
                 }
             }
         }
 
-        private void DrawLeftHarpoonUpBarb(DrawingContext dc)
+        private void DrawLeftHarpoonUpBarb(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
                 new Point(Left + FontSize * .3, Top),
@@ -333,10 +338,10 @@ namespace Editor
                 new Point(Right, Bottom - FontSize * .06),
                 new Point(Right, Bottom- FontSize * .02)
                 ];
-            dc.FillPolylineGeometry(new Point(Left, Bottom - FontSize * .02), points);
+            dc.FillPolylineGeometry(new Point(Left, Bottom - FontSize * .02), points, forceBlackBrush);
         }
 
-        private void DrawRightHarpoonUpBarb(DrawingContext dc)
+        private void DrawRightHarpoonUpBarb(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
                 new Point(Right - FontSize * .3, Top),
@@ -345,10 +350,10 @@ namespace Editor
                 new Point(Left, Bottom - FontSize * .06),
                 new Point(Left, Bottom - FontSize * .02)
                 ];
-            dc.FillPolylineGeometry(new Point(Right, Bottom - FontSize * .02), points);
+            dc.FillPolylineGeometry(new Point(Right, Bottom - FontSize * .02), points, forceBlackBrush);
         }
 
-        private void DrawLeftHarpoonDownBarb(DrawingContext dc)
+        private void DrawLeftHarpoonDownBarb(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
                 new Point(Left + FontSize * .3, Bottom),
@@ -357,10 +362,10 @@ namespace Editor
                 new Point(Right, Top + FontSize * .06),
                 new Point(Right, Top + FontSize * .02)
                 ];
-            dc.FillPolylineGeometry(new Point(Left, Top + FontSize * .02), points);
+            dc.FillPolylineGeometry(new Point(Left, Top + FontSize * .02), points, forceBlackBrush);
         }
 
-        private void DrawRightHarpoonDownBarb(DrawingContext dc)
+        private void DrawRightHarpoonDownBarb(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
                 new Point(Right - FontSize * .3, Bottom),
@@ -369,10 +374,10 @@ namespace Editor
                 new Point(Left, Top + FontSize * .06),
                 new Point(Left, Top + FontSize * .02)
                 ];
-            dc.FillPolylineGeometry(new Point(Right, Top + FontSize * .02), points);
+            dc.FillPolylineGeometry(new Point(Right, Top + FontSize * .02), points, forceBlackBrush);
         }
 
-        private void DrawTortoise(DrawingContext dc)
+        private void DrawTortoise(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
                 new Point(Left + Height * .5, Top),
@@ -383,7 +388,7 @@ namespace Editor
                 new Point(Left + Height * .7, Top + Height * .3),
                 new Point(Left + Height * .2, Bottom)
                 ];
-            dc.FillPolylineGeometry(new Point(Left, Bottom), points);
+            dc.FillPolylineGeometry(new Point(Left, Bottom), points, forceBlackBrush);
         }
     }
 }

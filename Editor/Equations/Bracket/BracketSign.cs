@@ -42,99 +42,99 @@ namespace Editor
             }
         }
 
-        private void CreateTextBrackets()
+        private void CreateTextBrackets(bool forceBlackBrush)
         {
             switch (SignType)
             {
                 case BracketSignType.LeftRound:
                 case BracketSignType.RightRound:
-                    CreateRoundTextBracket();
+                    CreateRoundTextBracket(forceBlackBrush);
                     break;
                 case BracketSignType.LeftCurly:
                 case BracketSignType.RightCurly:
-                    CreateCurlyTextBracket();
+                    CreateCurlyTextBracket(forceBlackBrush);
                     break;
             }
         }
 
-        private void CreateRoundTextBracket()
+        private void CreateRoundTextBracket(bool forceBlackBrush)
         {
             if (Height < FontSize * 1.2)
             {
                 var signText = SignType == BracketSignType.LeftRound ? "(" : ")";
-                FitSignToHeight(FontType.STIXGeneral, signText);
+                FitSignToHeight(FontType.STIXGeneral, signText, forceBlackBrush);
             }
             if (Height < FontSize * 1.5)
             {
                 var signText = SignType == BracketSignType.LeftRound ? "(" : ")";
-                FitSignToHeight(FontType.STIXSizeOneSym, signText);
+                FitSignToHeight(FontType.STIXSizeOneSym, signText, forceBlackBrush);
             }
             else if (Height < FontSize * 1.9)
             {
                 var signText = SignType == BracketSignType.LeftRound ? "(" : ")";
-                FitSignToHeight(FontType.STIXSizeTwoSym, signText);
+                FitSignToHeight(FontType.STIXSizeTwoSym, signText, forceBlackBrush);
             }
             else if (Height < FontSize * 2.5)
             {
                 var signText = SignType == BracketSignType.LeftRound ? "(" : ")";
-                FitSignToHeight(FontType.STIXSizeThreeSym, signText);
+                FitSignToHeight(FontType.STIXSizeThreeSym, signText, forceBlackBrush);
             }
             else if (Height < BracketBreakLimit)
             {
                 var signText = SignType == BracketSignType.LeftRound ? "(" : ")";
-                FitSignToHeight(FontType.STIXSizeFourSym, signText);
+                FitSignToHeight(FontType.STIXSizeFourSym, signText, forceBlackBrush);
             }
             else
             {
                 var text1 = SignType == BracketSignType.LeftRound ? "\u239b" : "\u239e";
                 var text2 = SignType == BracketSignType.LeftRound ? "\u239d" : "\u23a0";
                 var ext = SignType == BracketSignType.LeftRound ? "\u239c" : "\u239f";
-                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5);
-                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5);
-                extension = FontFactory.GetFormattedText(ext, FontType.STIXSizeOneSym, FontSize * .5);
+                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                extension = FontFactory.GetFormattedText(ext, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
             }
         }
 
-        private void CreateCurlyTextBracket()
+        private void CreateCurlyTextBracket(bool forceBlackBrush)
         {
             if (Height < FontSize * 1.5)
             {
                 var signText = SignType == BracketSignType.LeftCurly ? "{" : "}";
-                FitSignToHeight(FontType.STIXSizeOneSym, signText);
+                FitSignToHeight(FontType.STIXSizeOneSym, signText, forceBlackBrush);
             }
             else if (Height < FontSize * 1.9)
             {
                 var signText = SignType == BracketSignType.LeftCurly ? "{" : "}";
-                FitSignToHeight(FontType.STIXSizeTwoSym, signText);
+                FitSignToHeight(FontType.STIXSizeTwoSym, signText, forceBlackBrush);
             }
             else if (Height < FontSize * 2.5)
             {
                 var signText = SignType == BracketSignType.LeftCurly ? "{" : "}";
-                FitSignToHeight(FontType.STIXSizeThreeSym, signText);
+                FitSignToHeight(FontType.STIXSizeThreeSym, signText, forceBlackBrush);
             }
             else if (Height < BracketBreakLimit)
             {
                 var signText = SignType == BracketSignType.LeftCurly ? "{" : "}";
-                FitSignToHeight(FontType.STIXSizeFourSym, signText);
+                FitSignToHeight(FontType.STIXSizeFourSym, signText, forceBlackBrush);
             }
             else
             {
                 var text1 = SignType == BracketSignType.LeftCurly ? "\u23a7" : "\u23ab";
                 var midtex = SignType == BracketSignType.LeftCurly ? "\u23a8" : "\u23ac";
                 var text2 = SignType == BracketSignType.LeftCurly ? "\u23a9" : "\u23ad";
-                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5);
-                midText = FontFactory.GetFormattedText(midtex, FontType.STIXSizeOneSym, FontSize * .5);
-                extension = FontFactory.GetFormattedText("\u23AA", FontType.STIXSizeOneSym, FontSize * .5);
-                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5);
+                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                midText = FontFactory.GetFormattedText(midtex, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                extension = FontFactory.GetFormattedText("\u23AA", FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
             }
         }
 
-        private void FitSignToHeight(FontType fontType, string unicodeCharText)
+        private void FitSignToHeight(FontType fontType, string unicodeCharText, bool forceBlackBrush)
         {
             var factor = .4;
             do
             {
-                signText = FontFactory.GetFormattedText(unicodeCharText, fontType, FontSize * factor);
+                signText = FontFactory.GetFormattedText(unicodeCharText, fontType, FontSize * factor, forceBlackBrush);
                 factor += .02;
             }
             while (Height > signText.Extent);
@@ -150,7 +150,7 @@ namespace Editor
                     BracketSignType.LeftCurly or BracketSignType.RightCurly
                     )
                 {
-                    CreateTextBrackets();
+                    CreateTextBrackets(false);
                 }
                 DetermineWidth();
             }
@@ -196,191 +196,194 @@ namespace Editor
             Width = width + LeftPadding + RightPadding;
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
             //dc.DrawRectangle(Brushes.Yellow, null, Bounds);
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             switch (SignType)
             {
                 case BracketSignType.LeftAngle:
-                    PaintLeftAngle(dc);
+                    PaintLeftAngle(dc, forceBlackBrush);
                     break;
                 case BracketSignType.RightAngle:
-                    PaintRightAngle(dc);
+                    PaintRightAngle(dc, forceBlackBrush);
                     break;
                 case BracketSignType.LeftBar:
-                    dc.DrawLine(ThinPen, new Point(SignLeft, Top), new Point(SignLeft, Bottom));
+                    dc.DrawLine(pen, new Point(SignLeft, Top), new Point(SignLeft, Bottom));
                     break;
                 case BracketSignType.RightBar:
-                    dc.DrawLine(ThinPen, new Point(SignRight, Top), new Point(SignRight, Bottom));
+                    dc.DrawLine(pen, new Point(SignRight, Top), new Point(SignRight, Bottom));
                     //PaintVerticalBar(dc);
                     break;
                 case BracketSignType.LeftCeiling:
-                    PaintLeftCeiling(dc);
+                    PaintLeftCeiling(dc, forceBlackBrush);
                     break;
                 case BracketSignType.RightCeiling:
-                    PaintRightCeiling(dc);
+                    PaintRightCeiling(dc, forceBlackBrush);
                     break;
                 case BracketSignType.LeftCurly:
                 case BracketSignType.RightCurly:
-                    PaintCurly(dc);
+                    PaintCurly(dc, forceBlackBrush);
                     break;
                 case BracketSignType.LeftDoubleBar:
                 case BracketSignType.RightDoubleBar:
-                    dc.DrawLine(ThinPen, new Point(SignLeft, Top), new Point(SignLeft, Bottom));
-                    dc.DrawLine(ThinPen, new Point(SignRight, Top), new Point(SignRight, Bottom));
+                    dc.DrawLine(pen, new Point(SignLeft, Top), new Point(SignLeft, Bottom));
+                    dc.DrawLine(pen, new Point(SignRight, Top), new Point(SignRight, Bottom));
                     break;
                 case BracketSignType.LeftFloor:
-                    PaintLeftFloor(dc);
+                    PaintLeftFloor(dc, forceBlackBrush);
                     break;
                 case BracketSignType.RightFloor:
-                    PaintRightFloor(dc);
+                    PaintRightFloor(dc, forceBlackBrush);
                     break;
                 case BracketSignType.LeftRound:
                 case BracketSignType.RightRound:
-                    PaintRound(dc);
+                    PaintRound(dc, forceBlackBrush);
                     break;
                 case BracketSignType.LeftSquare:
-                    PaintLeftSquare(dc);
+                    PaintLeftSquare(dc, forceBlackBrush);
                     break;
                 case BracketSignType.RightSquare:
-                    PaintRightSquare(dc);
+                    PaintRightSquare(dc, forceBlackBrush);
                     break;
                 case BracketSignType.LeftSquareBar:
-                    PaintLeftSquareBar(dc);
+                    PaintLeftSquareBar(dc, forceBlackBrush);
                     break;
                 case BracketSignType.RightSquareBar:
-                    PaintRightSquareBar(dc);
+                    PaintRightSquareBar(dc, forceBlackBrush);
                     break;
             }
         }
 
-        private void PaintVerticalBar(DrawingContext dc)
+        private void PaintVerticalBar(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
+                new Point(SignRight, Top),
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
         }
 
-        private void PaintLeftCeiling(DrawingContext dc)
+        private void PaintLeftCeiling(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Top + ThinLineThickness),
-                                                            new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
-                                                            new Point(SignLeft + ThinLineThickness, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
+                new Point(SignRight, Top),
+                new Point(SignRight, Top + ThinLineThickness),
+                new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
+                new Point(SignLeft + ThinLineThickness, Bottom),
+                new Point(SignLeft, Bottom),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
         }
 
-        private void PaintRightCeiling(DrawingContext dc)
+        private void PaintRightCeiling(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignRight - ThinLineThickness, Bottom),
-                                                            new Point(SignRight - ThinLineThickness, Top + ThinLineThickness),
-                                                            new Point(SignLeft, Top + ThinLineThickness),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
+                new Point(SignRight, Top),
+                new Point(SignRight, Bottom),
+                new Point(SignRight - ThinLineThickness, Bottom),
+                new Point(SignRight - ThinLineThickness, Top + ThinLineThickness),
+                new Point(SignLeft, Top + ThinLineThickness),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
         }
 
-        private void PaintLeftFloor(DrawingContext dc)
+        private void PaintLeftFloor(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignLeft + ThinLineThickness, Top),
-                                                            new Point(SignLeft + ThinLineThickness, Bottom - ThinLineThickness),
-                                                            new Point(SignRight, Bottom - ThinLineThickness),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
+                new Point(SignLeft + ThinLineThickness, Top),
+                new Point(SignLeft + ThinLineThickness, Bottom - ThinLineThickness),
+                new Point(SignRight, Bottom - ThinLineThickness),
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
         }
 
-        private void PaintRightFloor(DrawingContext dc)
+        private void PaintRightFloor(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                            new Point(SignLeft, Bottom - ThinLineThickness),
-                                                            new Point(SignRight - ThinLineThickness, Bottom - ThinLineThickness),
-                                                            new Point(SignRight - ThinLineThickness, Top),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignRight, Top), points);
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+                new Point(SignLeft, Bottom - ThinLineThickness),
+                new Point(SignRight - ThinLineThickness, Bottom - ThinLineThickness),
+                new Point(SignRight - ThinLineThickness, Top),
+            ];
+            dc.FillPolylineGeometry(new Point(SignRight, Top), points, forceBlackBrush);
         }
 
-        private void PaintLeftSquareBar(DrawingContext dc)
+        private void PaintLeftSquareBar(DrawingContext dc, bool forceBlackBrush)
+        {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
+            PointCollection points = [
+                new Point(SignRight, Top),
+                new Point(SignRight, Top + ThinLineThickness),
+                new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
+                new Point(SignLeft + ThinLineThickness, Bottom - ThinLineThickness),
+                new Point(SignRight, Bottom - ThinLineThickness),
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
+            dc.DrawLine(pen, new Point(SignLeft + FontSize * .12, Top + ThinLineThickness * .5), new Point(SignLeft + FontSize * .12, Bottom - ThinLineThickness * .5));
+        }
+
+        private void PaintRightSquareBar(DrawingContext dc, bool forceBlackBrush)
+        {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
+            PointCollection points = [
+                new Point(SignRight, Top),
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+                new Point(SignLeft, Bottom - ThinLineThickness),
+                new Point(SignRight - ThinLineThickness, Bottom - ThinLineThickness),
+                new Point(SignRight - ThinLineThickness, Top + ThinLineThickness),
+                new Point(SignLeft, Top + ThinLineThickness),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
+            dc.DrawLine(pen, new Point(SignRight - FontSize * .12, Top + ThinLineThickness * .5), new Point(SignRight - FontSize * .12, Bottom - ThinLineThickness * .5));
+        }
+
+        private void PaintLeftSquare(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Top + ThinLineThickness),
-                                                            new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
-                                                            new Point(SignLeft + ThinLineThickness, Bottom - ThinLineThickness),
-                                                            new Point(SignRight, Bottom - ThinLineThickness),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
-            dc.DrawLine(ThinPen, new Point(SignLeft + FontSize * .12, Top + ThinLineThickness * .5), new Point(SignLeft + FontSize * .12, Bottom - ThinLineThickness * .5));
+                new Point(SignRight, Top),
+                new Point(SignRight, Top + ThinLineThickness),
+                new Point(SignLeft + LineThickness, Top + ThinLineThickness),
+                new Point(SignLeft + LineThickness, Bottom - ThinLineThickness),
+                new Point(SignRight, Bottom - ThinLineThickness),
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
         }
 
-        private void PaintRightSquareBar(DrawingContext dc)
+        private void PaintRightSquare(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                            new Point(SignLeft, Bottom - ThinLineThickness),
-                                                            new Point(SignRight - ThinLineThickness, Bottom - ThinLineThickness),
-                                                            new Point(SignRight - ThinLineThickness, Top + ThinLineThickness),
-                                                            new Point(SignLeft, Top + ThinLineThickness),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
-            dc.DrawLine(ThinPen, new Point(SignRight - FontSize * .12, Top + ThinLineThickness * .5), new Point(SignRight - FontSize * .12, Bottom - ThinLineThickness * .5));
+                new Point(SignRight, Top),
+                new Point(SignRight, Bottom),
+                new Point(SignLeft, Bottom),
+                new Point(SignLeft, Bottom - ThinLineThickness),
+                new Point(SignRight - LineThickness, Bottom - ThinLineThickness),
+                new Point(SignRight - LineThickness, Top + ThinLineThickness),
+                new Point(SignLeft, Top + ThinLineThickness),
+            ];
+            dc.FillPolylineGeometry(new Point(SignLeft, Top), points, forceBlackBrush);
         }
 
-        private void PaintLeftSquare(DrawingContext dc)
-        {
-            PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Top + ThinLineThickness),
-                                                            new Point(SignLeft + LineThickness, Top + ThinLineThickness),
-                                                            new Point(SignLeft + LineThickness, Bottom - ThinLineThickness),
-                                                            new Point(SignRight, Bottom - ThinLineThickness),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
-        }
-
-        private void PaintRightSquare(DrawingContext dc)
-        {
-            PointCollection points = [
-                                                            new Point(SignRight, Top),
-                                                            new Point(SignRight, Bottom),
-                                                            new Point(SignLeft, Bottom),
-                                                            new Point(SignLeft, Bottom - ThinLineThickness),
-                                                            new Point(SignRight - LineThickness, Bottom - ThinLineThickness),
-                                                            new Point(SignRight - LineThickness, Top + ThinLineThickness),
-                                                            new Point(SignLeft, Top + ThinLineThickness),
-                                                         ];
-            dc.FillPolylineGeometry(new Point(SignLeft, Top), points);
-        }
-
-        private void PaintRound(DrawingContext dc)
+        private void PaintRound(DrawingContext dc, bool forceBlackBrush)
         {
             if (Height < BracketBreakLimit)
             {
                 if (SignType == BracketSignType.LeftRound)
                 {
-                    signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
+                    signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top), forceBlackBrush);
                 }
                 else
                 {
-                    signText!.DrawTextTopRightAligned(dc, new Point(SignRight, Top));
+                    signText!.DrawTextTopRightAligned(dc, new Point(SignRight, Top), forceBlackBrush);
                 }
             }
             else
@@ -388,19 +391,20 @@ namespace Editor
                 if (SignType == BracketSignType.LeftRound)
                 {
                     var left = Math.Floor(SignLeft);
-                    signText!.DrawTextTopLeftAligned(dc, new Point(left, Top));
-                    signText2!.DrawTextBottomLeftAligned(dc, new Point(left, Bottom));
+                    signText!.DrawTextTopLeftAligned(dc, new Point(left, Top), forceBlackBrush);
+                    signText2!.DrawTextBottomLeftAligned(dc, new Point(left, Bottom), forceBlackBrush);
                     var top = Top + signText!.Extent * .9;
                     var bottom = Bottom - signText2!.Extent * .9;
                     //double topExtra = extension.Height + extension.OverhangAfter - extension.Extent;
                     var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
-                                                                   new Point(geometry.Bounds.Right, bottom),
-                                                                   new Point(geometry.Bounds.Left, bottom),
-                                                                 ];
-                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
+                    PointCollection points = [
+                        new Point(geometry.Bounds.Right, top),
+                        new Point(geometry.Bounds.Right, bottom),
+                        new Point(geometry.Bounds.Left, bottom),
+                    ];
+                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points, forceBlackBrush);
 
                     //Pen pen = PenManager.GetPen(extension.GetFullWidth() * .68);
                     //dc.DrawLine(pen, new Point(SignLeft + pen.Thickness * .68, top),
@@ -447,17 +451,18 @@ namespace Editor
                 }
                 else
                 {
-                    signText!.DrawTextTopRightAligned(dc, new Point(SignRight, Top));
-                    signText2!.DrawTextBottomRightAligned(dc, new Point(SignRight, Bottom));
+                    signText!.DrawTextTopRightAligned(dc, new Point(SignRight, Top), forceBlackBrush);
+                    signText2!.DrawTextBottomRightAligned(dc, new Point(SignRight, Bottom), forceBlackBrush);
                     var top = Top + signText!.Extent * .9;
                     var bottom = Bottom - signText2!.Extent * .9;
                     var geometry = extension!.BuildGeometry(new Point(SignRight - extension.GetFullWidth() - extension.OverhangLeading, 0));
 
-                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
-                                                                   new Point(geometry.Bounds.Right, bottom),
-                                                                   new Point(geometry.Bounds.Left, bottom),
-                                                                 ];
-                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
+                    PointCollection points = [
+                        new Point(geometry.Bounds.Right, top),
+                        new Point(geometry.Bounds.Right, bottom),
+                        new Point(geometry.Bounds.Left, bottom),
+                    ];
+                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points, forceBlackBrush);
                     //double topExtra = extension.Height + extension.OverhangAfter - extension.Extent;
                     ////double padding = extension.OverhangLeading;
                     ////var geometry = extension.BuildGeometry(new Point(SignLeft, top));
@@ -484,21 +489,21 @@ namespace Editor
             }
         }
 
-        private void PaintCurly(DrawingContext dc)
+        private void PaintCurly(DrawingContext dc, bool forceBlackBrush)
         {
             if (Height < BracketBreakLimit)
             {
-                signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
+                signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top), forceBlackBrush);
             }
             else
             {
                 if (SignType == BracketSignType.LeftCurly)
                 {
                     var left = SignLeft + midText!.GetFullWidth() - extension!.GetFullWidth();
-                    signText!.DrawTextTopLeftAligned(dc, new Point(left, Top));
+                    signText!.DrawTextTopLeftAligned(dc, new Point(left, Top), forceBlackBrush);
                     //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(left, Top), new Point(left, Bottom));
-                    midText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, MidY - midText!.Extent / 2));
-                    signText2!.DrawTextBottomLeftAligned(dc, new Point(left, Bottom));
+                    midText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, MidY - midText!.Extent / 2), forceBlackBrush);
+                    signText2!.DrawTextBottomLeftAligned(dc, new Point(left, Bottom), forceBlackBrush);
                     var top = Top + signText!.Extent * .9;
                     var bottom = MidY - midText.Extent * .4;
 
@@ -506,11 +511,12 @@ namespace Editor
                     var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
-                                                                   new Point(geometry.Bounds.Right, bottom),
-                                                                   new Point(geometry.Bounds.Left, bottom),
-                                                                 ];
-                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
+                    PointCollection points = [
+                        new Point(geometry.Bounds.Right, top),
+                        new Point(geometry.Bounds.Right, bottom),
+                        new Point(geometry.Bounds.Left, bottom),
+                    ];
+                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points, forceBlackBrush);
 
                     //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(Left, top), new Point(Right, top));
                     //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(Left, bottom), new Point(Right, bottom));
@@ -545,11 +551,12 @@ namespace Editor
                     top = MidY + midText.Extent * .4;
                     bottom = Bottom - signText2!.Extent * .9;
 
-                    points = [ new Point(geometry.Bounds.Right, top),
-                                                                   new Point(geometry.Bounds.Right, bottom),
-                                                                   new Point(geometry.Bounds.Left, bottom),
-                                                                 ];
-                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
+                    points = [
+                        new Point(geometry.Bounds.Right, top),
+                        new Point(geometry.Bounds.Right, bottom),
+                        new Point(geometry.Bounds.Left, bottom),
+                    ];
+                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points, forceBlackBrush);
                     //dc.DrawLine(pen, new Point(left + pen.Thickness - padding * 1.2, top),
                     //                 new Point(left + pen.Thickness - padding * 1.2, bottom));
                     //dc.DrawLine(pen, new Point(left + pen.Thickness * .68, top),
@@ -570,20 +577,21 @@ namespace Editor
                 else
                 {
                     var left = SignLeft + signText!.GetFullWidth() - extension!.GetFullWidth();
-                    signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top));
-                    midText!.DrawTextTopLeftAligned(dc, new Point(left, MidY - midText!.Extent / 2));
-                    signText2!.DrawTextBottomLeftAligned(dc, new Point(SignLeft, Bottom));
+                    signText!.DrawTextTopLeftAligned(dc, new Point(SignLeft, Top), forceBlackBrush);
+                    midText!.DrawTextTopLeftAligned(dc, new Point(left, MidY - midText!.Extent / 2), forceBlackBrush);
+                    signText2!.DrawTextBottomLeftAligned(dc, new Point(SignLeft, Bottom), forceBlackBrush);
                     var top = Top + signText!.Extent * .9;
                     var bottom = MidY - midText.Extent * .4;
 
                     var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = [ new Point(geometry.Bounds.Right, top),
-                                                                   new Point(geometry.Bounds.Right, bottom),
-                                                                   new Point(geometry.Bounds.Left, bottom),
-                                                                 ];
-                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
+                    PointCollection points = [
+                        new Point(geometry.Bounds.Right, top),
+                        new Point(geometry.Bounds.Right, bottom),
+                        new Point(geometry.Bounds.Left, bottom),
+                    ];
+                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points, forceBlackBrush);
 
                     //double padding = extension.OverhangLeading;
                     //var geometry = extension.BuildGeometry(new Point(SignLeft, top));
@@ -607,11 +615,12 @@ namespace Editor
                     //}
                     top = MidY + midText.Extent * .4;
                     bottom = Bottom - signText2!.Extent * .9;
-                    points = [ new Point(geometry.Bounds.Right, top),
-                                                                   new Point(geometry.Bounds.Right, bottom),
-                                                                   new Point(geometry.Bounds.Left, bottom),
-                                                                 ];
-                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points);
+                    points = [
+                        new Point(geometry.Bounds.Right, top),
+                        new Point(geometry.Bounds.Right, bottom),
+                        new Point(geometry.Bounds.Left, bottom),
+                    ];
+                    dc.FillPolylineGeometry(new Point(geometry.Bounds.Left, top), points, forceBlackBrush);
                     //dc.DrawLine(pen, new Point(left + pen.Thickness - padding * 1.2, top),
                     //                 new Point(left + pen.Thickness - padding * 1.2, bottom));
                     //dc.DrawLine(pen, new Point(left + pen.Thickness * .68, top),
@@ -633,16 +642,18 @@ namespace Editor
             }
         }
 
-        private void PaintLeftAngle(DrawingContext dc)
+        private void PaintLeftAngle(DrawingContext dc, bool forceBlackBrush)
         {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             PointCollection points = [new Point(SignLeft, MidY), new Point(SignRight, Bottom)];
-            dc.DrawPolyline(new Point(SignRight, Top), points, ThinPen);
+            dc.DrawPolyline(new Point(SignRight, Top), points, pen);
         }
 
-        private void PaintRightAngle(DrawingContext dc)
+        private void PaintRightAngle(DrawingContext dc, bool forceBlackBrush)
         {
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             PointCollection points = [new Point(SignRight, MidY), new Point(SignLeft, Bottom)];
-            dc.DrawPolyline(new Point(SignLeft, Top), points, ThinPen);
+            dc.DrawPolyline(new Point(SignLeft, Top), points, pen);
         }
     }
 }

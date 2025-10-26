@@ -22,10 +22,10 @@ namespace Editor
             childEquations.Add(_decoration);
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            _rowContainer.DrawEquation(dc);
-            _decoration.DrawEquation(dc);
+            _rowContainer.DrawEquation(dc, forceBlackBrush);
+            _decoration.DrawEquation(dc, forceBlackBrush);
         }
 
         public override XElement Serialize()

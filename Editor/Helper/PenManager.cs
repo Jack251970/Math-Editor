@@ -21,29 +21,47 @@ namespace Editor
         private static readonly Lock _miterLock = new();
         private static readonly Lock _roundLock = new();
 
-        public static Pen GetPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
+        public static Pen GetBlackPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
         {
+            var key = (thickness, ApplicationTheme.Light);
             if (lineJoin == PenLineJoin.Bevel)
             {
-                return GetPen(_bevelLock, _bevelPens, thickness, lineJoin);
+                return GetPen(_bevelLock, _bevelPens, key, lineJoin);
             }
             else if (lineJoin == PenLineJoin.Miter)
             {
-                return GetPen(_miterLock, _miterPens, thickness, lineJoin);
+                return GetPen(_miterLock, _miterPens, key, lineJoin);
             }
             else
             {
-                return GetPen(_roundLock, _roundPens, thickness, lineJoin);
+                return GetPen(_roundLock, _roundPens, key, lineJoin);
             }
         }
 
-        private static Pen GetPen(Lock lockObj, Dictionary<(double, ApplicationTheme), Pen> penDictionary, double thickness, PenLineJoin lineJoin, Brush? brush = null)
+        public static Pen GetPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
+        {
+            var key = (thickness, ThemeManager.Current.ActualApplicationTheme);
+            if (lineJoin == PenLineJoin.Bevel)
+            {
+                return GetPen(_bevelLock, _bevelPens, key, lineJoin);
+            }
+            else if (lineJoin == PenLineJoin.Miter)
+            {
+                return GetPen(_miterLock, _miterPens, key, lineJoin);
+            }
+            else
+            {
+                return GetPen(_roundLock, _roundPens, key, lineJoin);
+            }
+        }
+
+        private static Pen GetPen(Lock lockObj, Dictionary<(double, ApplicationTheme), Pen> penDictionary, (double, ApplicationTheme) key, PenLineJoin lineJoin, Brush? brush = null)
         {
             lock (lockObj)
             {
-                thickness = Math.Round(thickness, 1);
-                var key = (thickness, ThemeManager.Current.ActualApplicationTheme);
-                if (!penDictionary.TryGetValue(key, out var value))
+                var thickness = Math.Round(key.Item1, 1);
+                var newKey = (thickness, key.Item2);
+                if (!penDictionary.TryGetValue(newKey, out var value))
                 {
                     var pen = new Pen(brush ?? TextFillColorPrimaryBrush, thickness)
                     {
@@ -51,7 +69,7 @@ namespace Editor
                     };
                     pen.Freeze();
                     value = pen;
-                    penDictionary.Add(key, value);
+                    penDictionary.Add(newKey, value);
                 }
                 return value;
             }

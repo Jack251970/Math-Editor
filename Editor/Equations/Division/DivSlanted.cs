@@ -29,10 +29,11 @@ namespace Editor
             return LatexConverter.ToDivision(DivisionType.DivSlanted, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
-            dc.DrawLine(StandardPen, new Point(Left + centerX + slantXTop, Top), new Point(Left + centerX - slantXBottom, Bottom));
+            base.DrawEquation(dc, forceBlackBrush);
+            var pen = forceBlackBrush ? BlackStandardPen : StandardPen;
+            dc.DrawLine(pen, new Point(Left + centerX + slantXTop, Top), new Point(Left + centerX - slantXBottom, Bottom));
         }
 
         public override double Left

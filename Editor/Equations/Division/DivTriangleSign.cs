@@ -26,9 +26,11 @@ namespace Editor
             get => base.Bottom - StandardPen.Thickness / 2; set => base.Bottom = value;
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            dc.DrawPolyline(new Point(ParentEquation.Right, Bottom), [new Point(Left, Bottom), new Point(Right, Top)], StandardRoundPen);
+            var pen = forceBlackBrush ? BlackStandardRoundPen : StandardRoundPen;
+            dc.DrawPolyline(new Point(ParentEquation.Right, Bottom),
+                [new Point(Left, Bottom), new Point(Right, Top)], pen);
         }
     }
 }

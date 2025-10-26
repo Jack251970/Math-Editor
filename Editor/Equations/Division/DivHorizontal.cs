@@ -25,10 +25,12 @@ namespace Editor
             return LatexConverter.ToDivision(DivisionType.DivHoriz, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
-            dc.DrawLine(StandardPen, new Point(_bottomEquation.Left - ExtraWidth / 10, Top), new Point(_topEquation.Right + ExtraWidth / 10, Bottom));
+            base.DrawEquation(dc, forceBlackBrush);
+            var pen = forceBlackBrush ? BlackStandardPen : StandardPen;
+            dc.DrawLine(pen, new Point(_bottomEquation.Left - ExtraWidth / 10, Top),
+                new Point(_topEquation.Right + ExtraWidth / 10, Bottom));
         }
 
         public override double Left

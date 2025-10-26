@@ -17,26 +17,26 @@ namespace Editor
             IsStatic = true;
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
             switch (SignType)
             {
                 case HorizontalBracketSignType.TopCurly:
-                    DrawTopCurly(dc);
+                    DrawTopCurly(dc, forceBlackBrush);
                     break;
                 case HorizontalBracketSignType.BottomCurly:
-                    DrawBottomCurly(dc);
+                    DrawBottomCurly(dc, forceBlackBrush);
                     break;
                 case HorizontalBracketSignType.TopSquare:
-                    DrawTopSquare(dc);
+                    DrawTopSquare(dc, forceBlackBrush);
                     break;
                 case HorizontalBracketSignType.BottomSquare:
-                    DrawBottomSquare(dc);
+                    DrawBottomSquare(dc, forceBlackBrush);
                     break;
             }
         }
 
-        private void DrawTopSquare(DrawingContext dc)
+        private void DrawTopSquare(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points =
             [
@@ -48,10 +48,10 @@ namespace Editor
                 new Point(Left + ThinLineThickness, Top + LineThickness),
                 new Point(Left + ThinLineThickness, Bottom)
             ];
-            dc.FillPolylineGeometry(new Point(Left, Bottom), points);
+            dc.FillPolylineGeometry(new Point(Left, Bottom), points, forceBlackBrush);
         }
 
-        private void DrawBottomSquare(DrawingContext dc)
+        private void DrawBottomSquare(DrawingContext dc, bool forceBlackBrush)
         {
             PointCollection points =
             [
@@ -63,32 +63,32 @@ namespace Editor
                 new Point(Right, Top),
                 new Point(Right, Bottom)
             ];
-            dc.FillPolylineGeometry(new Point(Left, Bottom), points);
+            dc.FillPolylineGeometry(new Point(Left, Bottom), points, forceBlackBrush);
         }
 
-        private void DrawBottomCurly(DrawingContext dc)
+        private void DrawBottomCurly(DrawingContext dc, bool forceBlackBrush)
         {
             if (Width < FontSize * 5)
             {
-                sign.DrawTextTopLeftAligned(dc, Location);
+                sign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
             }
             else
             {
-                var line = FontFactory.GetFormattedText("\uE14B", FontType.STIXNonUnicode, FontSize * .55);
-                leftCurlyPart.DrawTextTopLeftAligned(dc, Location);
-                sign.DrawTextTopLeftAligned(dc, new Point(MidX - sign.GetFullWidth() * .5, Top + leftCurlyPart.Extent - line.Extent));
-                rightCurlyPart.DrawTextTopLeftAligned(dc, new Point(Right - rightCurlyPart.GetFullWidth(), Top));
+                var line = FontFactory.GetFormattedText("\uE14B", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                leftCurlyPart.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
+                sign.DrawTextTopLeftAligned(dc, new Point(MidX - sign.GetFullWidth() * .5, Top + leftCurlyPart.Extent - line.Extent), forceBlackBrush);
+                rightCurlyPart.DrawTextTopLeftAligned(dc, new Point(Right - rightCurlyPart.GetFullWidth(), Top), forceBlackBrush);
                 var left = Left + leftCurlyPart.GetFullWidth() * .85;
                 var right = MidX - sign.GetFullWidth() * .4;
                 while (left < right)
                 {
-                    line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent));
+                    line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent), forceBlackBrush);
                     left += line.GetFullWidth() * .8;
                     var shoot = (left + line.GetFullWidth() * .8) - right;
                     if (shoot > 0)
                     {
                         left -= shoot;
-                        line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent));
+                        line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent), forceBlackBrush);
                         break;
                     }
                 }
@@ -96,13 +96,13 @@ namespace Editor
                 right = Right - rightCurlyPart.GetFullWidth() * .8;
                 while (left < right)
                 {
-                    line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent));
+                    line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent), forceBlackBrush);
                     left += line.GetFullWidth() * .8;
                     var shoot = (left + line.GetFullWidth() * .8) - right;
                     if (shoot > 0)
                     {
                         left -= shoot;
-                        line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent));
+                        line.DrawTextTopLeftAligned(dc, new Point(left, Top + leftCurlyPart.Extent - line.Extent), forceBlackBrush);
                         break;
                     }
                 }
@@ -114,19 +114,19 @@ namespace Editor
             }
         }
 
-        private void DrawTopCurly(DrawingContext dc)
+        private void DrawTopCurly(DrawingContext dc, bool forceBlackBrush)
         {
             if (Width < FontSize * 5)
             {
-                sign.DrawTextTopLeftAligned(dc, Location);
+                sign.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
             }
             else
             {
-                var extension = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55);
+                var extension = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
                 //dc.DrawLine(new Pen(Brushes.Red, 1), Location, new Point(Right, Top));
-                leftCurlyPart.DrawTextTopLeftAligned(dc, new Point(Left, Top + sign.Extent - extension.Extent));
-                sign.DrawTextTopLeftAligned(dc, new Point(MidX - sign.GetFullWidth() * .5, Top));
-                rightCurlyPart.DrawTextTopLeftAligned(dc, new Point(Right - rightCurlyPart.GetFullWidth(), Top + sign.Extent - extension.Extent));
+                leftCurlyPart.DrawTextTopLeftAligned(dc, new Point(Left, Top + sign.Extent - extension.Extent), forceBlackBrush);
+                sign.DrawTextTopLeftAligned(dc, new Point(MidX - sign.GetFullWidth() * .5, Top), forceBlackBrush);
+                rightCurlyPart.DrawTextTopLeftAligned(dc, new Point(Right - rightCurlyPart.GetFullWidth(), Top + sign.Extent - extension.Extent), forceBlackBrush);
                 var left = Left + leftCurlyPart.GetFullWidth() * .9;
                 var right = MidX - sign.GetFullWidth() * .4;
                 //var geometry = extension.BuildGeometry(new Point(0, Top + sign.Extent - extension.Height - extension.OverhangAfter));
@@ -137,13 +137,13 @@ namespace Editor
                 //dc.FillPolylineGeometry(new Point(left, geometry.Bounds.Top), points);                
                 while (left < right)
                 {
-                    extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent));
+                    extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent), forceBlackBrush);
                     left += extension.GetFullWidth() * .8;
                     var shoot = (left + extension.GetFullWidth() * .8) - right;
                     if (shoot > 0)
                     {
                         left -= shoot;
-                        extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent));
+                        extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent), forceBlackBrush);
                         break;
                     }
                 }
@@ -156,13 +156,13 @@ namespace Editor
                 //dc.FillPolylineGeometry(new Point(left, geometry.Bounds.Top), points);
                 while (left < right)
                 {
-                    extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent));
+                    extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent), forceBlackBrush);
                     left += extension.GetFullWidth() * .8;
                     var shoot = (left + extension.GetFullWidth() * .8) - right;
                     if (shoot > 0)
                     {
                         left -= shoot;
-                        extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent));
+                        extension.DrawTextTopLeftAligned(dc, new Point(left, Top + sign.Extent - extension.Extent), forceBlackBrush);
                         break;
                     }
                 }
@@ -187,39 +187,39 @@ namespace Editor
             }
             else if (Width < FontSize * 5)
             {
-                CreateSingleCharacterCurlySign();
+                CreateSingleCharacterCurlySign(false);
             }
             else
             {
                 if (SignType == HorizontalBracketSignType.BottomCurly)
                 {
-                    CreateBrokenCurlyBottom();
+                    CreateBrokenCurlyBottom(false);
                 }
                 else
                 {
-                    CreateBrokenCurlyTop();
+                    CreateBrokenCurlyTop(false);
                 }
                 Height = FontSize * .5;
             }
         }
 
-        private void CreateBrokenCurlyTop()
+        private void CreateBrokenCurlyTop(bool forceBlackBrush)
         {
             var fontSize = FontSize * .55;
-            leftCurlyPart = FontFactory.GetFormattedText("\uE13B", FontType.STIXNonUnicode, fontSize); //Top left of overbrace 
-            sign = FontFactory.GetFormattedText("\uE140", FontType.STIXNonUnicode, fontSize); //middle of overbrace
-            rightCurlyPart = FontFactory.GetFormattedText("\uE13C", FontType.STIXNonUnicode, fontSize); //Top right of overbrace             
+            leftCurlyPart = FontFactory.GetFormattedText("\uE13B", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top left of overbrace 
+            sign = FontFactory.GetFormattedText("\uE140", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //middle of overbrace
+            rightCurlyPart = FontFactory.GetFormattedText("\uE13C", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top right of overbrace             
         }
 
-        private void CreateBrokenCurlyBottom()
+        private void CreateBrokenCurlyBottom(bool forceBlackBrush)
         {
             var fontSize = FontSize * .55;
-            leftCurlyPart = FontFactory.GetFormattedText("\uE13D", FontType.STIXNonUnicode, fontSize); //Top left of overbrace 
-            sign = FontFactory.GetFormattedText("\uE141", FontType.STIXNonUnicode, fontSize); //middle of overbrace
-            rightCurlyPart = FontFactory.GetFormattedText("\uE13E", FontType.STIXNonUnicode, fontSize); //Top right of overbrace
+            leftCurlyPart = FontFactory.GetFormattedText("\uE13D", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top left of overbrace 
+            sign = FontFactory.GetFormattedText("\uE141", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //middle of overbrace
+            rightCurlyPart = FontFactory.GetFormattedText("\uE13E", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top right of overbrace
         }
 
-        private void CreateSingleCharacterCurlySign()
+        private void CreateSingleCharacterCurlySign(bool forceBlackBrush)
         {
             var signStr = SignType == HorizontalBracketSignType.TopCurly ? "\u23DE" : "\u23DF";
             FontType fontType;
@@ -246,7 +246,7 @@ namespace Editor
             double fontSize = 4;
             do
             {
-                sign = FontFactory.GetFormattedText(signStr, fontType, fontSize++);
+                sign = FontFactory.GetFormattedText(signStr, fontType, fontSize++, forceBlackBrush);
             }
             while (sign.Width < Width);
             Height = sign.Extent * 1.1;

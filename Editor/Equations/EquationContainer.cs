@@ -69,12 +69,12 @@ namespace Editor
             return ActiveChild.GetSelectionBounds();
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
+            base.DrawEquation(dc, forceBlackBrush);
             foreach (var eb in childEquations)
             {
-                eb.DrawEquation(dc);
+                eb.DrawEquation(dc, forceBlackBrush);
             }
         }
 

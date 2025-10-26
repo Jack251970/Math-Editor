@@ -24,8 +24,9 @@ namespace Editor
             }
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
+            var pen = forceBlackBrush ? BlackStandardPen : StandardPen;
             dc.DrawPolyline(new Point(Left, Bottom - Height * .4),
                 [
                     new Point(Left + FontSize * .2, Bottom - Height * .5),
@@ -36,7 +37,7 @@ namespace Editor
                     new Point(Right - FontSize * .1, Top + FontSize * .1),
                     new Point(ParentEquation.Right, Top + FontSize * .1),
                 ],
-                StandardPen);
+                pen);
         }
 
         //An incomplete manual solution

@@ -23,10 +23,10 @@ namespace Editor
             Width = charFt.Width;
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
-            charFt.DrawTextLeftAligned(dc, Location);
+            base.DrawEquation(dc, forceBlackBrush);
+            charFt.DrawTextLeftAligned(dc, Location, forceBlackBrush);
             var left = Left;
             for (var i = 0; i < decorations.Count; i++)
             {

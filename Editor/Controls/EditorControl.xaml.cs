@@ -229,7 +229,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         base.OnRender(drawingContext);
         var scrollViewer = Parent as ScrollViewer;
-        equationRoot.DrawVisibleRows(drawingContext, scrollViewer!.VerticalOffset, scrollViewer.ViewportHeight + scrollViewer.VerticalOffset);
+        equationRoot.DrawVisibleRows(drawingContext, scrollViewer!.VerticalOffset, scrollViewer.ViewportHeight + scrollViewer.VerticalOffset, false);
     }
 
     public void EditorControl_TextInput(object sender, TextCompositionEventArgs e)

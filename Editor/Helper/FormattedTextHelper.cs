@@ -5,10 +5,14 @@ namespace Editor
 {
     public static class FormattedTextHelper
     {
-        public static void DrawTextTopLeftAligned(this FormattedText text, DrawingContext dc, Point topLeft)
+        public static void DrawTextTopLeftAligned(this FormattedText text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
         {
             //double descent = text.Height - text.Baseline + text.OverhangAfter;
             //double topExtra = text.Baseline - text.Extent + descent;
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
             var topExtra = text.Height + text.OverhangAfter - text.Extent;
             double padding = 0;
             if (text.Text.Length > 0 && !char.IsWhiteSpace(text.Text[0]))
@@ -16,79 +20,154 @@ namespace Editor
                 padding = text.OverhangLeading;
             }
             dc.DrawText(text, new Point(topLeft.X - padding, topLeft.Y - topExtra));
-        }
-
-        public static void DrawText(this FormattedText ft, DrawingContext dc, Point topLeft)
-        {
-            if (ft.Text.Length > 0)
+            if (forceBlackBrush)
             {
-                dc.DrawText(ft, new Point(topLeft.X, topLeft.Y));
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
             }
         }
 
-        public static void DrawTextLeftAligned(this FormattedText ft, DrawingContext dc, Point topLeft)
+        public static void DrawText(this FormattedText text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
         {
-            if (ft.Text.Length > 0)
+            if (forceBlackBrush)
             {
-                if (char.IsWhiteSpace(ft.Text[0]))
+                text.SetForegroundBrush(Brushes.Black);
+            }
+            if (text.Text.Length > 0)
+            {
+                dc.DrawText(text, new Point(topLeft.X, topLeft.Y));
+            }
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
+        }
+
+        public static void DrawTextLeftAligned(this FormattedText text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
+        {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
+            if (text.Text.Length > 0)
+            {
+                if (char.IsWhiteSpace(text.Text[0]))
                 {
-                    dc.DrawText(ft, new Point(topLeft.X, topLeft.Y));
+                    dc.DrawText(text, new Point(topLeft.X, topLeft.Y));
                 }
                 else
                 {
-                    dc.DrawText(ft, new Point(topLeft.X - ft.OverhangLeading, topLeft.Y));
+                    dc.DrawText(text, new Point(topLeft.X - text.OverhangLeading, topLeft.Y));
                 }
             }
-        }
-
-        public static void DrawTextCenterAligned(this FormattedText ft, DrawingContext dc, Point hCenter)
-        {
-            if (ft.Text.Length > 0)
+            if (forceBlackBrush)
             {
-                var width = ft.GetFullWidth();
-                dc.DrawText(ft, new Point(hCenter.X - width / 2 - ft.OverhangLeading, hCenter.Y));
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
             }
         }
 
-        public static void DrawTextRightAligned(this FormattedText text, DrawingContext dc, Point topRight)
+        public static void DrawTextCenterAligned(this FormattedText text, DrawingContext dc, Point hCenter, bool forceBlackBrush)
         {
-            dc.DrawText(text, new Point(topRight.X - text.GetFullWidth(), topRight.Y));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
+            if (text.Text.Length > 0)
+            {
+                var width = text.GetFullWidth();
+                dc.DrawText(text, new Point(hCenter.X - width / 2 - text.OverhangLeading, hCenter.Y));
+            }
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
         }
 
-
-        public static void DrawTextTopRightAligned(this FormattedText text, DrawingContext dc, Point topRight)
+        public static void DrawTextRightAligned(this FormattedText text, DrawingContext dc, Point topRight, bool forceBlackBrush)
         {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
+            dc.DrawText(text, new Point(topRight.X - text.GetFullWidth(), topRight.Y));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
+        }
+
+        public static void DrawTextTopRightAligned(this FormattedText text, DrawingContext dc, Point topRight, bool forceBlackBrush)
+        {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
             var descent = text.Height - text.Baseline + text.OverhangAfter;
             var topExtra = text.Baseline - text.Extent + descent;
             dc.DrawText(text, new Point(topRight.X - text.GetFullWidth() - text.OverhangLeading, topRight.Y - topExtra));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
         }
 
-        public static void DrawTextBottomLeftAligned(this FormattedText text, DrawingContext dc, Point bottomLeft)
+        public static void DrawTextBottomLeftAligned(this FormattedText text, DrawingContext dc, Point bottomLeft, bool forceBlackBrush)
         {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
             var descent = text.Height - text.Baseline + text.OverhangAfter;
             var topExtra = text.Baseline - text.Extent + descent;
             dc.DrawText(text, new Point(bottomLeft.X - text.OverhangLeading, bottomLeft.Y - topExtra - text.Extent));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
         }
 
-        public static void DrawTextBottomCenterAligned(this FormattedText text, DrawingContext dc, Point bottomCenter)
+        public static void DrawTextBottomCenterAligned(this FormattedText text, DrawingContext dc, Point bottomCenter, bool forceBlackBrush)
         {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
             var descent = text.Height - text.Baseline + text.OverhangAfter;
             var topExtra = text.Baseline - text.Extent + descent;
             dc.DrawText(text, new Point(bottomCenter.X - text.OverhangLeading - text.GetFullWidth() / 2, bottomCenter.Y - topExtra - text.Extent));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
         }
 
-        public static void DrawTextTopCenterAligned(this FormattedText text, DrawingContext dc, Point topCenter)
+        public static void DrawTextTopCenterAligned(this FormattedText text, DrawingContext dc, Point topCenter, bool forceBlackBrush)
         {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
             var descent = text.Height - text.Baseline + text.OverhangAfter;
             var topExtra = text.Baseline - text.Extent + descent;
             dc.DrawText(text, new Point(topCenter.X - text.OverhangLeading - text.GetFullWidth() / 2, topCenter.Y - topExtra));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
         }
 
-        public static void DrawTextBottomRightAligned(this FormattedText text, DrawingContext dc, Point bottomRight)
+        public static void DrawTextBottomRightAligned(this FormattedText text, DrawingContext dc, Point bottomRight, bool forceBlackBrush)
         {
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(Brushes.Black);
+            }
             var descent = text.Height - text.Baseline + text.OverhangAfter;
             var topExtra = text.Baseline - text.Extent + descent;
             dc.DrawText(text, new Point(bottomRight.X - text.GetFullWidth() - text.OverhangLeading, bottomRight.Y - topExtra - text.Extent));
+            if (forceBlackBrush)
+            {
+                text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
+            }
         }
 
         public static double GetFullWidth(this FormattedText ft)

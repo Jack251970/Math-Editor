@@ -23,15 +23,16 @@ namespace Editor
             }
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
             LineSegment line;
             ArcSegment arc;
             Point pathFigureStart;
+            var pen = forceBlackBrush ? BlackStandardRoundPen : StandardRoundPen;
             if (IsInverted)
             {
-                pathFigureStart = new Point(ParentEquation.Right, Bottom - StandardRoundPen.Thickness / 2);
-                line = new LineSegment(new Point(Left, Bottom - StandardRoundPen.Thickness / 2), true);
+                pathFigureStart = new Point(ParentEquation.Right, Bottom - pen.Thickness / 2);
+                line = new LineSegment(new Point(Left, Bottom - pen.Thickness / 2), true);
                 arc = new ArcSegment(Location, new Size(Width * 4.5, Height), 0, false, SweepDirection.Counterclockwise, true);
             }
             else
@@ -43,7 +44,7 @@ namespace Editor
             var pathGeometry = new PathGeometry();
             var pathFigure = new PathFigure(pathFigureStart, [line, arc], false);
             pathGeometry.Figures.Add(pathFigure);
-            dc.DrawGeometry(null, StandardRoundPen, pathGeometry);
+            dc.DrawGeometry(null, pen, pathGeometry);
         }
     }
 }

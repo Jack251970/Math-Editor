@@ -23,13 +23,22 @@ namespace Editor
 
         protected double LineThickness => fontSize * LineFactor;
         protected double ThinLineThickness => fontSize * LineFactor * 0.7;
+        protected Pen BlackStandardPen => PenManager.GetBlackPen(LineThickness);
         protected Pen StandardPen => PenManager.GetPen(LineThickness);
+
+        protected Pen BlackThinPen => PenManager.GetBlackPen(ThinLineThickness);
         protected Pen ThinPen => PenManager.GetPen(ThinLineThickness);
 
+        protected Pen BlackStandardMiterPen => PenManager.GetBlackPen(ThinLineThickness, PenLineJoin.Miter);
         protected Pen StandardMiterPen => PenManager.GetPen(LineThickness, PenLineJoin.Miter);
+
+        protected Pen BlackThinMiterPen => PenManager.GetBlackPen(ThinLineThickness, PenLineJoin.Miter);
         protected Pen ThinMiterPen => PenManager.GetPen(ThinLineThickness, PenLineJoin.Miter);
 
+        protected Pen BlackStandardRoundPen => PenManager.GetBlackPen(LineThickness, PenLineJoin.Round);
         protected Pen StandardRoundPen => PenManager.GetPen(LineThickness, PenLineJoin.Round);
+
+        protected Pen BlackThinRoundPen => PenManager.GetBlackPen(ThinLineThickness, PenLineJoin.Round);
         protected Pen ThinRoundPen => PenManager.GetPen(ThinLineThickness, PenLineJoin.Round);
 
         public HAlignment HAlignment { get; set; }
@@ -42,7 +51,7 @@ namespace Editor
         public MainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }
         private Point location = new();
-        private readonly double width;
+        /*private readonly double width;*/
         private readonly double height;
         private double fontSize = 20;
         private double fontFactor = 1;
@@ -104,7 +113,7 @@ namespace Editor
         public virtual void SelectAll() { }
         public virtual string GetSelectedText() { return string.Empty; }
 
-        public virtual void DrawEquation(DrawingContext dc)
+        public virtual void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
             if (App.Settings.ShowNesting)
             {

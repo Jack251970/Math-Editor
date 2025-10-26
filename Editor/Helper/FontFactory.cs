@@ -19,19 +19,19 @@ public sealed class FontFactory
         }
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize)
+    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, FontWeights.Normal);
+        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, FontWeights.Normal, forceBlackBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontWeight fontWeight)
+    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontWeight fontWeight, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, fontWeight);
+        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, fontWeight, forceBlackBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight)
+    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, PenManager.TextFillColorPrimaryBrush);
+        return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, forceBlackBrush ? Brushes.Black : PenManager.TextFillColorPrimaryBrush);
     }
 
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, Brush brush)
@@ -43,7 +43,12 @@ public sealed class FontFactory
     {
         var typeface = GetTypeface(fontType, fontStyle, fontWeight);
 #pragma warning disable CS0618 // Type or member is obsolete
-        return new FormattedText(textToFormat, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, typeface, fontSize, brush);
+        return new FormattedText(textToFormat,
+            CultureInfo.InvariantCulture,
+            FlowDirection.LeftToRight,
+            typeface,
+            fontSize,
+            brush);
 #pragma warning restore CS0618 // Type or member is obsolete
     }
 

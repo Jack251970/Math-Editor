@@ -27,23 +27,24 @@ namespace Editor
             return LatexConverter.ToDivision(DivisionType.DivRegular, _topEquation.ToLatex(), _bottomEquation.ToLatex());
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
+            base.DrawEquation(dc, forceBlackBrush);
+            var pen = forceBlackBrush ? BlackStandardPen : StandardPen;
             if (barCount == 1)
             {
-                dc.DrawLine(StandardPen, new Point(Left + ExtraWidth * .5, MidY), new Point(Right - ExtraWidth * .5, MidY));
+                dc.DrawLine(pen, new Point(Left + ExtraWidth * .5, MidY), new Point(Right - ExtraWidth * .5, MidY));
             }
             else if (barCount == 2)
             {
-                dc.DrawLine(StandardPen, new Point(Left + ExtraWidth * .5, MidY - ExtraHeight / 2), new Point(Right - ExtraWidth * .5, MidY - ExtraHeight / 2));
-                dc.DrawLine(StandardPen, new Point(Left + ExtraWidth * .5, MidY + ExtraHeight / 2), new Point(Right - ExtraWidth * .5, MidY + ExtraHeight / 2));
+                dc.DrawLine(pen, new Point(Left + ExtraWidth * .5, MidY - ExtraHeight / 2), new Point(Right - ExtraWidth * .5, MidY - ExtraHeight / 2));
+                dc.DrawLine(pen, new Point(Left + ExtraWidth * .5, MidY + ExtraHeight / 2), new Point(Right - ExtraWidth * .5, MidY + ExtraHeight / 2));
             }
             if (barCount == 3)
             {
-                dc.DrawLine(StandardPen, new Point(Left + ExtraWidth * .5, MidY), new Point(Right - ExtraWidth * .5, MidY));
-                dc.DrawLine(StandardPen, new Point(Left + ExtraWidth * .5, MidY - ExtraHeight), new Point(Right - ExtraWidth * .5, MidY - ExtraHeight));
-                dc.DrawLine(StandardPen, new Point(Left + ExtraWidth * .5, MidY + ExtraHeight), new Point(Right - ExtraWidth * .5, MidY + ExtraHeight));
+                dc.DrawLine(pen, new Point(Left + ExtraWidth * .5, MidY), new Point(Right - ExtraWidth * .5, MidY));
+                dc.DrawLine(pen, new Point(Left + ExtraWidth * .5, MidY - ExtraHeight), new Point(Right - ExtraWidth * .5, MidY - ExtraHeight));
+                dc.DrawLine(pen, new Point(Left + ExtraWidth * .5, MidY + ExtraHeight), new Point(Right - ExtraWidth * .5, MidY + ExtraHeight));
             }
             //dc.DrawLine(new Pen(Brushes.Purple, 1), new Point(Left, MidY), new Point(Right, MidY));            
         }

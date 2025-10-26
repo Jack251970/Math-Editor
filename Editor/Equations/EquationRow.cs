@@ -419,7 +419,7 @@ namespace Editor
                         dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
                         foreach (var eb in equations)
                         {
-                            eb.DrawEquation(dc);
+                            eb.DrawEquation(dc, true);
                         }
                     }
                     Owner.ViewModel.IsSelecting = true;
@@ -467,9 +467,10 @@ namespace Editor
             return base.Copy(removeSelection);
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
+            base.DrawEquation(dc, forceBlackBrush);
+            //if (forceBlackBrush) return;
             if (_deleteable != null)
             {
                 // TODO: Use AppResources for all brushes?

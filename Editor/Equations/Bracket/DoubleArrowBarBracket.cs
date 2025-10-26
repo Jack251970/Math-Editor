@@ -28,10 +28,11 @@ namespace Editor
             childEquations.AddRange([leftEquation, leftArrowSign, rightArrowSign, rightEquation]);
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
-            dc.DrawLine(ThinPen, new Point(leftEquation.Right + MidSpace / 2, Top + ExtraHeight / 2), new Point(leftEquation.Right + MidSpace / 2, Bottom - ExtraHeight / 2));
+            base.DrawEquation(dc, forceBlackBrush);
+            var pen = forceBlackBrush ? BlackThinPen : ThinPen;
+            dc.DrawLine(pen, new Point(leftEquation.Right + MidSpace / 2, Top + ExtraHeight / 2), new Point(leftEquation.Right + MidSpace / 2, Bottom - ExtraHeight / 2));
         }
 
         public override XElement Serialize()

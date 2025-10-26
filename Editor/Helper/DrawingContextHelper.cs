@@ -17,7 +17,7 @@ namespace Editor
             dc.DrawGeometry(null, pen, geometry);
         }
 
-        public static void FillPolylineGeometry(this DrawingContext dc, Point startPoint, PointCollection points)
+        public static void FillPolylineGeometry(this DrawingContext dc, Point startPoint, PointCollection points, bool forceBlackBrush)
         {
             var geometry = new PathGeometry();
             var segment = new PolyLineSegment
@@ -26,7 +26,7 @@ namespace Editor
             };
             var fig = new PathFigure(startPoint, [segment], true);
             geometry.Figures.Add(fig);
-            dc.DrawGeometry(PenManager.TextFillColorPrimaryBrush, null, geometry);
+            dc.DrawGeometry(forceBlackBrush ? Brushes.Black : PenManager.TextFillColorPrimaryBrush, null, geometry);
         }
     }
 }

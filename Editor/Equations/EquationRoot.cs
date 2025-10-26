@@ -296,9 +296,9 @@ namespace Editor
             }
         }
 
-        public void DrawVisibleRows(DrawingContext dc, double top, double bottom)
+        public void DrawVisibleRows(DrawingContext dc, double top, double bottom, bool forceBlackBrush)
         {
-            ((RowContainer)ActiveChild).DrawVisibleRows(dc, top, bottom);
+            ((RowContainer)ActiveChild).DrawVisibleRows(dc, top, bottom, forceBlackBrush);
         }
 
         public void SaveImageToFile(string path)
@@ -311,7 +311,7 @@ namespace Editor
                 {
                     dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
                 }
-                ActiveChild.DrawEquation(dc);
+                ActiveChild.DrawEquation(dc, true);
             }
             var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)), (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
             bitmap.Render(dv);

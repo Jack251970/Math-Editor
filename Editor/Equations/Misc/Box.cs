@@ -102,25 +102,26 @@ namespace Editor
             return LatexConverter.ToBox(_boxType, _insideEq.ToLatex());
         }
 
-        public override void DrawEquation(DrawingContext dc)
+        public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            base.DrawEquation(dc);
+            base.DrawEquation(dc, forceBlackBrush);
+            var pen = forceBlackBrush ? BlackStandardMiterPen : StandardMiterPen;
             switch (_boxType)
             {
                 case BoxType.All:
-                    dc.DrawPolyline(LeftTop, [RightTop, RightBottom, LeftBottom, LeftTop, RightTop], StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, [RightTop, RightBottom, LeftBottom, LeftTop, RightTop], pen);
                     break;
                 case BoxType.LeftBottom:
-                    dc.DrawPolyline(LeftTop, [LeftBottom, RightBottom], StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, [LeftBottom, RightBottom], pen);
                     break;
                 case BoxType.LeftTop:
-                    dc.DrawPolyline(RightTop, [LeftTop, LeftBottom], StandardMiterPen);
+                    dc.DrawPolyline(RightTop, [LeftTop, LeftBottom], pen);
                     break;
                 case BoxType.RightBottom:
-                    dc.DrawPolyline(RightTop, [RightBottom, LeftBottom], StandardMiterPen);
+                    dc.DrawPolyline(RightTop, [RightBottom, LeftBottom], pen);
                     break;
                 case BoxType.RightTop:
-                    dc.DrawPolyline(LeftTop, [RightTop, RightBottom], StandardMiterPen);
+                    dc.DrawPolyline(LeftTop, [RightTop, RightBottom], pen);
                     break;
             }
         }
