@@ -831,8 +831,7 @@ namespace Editor
             var count = formats.Count;
             for (var i = startIndex; i < startIndex + count; i++)
             {
-                formats[i] = TextManager.GetFormatIdForNewSolidBrush(formats[i], (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ?
-                    Brushes.Black : Brushes.White));
+                formats[i] = TextManager.GetFormatIdForNewSolidBrush(formats[i], PenManager.TextFillColorPrimaryBrush);
             }
         }
 
