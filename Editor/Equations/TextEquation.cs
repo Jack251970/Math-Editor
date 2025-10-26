@@ -351,7 +351,7 @@ namespace Editor
                 RenderTargetBitmap? bitmap = null;
                 if (App.Settings.CopyType == CopyType.Image)
                 {
-                    bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + 4)), (int)(Math.Ceiling(Height + 4)), 96, 96, PixelFormats.Default);
+                    bitmap = new RenderTargetBitmap((int)Math.Ceiling(Width + 4), (int)Math.Ceiling(Height + 4), 96, 96, PixelFormats.Default);
                     var dv = new DrawingVisual();
                     using (var dc = dv.RenderOpen())
                     {
