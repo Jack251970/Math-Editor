@@ -247,50 +247,71 @@
                         Header="{Binding FullScreenMenuItemHeader, Mode=OneWay}" />
                     <MenuItem Header="{DynamicResource MainWindow_Zoom}">
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="25%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="25" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="50%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="50" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="75%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="75" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            x:Name="DefaultZoomPercentageItem"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="100%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="100" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="150%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="150" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="200%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="200" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="250%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="250" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="300%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="300" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="400%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="400" />
                         <MenuItem
-                            Click="ZoomMenuItem_Click"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                             Header="500%"
-                            IsCheckable="True" />
+                            IsCheckable="True"
+                            Tag="500" />
                         <MenuItem
-                            Name="customZoomMenu"
                             Command="{Binding OpenCustomZoomWindowCommand, Mode=OneTime}"
-                            Header="{DynamicResource MainWindow_ZoomCustom}"
-                            IsCheckable="True" />
+                            Header="{Binding CustomZoomMenuHeader, Mode=OneWay}"
+                            IsCheckable="True"
+                            IsChecked="{Binding CustomZoomMenuChecked, Mode=OneWay}" />
                     </MenuItem>
                     <MenuItem
                         x:Name="showNestingMenuItem"

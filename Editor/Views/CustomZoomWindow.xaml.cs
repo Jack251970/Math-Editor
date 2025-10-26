@@ -36,7 +36,7 @@ public partial class CustomZoomWindow : Window
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            ((MainWindow)Owner).SetFontSizePercentage(number);
+            ((MainWindow)Owner).ViewModel.CustomZoomPercentage = number;
             Close();
         }
         catch

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -32,6 +33,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         UpdateMainWindowTitle();
         UpdateShowNestingMenuItemHeader();
         UpdateFullScreenMenuItemHeader();
+        UpdateCustomZoomPercentage();
         UpdateStatusBarLeftMessage();
     }
 
@@ -90,11 +92,22 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [ObservableProperty]
     private Visibility _fullScreenButtonVisibility = Visibility.Collapsed;
 
+    [ObservableProperty]
+    private int _customZoomPercentage = 0;
+
+    [ObservableProperty]
+    private bool _customZoomMenuChecked = false;
+
+    [ObservableProperty]
+    private string _customZoomMenuHeader = null!;
+
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
     public bool IgnoreInputBoldChange { get; set; } = false;
     public bool IgnoreInputItalicChange { get; set; } = false;
     public bool IgnoreInputUnderlineChange { get; set; } = false;
+
+    public bool IgnoreEditorZoomPercentageChange { get; set; } = false;
 
     partial void OnCurrentLocalFileChanged(string value)
     {
@@ -214,6 +227,64 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             // Ignore
         }
         return currentLocalFileName;
+    }
+
+    partial void OnCustomZoomPercentageChanged(int value)
+    {
+        if (!IgnoreEditorZoomPercentageChange && value != 0)
+        {
+            Editor?.SetFontSizePercentage(value);
+        }
+        UpdateCustomZoomPercentage();
+    }
+
+    private void UpdateCustomZoomPercentage()
+    {
+        if (CustomZoomPercentage == 0)
+        {
+            CustomZoomMenuChecked = false;
+            CustomZoomMenuHeader = Localize.MainWindow_Custom();
+        }
+        else
+        {
+            CustomZoomMenuChecked = true;
+            CustomZoomMenuHeader = Localize.MainWindow_CustomPercentage(CustomZoomPercentage);
+            if (_lastZoomPercentageItem != null)
+            {
+                _lastZoomPercentageItem.IsChecked = false;
+                _lastZoomPercentageItem = null;
+            }
+        }
+    }
+
+    private MenuItem? _lastZoomPercentageItem;
+
+    [RelayCommand]
+    private void ChangeZoomPercentage(MenuItem item)
+    {
+        if (item.Tag is string percentage &&
+            !string.IsNullOrEmpty(percentage) &&
+            int.TryParse(percentage, out var zoomPercentage))
+        {
+            Editor?.SetFontSizePercentage(zoomPercentage);
+            SetLastZoomPercentageItem(item);
+            // Reset the custom zoom percentage
+            IgnoreEditorZoomPercentageChange = true;
+            CustomZoomPercentage = 0;
+            IgnoreEditorZoomPercentageChange = false;
+        }
+    }
+
+    public void SetLastZoomPercentageItem(MenuItem item)
+    {
+        // Uncheck the last selected zoom percentage item
+        if (_lastZoomPercentageItem != null && item != _lastZoomPercentageItem)
+        {
+            _lastZoomPercentageItem.IsChecked = false;
+        }
+        // Check the current selected zoom percentage item
+        item.IsChecked = true;
+        _lastZoomPercentageItem = item;
     }
 
     partial void OnActiveChildSelectionStartIndexChanged(int value)
@@ -377,6 +448,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         UpdateMainWindowTitle();
         UpdateShowNestingMenuItemHeader();
         UpdateFullScreenMenuItemHeader();
+        UpdateCustomZoomPercentage();
         UpdateStatusBarLeftMessage();
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);

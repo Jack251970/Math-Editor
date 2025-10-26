@@ -64,6 +64,9 @@ public partial class MainWindow : Window, ICultureInfoChanged
         ViewModel.ChangeInputUnderline(false);*/
         Editor.Focus();
 
+        // Init zoom percentage item
+        ViewModel.SetLastZoomPercentageItem(DefaultZoomPercentageItem);
+
         IsEditorLoaded = true;
     }
 
@@ -163,6 +166,13 @@ public partial class MainWindow : Window, ICultureInfoChanged
     private void UndoManager_CanRedo(object? sender, UndoEventArgs e)
     {
         ViewModel.RedoButtonIsEnabled = e.ActionPossible;
+    }
+
+    private void Editor_ZoomChanged(object? sender, int number)
+    {
+        ViewModel.IgnoreEditorZoomPercentageChange = true;
+        ViewModel.CustomZoomPercentage = number;
+        ViewModel.IgnoreEditorZoomPercentageChange = false;
     }
 
     private void EquationToolBar_CommandCompleted(object? sender, EventArgs e)
@@ -333,48 +343,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
     }
 
     #endregion
-
-    private MenuItem? lastZoomMenuItem = null;
-
-    private void ZoomMenuItem_Click(object sender, RoutedEventArgs e)
-    {
-        customZoomMenu.Header = "_Custom";
-        customZoomMenu.IsChecked = false;
-        if (lastZoomMenuItem != null && sender != lastZoomMenuItem)
-        {
-            lastZoomMenuItem.IsChecked = false;
-        }
-        lastZoomMenuItem = (MenuItem)sender;
-        lastZoomMenuItem.IsChecked = true;
-        var percentage = lastZoomMenuItem.Header as string;
-        if (!string.IsNullOrEmpty(percentage))
-        {
-            Editor.SetFontSizePercentage(int.Parse(percentage.Replace("%", "")));
-        }
-    }
-
-    private void Editor_ZoomChanged(object? sender, int number)
-    {
-        customZoomMenu.Header = "_Custom (" + number + "%)";
-        customZoomMenu.IsChecked = true;
-        if (lastZoomMenuItem != null)
-        {
-            lastZoomMenuItem.IsChecked = false;
-            lastZoomMenuItem = null;
-        }
-    }
-
-    public void SetFontSizePercentage(int number)
-    {
-        customZoomMenu.Header = "_Custom (" + number + "%)";
-        customZoomMenu.IsChecked = true;
-        if (lastZoomMenuItem != null)
-        {
-            lastZoomMenuItem.IsChecked = false;
-            lastZoomMenuItem = null;
-        }
-        Editor.SetFontSizePercentage(number);
-    }
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {

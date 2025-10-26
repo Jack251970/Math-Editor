@@ -186,7 +186,8 @@
     <system:String x:Key="MainWindow_FullScreen">Full screen</system:String>
     <system:String x:Key="MainWindow_NormalScreen">Normal screen</system:String>
     <system:String x:Key="MainWindow_Zoom">Zoom</system:String>
-    <system:String x:Key="MainWindow_ZoomCustom">Custom</system:String>
+    <system:String x:Key="MainWindow_Custom">Custom</system:String>
+    <system:String x:Key="MainWindow_CustomPercentage">Custom ({0}%)</system:String>
 
     <system:String x:Key="MainWindow_Tools">Tools</system:String>
     <system:String x:Key="MainWindow_Settings">Settings</system:String>
