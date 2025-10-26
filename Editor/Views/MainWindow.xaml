@@ -21,8 +21,6 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
-        <local:EditorModeToBoolConverter x:Key="editorModeToBoolconverter" />
-        <local:EditorModeToVisibilityConverter x:Key="editorModeToVisibilityconverter" />
         <Style x:Key="ToolbarButton" TargetType="Button">
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30" />
@@ -67,6 +65,30 @@
             Key="W"
             Command="Close"
             Modifiers="Ctrl+Shift" />
+        <KeyBinding
+            Key="Z"
+            Command="{Binding UndoCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="Y"
+            Command="{Binding RedoCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="X"
+            Command="{Binding CutCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="C"
+            Command="{Binding CopyCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="V"
+            Command="{Binding PasteCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="A"
+            Command="{Binding SelectAllCommand, Mode=OneTime}"
+            Modifiers="Ctrl" />
     </Window.InputBindings>
 
     <DockPanel x:Name="MainDock" LastChildFill="True">
@@ -168,28 +190,45 @@
 
                 <MenuItem x:Name="editMenuItem" Header="{DynamicResource MainWindow_Edit}">
                     <MenuItem
+                        Command="{Binding UndoCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Undo}"
+                        InputGestureText="Ctrl+Z"
+                        IsEnabled="{Binding UndoButtonIsEnabled, Mode=OneWay}" />
+                    <MenuItem
+                        Command="{Binding RedoCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Redo}"
+                        InputGestureText="Ctrl+Y"
+                        IsEnabled="{Binding RedoButtonIsEnabled, Mode=OneWay}" />
+                    <Separator />
+                    <MenuItem
                         x:Name="cutMenuItem"
                         Command="{Binding CutCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Cut}"
+                        InputGestureText="Ctrl+X"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
                         x:Name="copyMenuItem"
                         Command="{Binding CopyCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Copy}"
+                        InputGestureText="Ctrl+C"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
                     <MenuItem
                         x:Name="pasteMenuItem"
                         Command="{Binding PasteCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_Paste}" />
-                    <MenuItem
-                        x:Name="selectAllMenuItem"
-                        Command="{Binding SelectAllCommand, Mode=OneTime}"
-                        Header="{DynamicResource MainWindow_SelectAll}" />
+                        Header="{DynamicResource MainWindow_Paste}"
+                        InputGestureText="Ctrl+V" />
                     <MenuItem
                         x:Name="deleteMenuItem"
                         Command="{Binding DeleteCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Delete}"
+                        InputGestureText="Del"
                         IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
+                    <Separator />
+                    <MenuItem
+                        x:Name="selectAllMenuItem"
+                        Command="{Binding SelectAllCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_SelectAll}"
+                        InputGestureText="Ctrl+A" />
                 </MenuItem>
 
                 <MenuItem x:Name="insertMenuItem" Header="{DynamicResource MainWindow_Insert}">
@@ -401,7 +440,7 @@
                     <!--<ToggleButton
                         x:Name="italicToggleButton"
                         IsChecked="{Binding InputItalic}"
-                        IsEnabled="{Binding Path=EditorMode, Converter={StaticResource editorModeToBoolconverter}}"
+                        IsEnabled="{Binding Path=EditorMode, Converter={StaticResource EditorModeToBoolConverter}}"
                         Style="{StaticResource ToolbarToggleButton}"
                         ToolTip="Italic" />-->
                     <ToggleButton
