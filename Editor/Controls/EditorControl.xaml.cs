@@ -335,41 +335,6 @@ public partial class EditorControl : UserControl, IDisposable
     public void ExportImage(string filePath)
     {
         equationRoot.SaveImageToFile(filePath);
-        /*//clip 1
-        DrawingVisual drawingVisual = new DrawingVisual();
-        using (DrawingContext drawingContext = drawingVisual.RenderOpen())
-        {
-            RenderTargetBitmap bmp = new RenderTargetBitmap(100, 100, 96, 96, PixelFormats.Default);
-            bmp.Render(drawingVisual);
-
-        }
-        //clip 2
-        var image = Clipboard.GetImage();
-        using (var fileStream = new FileStream(filePath, FileMode.Create))
-        {
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image));
-            encoder.Save(fileStream);
-        }
-
-        //clip 3
-
-        Rect rect = new Rect(RenderSize);
-        RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
-          (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
-        rtb.Render(this);
-        //endcode as PNG
-        BitmapEncoder pngEncoder = new PngBitmapEncoder();
-        pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-
-        //save to memory stream
-        System.IO.MemoryStream ms = new System.IO.MemoryStream();
-
-        pngEncoder.Save(ms);
-        ms.Close();
-        System.IO.File.WriteAllBytes("logo.png", ms.ToArray());
-        Console.WriteLine("Done");
-        */
     }
 
     public void Print(PrintDialog printDialog)
