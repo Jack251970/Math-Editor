@@ -319,18 +319,18 @@ namespace Editor
 #pragma warning restore CS0618 // Type or member is obsolete
             for (var i = 0; i < formats.Count; i++)
             {
-                FormatText(formats, formattedText, i);
+                FormatText(formats, formattedText, i, forceBlackBrush);
             }
             return formattedText;
         }
 
-        private void FormatText(List<int> formats, FormattedText formattedText, int i)
+        private void FormatText(List<int> formats, FormattedText formattedText, int i, bool forceBlackBrush = false)
         {
             formattedText.SetFontFamily(formattingList[formats[i]].FontFamily, i, 1);
             formattedText.SetFontSize(formattingList[formats[i]].FontSize, i, 1);
             formattedText.SetFontStyle(formattingList[formats[i]].FontStyle, i, 1);
             formattedText.SetFontWeight(formattingList[formats[i]].FontWeight, i, 1);
-            formattedText.SetForegroundBrush(formattingList[formats[i]].TextBrush, i, 1);
+            formattedText.SetForegroundBrush(forceBlackBrush ? Brushes.Black : formattingList[formats[i]].TextBrush, i, 1);
             if (formattingList[formats[i]].UseUnderline)
             {
                 formattedText.SetTextDecorations(decorations[0], i, 1);

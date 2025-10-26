@@ -977,7 +977,7 @@ namespace Editor
                             var text = textData.ToString(done, subLimit - done);
                             if (text.Length > 0)
                             {
-                                var ft = TextManager.GetFormattedText(text, [.. formats.Skip(done).Take(text.Length)], true);
+                                var ft = TextManager.GetFormattedText(text, [.. formats.Skip(done).Take(text.Length)]);
                                 ft.DrawTextLeftAligned(dc, new Point(left, Top - topExtra));
                                 left += ft.GetFullWidth();
                                 //dc.DrawLine(new Pen(Brushes.Blue, 1), new Point(left, Top), new Point(left, Bottom));
