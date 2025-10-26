@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,8 +42,6 @@ public partial class EditorControl : UserControl, IDisposable
         };
         timer = new Timer(BlinkPeriod);
         timer.Elapsed += Timer_Elapsed;
-        // ensure timer and carets are disposed when the window is closed.
-        mainWindow.Closing += OnWindowClosing;
     }
 
     private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
@@ -59,11 +56,6 @@ public partial class EditorControl : UserControl, IDisposable
         // Here we set Editor later so that equationRoot will not call the methods related to timer
         // which can cause null exception
         equationRoot.Editor = this;
-    }
-
-    private void OnWindowClosing(object? sender, CancelEventArgs e)
-    {
-        Dispose();
     }
 
     public void SetFontSizePercentage(int percentage)

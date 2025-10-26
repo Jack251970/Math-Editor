@@ -152,6 +152,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         Editor.ZoomChanged -= Editor_ZoomChanged;
         CharacterToolBar.CommandCompleted -= CharacterToolBar_CommandCompleted;
         EquationToolBar.CommandCompleted -= EquationToolBar_CommandCompleted;
+        Editor.Dispose();
     }
 
     private void UndoManager_CanUndo(object? sender, UndoEventArgs e)
