@@ -13,6 +13,7 @@
     MouseEnter="EditorControl_MouseEnter"
     MouseLeave="EditorControl_MouseLeave"
     MouseMove="EditorControl_MouseMove"
+    MouseRightButtonDown="EditorControl_MouseRightButtonDown"
     MouseUp="EditorControl_MouseUp"
     TextInput="EditorControl_TextInput"
     UseLayoutRounding="True"

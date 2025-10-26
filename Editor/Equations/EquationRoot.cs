@@ -16,7 +16,7 @@ namespace Editor
     {
         private static readonly string ClassName = nameof(EquationRoot);
 
-        private static readonly string ClipboardXmlFormat = $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
+        public static readonly string ClipboardXmlFormat = $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
 
         public EditorControl? Editor { get; set; } = null;
         private readonly Caret _vCaret;
@@ -221,44 +221,31 @@ namespace Editor
 
         public bool PasteFromClipBoard()
         {
-            var success = false;
-            MathEditorData? data = null;
-            var text = string.Empty;
+            // Get data from clipboard with retries
+            object? data = null;
             for (var i = 0; i < 3; i++)
             {
-                try
+                if (CanPasteFromClipboard(out var data1))
                 {
-                    if (Clipboard.ContainsData(ClipboardXmlFormat))
-                    {
-                        if (Clipboard.GetData(ClipboardXmlFormat) is string xmlString)
-                        {
-                            data = new MathEditorData { XmlString = xmlString };
-                        }
-                        break;
-                    }
-                    else if (Clipboard.ContainsText())
-                    {
-                        text = Clipboard.GetText();
-                        break;
-                    }
+                    data = data1;
+                    break;
                 }
-                catch (Exception e)
-                {
-                    EditorLogger.Error(ClassName, "Failed to paste from clipboard", e);
-                    Thread.Sleep(100);
-                }
+                Thread.Sleep(100);
             }
+
+            // Parse and paste data
+            var success = false;
             try
             {
-                if (data != null)
+                if (data is MathEditorData mathEditorData)
                 {
-                    var element = XElement.Parse(data.XmlString, LoadOptions.PreserveWhitespace);
+                    var element = XElement.Parse(mathEditorData.XmlString, LoadOptions.PreserveWhitespace);
                     Paste(element);
                     success = true;
                 }
-                else if (!string.IsNullOrEmpty(text))
+                else if (data is string textData)
                 {
-                    ConsumeText(text);
+                    ConsumeText(textData);
                     success = true;
                 }
             }
@@ -266,9 +253,38 @@ namespace Editor
             {
                 var dataType = data != null ? "XML Data" : "Text Data";
                 EditorLogger.Error(ClassName, $"Failed to parse from {dataType} data", e);
-                success = false;
             }
             return success;
+        }
+
+        public static bool CanPasteFromClipboard(out object? data)
+        {
+            data = null;
+            try
+            {
+                if (Clipboard.ContainsData(ClipboardXmlFormat))
+                {
+                    if (Clipboard.GetData(ClipboardXmlFormat) is string xmlString)
+                    {
+                        data = new MathEditorData { XmlString = xmlString };
+                        return true;
+                    }
+                }
+                else if (Clipboard.ContainsText())
+                {
+                    var textString = Clipboard.GetText();
+                    if (!string.IsNullOrEmpty(textString))
+                    {
+                        data = textString;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
+            }
+            return false;
         }
 
         public override void ConsumeText(string text)

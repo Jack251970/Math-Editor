@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
@@ -165,6 +166,57 @@ public partial class EditorControl : UserControl, IDisposable
         ForceCaretVisible(false); // When we click, we want to see the caret immediately
         lastMouseLocation = e.GetPosition(this);
         isDragging = true;
+    }
+
+    private void EditorControl_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        Focus();
+
+        // Build context menu
+        var menu = new ContextMenu();
+
+        var hasSelection = _mainWindow.ViewModel.IsSelecting == true;
+        var canPaste = EquationRoot.CanPasteFromClipboard(out _);
+
+        void AddMenuItem(string header, bool isEnabled, Action action)
+        {
+            var mi = new MenuItem { Header = header, IsEnabled = isEnabled };
+            mi.Click += (s, e) => action();
+            menu.Items.Add(mi);
+        }
+
+        void AddSeparator()
+        {
+            menu.Items.Add(new Separator());
+        }
+
+        AddMenuItem(Localize.MainWindow_Cut(), hasSelection, Cut);
+
+        AddMenuItem(Localize.MainWindow_Copy(), hasSelection, Copy);
+
+        AddMenuItem(Localize.MainWindow_Paste(), canPaste, Paste);
+
+        AddMenuItem(Localize.MainWindow_Delete(), hasSelection, DeleteSelection);
+
+        // It looks like Clear action cannot be added into UndoManager,
+        // So we do not add it here
+        /*AddSeparator();
+
+        AddMenuItem(Localize.MainWindow_Clear(), true, Clear);*/
+
+        AddSeparator();
+
+        AddMenuItem(Localize.MainWindow_SelectAll(), true, SelectAll);
+
+        // Show at mouse position
+        var pos = e.GetPosition(this);
+        menu.PlacementTarget = this;
+        menu.Placement = PlacementMode.RelativePoint;
+        menu.HorizontalOffset = pos.X;
+        menu.VerticalOffset = pos.Y;
+        menu.IsOpen = true;
+
+        e.Handled = true;
     }
 
     private bool isForceVisible = false;
@@ -368,7 +420,17 @@ public partial class EditorControl : UserControl, IDisposable
         ZoomIn();
     }
 
-    public void Copy(bool cut)
+    public void Cut()
+    {
+        Copy(true);
+    }
+
+    public void Copy()
+    {
+        Copy(false);
+    }
+
+    private void Copy(bool cut)
     {
         equationRoot.Copy(cut);
         if (cut)

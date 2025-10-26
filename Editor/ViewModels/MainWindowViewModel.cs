@@ -435,13 +435,13 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [RelayCommand]
     private void Cut()
     {
-        Editor!.Copy(true);
+        Editor!.Cut();
     }
 
     [RelayCommand]
     private void Copy()
     {
-        Editor!.Copy(false);
+        Editor!.Copy();
     }
 
     [RelayCommand]
