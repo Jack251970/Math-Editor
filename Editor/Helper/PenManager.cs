@@ -9,9 +9,8 @@ namespace Editor
 {
     public static class PenManager
     {
-        // TextFillColorPrimaryBrush
         public static SolidColorBrush TextFillColorPrimaryBrush =>
-            ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Light ? Brushes.Black : Brushes.White;
+            GetTextFillColorPrimaryBrush(ThemeManager.Current.ActualApplicationTheme);
 
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _bevelPens = [];
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _miterPens = [];
@@ -60,10 +59,11 @@ namespace Editor
             lock (lockObj)
             {
                 var thickness = Math.Round(key.Item1, 1);
-                var newKey = (thickness, key.Item2);
+                var theme = key.Item2;
+                var newKey = (thickness, theme);
                 if (!penDictionary.TryGetValue(newKey, out var value))
                 {
-                    var pen = new Pen(brush ?? TextFillColorPrimaryBrush, thickness)
+                    var pen = new Pen(brush ?? GetTextFillColorPrimaryBrush(theme), thickness)
                     {
                         LineJoin = lineJoin
                     };
@@ -75,10 +75,9 @@ namespace Editor
             }
         }
 
-        // AccentFillColorDefaultBrush
-        private static Pen? _rowBoxPen;
-        private static readonly object _rowBoxPenLock = new();
+        private static readonly Lock _rowBoxPenLock = new();
 
+        private static Pen? _rowBoxPen;
         public static Pen RowBoxPen
         {
             get
@@ -87,10 +86,7 @@ namespace Editor
                 {
                     lock (_rowBoxPenLock)
                     {
-                        _rowBoxPen = new(
-                            new SolidColorBrush(((SolidColorBrush)Application.Current.Resources[
-                                ThemeKeys.AccentFillColorDefaultBrushKey]).Color),
-                            1.1)
+                        _rowBoxPen = new(GetAccentFillColorDefaultBrush(), 1.1)
                         {
                             StartLineCap = PenLineCap.Flat,
                             EndLineCap = PenLineCap.Flat,
@@ -101,6 +97,20 @@ namespace Editor
                 }
                 return _rowBoxPen;
             }
+        }
+
+        /*
+         * Brushes
+         */
+        private static SolidColorBrush GetTextFillColorPrimaryBrush(ApplicationTheme? theme)
+        {
+            theme ??= ThemeManager.Current.ActualApplicationTheme;
+            return theme == ApplicationTheme.Light ? Brushes.Black : Brushes.White;
+        }
+
+        private static SolidColorBrush GetAccentFillColorDefaultBrush()
+        {
+            return new(((SolidColorBrush)Application.Current.Resources[ThemeKeys.AccentFillColorDefaultBrushKey]).Color);
         }
     }
 }
