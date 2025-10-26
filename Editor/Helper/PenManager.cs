@@ -9,9 +9,9 @@ namespace Editor
 {
     public static class PenManager
     {
-        public static SolidColorBrush TextFillColorPrimaryBrush =>
-            GetTextFillColorPrimaryBrush(ThemeManager.Current.ActualApplicationTheme);
-
+        /*
+         * Pens
+         */
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _bevelPens = [];
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _miterPens = [];
         private static readonly Dictionary<(double, ApplicationTheme), Pen> _roundPens = [];
@@ -82,9 +82,9 @@ namespace Editor
         {
             get
             {
-                if (_rowBoxPen is null)
+                lock (_rowBoxPenLock)
                 {
-                    lock (_rowBoxPenLock)
+                    if (_rowBoxPen is null)
                     {
                         _rowBoxPen = new(GetAccentFillColorDefaultBrush(), 1.1)
                         {
@@ -94,14 +94,39 @@ namespace Editor
                         };
                         _rowBoxPen.Freeze();
                     }
+                    return _rowBoxPen;
                 }
-                return _rowBoxPen;
             }
         }
 
         /*
          * Brushes
          */
+        public static SolidColorBrush TextFillColorPrimaryBrush =>
+            GetTextFillColorPrimaryBrush(ThemeManager.Current.ActualApplicationTheme);
+
+        private static readonly Lock _deleteableBrushLock = new();
+
+        private static SolidColorBrush? _deleteableBrush;
+        public static SolidColorBrush DeleteableBrush
+        {
+            get
+            {
+                lock (_deleteableBrushLock)
+                {
+                    if (_deleteableBrush is null)
+                    {
+                        _deleteableBrush = new SolidColorBrush(Colors.Gray)
+                        {
+                            Opacity = 0.5
+                        };
+                        _deleteableBrush.Freeze();
+                    }
+                    return _deleteableBrush;
+                }
+            }
+        }
+
         private static SolidColorBrush GetTextFillColorPrimaryBrush(ApplicationTheme? theme)
         {
             theme ??= ThemeManager.Current.ActualApplicationTheme;

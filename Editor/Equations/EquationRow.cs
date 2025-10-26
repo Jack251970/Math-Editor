@@ -473,12 +473,7 @@ namespace Editor
             //if (forceBlackBrush) return;
             if (_deleteable != null)
             {
-                // TODO: Use AppResources for all brushes?
-                Brush brush = new SolidColorBrush(Colors.Gray)
-                {
-                    Opacity = 0.5
-                };
-                dc.DrawRectangle(brush, null, new Rect(_deleteable.Location, _deleteable.Size));
+                dc.DrawRectangle(PenManager.DeleteableBrush, null, new Rect(_deleteable.Location, _deleteable.Size));
             }
             if (childEquations.Count == 1)
             {
