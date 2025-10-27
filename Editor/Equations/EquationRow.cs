@@ -292,6 +292,7 @@ namespace Editor
                         }
                         firstRect.Union(lastRect);
                     }
+                    System.Diagnostics.Debug.WriteLine($"EquationRow.GetSelectionBounds: {firstRect}");
                     return new Rect(firstRect.TopLeft, firstRect.BottomRight);
                 }
             }
@@ -472,7 +473,7 @@ namespace Editor
         public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
             base.DrawEquation(dc, forceBlackBrush);
-            //if (forceBlackBrush) return;
+            if (forceBlackBrush) return;
             if (_deleteable != null)
             {
                 dc.DrawRectangle(PenManager.DeleteableBrush, null, new Rect(_deleteable.Location, _deleteable.Size));
