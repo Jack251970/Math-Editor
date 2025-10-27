@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -56,7 +57,7 @@ namespace Editor
             TextManager.RestoreAfterSave(this);
         }
 
-        public void LoadFile(Stream stream)
+        public async Task LoadFileAsync(Stream stream)
         {
             UndoManager.ClearAll();
             DeSelect();
@@ -81,8 +82,8 @@ namespace Editor
             var appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
             if (fileVersionAttribute == null || fileVersionAttribute.Value != fileVersion)
             {
-                MessageBox.Show(Owner, Localize.EquationRoot_FileVersionDifferent(appVersion, Environment.NewLine),
-                    Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Warning);
+                await ContentDialogHelper.ShowAsync(Owner, Localize.EquationRoot_FileVersionDifferent(appVersion, Environment.NewLine),
+                    Localize.Error(), MessageBoxButton.OK);
             }
             ActiveChild.DeSerialize(root);
             CalculateSize();
@@ -318,7 +319,7 @@ namespace Editor
             ((RowContainer)ActiveChild).DrawVisibleRows(dc, top, bottom, forceBlackBrush);
         }
 
-        public void SaveImageToFile(string path)
+        public async Task SaveImageToFileAsync(string path)
         {
             var extension = Path.GetExtension(path).ToLower();
 
@@ -368,12 +369,12 @@ namespace Editor
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to save file", e);
-                MessageBox.Show(Owner, Localize.EditorControl_CannotSaveFile(),
-                    Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+                await ContentDialogHelper.ShowAsync(Owner, Localize.EditorControl_CannotSaveFile(),
+                    Localize.Error(), MessageBoxButton.OK);
             }
         }
 
-        public void Print(PrintDialog printDialog)
+        public async Task PrintAsync(PrintDialog printDialog)
         {
             try
             {
@@ -436,8 +437,8 @@ namespace Editor
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to print document", e);
-                MessageBox.Show(Owner, Localize.EditorControl_CannotPrintFile(),
-                    Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
+                await ContentDialogHelper.ShowAsync(Owner, Localize.EditorControl_CannotPrintFile(),
+                    Localize.Error(), MessageBoxButton.OK);
             }
         }
 

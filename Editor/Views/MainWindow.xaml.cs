@@ -45,12 +45,12 @@ public partial class MainWindow : Window, ICultureInfoChanged
         EquationToolBar.CommandCompleted += EquationToolBar_CommandCompleted;
     }
 
-    private void Editor_Loaded(object sender, RoutedEventArgs e)
+    private async void Editor_Loaded(object sender, RoutedEventArgs e)
     {
         ViewModel.Editor = Editor;
 
         // Check if we have a file to open
-        ViewModel.OpenFile(ViewModel.CurrentLocalFile);
+        await ViewModel.OpenFileAsync(ViewModel.CurrentLocalFile);
 
         // Init editor mode & editor font
         ViewModel.ChangeEditorMode(App.Settings.DefaultMode);

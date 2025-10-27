@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,7 +10,6 @@ using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using iNKORE.UI.WPF.Modern.Controls;
 using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 using Timer = System.Timers.Timer;
 
 namespace Editor;
@@ -85,7 +85,7 @@ public partial class EditorControl : UserControl, IDisposable
         Dirty = true;
     }
 
-    public void SaveFile(Stream stream, string fileName)
+    public async Task SaveFileAsync(Stream stream, string fileName)
     {
         try
         {
@@ -97,8 +97,8 @@ public partial class EditorControl : UserControl, IDisposable
         catch (Exception e)
         {
             EditorLogger.Fatal(ClassName, "Failed to save file", e);
-            MessageBox.Show(_mainWindow, Localize.EditorControl_CannotSaveFile(), Localize.Error(),
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            await ContentDialogHelper.ShowAsync(_mainWindow, Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+                MessageBoxButton.OK);
         }
         Dirty = false;
     }
@@ -118,7 +118,7 @@ public partial class EditorControl : UserControl, IDisposable
         zipStream.Close();			// Must finish the ZipOutputStream before using outputMemStream.            
     }
 
-    public void LoadFile(Stream stream)
+    public async Task LoadFileAsync(Stream stream)
     {
         try
         {
@@ -133,7 +133,7 @@ public partial class EditorControl : UserControl, IDisposable
             outputStream.Position = 0;
             using (outputStream)
             {
-                equationRoot.LoadFile(outputStream);
+                await equationRoot.LoadFileAsync(outputStream);
             }
         }
         catch (Exception e)
@@ -142,13 +142,13 @@ public partial class EditorControl : UserControl, IDisposable
             try
             {
                 stream.Position = 0;
-                equationRoot.LoadFile(stream);
+                await equationRoot.LoadFileAsync(stream);
             }
             catch (Exception e1)
             {
                 EditorLogger.Fatal(ClassName, "Failed to load file from stream", e1);
-                MessageBox.Show(_mainWindow, Localize.EditorControl_CannotOpenFile(), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                await ContentDialogHelper.ShowAsync(_mainWindow, Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                    MessageBoxButton.OK);
             }
         }
         AdjustView();
@@ -400,14 +400,14 @@ public partial class EditorControl : UserControl, IDisposable
         equationRoot.AdjustCarets();
     }
 
-    public void ExportImage(string filePath)
+    public async Task ExportImageAsync(string filePath)
     {
-        equationRoot.SaveImageToFile(filePath);
+        await equationRoot.SaveImageToFileAsync(filePath);
     }
 
-    public void Print(PrintDialog printDialog)
+    public async Task PrintAsync(PrintDialog printDialog)
     {
-        equationRoot.Print(printDialog);
+        await equationRoot.PrintAsync(printDialog);
     }
 
     public void ZoomOut()

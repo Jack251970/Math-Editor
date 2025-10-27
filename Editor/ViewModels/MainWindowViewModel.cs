@@ -8,7 +8,6 @@ using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
@@ -406,24 +405,24 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         var result = ofd.ShowDialog(MainWindow);
         if (result == true)
         {
-            OpenFile(ofd.FileName);
+            await OpenFileAsync(ofd.FileName);
         }
     }
 
     [RelayCommand]
-    private void Save()
+    private async Task SaveAsync()
     {
-        ProcessFileSave();
+        await ProcessFileSaveAsync();
     }
 
     [RelayCommand]
-    private void SaveAs()
+    private async Task SaveAsAsync()
     {
         var result = ShowSaveFileDialog(Constants.MedExtension,
             Localize.MainWindow_MedFileFilter(Constants.MedExtension));
         if (!string.IsNullOrEmpty(result))
         {
-            SaveFile(result);
+            await SaveFileAsync(result);
         }
     }
 
@@ -446,7 +445,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     }
 
     [RelayCommand]
-    private void Export(string imageType)
+    private async Task ExportAsync(string imageType)
     {
         var extension = $".{imageType}";
         var fileName = ShowSaveFileDialog(imageType, Localize.MainWindow_ImageFileFilter(imageType));
@@ -454,17 +453,17 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         {
             var ext = Path.GetExtension(fileName);
             if (ext != extension) fileName += extension;
-            Editor!.ExportImage(fileName);
+            await Editor!.ExportImageAsync(fileName);
         }
     }
 
     [RelayCommand]
-    private void Print()
+    private async Task PrintAsync()
     {
         var printDialog = new PrintDialog();
         if (printDialog.ShowDialog() == true)
         {
-            Editor!.Print(printDialog);
+            await Editor!.PrintAsync(printDialog);
         }
     }
 
@@ -504,7 +503,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
     }
 
-    public void OpenFile(string filePath)
+    public async Task OpenFileAsync(string filePath)
     {
         if (!string.IsNullOrEmpty(filePath))
         {
@@ -512,7 +511,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             {
                 using (Stream stream = File.OpenRead(filePath))
                 {
-                    Editor!.LoadFile(stream);
+                    await Editor!.LoadFileAsync(stream);
                 }
                 CurrentLocalFile = filePath;
             }
@@ -520,19 +519,19 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             {
                 CurrentLocalFile = string.Empty;
                 EditorLogger.Fatal(ClassName, "Failed to load file", e);
-                MessageBox.Show(MainWindow, Localize.EditorControl_CannotOpenFile(), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                await ContentDialogHelper.ShowAsync(MainWindow, Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                    MessageBoxButton.OK);
             }
         }
     }
 
-    private bool SaveFile(string filePath)
+    private async Task<bool> SaveFileAsync(string filePath)
     {
         try
         {
             using (Stream stream = File.Open(filePath, FileMode.Create))
             {
-                Editor!.SaveFile(stream, filePath);
+                await Editor!.SaveFileAsync(stream, filePath);
             }
             CurrentLocalFile = filePath;
             return true;
@@ -540,8 +539,8 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         catch (Exception e)
         {
             EditorLogger.Fatal(ClassName, "Failed to save file", e);
-            MessageBox.Show(MainWindow, Localize.EditorControl_CannotSaveFile(), Localize.Error(),
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            await ContentDialogHelper.ShowAsync(MainWindow, Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+                MessageBoxButton.OK);
             Editor!.Dirty = true;
         }
         return false;
@@ -559,7 +558,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             }
             else if (result == MessageBoxResult.Yes)
             {
-                if (!ProcessFileSave())
+                if (!await ProcessFileSaveAsync())
                 {
                     return false;
                 }
@@ -569,7 +568,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         return true;
     }
 
-    private bool ProcessFileSave()
+    private async Task<bool> ProcessFileSaveAsync()
     {
         var savePath = CurrentLocalFile;
         if (!File.Exists(savePath))
@@ -585,7 +584,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
                 savePath = result;
             }
         }
-        return SaveFile(savePath);
+        return await SaveFileAsync(savePath);
     }
 
     private string? ShowSaveFileDialog(string extension, string filter)
