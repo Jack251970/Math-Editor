@@ -138,10 +138,8 @@ namespace Editor
                 {
                     if (_selectionBrush is null)
                     {
-                        _selectionBrush = new SolidColorBrush(Colors.LightGray)
-                        {
-                            Opacity = 0.5
-                        };
+                        // From WinUI3 TextBox #0063B1
+                        _selectionBrush = new SolidColorBrush(Color.FromRgb(0, 99, 177));
                         _selectionBrush.Freeze();
                     }
                     return _selectionBrush;
