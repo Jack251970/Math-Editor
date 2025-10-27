@@ -96,7 +96,7 @@ public partial class EditorControl : UserControl, IDisposable
         catch (Exception e)
         {
             EditorLogger.Fatal(ClassName, "Failed to save file", e);
-            MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+            MessageBox.Show(_mainWindow, Localize.EditorControl_CannotSaveFile(), Localize.Error(),
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
         Dirty = false;
@@ -146,7 +146,7 @@ public partial class EditorControl : UserControl, IDisposable
             catch (Exception e1)
             {
                 EditorLogger.Fatal(ClassName, "Failed to load file from stream", e1);
-                MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                MessageBox.Show(_mainWindow, Localize.EditorControl_CannotOpenFile(), Localize.Error(),
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

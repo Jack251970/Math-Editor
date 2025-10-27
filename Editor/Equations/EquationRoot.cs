@@ -81,7 +81,7 @@ namespace Editor
             var appVersion = appVersionAttribute != null ? appVersionAttribute.Value : "Unknown";
             if (fileVersionAttribute == null || fileVersionAttribute.Value != fileVersion)
             {
-                MessageBox.Show(Localize.EquationRoot_FileVersionDifferent(appVersion, Environment.NewLine),
+                MessageBox.Show(Owner, Localize.EquationRoot_FileVersionDifferent(appVersion, Environment.NewLine),
                     Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             ActiveChild.DeSerialize(root);
@@ -368,7 +368,7 @@ namespace Editor
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to save file", e);
-                MessageBox.Show(Localize.EditorControl_CannotSaveFile(),
+                MessageBox.Show(Owner, Localize.EditorControl_CannotSaveFile(),
                     Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -436,7 +436,7 @@ namespace Editor
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to print document", e);
-                MessageBox.Show(Localize.EditorControl_CannotPrintFile(),
+                MessageBox.Show(Owner, Localize.EditorControl_CannotPrintFile(),
                     Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

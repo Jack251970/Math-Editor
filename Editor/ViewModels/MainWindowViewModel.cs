@@ -519,7 +519,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             {
                 CurrentLocalFile = string.Empty;
                 EditorLogger.Fatal(ClassName, "Failed to load file", e);
-                MessageBox.Show(Localize.EditorControl_CannotOpenFile(), Localize.Error(),
+                MessageBox.Show(MainWindow, Localize.EditorControl_CannotOpenFile(), Localize.Error(),
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -539,7 +539,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         catch (Exception e)
         {
             EditorLogger.Fatal(ClassName, "Failed to save file", e);
-            MessageBox.Show(Localize.EditorControl_CannotSaveFile(), Localize.Error(),
+            MessageBox.Show(MainWindow, Localize.EditorControl_CannotSaveFile(), Localize.Error(),
                 MessageBoxButton.OK, MessageBoxImage.Error);
             Editor!.Dirty = true;
         }
@@ -550,7 +550,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     {
         if (Editor!.Dirty)
         {
-            var result = MessageBox.Show(Localize.MainWindow_SaveCurrentDocument(),
+            var result = MessageBox.Show(MainWindow, Localize.MainWindow_SaveCurrentDocument(),
                 Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Cancel)
             {
