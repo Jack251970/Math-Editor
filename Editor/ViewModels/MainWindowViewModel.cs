@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -390,9 +391,9 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     }
 
     [RelayCommand]
-    private void Open()
+    private async Task OpenAsync()
     {
-        if (!CheckSaveCurrentDocument())
+        if (!await CheckSaveCurrentDocumentAsync())
         {
             return;
         }
@@ -546,12 +547,12 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         return false;
     }
 
-    public bool CheckSaveCurrentDocument()
+    public async Task<bool> CheckSaveCurrentDocumentAsync()
     {
         if (Editor!.Dirty)
         {
-            var result = MessageBox.Show(MainWindow, Localize.MainWindow_SaveCurrentDocument(),
-                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            var result = await ContentDialogHelper.ShowAsync(MainWindow, Localize.MainWindow_SaveCurrentDocument(),
+                Constants.MathEditorFullName, MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel)
             {
                 return false;

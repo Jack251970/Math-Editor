@@ -17,6 +17,9 @@ public partial class MainWindow : Window, ICultureInfoChanged
 
     public EditorControl Editor { get; set; } = null!;
 
+    // Guard flag to allow re-entrance after async confirmation
+    private bool _canClose;
+
     public MainWindow(string currentLocalFile)
     {
         ViewModel.CurrentLocalFile = currentLocalFile;
@@ -136,18 +139,30 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void Window_Closing(object sender, CancelEventArgs e)
+    private async void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (!ViewModel.CheckSaveCurrentDocument())
+        // If we already confirmed close, allow it and perform cleanup once
+        if (_canClose)
         {
-            e.Cancel = true;
+            Editor.ZoomChanged -= Editor_ZoomChanged;
+            CharacterToolBar.CommandCompleted -= CharacterToolBar_CommandCompleted;
+            EquationToolBar.CommandCompleted -= EquationToolBar_CommandCompleted;
+            Editor.Dispose();
             return;
         }
 
-        Editor.ZoomChanged -= Editor_ZoomChanged;
-        CharacterToolBar.CommandCompleted -= CharacterToolBar_CommandCompleted;
-        EquationToolBar.CommandCompleted -= EquationToolBar_CommandCompleted;
-        Editor.Dispose();
+        // Cancel the close first, then run async flow
+        e.Cancel = true;
+
+        if (!await ViewModel.CheckSaveCurrentDocumentAsync())
+        {
+            // User canceled or save failed; keep window open
+            return;
+        }
+
+        // Mark as confirmable and close again to re-enter with _canClose = true
+        _canClose = true;
+        Close();
     }
 
     private void Editor_ZoomChanged(object? sender, int number)
