@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using iNKORE.UI.WPF.Modern.Controls;
 using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 using Timer = System.Timers.Timer;
@@ -178,15 +179,15 @@ public partial class EditorControl : UserControl, IDisposable
         var hasSelection = _mainWindow.ViewModel.IsSelecting == true;
         var canPaste = EquationRoot.CanPasteFromClipboard(out _);
 
-        void AddMenuItem(string header, /*string glyph, */bool isEnabled, Action action)
+        void AddMenuItem(string header, string glyph, bool isEnabled, Action action)
         {
             var mi = new MenuItem
             {
                 Header = header,
-                /*Icon = new FontIcon()
+                Icon = new FontIcon()
                 {
                     Glyph = glyph
-                },*/
+                },
                 IsEnabled = isEnabled
             };
             mi.Click += (s, e) => action();
@@ -198,30 +199,30 @@ public partial class EditorControl : UserControl, IDisposable
             menu.Items.Add(new Separator());
         }
 
-        AddMenuItem(Localize.MainWindow_Cut(), /*"&#xE8C6;", */hasSelection, Cut);
+        AddMenuItem(Localize.MainWindow_Cut(), "\uE8C6", hasSelection, Cut);
 
-        AddMenuItem(Localize.MainWindow_Copy(), /*"&#xE8C8;", */hasSelection, Copy);
+        AddMenuItem(Localize.MainWindow_Copy(), "\uE8C8", hasSelection, Copy);
 
-        AddMenuItem(Localize.MainWindow_Paste(), /*"&#xE77F;", */canPaste, Paste);
+        AddMenuItem(Localize.MainWindow_Paste(), "\uE77F", canPaste, Paste);
 
-        AddMenuItem(Localize.MainWindow_Delete(), /*"&#xE74D;", */hasSelection, DeleteSelection);
+        AddMenuItem(Localize.MainWindow_Delete(), "\uE74D", hasSelection, DeleteSelection);
 
         // The menu is too long so I remove these two actions here
         /*AddSeparator();
 
-        AddMenuItem(Localize.MainWindow_Undo(), "&#xE7A7;", _mainWindow.ViewModel.UndoManager.CanUndo, Undo);
+        AddMenuItem(Localize.MainWindow_Undo(), "\uE7A7", _mainWindow.ViewModel.UndoManager.CanUndo, Undo);
 
-        AddMenuItem(Localize.MainWindow_Redo(), "&#xE7A6;", _mainWindow.ViewModel.UndoManager.CanRedo, Redo);*/
+        AddMenuItem(Localize.MainWindow_Redo(), "\uE7A6", _mainWindow.ViewModel.UndoManager.CanRedo, Redo);*/
 
         // It looks like Clear action cannot be added into UndoManager,
         // So we do not add it here
         /*AddSeparator();
 
-        AddMenuItem(Localize.MainWindow_Clear(), "&#xE894;", true, Clear);*/
+        AddMenuItem(Localize.MainWindow_Clear(), "\uE894", true, Clear);*/
 
         AddSeparator();
 
-        AddMenuItem(Localize.MainWindow_SelectAll(), /*"&#xE8B3;", */true, SelectAll);
+        AddMenuItem(Localize.MainWindow_SelectAll(), "\uE8B3", true, SelectAll);
 
         // Show at mouse position
         var pos = e.GetPosition(this);
