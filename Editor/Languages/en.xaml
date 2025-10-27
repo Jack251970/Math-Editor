@@ -6,6 +6,8 @@
     <!--  General  -->
     <system:String x:Key="Error">Error</system:String>
     <system:String x:Key="Close">Close</system:String>
+    <system:String x:Key="Yes">Yes</system:String>
+    <system:String x:Key="No">No</system:String>
     <system:String x:Key="Ok">Ok</system:String>
     <system:String x:Key="Cancel">Cancel</system:String>
 
