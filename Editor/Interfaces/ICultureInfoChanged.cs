@@ -4,5 +4,5 @@ namespace Editor;
 
 public interface ICultureInfoChanged
 {
-    public void OnCultureInfoChanged(CultureInfo newCultureInfo);
+    void OnCultureInfoChanged(CultureInfo newCultureInfo);
 }

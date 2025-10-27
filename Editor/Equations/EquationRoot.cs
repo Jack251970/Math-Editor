@@ -328,6 +328,7 @@ namespace Editor
             Owner.ViewModel.IsSelecting = false;
             try
             {
+#pragma warning disable IDE0063
                 using (var dc = dv.RenderOpen())
                 {
                     if (extension is ".bmp" or "jpg")
@@ -336,6 +337,7 @@ namespace Editor
                     }
                     ActiveChild.DrawEquation(dc, true);
                 }
+#pragma warning restore IDE0063
             }
             finally
             {
@@ -401,6 +403,7 @@ namespace Editor
                 Owner.ViewModel.IsSelecting = false;
                 try
                 {
+#pragma warning disable IDE0063
                     using (var dc = dv.RenderOpen())
                     {
                         // Center after scaling
@@ -421,6 +424,7 @@ namespace Editor
 
                         dc.Pop();
                     }
+#pragma warning restore IDE0063
                 }
                 finally
                 {

@@ -2,15 +2,14 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Controls.Primitives;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 using Timer = System.Timers.Timer;
-using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
-using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Editor;
 
