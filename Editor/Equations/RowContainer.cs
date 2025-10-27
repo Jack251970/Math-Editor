@@ -151,7 +151,10 @@ namespace Editor
         {
             if (Owner.ViewModel.IsSelecting)
             {
-                try { DrawSelectionRegion(dc); }
+                try
+                {
+                    DrawSelectionRegion(dc);
+                }
                 catch { }
             }
             foreach (var eb in childEquations)
@@ -181,23 +184,23 @@ namespace Editor
             var topSelectedRowIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
             var topEquation = childEquations[topSelectedRowIndex];
             var rect = topEquation.GetSelectionBounds();
-            dc.DrawRectangle(Brushes.LightGray, null, rect);
+            dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
 
             var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - topSelectedRowIndex;
             if (count > 0)
             {
                 rect.Union(new Point(topEquation.Right, rect.Bottom + LineSpace + 1));
-                dc.DrawRectangle(Brushes.LightGray, null, rect);
+                dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 var bottomEquation = childEquations[topSelectedRowIndex + count];
                 rect = bottomEquation.GetSelectionBounds();
                 rect.Union(new Point(bottomEquation.Left, bottomEquation.Top));
-                dc.DrawRectangle(Brushes.LightGray, null, rect);
+                dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 for (var i = topSelectedRowIndex + 1; i < topSelectedRowIndex + count; i++)
                 {
                     var equation = childEquations[i];
                     rect = equation.Bounds;
                     rect.Union(new Point(rect.Left, rect.Bottom + LineSpace + 1));
-                    dc.DrawRectangle(Brushes.LightGray, null, rect);
+                    dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 }
             }
         }

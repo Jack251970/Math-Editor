@@ -292,7 +292,6 @@ namespace Editor
                         }
                         firstRect.Union(lastRect);
                     }
-                    System.Diagnostics.Debug.WriteLine($"EquationRow.GetSelectionBounds: {firstRect}");
                     return new Rect(firstRect.TopLeft, firstRect.BottomRight);
                 }
             }
@@ -478,17 +477,14 @@ namespace Editor
             {
                 dc.DrawRectangle(PenManager.DeleteableBrush, null, new Rect(_deleteable.Location, _deleteable.Size));
             }
-            if (childEquations.Count == 1)
+            if (childEquations.Count == 1 && childEquations.First() is TextEquation firstEquation &&
+                firstEquation.TextLength == 0)
             {
-                var firstEquation = (TextEquation)childEquations.First();
-                if (firstEquation.TextLength == 0)
+                if (Owner.ViewModel.IsSelecting)
                 {
-                    if (Owner.ViewModel.IsSelecting)
-                    {
-                        //dc.DrawRectangle(Brushes.LightGray, null, new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
-                    }
-                    dc.DrawRectangle(null, PenManager.RowBoxPen, new Rect(Left, Top, Width, Height + ThinLineThickness));//new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
+                    //dc.DrawRectangle(PenManager.SelectionBrush, null, new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
                 }
+                dc.DrawRectangle(null, PenManager.RowBoxPen, new Rect(Left, Top, Width, Height + ThinLineThickness));//new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
             }
         }
 

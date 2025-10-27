@@ -127,6 +127,25 @@ namespace Editor
             }
         }
 
+        private static readonly Lock _selectionBrushLock = new();
+
+        private static SolidColorBrush? _selectionBrush;
+        public static SolidColorBrush SelectionBrush
+        {
+            get
+            {
+                lock (_selectionBrushLock)
+                {
+                    if (_selectionBrush is null)
+                    {
+                        _selectionBrush = new SolidColorBrush(Colors.LightGray);
+                        _selectionBrush.Freeze();
+                    }
+                    return _selectionBrush;
+                }
+            }
+        }
+
         private static SolidColorBrush GetTextFillColorPrimaryBrush(ApplicationTheme? theme)
         {
             theme ??= ThemeManager.Current.ActualApplicationTheme;
