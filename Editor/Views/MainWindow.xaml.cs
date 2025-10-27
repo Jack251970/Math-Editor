@@ -160,9 +160,9 @@ public partial class MainWindow : Window, ICultureInfoChanged
             return;
         }
 
-        // Mark as confirmable and close again to re-enter with _canClose = true
+        // Mark as confirmable and close again after this handler returns
         _canClose = true;
-        Close();
+        _ = Dispatcher.InvokeAsync(Close);
     }
 
     private void Editor_ZoomChanged(object? sender, int number)
