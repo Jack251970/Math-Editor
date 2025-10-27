@@ -18,7 +18,6 @@
     KeyDown="Window_KeyDown"
     KeyUp="Window_KeyUp"
     TextInput="Window_TextInput"
-    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
         <Style x:Key="ToolbarButton" TargetType="Button">
