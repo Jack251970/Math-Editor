@@ -12,6 +12,8 @@ namespace Editor
 {
     public sealed class EquationRow : EquationContainer, ISupportsUndo
     {
+        private static readonly string ClassName = nameof(EquationRow);
+
         private EquationContainer? _deleteable = null;
 
         public EquationRow(MainWindow owner, EquationContainer parent)
@@ -293,9 +295,9 @@ namespace Editor
                     return new Rect(firstRect.TopLeft, firstRect.BottomRight);
                 }
             }
-            catch
+            catch (Exception e)
             {
-
+                EditorLogger.Fatal(ClassName, "Error in GetSelectionBounds", e);
             }
             return Rect.Empty;
         }
