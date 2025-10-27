@@ -175,12 +175,12 @@
                         Command="{Binding UndoCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Undo}"
                         InputGestureText="Ctrl+Z"
-                        IsEnabled="{Binding UndoButtonIsEnabled, Mode=OneWay}" />
+                        IsEnabled="{Binding UndoManager.CanUndo, Mode=OneWay}" />
                     <MenuItem
                         Command="{Binding RedoCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Redo}"
                         InputGestureText="Ctrl+Y"
-                        IsEnabled="{Binding RedoButtonIsEnabled, Mode=OneWay}" />
+                        IsEnabled="{Binding UndoManager.CanRedo, Mode=OneWay}" />
                     <Separator />
                     <MenuItem
                         Command="{Binding CutCommand, Mode=OneTime}"
@@ -328,7 +328,7 @@
                     <Separator />
                     <Button
                         Command="{Binding UndoCommand, Mode=OneTime}"
-                        IsEnabled="{Binding UndoButtonIsEnabled, Mode=OneWay}"
+                        IsEnabled="{Binding UndoManager.CanUndo, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_Undo}"
                         ToolTipService.ShowOnDisabled="True">
@@ -336,7 +336,7 @@
                     </Button>
                     <Button
                         Command="{Binding RedoCommand, Mode=OneTime}"
-                        IsEnabled="{Binding RedoButtonIsEnabled, Mode=OneWay}"
+                        IsEnabled="{Binding UndoManager.CanRedo, Mode=OneWay}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_Redo}"
                         ToolTipService.ShowOnDisabled="True">

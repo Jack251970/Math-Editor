@@ -68,12 +68,6 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     private bool _useItalicIntergalOnNew;
 
     [ObservableProperty]
-    private bool _undoButtonIsEnabled = false;
-
-    [ObservableProperty]
-    private bool _redoButtonIsEnabled = false;
-
-    [ObservableProperty]
     private bool _showUnderbar = true;
 
     [ObservableProperty]

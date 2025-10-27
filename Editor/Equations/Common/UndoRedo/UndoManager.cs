@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Editor
 {
-    public class UndoManager
+    public partial class UndoManager : ObservableObject
     {
         public bool DisableAddingActions { get; set; }
+
         private readonly Stack<EquationAction> undoStack = new();
         private readonly Stack<EquationAction> redoStack = new();
 
-        public event EventHandler<UndoEventArgs>? CanUndo;
-        public event EventHandler<UndoEventArgs>? CanRedo;
+        [ObservableProperty]
+        private bool _canUndo;
+
+        [ObservableProperty]
+        private bool _canRedo;
 
         public void AddUndoAction(EquationAction equationAction)
         {
@@ -18,8 +22,8 @@ namespace Editor
             {
                 undoStack.Push(equationAction);
                 redoStack.Clear();
-                CanUndo?.Invoke(this, new UndoEventArgs(true));
-                CanRedo?.Invoke(this, new UndoEventArgs(false));
+                CanUndo = true;
+                CanRedo = false;
             }
         }
 
@@ -37,9 +41,9 @@ namespace Editor
                 }
                 if (undoStack.Count == 0)
                 {
-                    CanUndo?.Invoke(this, new UndoEventArgs(false));
+                    CanUndo = false;
                 }
-                CanRedo?.Invoke(this, new UndoEventArgs(true));
+                CanRedo = true;
             }
         }
 
@@ -57,9 +61,9 @@ namespace Editor
                 }
                 if (redoStack.Count == 0)
                 {
-                    CanRedo?.Invoke(this, new UndoEventArgs(false));
+                    CanRedo = false;
                 }
-                CanUndo?.Invoke(this, new UndoEventArgs(true));
+                CanUndo = true;
             }
         }
 
@@ -67,8 +71,8 @@ namespace Editor
         {
             undoStack.Clear();
             redoStack.Clear();
-            CanUndo?.Invoke(this, new UndoEventArgs(false));
-            CanRedo?.Invoke(this, new UndoEventArgs(false));
+            CanUndo = false;
+            CanRedo = false;
         }
 
         public int UndoCount => undoStack.Count;

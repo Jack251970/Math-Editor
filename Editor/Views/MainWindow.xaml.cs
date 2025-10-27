@@ -37,8 +37,6 @@ public partial class MainWindow : Window, ICultureInfoChanged
         WindowTracker.TrackOwner(this);
         // Add event handlers
         AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
-        ViewModel.UndoManager.CanUndo += UndoManager_CanUndo;
-        ViewModel.UndoManager.CanRedo += UndoManager_CanRedo;
         Editor.ZoomChanged += Editor_ZoomChanged;
         CharacterToolBar.CommandCompleted += CharacterToolBar_CommandCompleted;
         EquationToolBar.CommandCompleted += EquationToolBar_CommandCompleted;
@@ -146,22 +144,10 @@ public partial class MainWindow : Window, ICultureInfoChanged
             return;
         }
 
-        ViewModel.UndoManager.CanUndo -= UndoManager_CanUndo;
-        ViewModel.UndoManager.CanRedo -= UndoManager_CanRedo;
         Editor.ZoomChanged -= Editor_ZoomChanged;
         CharacterToolBar.CommandCompleted -= CharacterToolBar_CommandCompleted;
         EquationToolBar.CommandCompleted -= EquationToolBar_CommandCompleted;
         Editor.Dispose();
-    }
-
-    private void UndoManager_CanUndo(object? sender, UndoEventArgs e)
-    {
-        ViewModel.UndoButtonIsEnabled = e.ActionPossible;
-    }
-
-    private void UndoManager_CanRedo(object? sender, UndoEventArgs e)
-    {
-        ViewModel.RedoButtonIsEnabled = e.ActionPossible;
     }
 
     private void Editor_ZoomChanged(object? sender, int number)
