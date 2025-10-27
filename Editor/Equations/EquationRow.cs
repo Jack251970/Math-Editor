@@ -477,12 +477,12 @@ namespace Editor
             {
                 dc.DrawRectangle(PenManager.DeleteableBrush, null, new Rect(_deleteable.Location, _deleteable.Size));
             }
-            if (childEquations.Count == 1 && childEquations.First() is TextEquation firstEquation &&
-                firstEquation.TextLength == 0)
+            if (childEquations.Count == 1 && childEquations.First() is TextEquation textEquation &&
+                textEquation.TextLength == 0)
             {
                 if (Owner.ViewModel.IsSelecting)
                 {
-                    //dc.DrawRectangle(PenManager.SelectionBrush, null, new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
+                    dc.DrawRectangle(PenManager.SelectionBrush, null, new Rect(Left, Top, Width, Height + ThinLineThickness));
                 }
                 dc.DrawRectangle(null, PenManager.RowBoxPen, new Rect(Left, Top, Width, Height + ThinLineThickness));//new Rect(new Point(Left - 1, Top), new Size(FontSize / 2.5, Height)));
             }
