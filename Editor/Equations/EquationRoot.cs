@@ -331,7 +331,7 @@ namespace Editor
 #pragma warning disable IDE0063
                 using (var dc = dv.RenderOpen())
                 {
-                    if (extension is ".bmp" or "jpg")
+                    if (extension is ".bmp" or ".jpg")
                     {
                         dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
                     }
