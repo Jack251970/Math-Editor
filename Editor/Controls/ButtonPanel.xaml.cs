@@ -7,7 +7,7 @@ namespace Editor;
 
 public partial class ButtonPanel : UserControl
 {
-    public event EventHandler ButtonClick = (x, y) => { };
+    public event EventHandler? ButtonClick;
 
     private readonly List<CommandDetails> _commandDetails;
 
@@ -50,7 +50,7 @@ public partial class ButtonPanel : UserControl
     private void PanelButton_Click(object sender, RoutedEventArgs e)
     {
         Visibility = Visibility.Collapsed;
-        ButtonClick(this, EventArgs.Empty);
+        ButtonClick?.Invoke(this, EventArgs.Empty);
     }
 }
 
