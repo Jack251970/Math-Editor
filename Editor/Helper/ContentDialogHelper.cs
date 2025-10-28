@@ -41,37 +41,32 @@ public static class ContentDialogHelper
         };
 
         var result = await dialog.ShowAsync();
-        switch (button)
+        return button switch
         {
-            case MessageBoxButton.OK:
-                return result switch
-                {
-                    ContentDialogResult.Primary => MessageBoxResult.OK,
-                    _ => MessageBoxResult.None
-                };
-            case MessageBoxButton.YesNo:
-                return result switch
-                {
-                    ContentDialogResult.Primary => MessageBoxResult.Yes,
-                    ContentDialogResult.Secondary => MessageBoxResult.No,
-                    _ => MessageBoxResult.None
-                };
-            case MessageBoxButton.OKCancel:
-                return result switch
-                {
-                    ContentDialogResult.Primary => MessageBoxResult.OK,
-                    ContentDialogResult.Secondary => MessageBoxResult.Cancel,
-                    _ => MessageBoxResult.None
-                };
-            case MessageBoxButton.YesNoCancel:
-                return result switch
-                {
-                    ContentDialogResult.Primary => MessageBoxResult.Yes,
-                    ContentDialogResult.Secondary => MessageBoxResult.No,
-                    _ => MessageBoxResult.Cancel
-                };
-            default:
-                return MessageBoxResult.None;
-        }
+            MessageBoxButton.OK => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResult.OK,
+                _ => MessageBoxResult.None
+            },
+            MessageBoxButton.YesNo => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResult.Yes,
+                ContentDialogResult.Secondary => MessageBoxResult.No,
+                _ => MessageBoxResult.None
+            },
+            MessageBoxButton.OKCancel => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResult.OK,
+                ContentDialogResult.Secondary => MessageBoxResult.Cancel,
+                _ => MessageBoxResult.None
+            },
+            MessageBoxButton.YesNoCancel => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResult.Yes,
+                ContentDialogResult.Secondary => MessageBoxResult.No,
+                _ => MessageBoxResult.Cancel
+            },
+            _ => MessageBoxResult.None,
+        };
     }
 }
