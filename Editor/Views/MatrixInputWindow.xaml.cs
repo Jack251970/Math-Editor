@@ -1,17 +1,17 @@
-﻿using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Editor;
 
+// TODO: Convert to dialog?
 [INotifyPropertyChanged]
 public partial class MatrixInputWindow : Window
 {
     [ObservableProperty]
-    private string _rowsText = string.Empty;
+    private double _rows = 1;
 
     [ObservableProperty]
-    private string _columnsText = string.Empty;
+    private double _columns = 1;
 
     public MatrixInputWindow()
     {
@@ -21,26 +21,22 @@ public partial class MatrixInputWindow : Window
 
     public MatrixInputWindow(int rows, int columns)
     {
+        Rows = rows;
+        Columns = columns;
         DataContext = this;
         InitializeComponent();
-        RowsText = rows.ToString(CultureInfo.CurrentUICulture);
-        ColumnsText = columns.ToString(CultureInfo.CurrentUICulture);
     }
 
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        // WPF does not provide a NumericUpDown control out of the box
-        // The button click will be ignored, when the number cannot be parsed.
-        // TODO: Provide user feedback when the input is invalid or implement a proper NumericUpDownControl.
-        if (int.TryParse(RowsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var rows)
-            && int.TryParse(ColumnsText, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var columns))
+        if (Rows > 0 && Columns > 0)
         {
             var newCommand = new CommandDetails
             {
                 CommandType = CommandType.Matrix,
                 CommandParam = new int[]
                 {
-                    rows, columns
+                    (int)Rows, (int)Columns
                 }
             };
             ((MainWindow)Owner).Editor.HandleUserCommand(newCommand);

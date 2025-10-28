@@ -18,6 +18,10 @@
     WindowStartupLocation="CenterOwner"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
+    <Window.Resources>
+        <local:IntegerNumberFormatter x:Key="IntegerNumberFormatter" />
+    </Window.Resources>
+
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -38,20 +42,24 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Text="{DynamicResource MatrixInputWindow_Rows}" />
-            <TextBox
+            <ui:NumberBox
                 Grid.Column="2"
                 Width="100"
-                Text="{Binding RowsText, Mode=TwoWay}" />
+                Minimum="1"
+                NumberFormatter="{StaticResource IntegerNumberFormatter}"
+                Value="{Binding Rows, Mode=TwoWay}" />
             <TextBlock
                 Grid.Row="2"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Text="{DynamicResource MatrixInputWindow_Columns}" />
-            <TextBox
+            <ui:NumberBox
                 Grid.Row="2"
                 Grid.Column="2"
                 Width="100"
-                Text="{Binding ColumnsText, Mode=TwoWay}" />
+                Minimum="1"
+                NumberFormatter="{StaticResource IntegerNumberFormatter}"
+                Value="{Binding Columns, Mode=TwoWay}" />
         </Grid>
         <StackPanel
             Grid.Row="1"
