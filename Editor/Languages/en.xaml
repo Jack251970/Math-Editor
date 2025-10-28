@@ -155,8 +155,6 @@
 
     <!--  Custom Zoom Window  -->
     <system:String x:Key="CustomZoomWindow_Title">Zoom Level</system:String>
-    <system:String x:Key="CustomZoomWindow_ZoomPercentageRangeError">Zoom percentage must be between 1 and {0}</system:String>
-    <system:String x:Key="CustomZoomWindow_ZoomPercentageFormatError">Zoom percentage must be a number between 1 and {0}</system:String>
 
     <!--  Main Window  -->
     <system:String x:Key="MainWindow_File">File</system:String>
