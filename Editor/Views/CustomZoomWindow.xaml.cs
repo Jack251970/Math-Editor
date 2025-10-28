@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
-using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Editor;
 
@@ -36,23 +34,5 @@ public partial class CustomZoomWindow : Window
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
-    }
-}
-
-public class IntegerNumberFormatter : INumberBoxNumberFormatter
-{
-    public string FormatDouble(double value)
-    {
-        var rounded = (long)Math.Round(value);
-        return rounded.ToString();
-    }
-
-    public double? ParseDouble(string text)
-    {
-        if (double.TryParse(text, out double result))
-        {
-            return Math.Round(result);
-        }
-        return null;
     }
 }
