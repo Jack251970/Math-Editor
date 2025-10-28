@@ -17,6 +17,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
 
     public Settings Settings { get; init; }
     public UndoManager UndoManager { get; init; }
+    public ClipboardHelper ClipboardHelper { get; init; }
     public MainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
 
@@ -29,10 +30,11 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [ObservableProperty]
     private string _showNestingMenuItemHeader = null!;
 
-    public MainWindowViewModel(Settings settings, UndoManager undoManager)
+    public MainWindowViewModel(Settings settings, UndoManager undoManager, ClipboardHelper clipboardHelper)
     {
         Settings = settings;
         UndoManager = undoManager;
+        ClipboardHelper = clipboardHelper;
         TextEditorMode = settings.DefaultMode;
         TextFontType = settings.DefaultFont;
         UpdateMainWindowTitle();

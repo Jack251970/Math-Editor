@@ -92,6 +92,7 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
                     .AddSingleton<LatexConverter>()
                     .AddSingleton<TextManager>()
                     .AddTransient<UndoManager>()
+                    .AddSingleton<ClipboardHelper>()
                     .AddTransient<MainWindowViewModel>()
                     .AddTransient<SettingsWindowViewModel>()
             ).Build();
@@ -117,6 +118,8 @@ public partial class App : Application, IDisposable, ISingleInstanceApp
             RegisterAppDomainExceptions();
             RegisterDispatcherUnhandledException();
             RegisterTaskSchedulerUnhandledException();
+
+            Ioc.Default.GetRequiredService<ClipboardHelper>().StartMonitoring();
 
             Ioc.Default.GetRequiredService<LatexConverter>().LoadPredefinedLatexUnicodeMapping();
 

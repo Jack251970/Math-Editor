@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor
 {
@@ -223,16 +222,7 @@ namespace Editor
         public bool PasteFromClipBoard()
         {
             // Get data from clipboard with retries
-            object? data = null;
-            for (var i = 0; i < 3; i++)
-            {
-                if (CanPasteFromClipboard(out var data1))
-                {
-                    data = data1;
-                    break;
-                }
-                Thread.Sleep(100);
-            }
+            object? data = Owner.ViewModel.ClipboardHelper.PasteObject;
 
             // Parse and paste data
             var success = false;

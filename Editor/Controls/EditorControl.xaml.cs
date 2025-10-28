@@ -177,7 +177,7 @@ public partial class EditorControl : UserControl, IDisposable
         var menu = new ContextMenu();
 
         var hasSelection = _mainWindow.ViewModel.IsSelecting == true;
-        var canPaste = EquationRoot.CanPasteFromClipboard(out _);
+        var canPaste = _mainWindow.ViewModel.ClipboardHelper.CanPaste;
 
         void AddMenuItem(string header, string glyph, bool isEnabled, Action action)
         {

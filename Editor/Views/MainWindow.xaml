@@ -197,7 +197,8 @@
                     <MenuItem
                         Command="{Binding PasteCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Paste}"
-                        InputGestureText="Ctrl+V" />
+                        InputGestureText="Ctrl+V"
+                        IsEnabled="{Binding ClipboardHelper.CanPaste, Mode=OneWay}" />
                     <MenuItem
                         Command="{Binding DeleteCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Delete}"
