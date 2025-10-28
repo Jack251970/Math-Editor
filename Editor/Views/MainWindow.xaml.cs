@@ -5,17 +5,23 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shell;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor;
 
-public partial class MainWindow : Window, ICultureInfoChanged
+public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwner
 {
     public bool IsEditorLoaded { get; private set; } = false;
 
     public MainWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MainWindowViewModel>();
 
+    public bool ContentDialogShown { get; private set; } = false;
+
     public EditorControl Editor { get; set; } = null!;
+
+    private WindowChrome _draggableChrome = null!;
+    private WindowChrome _nonDraggableChrome = null!;
 
     // Guard flag to allow re-entrance after async confirmation
     private bool _canClose;
@@ -39,10 +45,23 @@ public partial class MainWindow : Window, ICultureInfoChanged
         // Track this window
         WindowTracker.TrackOwner(this);
         // Add event handlers
-        AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(MainWindow_MouseDown), true);
         Editor.ZoomChanged += Editor_ZoomChanged;
         CharacterToolBar.CommandCompleted += CharacterToolBar_CommandCompleted;
         EquationToolBar.CommandCompleted += EquationToolBar_CommandCompleted;
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        _draggableChrome = WindowChrome.GetWindowChrome(this);
+        _nonDraggableChrome = new WindowChrome
+        {
+            NonClientFrameEdges = _draggableChrome.NonClientFrameEdges,
+            CaptionHeight = 0,  // Disable caption height for non-draggable chrome
+            CornerRadius = _draggableChrome.CornerRadius,
+            GlassFrameThickness = _draggableChrome.GlassFrameThickness,
+            ResizeBorderThickness = _draggableChrome.ResizeBorderThickness,
+            UseAeroCaptionButtons = _draggableChrome.UseAeroCaptionButtons
+        };
     }
 
     private async void Editor_Loaded(object sender, RoutedEventArgs e)
@@ -91,7 +110,7 @@ public partial class MainWindow : Window, ICultureInfoChanged
         }
     }
 
-    private void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
+    private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (Mouse.DirectlyOver != null)
         {
@@ -185,5 +204,11 @@ public partial class MainWindow : Window, ICultureInfoChanged
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
         ViewModel.OnCultureInfoChanged(newCultureInfo);
+    }
+
+    public void ContentDialogChanged(bool isShown)
+    {
+        WindowChrome.SetWindowChrome(this, isShown ? _nonDraggableChrome : _draggableChrome);
+        ContentDialogShown = isShown;
     }
 }

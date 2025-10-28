@@ -523,4 +523,20 @@ public partial class EditorControl : UserControl, IDisposable
     }
 
     #endregion
+
+    private void EditorControl_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (_mainWindow.ContentDialogShown)
+        {
+            e.Handled = true;
+        }
+    }
+
+    private void EditorControl_PreviewKeyUp(object sender, KeyEventArgs e)
+    {
+        if (_mainWindow.ContentDialogShown)
+        {
+            e.Handled = true;
+        }
+    }
 }

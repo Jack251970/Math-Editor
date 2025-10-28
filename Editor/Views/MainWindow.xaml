@@ -17,6 +17,8 @@
     Closing="Window_Closing"
     KeyDown="Window_KeyDown"
     KeyUp="Window_KeyUp"
+    Loaded="Window_Loaded"
+    MouseDown="Window_MouseDown"
     TextInput="Window_TextInput"
     mc:Ignorable="d">
     <Window.Resources>

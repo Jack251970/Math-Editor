@@ -15,6 +15,8 @@
     MouseMove="EditorControl_MouseMove"
     MouseRightButtonDown="EditorControl_MouseRightButtonDown"
     MouseUp="EditorControl_MouseUp"
+    PreviewKeyDown="EditorControl_PreviewKeyDown"
+    PreviewKeyUp="EditorControl_PreviewKeyUp"
     TextInput="EditorControl_TextInput"
     UseLayoutRounding="True"
     mc:Ignorable="d">

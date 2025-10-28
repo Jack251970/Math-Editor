@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using iNKORE.UI.WPF.Modern.Controls;
@@ -7,8 +8,13 @@ namespace Editor;
 
 public static class ContentDialogHelper
 {
-    public static async Task<MessageBoxResult> ShowAsync(Window owner, string messageBoxText, string caption, MessageBoxButton button)
+    public static async Task<MessageBoxResult> ShowAsync(MainWindow owner, string messageBoxText, string caption, MessageBoxButton button)
     {
+        if (owner is not IContentDialogOwner contentDialogOwner)
+        {
+            throw new InvalidOperationException("Owner must implement IContentDialogOwner.");
+        }
+
         var dialog = new ContentDialog
         {
             Owner = owner,
@@ -40,33 +46,41 @@ public static class ContentDialogHelper
             TextWrapping = TextWrapping.Wrap
         };
 
-        var result = await dialog.ShowAsync();
-        return button switch
+        contentDialogOwner.ContentDialogChanged(true);
+        try
         {
-            MessageBoxButton.OK => result switch
+            var result = await dialog.ShowAsync();
+            return button switch
             {
-                ContentDialogResult.Primary => MessageBoxResult.OK,
-                _ => MessageBoxResult.None
-            },
-            MessageBoxButton.YesNo => result switch
-            {
-                ContentDialogResult.Primary => MessageBoxResult.Yes,
-                ContentDialogResult.Secondary => MessageBoxResult.No,
-                _ => MessageBoxResult.None
-            },
-            MessageBoxButton.OKCancel => result switch
-            {
-                ContentDialogResult.Primary => MessageBoxResult.OK,
-                ContentDialogResult.Secondary => MessageBoxResult.Cancel,
-                _ => MessageBoxResult.None
-            },
-            MessageBoxButton.YesNoCancel => result switch
-            {
-                ContentDialogResult.Primary => MessageBoxResult.Yes,
-                ContentDialogResult.Secondary => MessageBoxResult.No,
-                _ => MessageBoxResult.Cancel
-            },
-            _ => MessageBoxResult.None,
-        };
+                MessageBoxButton.OK => result switch
+                {
+                    ContentDialogResult.Primary => MessageBoxResult.OK,
+                    _ => MessageBoxResult.None
+                },
+                MessageBoxButton.YesNo => result switch
+                {
+                    ContentDialogResult.Primary => MessageBoxResult.Yes,
+                    ContentDialogResult.Secondary => MessageBoxResult.No,
+                    _ => MessageBoxResult.None
+                },
+                MessageBoxButton.OKCancel => result switch
+                {
+                    ContentDialogResult.Primary => MessageBoxResult.OK,
+                    ContentDialogResult.Secondary => MessageBoxResult.Cancel,
+                    _ => MessageBoxResult.None
+                },
+                MessageBoxButton.YesNoCancel => result switch
+                {
+                    ContentDialogResult.Primary => MessageBoxResult.Yes,
+                    ContentDialogResult.Secondary => MessageBoxResult.No,
+                    _ => MessageBoxResult.Cancel
+                },
+                _ => MessageBoxResult.None,
+            };
+        }
+        finally
+        {
+            contentDialogOwner.ContentDialogChanged(false);
+        }
     }
 }
