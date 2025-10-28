@@ -46,6 +46,22 @@ public partial class EditorControl : UserControl, IDisposable
         timer.Elapsed += Timer_Elapsed;
     }
 
+    public void SetTimer(bool enabled)
+    {
+        if (enabled)
+        {
+            vCaret.ForceVisible(true);
+            hCaret.ForceVisible(true);
+            timer.Start();
+        }
+        else
+        {
+            timer.Stop();
+            vCaret.ForceVisible(false);
+            hCaret.ForceVisible(false);
+        }
+    }
+
     private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         vCaret.ToggleVisibility();

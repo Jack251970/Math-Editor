@@ -208,6 +208,7 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
 
     public void ContentDialogChanged(bool isShown)
     {
+        Editor.SetTimer(!isShown);
         WindowChrome.SetWindowChrome(this, isShown ? _nonDraggableChrome : _draggableChrome);
         ContentDialogShown = isShown;
     }
