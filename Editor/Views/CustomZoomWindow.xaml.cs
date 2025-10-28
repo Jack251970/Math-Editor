@@ -1,17 +1,17 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
+using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Editor;
 
 [INotifyPropertyChanged]
 public partial class CustomZoomWindow : Window
 {
-    private const int MaxPercentage = 9999;
+    public int MaxPercentage { get; } = 9999;
 
     [ObservableProperty]
-    private string _numberBoxText = string.Empty;
+    private double? _number = null;
 
     public CustomZoomWindow()
     {
@@ -19,30 +19,17 @@ public partial class CustomZoomWindow : Window
         InitializeComponent();
     }
 
-    private void NumberBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        e.Handled = !AreAllValidNumericChars(e.Text) || NumberBoxText.Length > 3;
-        base.OnPreviewTextInput(e);
-    }
-
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        try
+        if (Number is null)
         {
-            var number = int.Parse(NumberBoxText);
-            if (number is <= 0 or > MaxPercentage)
-            {
-                MessageBox.Show(this, Localize.CustomZoomWindow_ZoomPercentageRangeError(MaxPercentage), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            ((MainWindow)Owner).ViewModel.CustomZoomPercentage = number;
-            Close();
+            return;
         }
-        catch
+        var percentage = (int)Number;
+        if (percentage > 0 && percentage < MaxPercentage)
         {
-            MessageBox.Show(this, Localize.CustomZoomWindow_ZoomPercentageFormatError(MaxPercentage), Localize.Error(),
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            ((MainWindow)Owner).ViewModel.CustomZoomPercentage = percentage;
+            Close();
         }
     }
 
@@ -50,14 +37,22 @@ public partial class CustomZoomWindow : Window
     {
         Close();
     }
+}
 
-    private static bool AreAllValidNumericChars(string str)
+public class IntegerNumberFormatter : INumberBoxNumberFormatter
+{
+    public string FormatDouble(double value)
     {
-        foreach (var c in str)
-        {
-            if (!char.IsNumber(c)) return false;
-        }
+        var rounded = (long)Math.Round(value);
+        return rounded.ToString();
+    }
 
-        return true;
+    public double? ParseDouble(string text)
+    {
+        if (double.TryParse(text, out double result))
+        {
+            return Math.Round(result);
+        }
+        return null;
     }
 }
