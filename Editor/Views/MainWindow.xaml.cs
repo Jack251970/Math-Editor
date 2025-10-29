@@ -67,6 +67,7 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
     private async void Editor_Loaded(object sender, RoutedEventArgs e)
     {
         ViewModel.Editor = Editor;
+        ViewModel.InitializeRecentFiles(RecentFileItem);
 
         // Check if we have a file to open
         await ViewModel.OpenFileAsync(ViewModel.CurrentLocalFile);

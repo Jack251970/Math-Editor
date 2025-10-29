@@ -125,7 +125,7 @@
                         Command="{Binding OpenCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Open}"
                         InputGestureText="Ctrl+O" />
-                    <MenuItem Header="{DynamicResource MainWindow_Recent}" />
+                    <MenuItem x:Name="RecentFileItem" Header="{DynamicResource MainWindow_Recent}" />
                     <MenuItem
                         Command="{Binding SaveCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Save}"

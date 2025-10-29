@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     public ClipboardHelper ClipboardHelper { get; init; }
     public MainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
+    private MenuItem _recentFileItem = null!;
 
     [ObservableProperty]
     private string _mainWindowTitle = null!;
@@ -505,10 +507,30 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         WindowTracker.GetOwnerWindows().ForEach(window => window.Close());
     }
 
+    [RelayCommand]
+    private void ClearRecentFiles()
+    {
+        Settings.RecentFiles.Clear();
+        UpdateRecentFiles();
+    }
+
+    [RelayCommand]
+    private async Task OpenRecentFileAsync(string file)
+    {
+        await OpenFileAsync(file);
+    }
+
     public async Task OpenFileAsync(string filePath)
     {
         if (!string.IsNullOrEmpty(filePath))
         {
+            if (!File.Exists(filePath))
+            {
+                CurrentLocalFile = string.Empty;
+                await ContentDialogHelper.ShowAsync(MainWindow, Localize.EditorControl_CannotFindFile(filePath), Localize.Error(),
+                    MessageBoxButton.OK);
+                return;
+            }
             try
             {
                 using (Stream stream = File.OpenRead(filePath))
@@ -516,6 +538,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
                     await Editor!.LoadFileAsync(stream);
                 }
                 CurrentLocalFile = filePath;
+                AddRecentFile(filePath);
             }
             catch (Exception e)
             {
@@ -604,6 +627,63 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         else
         {
             return null;
+        }
+    }
+
+    public void InitializeRecentFiles(MenuItem recentFileItem)
+    {
+        _recentFileItem = recentFileItem;
+        UpdateRecentFiles();
+    }
+
+    private void AddRecentFile(string filePath)
+    {
+        const int MaxRecentFiles = 10;
+
+        if (Settings.RecentFiles.Count > 0 && Settings.RecentFiles[0] == filePath)
+        {
+            return;
+        }
+
+        if (Settings.RecentFiles.Count == MaxRecentFiles)
+        {
+            Settings.RecentFiles.RemoveAt(Settings.RecentFiles.Count - 1);
+        }
+
+        Settings.RecentFiles.Insert(0, filePath);
+        UpdateRecentFiles();
+    }
+
+    private void UpdateRecentFiles()
+    {
+        _recentFileItem.Items.Clear();
+        if (Settings.RecentFiles.Count == 0)
+        {
+            var menuItem = new MenuItem()
+            {
+                IsEnabled = false
+            };
+            menuItem.SetResourceReference(MenuItem.HeaderProperty, nameof(Localize.MainWindow_NoRecentFiles));
+            _recentFileItem.Items.Add(menuItem);
+        }
+        else
+        {
+            foreach (var file in Settings.RecentFiles)
+            {
+                _recentFileItem.Items.Add(new MenuItem()
+                {
+                    Header = file,
+                    Command = OpenRecentFileCommand,
+                    CommandParameter = file
+                });
+            }
+            _recentFileItem.Items.Add(new Separator());
+            var menuItem = new MenuItem()
+            {
+                Command = ClearRecentFilesCommand
+            };
+            menuItem.SetResourceReference(MenuItem.HeaderProperty, nameof(Localize.MainWindow_ClearList));
+            _recentFileItem.Items.Add(menuItem);
         }
     }
 
