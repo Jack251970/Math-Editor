@@ -480,7 +480,7 @@ namespace Editor
             if (childEquations.Count == 1 && childEquations.First() is TextEquation textEquation &&
                 textEquation.TextLength == 0)
             {
-                if (Owner.ViewModel.IsSelecting)
+                if (Owner.ViewModel.IsSelecting && ParentEquation.ActiveChild == this)
                 {
                     dc.DrawRectangle(PenManager.SelectionBrush, null, new Rect(Left, Top, Width, Height + ThinLineThickness));
                 }
