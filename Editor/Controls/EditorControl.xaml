@@ -9,7 +9,6 @@
     MinHeight="200"
     KeyDown="EditorControl_KeyDown"
     Loaded="EditorControl_Loaded"
-    MouseDoubleClick="EditorControl_MouseDoubleClick"
     MouseDown="EditorControl_MouseDown"
     MouseEnter="EditorControl_MouseEnter"
     MouseLeave="EditorControl_MouseLeave"
@@ -18,6 +17,7 @@
     MouseUp="EditorControl_MouseUp"
     PreviewKeyDown="EditorControl_PreviewKeyDown"
     PreviewKeyUp="EditorControl_PreviewKeyUp"
+    PreviewMouseDoubleClick="EditorControl_PreviewMouseDoubleClick"
     TextInput="EditorControl_TextInput"
     UseLayoutRounding="True"
     mc:Ignorable="d">

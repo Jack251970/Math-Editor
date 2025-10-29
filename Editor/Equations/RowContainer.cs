@@ -680,6 +680,33 @@ namespace Editor
             Owner.ViewModel.ActiveChildSelectedItems = ActiveChild.SelectedItems;
         }
 
+        public override void HandleMouseDoubleClick(Point mousePoint)
+        {
+            // Select the entire row under the cursor on double click
+            for (var i = 0; i < childEquations.Count; i++)
+            {
+                var childEquation = childEquations[i];
+                var top = childEquation.Top;
+                var bottom = childEquation.Bottom;
+                if (i == 0)
+                {
+                    top = double.MinValue;
+                }
+                if (i == childEquations.Count - 1)
+                {
+                    bottom = double.MaxValue;
+                }
+                if (top <= mousePoint.Y && mousePoint.Y < bottom)
+                {
+                    ActiveChild = childEquation;
+                    SelectionStartIndex = i;
+                    Owner.ViewModel.IsSelecting = true;
+                    ActiveChild.SelectAll();
+                    break;
+                }
+            }
+        }
+
         public override double Left
         {
             get => base.Left;

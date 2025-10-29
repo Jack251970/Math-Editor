@@ -172,17 +172,30 @@ public partial class EditorControl : UserControl, IDisposable
     }
 
     private bool isDragging = false;
+    private bool isDoubleClicked = false;
 
     private void EditorControl_MouseDown(object sender, MouseButtonEventArgs e)
     {
+        var mousePosition = e.GetPosition(this);
         if (equationRoot.ConsumeMouseClick(Mouse.GetPosition(this)))
         {
             InvalidateVisual();
         }
         Focus();
         ForceCaretVisible(false); // When we click, we want to see the caret immediately
-        lastMouseLocation = e.GetPosition(this);
+        lastMouseLocation = mousePosition;
         isDragging = true;
+        if (isDoubleClicked)
+        {
+            isDoubleClicked = false;
+            equationRoot.HandleMouseDoubleClick(mousePosition);
+            InvalidateVisual();
+        }
+    }
+
+    private void EditorControl_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        isDoubleClicked = true;
     }
 
     private void EditorControl_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -301,13 +314,6 @@ public partial class EditorControl : UserControl, IDisposable
                 InvalidateVisual();
             }
         }
-    }
-
-    private void EditorControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        var mousePosition = e.GetPosition(this);
-        equationRoot.HandleMouseDoubleClick(mousePosition);
-        InvalidateVisual();
     }
 
     public void DeleteSelection()

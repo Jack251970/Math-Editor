@@ -8,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor
 {
@@ -97,6 +96,12 @@ namespace Editor
                 Owner.ViewModel.IsSelecting = true;
             }
             ActiveChild.HandleMouseDrag(mousePoint);
+            AdjustCarets();
+        }
+
+        public override void HandleMouseDoubleClick(Point mousePoint)
+        {
+            ActiveChild.HandleMouseDoubleClick(mousePoint);
             AdjustCarets();
         }
 
