@@ -303,6 +303,13 @@ public partial class EditorControl : UserControl, IDisposable
         }
     }
 
+    private void EditorControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        var mousePosition = e.GetPosition(this);
+        equationRoot.HandleMouseDoubleClick(mousePosition);
+        InvalidateVisual();
+    }
+
     public void DeleteSelection()
     {
         equationRoot.RemoveSelection(true);

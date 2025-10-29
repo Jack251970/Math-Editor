@@ -9,6 +9,7 @@
     MinHeight="200"
     KeyDown="EditorControl_KeyDown"
     Loaded="EditorControl_Loaded"
+    MouseDoubleClick="EditorControl_MouseDoubleClick"
     MouseDown="EditorControl_MouseDown"
     MouseEnter="EditorControl_MouseEnter"
     MouseLeave="EditorControl_MouseLeave"

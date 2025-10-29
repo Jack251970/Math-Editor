@@ -83,6 +83,7 @@ namespace Editor
 
         public virtual bool ConsumeMouseClick(Point mousePoint) { return false; }
         public virtual void HandleMouseDrag(Point mousePoint) { }
+        public virtual void HandleMouseDoubleClick(Point mousePoint) { }
 
         public virtual EquationBase? Split(EquationContainer newParent) { return null; }
         public virtual void ConsumeText(string text) { }
