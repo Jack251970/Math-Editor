@@ -157,6 +157,7 @@
     <system:String x:Key="MainWindow_File">File</system:String>
     <system:String x:Key="MainWindow_New">New</system:String>
     <system:String x:Key="MainWindow_Open">Open</system:String>
+    <system:String x:Key="MainWindow_Recent">Recent</system:String>
     <system:String x:Key="MainWindow_Save">Save</system:String>
     <system:String x:Key="MainWindow_SaveAs">Save as</system:String>
     <system:String x:Key="MainWindow_Export">Export</system:String>

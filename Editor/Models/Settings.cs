@@ -34,6 +34,8 @@ public class Settings : ObservableObject
 
     public bool ShowNesting { get; set; } = false;
 
+    public ObservableCollection<string> RecentFiles { get; set; } = [];
+
     private FontType _defaultFont = FontType.STIXGeneral;
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public FontType DefaultFont
