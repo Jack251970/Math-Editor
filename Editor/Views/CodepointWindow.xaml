@@ -29,7 +29,7 @@
                 PreviewTextInput="NumberBox_PreviewTextInput"
                 Text="{Binding NumberBoxText, Mode=TwoWay}" />
             <ComboBox
-                Width="100"
+                Width="120"
                 Margin="5 0 0 0"
                 DisplayMemberPath="Display"
                 ItemsSource="{Binding AllUnicodeFormats, Mode=OneTime}"

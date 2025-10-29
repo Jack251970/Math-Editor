@@ -119,7 +119,7 @@
                 SnapsToDevicePixels="True"
                 Text="{Binding CharacterCodeText, Mode=OneWay}" />
             <ComboBox
-                Width="100"
+                Width="120"
                 DisplayMemberPath="Display"
                 ItemsSource="{Binding AllUnicodeFormats, Mode=OneTime}"
                 SelectedValue="{Binding UnicodeFormat, Mode=TwoWay}"
