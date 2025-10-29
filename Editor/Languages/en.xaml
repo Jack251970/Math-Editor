@@ -149,9 +149,6 @@
     <system:String x:Key="CodepointWindow_Title">Enter Unicode Value</system:String>
     <system:String x:Key="CodepointWindow_UnicodeValue">Unicode Value:</system:String>
     <system:String x:Key="CodepointWindow_Insert">Insert</system:String>
-    <system:String x:Key="CodepointWindow_GivenValueError">The given value is invalid</system:String>
-    <system:String x:Key="CodepointWindow_EnteredError">The entered value is invalid</system:String>
-    <system:String x:Key="CodepointWindow_NumberFormatError">The number is not in correct format</system:String>
 
     <!--  Custom Zoom Window  -->
     <system:String x:Key="CustomZoomWindow_Title">Zoom Level</system:String>

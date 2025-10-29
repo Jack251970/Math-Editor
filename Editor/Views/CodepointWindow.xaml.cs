@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
@@ -20,43 +18,25 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
     private UnicodeFormat _unicodeFormat = UnicodeFormat.Decimal;
 
     [ObservableProperty]
-    private string _numberBoxText = string.Empty;
+    private double? _number = null;
 
     public CodepointWindow()
     {
         DataContext = this;
         InitializeComponent();
-    }
-
-    private void NumberBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        e.Handled = !ConvertToNumber(e.Text, out var _);
-        base.OnPreviewTextInput(e);
+        UnicodeValueBox.NumberFormatter = new CodepointNumberFormatter(this);
     }
 
     private void InsertButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ConvertToNumber(NumberBoxText, out var number))
+        if (Number > 0)
         {
-            try
+            var commandDetails = new CommandDetails
             {
-                var commandDetails = new CommandDetails
-                {
-                    UnicodeString = Convert.ToChar(number).ToString(),
-                    CommandType = CommandType.Text
-                };
-                ((MainWindow)Owner).HandleToolBarCommand(commandDetails);
-            }
-            catch
-            {
-                MessageBox.Show(this, Localize.CodepointWindow_GivenValueError(), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        else
-        {
-            MessageBox.Show(this, Localize.CodepointWindow_EnteredError(), Localize.Error(),
-                MessageBoxButton.OK, MessageBoxImage.Error);
+                UnicodeString = Convert.ToChar((uint)Number).ToString(),
+                CommandType = CommandType.Text
+            };
+            ((MainWindow)Owner).HandleToolBarCommand(commandDetails);
         }
     }
 
@@ -67,61 +47,48 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
 
     partial void OnUnicodeFormatChanged(UnicodeFormat value)
     {
-        var numberBase = value switch
+        if (!string.IsNullOrEmpty(UnicodeValueBox.Text))
         {
-            UnicodeFormat.Octal => 8,
-            UnicodeFormat.Decimal => 10,
-            UnicodeFormat.Hexadecimal => 16,
-            _ => throw new NotImplementedException(),
-        };
-        if (!string.IsNullOrEmpty(NumberBoxText))
-        {
-            try
+            if (TryConvertToNumber(UnicodeFormat, UnicodeValueBox.Text, out var number, out var numberBase))
             {
-                if (ConvertToNumber(NumberBoxText, out var number))
-                {
-                    NumberBoxText = Convert.ToString(number, numberBase);
-                }
-                else
-                {
-                    MessageBox.Show(this, Localize.CodepointWindow_EnteredError(), Localize.Error(),
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                UnicodeValueBox.Text = Convert.ToString(number, numberBase);
             }
-            catch (Exception e)
+            else
             {
-                EditorLogger.Fatal(ClassName, "Failed to convert number on format change.", e);
-                MessageBox.Show(this, Localize.CodepointWindow_NumberFormatError(), Localize.Error(),
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                NumberBoxText = string.Empty;
+                UnicodeValueBox.Text = string.Empty;
             }
         }
     }
 
-    private bool ConvertToNumber(string str, out uint number)
+    public static bool TryConvertToNumber(UnicodeFormat unicodeFormat, string str, out uint number, out int numberBase)
     {
         try
         {
-            switch (UnicodeFormat)
+            switch (unicodeFormat)
             {
                 case UnicodeFormat.Octal:
                     number = Convert.ToUInt32(str, 8);
+                    numberBase = 8;
                     return true;
                 case UnicodeFormat.Decimal:
                     number = uint.Parse(str);
+                    numberBase = 10;
                     return true;
                 case UnicodeFormat.Hexadecimal:
                     number = Convert.ToUInt32(str, 16);
+                    numberBase = 16;
                     return true;
                 default:
-                    throw new NotImplementedException();
+                    throw new InvalidOperationException($"Unsupported Unicode format: {unicodeFormat}");
             }
         }
-        catch
+        catch (Exception e)
         {
+            EditorLogger.Error(ClassName, "Failed to convert string to number.", e);
             number = 0;
+            numberBase = 0;
             return false;
-        }
+        };
     }
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
