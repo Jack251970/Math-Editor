@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Editor;
 
-// TODO: Convert to dialog?
 [INotifyPropertyChanged]
 public partial class MatrixInputWindow : Window
 {
