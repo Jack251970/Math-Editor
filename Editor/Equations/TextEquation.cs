@@ -351,13 +351,41 @@ namespace Editor
                 RenderTargetBitmap? bitmap = null;
                 if (App.Settings.CopyType == CopyType.Image)
                 {
-                    bitmap = new RenderTargetBitmap((int)Math.Ceiling(Width + 4), (int)Math.Ceiling(Height + 4), 96, 96, PixelFormats.Default);
-                    var dv = new DrawingVisual();
-                    using (var dc = dv.RenderOpen())
+                    // Use exact selection bounds and translate so (TopLeft) maps to (1,1)
+                    var selectionRect = GetSelectionBounds();
+                    if (selectionRect == Rect.Empty)
                     {
-                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
-                        DrawEquation(dc, true);
+                        // Fallback to selected text width and full height
+                        var selWidth = GetWidth(startIndex, count, true);
+                        selectionRect = new Rect(Left, Top, selWidth, Height);
                     }
+
+                    var bmpWidth = (int)Math.Ceiling(selectionRect.Width + 2);
+                    var bmpHeight = (int)Math.Ceiling(selectionRect.Height + 2);
+
+                    bitmap = new RenderTargetBitmap(bmpWidth, bmpHeight, 96, 96, PixelFormats.Default);
+                    var dv = new DrawingVisual();
+
+                    // Disable selection highlight during printing
+                    var oldSelecting = Owner.ViewModel.IsSelecting;
+                    Owner.ViewModel.IsSelecting = false;
+                    try
+                    {
+#pragma warning disable IDE0063
+                        using (var dc = dv.RenderOpen())
+                        {
+                            dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
+                            dc.PushTransform(new TranslateTransform(1 - selectionRect.Left, 1 - selectionRect.Top));
+                            DrawEquation(dc, true);
+                            dc.Pop();
+                        }
+#pragma warning restore IDE0063
+                    }
+                    finally
+                    {
+                        Owner.ViewModel.IsSelecting = oldSelecting;
+                    }
+
                     bitmap.Render(dv);
                 }
 
@@ -1382,15 +1410,15 @@ namespace Editor
         /*
         void DrawDecorations(DrawingContext dc, List<CharacterDecorationInfo> decorationList, FormattedText ft, int index, double hCenter)
         {
-            double offset = FontSize * .05;
-            //character metrics    
-            double topPixel = ft.Height + ft.OverhangAfter - ft.Extent; //ft.Baseline - ft.Extent + descent;
-            double descent = ft.Height - ft.Baseline + ft.OverhangAfter;
-            double halfCharWidth = ft.GetFullWidth() / 2;
-            double right = hCenter + halfCharWidth + offset;
-            double left = hCenter - halfCharWidth - offset;
-            double top = Top + topPixel - offset;
-            double bottom = Top + ft.Baseline + descent + offset;
+        double offset = FontSize * .05;
+        //character metrics    
+        double topPixel = ft.Height + ft.OverhangAfter - ft.Extent; //ft.Baseline - ft.Extent + descent;
+        double descent = ft.Height - ft.Baseline + ft.OverhangAfter;
+        double halfCharWidth = ft.GetFullWidth() / 2;
+        double right = hCenter + halfCharWidth + offset;
+        double left = hCenter - halfCharWidth - offset;
+        double top = Top + topPixel - offset;
+        double bottom = Top + ft.Baseline + descent + offset;
         }
         */
 
