@@ -50,6 +50,22 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
         EquationToolBar.CommandCompleted += EquationToolBar_CommandCompleted;
     }
 
+    // https://github.com/SuGar0218/NativeLikeCaptionButton-WPF
+    private void Window_StateChanged(object sender, EventArgs e)
+    {
+        switch (WindowState)
+        {
+            case WindowState.Maximized:
+                double left = SystemParameters.ResizeFrameVerticalBorderWidth + SystemParameters.FixedFrameVerticalBorderWidth + SystemParameters.BorderWidth;
+                double top = SystemParameters.ResizeFrameHorizontalBorderHeight + SystemParameters.FixedFrameHorizontalBorderHeight + SystemParameters.BorderWidth;
+                MainDock.Margin = new Thickness(left, top, left, top);
+                break;
+            default:
+                MainDock.Margin = new Thickness(0);
+                break;
+        }
+    }
+
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         _draggableChrome = WindowChrome.GetWindowChrome(this);

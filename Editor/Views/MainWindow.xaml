@@ -19,6 +19,7 @@
     KeyUp="Window_KeyUp"
     Loaded="Window_Loaded"
     MouseDown="Window_MouseDown"
+    StateChanged="Window_StateChanged"
     TextInput="Window_TextInput"
     mc:Ignorable="d">
     <Window.Resources>
