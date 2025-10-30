@@ -246,13 +246,13 @@ namespace Editor
             textData.Clear();
             textData.Append(text);
             this.caretIndex = caretIndex;
-            this.SelectionStartIndex = selectionStartIndex;
-            this.SelectedItems = selectedItems;
+            SelectionStartIndex = selectionStartIndex;
+            SelectedItems = selectedItems;
             this.formats.Clear();
             this.formats.AddRange(formats);
             this.modes.Clear();
             this.modes.AddRange(modes);
-            this.decorations.Clear();
+            decorations.Clear();
             decorations.AddRange(cdiList);
             FormatText();
         }
