@@ -330,9 +330,41 @@ namespace Editor
                 var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
                 if (count > 0)
                 {
-                    var beforeWidth = GetWidth(0, startIndex, false);
-                    var selectedWith = GetWidth(startIndex, count, false);
-                    return new Rect(Left + beforeWidth, Top, selectedWith, Height);
+                    // Base cumulative widths to the start and end of the selection
+                    var wStart = GetWidth(0, startIndex, false);
+                    var wEnd = GetWidth(0, startIndex + count, false);
+
+                    // If the selection does not start at the very first character, the character just
+                    // before the selection (startIndex -1) is measured as if it was the last char of a
+                    // chunk and its OverhangTrailing got subtracted by GetWidth. In the real drawing we
+                    // don't subtract that overhang inside a continuous run, so add it back.
+                    if (startIndex > 0 && startIndex <= textData.Length)
+                    {
+                        var prevChar = textData[startIndex - 1];
+                        if (!char.IsWhiteSpace(prevChar))
+                        {
+                            var ftPrev = TextManager.GetFormattedText(prevChar.ToString(), formats[startIndex - 1]);
+                            wStart += ftPrev.OverhangTrailing;
+                        }
+                    }
+
+                    // If the selection does not end at the very last character, the last selected
+                    // character is measured as if it was the last of a chunk and its OverhangTrailing
+                    // got subtracted. Add it back to match the real drawn width inside the run.
+                    var endIndexExclusive = startIndex + count;
+                    if (endIndexExclusive < textData.Length && endIndexExclusive > 0)
+                    {
+                        var lastSelChar = textData[endIndexExclusive - 1];
+                        if (!char.IsWhiteSpace(lastSelChar))
+                        {
+                            var ftLast = TextManager.GetFormattedText(lastSelChar.ToString(), formats[endIndexExclusive - 1]);
+                            wEnd += ftLast.OverhangTrailing;
+                        }
+                    }
+
+                    var leftX = Left + wStart;
+                    var width = Math.Max(0, wEnd - wStart);
+                    return new Rect(leftX, Top, width, Height);
                 }
             }
             return Rect.Empty;
