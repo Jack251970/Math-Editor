@@ -1612,7 +1612,7 @@ namespace Editor
         {
             get
             {
-                if (textData.Length > 0)
+                if (textData.Length >0)
                 {
                     var ft = TextManager.GetFormattedText(textData.ToString(), formats, forceBlackBrush);
                     return ft.OverhangAfter;
