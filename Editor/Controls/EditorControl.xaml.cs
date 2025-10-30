@@ -333,6 +333,8 @@ public partial class EditorControl : UserControl, IDisposable
     {
         if (!string.IsNullOrEmpty(e.Text))
         {
+            // Replace ASCII hyphen-minus '-' with Unicode minus '\u2212'
+            // for consistent mathematical notation rendering
             ConsumeText(e.Text.Replace('-', '\u2212'));
         }
     }

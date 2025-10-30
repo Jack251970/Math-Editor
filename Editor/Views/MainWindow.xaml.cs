@@ -150,6 +150,8 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
             //Editor.EditorControl_TextInput(null, e);
             if (!string.IsNullOrEmpty(e.Text))
             {
+                // Replace ASCII hyphen-minus '-' with Unicode minus '\u2212'
+                // for consistent mathematical notation rendering
                 Editor.ConsumeText(e.Text.Replace('-', '\u2212'));
             }
             CharacterToolBar.HideVisiblePanel();

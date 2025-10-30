@@ -643,26 +643,50 @@ namespace Editor
 
         public override void ConsumeText(string text)
         {
+            // Normalize input: drop control characters and replace ASCII hyphen with Unicode minus
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            var sbInput = new StringBuilder(text.Length);
+            foreach (var ch in text)
+            {
+                if (char.IsControl(ch))
+                {
+                    continue; // ignore control characters like \b (backspace)
+                }
+                // Replace ASCII hyphen-minus '-' with Unicode minus '\u2212'
+                // for consistent mathematical notation rendering
+                sbInput.Append(ch == '-' ? '\u2212' : ch);
+            }
+            var input = sbInput.ToString();
+            if (input.Length == 0)
+            {
+                return;
+            }
+
             var list = from d in decorations where d.Index >= caretIndex select d;
             foreach (var v in list)
             {
-                v.Index += text.Length;
+                v.Index += input.Length;
             }
             var style = InputItalic ? FontStyles.Italic : FontStyles.Normal;
-            textData.Insert(caretIndex, text);
-            var name = FunctionNames.CheckForFunctionName(textData.ToString(0, caretIndex + text.Length));
-            if (name != null && EditorMode == EditorMode.Math && caretIndex - (name.Length - text.Length) >= 0)
+            textData.Insert(caretIndex, input);
+            var name = FunctionNames.CheckForFunctionName(textData.ToString(0, caretIndex + input.Length));
+            if (name != null && EditorMode == EditorMode.Math && caretIndex - (name.Length - input.Length) >= 0)
             {
-                for (var i = caretIndex - (name.Length - text.Length); i < caretIndex; i++)
+                for (var i = caretIndex - (name.Length - input.Length); i < caretIndex; i++)
                 {
                     formats[i] = TextManager.GetFormatIdForNewStyle(formats[i], FontStyles.Normal);
                     modes[i] = EditorMode.Math;
                 }
                 style = FontStyles.Normal;
             }
-            else if (text.Length == 1 && EditorMode == EditorMode.Math)
+            else if (input.Length == 1 && EditorMode == EditorMode.Math)
             {
-                if ((text[0] >= 65 && text[0] <= 90 || text[0] >= 97 && text[0] <= 122) || char.IsWhiteSpace(text[0]))
+                if (((int)input[0] >= 65 && (int)input[0] <= 90 || (int)input[0] >= 97 && (int)input[0] <= 122) ||
+                    char.IsWhiteSpace(input[0]))
                 {
                     style = FontStyles.Italic;
                 }
@@ -675,17 +699,17 @@ namespace Editor
             var formatId = TextManager.GetFormatId(FontSize, FontType, style,
                 InputBold ? FontWeights.Bold : FontWeights.Normal,
                 PenManager.TextFillColorPrimaryBrush, InputUnderline);
-            var tempFormats = new int[text.Length];
-            var tempModes = new EditorMode[text.Length];
-            for (var i = 0; i < text.Length; i++)
+            var tempFormats = new int[input.Length];
+            var tempModes = new EditorMode[input.Length];
+            for (var i = 0; i < input.Length; i++)
             {
                 formats.Insert(i + caretIndex, formatId);
                 modes.Insert(i + caretIndex, EditorMode);
                 tempFormats[i] = formatId;
                 tempModes[i] = EditorMode;
             }
-            UndoManager.AddUndoAction(new TextAction(this, caretIndex, text, tempFormats, tempModes, []) { UndoFlag = false });
-            SetCaretIndex(caretIndex + text.Length);
+            UndoManager.AddUndoAction(new TextAction(this, caretIndex, input, tempFormats, tempModes, []) { UndoFlag = false });
+            SetCaretIndex(caretIndex + input.Length);
             FormatText();
         }
 
