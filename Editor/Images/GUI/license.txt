@@ -2,23 +2,22 @@ Artist: VisualPharm (Available for custom work)
 License: Linkware (Backlink to http://www.visualpharm.com required)
 Commercial usage: Allowed (Backlink to http://www.visualpharm.com required)
 
-1. copy.png 
-2. cut.png 
-3. delete.png 
-4. find.png 
-5. help.png
-6. information.png 
-7. new.png
-8. open.png
-9. paste.png
-10. print.png
-11. properties.png
-12. redo.png
-13. save.png
-14. settings.png
-15. zoomin.png
-16. zoomout.png
-17. undo.png
+1. copy.png
+2. cut.png
+3. find.png
+4. help.png
+5. information.png
+6. new.png
+7. open.png
+8. paste.png
+9. print.png
+10. properties.png
+11. redo.png
+12. save.png
+13. settings.png
+14. zoomin.png
+15. zoomout.png
+16. undo.png
 
 
 Artist: Fast Icon (Available for custom work)

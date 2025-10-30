@@ -93,27 +93,38 @@
                 HorizontalAlignment="Right"
                 Panel.ZIndex="10"
                 Orientation="Horizontal">
-                <Button
-                    Width="26"
-                    Height="26"
-                    Padding="2"
+                <ui:AppBarButton
+                    Width="44"
+                    Height="48"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ui:CornerRadius="0"
                     Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}"
-                    Style="{DynamicResource FullScreenButtonStyle}"
                     ToolTip="{DynamicResource MainWindow_ExitFullScreen}"
                     Visibility="{Binding FullScreenButtonVisibility, Mode=OneWay}">
-                    <Image Source="/Images/GUI/exitfullscreen.png" />
-                </Button>
-                <Button
-                    Width="26"
-                    Height="26"
-                    Margin="5 0"
-                    Padding="2"
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Glyph="&#xE73F;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
+                <ui:AppBarButton
+                    Width="44"
+                    Height="48"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ui:CornerRadius="0"
                     Command="{Binding CloseCommand, Mode=OneTime}"
-                    Style="{DynamicResource FullScreenButtonStyle}"
                     ToolTip="{DynamicResource Close}"
                     Visibility="{Binding FullScreenButtonVisibility, Mode=OneWay}">
-                    <Image Source="/Images/GUI/delete.png" />
-                </Button>
+                    <ui:AppBarButton.Icon>
+                        <ui:FontIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Glyph="&#xE711;" />
+                    </ui:AppBarButton.Icon>
+                </ui:AppBarButton>
             </StackPanel>
 
             <Menu DockPanel.Dock="Top">
