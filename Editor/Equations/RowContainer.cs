@@ -339,16 +339,27 @@ namespace Editor
 
                     bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)), (int)(Math.Ceiling(height + 2)), 96, 96, PixelFormats.Default);
                     var dv = new DrawingVisual();
+                    // Disable selection highlight during printing
+                    var oldSelecting = Owner.ViewModel.IsSelecting;
                     Owner.ViewModel.IsSelecting = false;
-                    using (var dc = dv.RenderOpen())
+                    try
                     {
-                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
-                        foreach (var eb in equations)
+#pragma warning disable IDE0063
+                        using (var dc = dv.RenderOpen())
                         {
-                            eb.DrawEquation(dc, true);
+                            dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
+                            foreach (var eb in equations)
+                            {
+                                eb.DrawEquation(dc, true);
+                            }
                         }
+#pragma warning restore IDE0063
                     }
-                    Owner.ViewModel.IsSelecting = true;
+                    finally
+                    {
+                        Owner.ViewModel.IsSelecting = oldSelecting;
+                    }
+
                     bitmap.Render(dv);
                 }
 
