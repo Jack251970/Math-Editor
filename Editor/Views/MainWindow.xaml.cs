@@ -148,7 +148,10 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
         {
             Editor.Focus();
             //Editor.EditorControl_TextInput(null, e);
-            Editor.ConsumeText(e.Text);
+            if (!string.IsNullOrEmpty(e.Text))
+            {
+                Editor.ConsumeText(e.Text.Replace('-', '\u2212'));
+            }
             CharacterToolBar.HideVisiblePanel();
             EquationToolBar.HideVisiblePanel();
         }

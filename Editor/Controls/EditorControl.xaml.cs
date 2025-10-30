@@ -331,7 +331,10 @@ public partial class EditorControl : UserControl, IDisposable
 
     public void EditorControl_TextInput(object sender, TextCompositionEventArgs e)
     {
-        ConsumeText(e.Text.Replace('-', '\u2212'));
+        if (!string.IsNullOrEmpty(e.Text))
+        {
+            ConsumeText(e.Text.Replace('-', '\u2212'));
+        }
     }
 
     public void ConsumeText(string text)
