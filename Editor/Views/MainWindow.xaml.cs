@@ -53,15 +53,8 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         _draggableChrome = WindowChrome.GetWindowChrome(this);
-        _nonDraggableChrome = new WindowChrome
-        {
-            NonClientFrameEdges = _draggableChrome.NonClientFrameEdges,
-            CaptionHeight = 0,  // Disable caption height for non-draggable chrome
-            CornerRadius = _draggableChrome.CornerRadius,
-            GlassFrameThickness = _draggableChrome.GlassFrameThickness,
-            ResizeBorderThickness = _draggableChrome.ResizeBorderThickness,
-            UseAeroCaptionButtons = _draggableChrome.UseAeroCaptionButtons
-        };
+        _nonDraggableChrome = (WindowChrome)_draggableChrome.Clone();
+        _nonDraggableChrome.CaptionHeight = 0; // Disable caption height for non-draggable chrome
     }
 
     private async void Editor_Loaded(object sender, RoutedEventArgs e)
