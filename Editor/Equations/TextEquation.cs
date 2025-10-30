@@ -643,8 +643,6 @@ namespace Editor
 
         public override void ConsumeText(string text)
         {
-            //text = "\U0001D400";
-            //string someText = char.ConvertFromUtf32(0x1D7D9);
             var list = from d in decorations where d.Index >= caretIndex select d;
             foreach (var v in list)
             {
@@ -664,7 +662,7 @@ namespace Editor
             }
             else if (text.Length == 1 && EditorMode == EditorMode.Math)
             {
-                if (((int)text[0] >= 65 && (int)text[0] <= 90 || (int)text[0] >= 97 && (int)text[0] <= 122) || char.IsWhiteSpace(text[0]))
+                if ((text[0] >= 65 && text[0] <= 90 || text[0] >= 97 && text[0] <= 122) || char.IsWhiteSpace(text[0]))
                 {
                     style = FontStyles.Italic;
                 }
