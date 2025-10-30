@@ -64,6 +64,10 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
                 MainDock.Margin = new Thickness(0);
                 break;
         }
+        if (WindowState == WindowState.Normal)
+        {
+            ViewModel.ExitFullScreen(WindowState.Normal);
+        }
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)

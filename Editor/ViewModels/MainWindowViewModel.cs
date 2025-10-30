@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +22,11 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     public MainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
     private MenuItem _recentFileItem = null!;
+
+    private WindowStyle _windowStyle;
+    private WindowState _windowState;
+    private bool _fullScreenModeEntered;
+    private readonly Lock _fullScreenModeLock = new();
 
     [ObservableProperty]
     private string _mainWindowTitle = null!;
@@ -331,18 +336,56 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     {
         if (value)
         {
-            MainWindow.WindowStyle = WindowStyle.None;
-            MainWindow.WindowState = WindowState.Normal;
-            MainWindow.WindowState = WindowState.Maximized;
+            EnterFullScreen();
             FullScreenButtonVisibility = Visibility.Visible;
         }
         else
         {
-            MainWindow.WindowStyle = WindowStyle.ThreeDBorderWindow;
-            MainWindow.WindowState = WindowState.Normal;
+            ExitFullScreen();
             FullScreenButtonVisibility = Visibility.Collapsed;
         }
         UpdateFullScreenMenuItemHeader();
+    }
+
+    public void EnterFullScreen()
+    {
+        lock (_fullScreenModeLock)
+        {
+            if (_fullScreenModeEntered)
+            {
+                return;
+            }
+
+            _windowStyle = MainWindow.WindowStyle;
+            MainWindow.WindowStyle = WindowStyle.None;
+
+            _windowState = MainWindow.WindowState;
+            MainWindow.WindowState = WindowState.Normal;
+            MainWindow.WindowState = WindowState.Maximized;
+
+            _fullScreenModeEntered = true;
+        }
+    }
+
+    public void ExitFullScreen()
+    {
+        ExitFullScreen(_windowState);
+    }
+
+    public void ExitFullScreen(WindowState windowState)
+    {
+        lock (_fullScreenModeLock)
+        {
+            if (!_fullScreenModeEntered)
+            {
+                return;
+            }
+
+            MainWindow.WindowStyle = _windowStyle;
+            MainWindow.WindowState = windowState;
+
+            _fullScreenModeEntered = false;
+        }
     }
 
     private void UpdateFullScreenMenuItemHeader()
