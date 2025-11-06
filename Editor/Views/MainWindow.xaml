@@ -360,14 +360,14 @@
                     </Button>
                     <Separator />
                     <Button
-                        Command="DecreaseZoom"
+                        Command="{Binding ZoomOutCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_ZoomOut}"
                         ToolTipService.ShowOnDisabled="True">
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/zoomout.png" />
                     </Button>
                     <Button
-                        Command="IncreaseZoom"
+                        Command="{Binding ZoomInCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_ZoomIn}"
                         ToolTipService.ShowOnDisabled="True">

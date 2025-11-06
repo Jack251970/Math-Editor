@@ -492,6 +492,18 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     }
 
     [RelayCommand]
+    private void ZoomOut()
+    {
+        Editor!.ZoomOut();
+    }
+
+    [RelayCommand]
+    private void ZoomIn()
+    {
+        Editor!.ZoomIn();
+    }
+
+    [RelayCommand]
     private async Task ExportAsync(string imageType)
     {
         var extension = $".{imageType}";
