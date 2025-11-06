@@ -81,9 +81,9 @@ public partial class EquationToolBar : UserControl
         CreateMatrixPanel();
     }
 
-    private void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int margin)
+    private void CreatePanel(List<CommandDetails> list, Button toolBarButton, int columns, int padding)
     {
-        var bp = new ButtonPanel(_mainWindow, list, columns, margin);
+        var bp = new ButtonPanel(_mainWindow, list, columns, padding);
         bp.ButtonClick += (x, y) => { CommandCompleted?.Invoke(this, EventArgs.Empty); visiblePanel = null; };
         mainToolBarPanel.Children.Add(bp);
         Canvas.SetTop(bp, mainToolBarPanel.Height);
