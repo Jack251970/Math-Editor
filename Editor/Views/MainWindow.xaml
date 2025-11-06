@@ -472,11 +472,13 @@
             <local:CharacterToolBar
                 x:Name="CharacterToolBar"
                 Padding="0 4"
-                Panel.ZIndex="100" />
+                Panel.ZIndex="100"
+                ClipToBounds="False" />
             <local:EquationToolBar
                 x:Name="EquationToolBar"
                 Padding="0 6"
-                Panel.ZIndex="99" />
+                Panel.ZIndex="99"
+                ClipToBounds="False" />
             <local:HistoryToolBar
                 x:Name="HistoryToolBar"
                 BorderBrush="#FFB6B6B6"
