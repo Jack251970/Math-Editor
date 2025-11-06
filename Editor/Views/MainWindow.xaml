@@ -127,7 +127,7 @@
                 </ui:AppBarButton>
             </StackPanel>
 
-            <Menu DockPanel.Dock="Top">
+            <Menu>
                 <MenuItem Header="{DynamicResource MainWindow_File}">
                     <MenuItem
                         Command="{Binding NewCommand, Mode=OneTime}"
