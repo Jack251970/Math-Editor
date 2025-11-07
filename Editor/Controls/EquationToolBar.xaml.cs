@@ -61,6 +61,7 @@ public partial class EquationToolBar : UserControl
     {
         buttonPanelMapping[sender].Visibility = Visibility.Visible;
         visiblePanel = buttonPanelMapping[sender];
+        _mainWindow.CharacterToolBar.TryHideVisiblePanel();
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
