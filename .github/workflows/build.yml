@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - wpf
     paths-ignore:
       - '*.md'
   pull_request:
