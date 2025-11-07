@@ -147,7 +147,7 @@ public class Internationalization(Settings settings) : IDisposable
 
     private void UpdateAllWindowsTranslations()
     {
-        foreach (var window in WindowTracker.GetActiveWindows())
+        foreach (var window in WindowTracker.GetAllWindows())
         {
             if (window is ICultureInfoChanged localizable)
             {
