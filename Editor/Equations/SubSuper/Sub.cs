@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Windows;
 using System.Xml.Linq;
 
 namespace Editor
@@ -62,11 +63,11 @@ namespace Editor
             set
             {
                 base.Left = value;
-                rowContainer.Left = this.Left + Padding;
+                rowContainer.Left = Left + Padding;
             }
         }
 
-        public override System.Windows.Thickness Margin
+        public override Thickness Margin
         {
             get
             {
@@ -75,7 +76,7 @@ namespace Editor
                 {
                     left += te.OverhangTrailing;
                 }
-                return new System.Windows.Thickness(left, 0, 0, 0);
+                return new Thickness(left, 0, 0, 0);
             }
         }
 

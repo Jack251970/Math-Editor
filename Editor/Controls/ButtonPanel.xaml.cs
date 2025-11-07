@@ -11,7 +11,7 @@ public partial class ButtonPanel : UserControl
 
     private readonly List<CommandDetails> _commandDetails;
 
-    public ButtonPanel(MainWindow mainWindow, List<CommandDetails> listCommandDetails, int columns, int buttonMargin)
+    public ButtonPanel(MainWindow mainWindow, List<CommandDetails> listCommandDetails, int columns, int buttonPadding)
     {
         InitializeComponent();
         _commandDetails = listCommandDetails;
@@ -23,7 +23,7 @@ public partial class ButtonPanel : UserControl
         {
             var button = new EditorToolBarButton(mainWindow, _commandDetails[i])
             {
-                Margin = new Thickness(buttonMargin)
+                Padding = new Thickness(buttonPadding)
             };
             button.Click += new RoutedEventHandler(PanelButton_Click);
             button.Style = (Style)FindResource("MathToolBarButtonStyle");

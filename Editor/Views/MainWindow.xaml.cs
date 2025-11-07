@@ -137,8 +137,8 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
                 //Editor.HandleMouseDown();
                 Editor.Focus();
             }
-            CharacterToolBar.HideVisiblePanel();
-            EquationToolBar.HideVisiblePanel();
+            CharacterToolBar.TryHideVisiblePanel();
+            EquationToolBar.TryHideVisiblePanel();
         }
     }
 
@@ -154,8 +154,8 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
                 // for consistent mathematical notation rendering
                 Editor.ConsumeText(e.Text.Replace('-', '\u2212'));
             }
-            CharacterToolBar.HideVisiblePanel();
-            EquationToolBar.HideVisiblePanel();
+            CharacterToolBar.TryHideVisiblePanel();
+            EquationToolBar.TryHideVisiblePanel();
         }
     }
 
@@ -164,8 +164,8 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
         if (!Editor.IsFocused)
         {
             Editor.Focus();
-            CharacterToolBar.HideVisiblePanel();
-            EquationToolBar.HideVisiblePanel();
+            CharacterToolBar.TryHideVisiblePanel();
+            EquationToolBar.TryHideVisiblePanel();
         }
     }
 

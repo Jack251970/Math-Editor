@@ -45,6 +45,8 @@ public partial class HistoryToolBar : UserControl
         {
             var commandDetails = new CommandDetails { UnicodeString = str, CommandType = CommandType.Text };
             _mainWindow.HandleToolBarCommand(commandDetails);
+            _mainWindow.CharacterToolBar.TryHideVisiblePanel();
+            _mainWindow.EquationToolBar.TryHideVisiblePanel();
         }
     }
 }

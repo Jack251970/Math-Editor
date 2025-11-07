@@ -127,7 +127,7 @@
                 </ui:AppBarButton>
             </StackPanel>
 
-            <Menu DockPanel.Dock="Top">
+            <Menu>
                 <MenuItem Header="{DynamicResource MainWindow_File}">
                     <MenuItem
                         Command="{Binding NewCommand, Mode=OneTime}"
@@ -360,14 +360,14 @@
                     </Button>
                     <Separator />
                     <Button
-                        Command="DecreaseZoom"
+                        Command="{Binding ZoomOutCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_ZoomOut}"
                         ToolTipService.ShowOnDisabled="True">
                         <local:AutoGreyableImage Style="{StaticResource ToolbarImage}" Uri="Images/GUI/zoomout.png" />
                     </Button>
                     <Button
-                        Command="IncreaseZoom"
+                        Command="{Binding ZoomInCommand, Mode=OneTime}"
                         Style="{StaticResource ToolbarButton}"
                         ToolTip="{DynamicResource MainWindow_ZoomIn}"
                         ToolTipService.ShowOnDisabled="True">
@@ -466,17 +466,20 @@
             </ToolBarTray>
         </Grid>
         <StackPanel
+            Background="Transparent"
             DockPanel.Dock="Top"
             DockPanel.ZIndex="100"
             Orientation="Vertical">
             <local:CharacterToolBar
                 x:Name="CharacterToolBar"
                 Padding="0 4"
-                Panel.ZIndex="100" />
+                Panel.ZIndex="100"
+                ClipToBounds="False" />
             <local:EquationToolBar
                 x:Name="EquationToolBar"
                 Padding="0 6"
-                Panel.ZIndex="99" />
+                Panel.ZIndex="99"
+                ClipToBounds="False" />
             <local:HistoryToolBar
                 x:Name="HistoryToolBar"
                 BorderBrush="#FFB6B6B6"
