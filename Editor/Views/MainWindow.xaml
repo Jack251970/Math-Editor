@@ -466,6 +466,7 @@
             </ToolBarTray>
         </Grid>
         <StackPanel
+            Background="Transparent"
             DockPanel.Dock="Top"
             DockPanel.ZIndex="100"
             Orientation="Vertical">
