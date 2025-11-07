@@ -3,251 +3,251 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- General -->
-    <x:String x:Key="Error">����</x:String>
-    <x:String x:Key="Close">�ر�</x:String>
-    <x:String x:Key="Yes">��</x:String>
-    <x:String x:Key="No">��</x:String>
-    <x:String x:Key="Ok">ȷ��</x:String>
-    <x:String x:Key="Cancel">ȡ��</x:String>
+    <x:String x:Key="Error">错误</x:String>
+    <x:String x:Key="Close">关闭</x:String>
+    <x:String x:Key="Yes">是</x:String>
+    <x:String x:Key="No">否</x:String>
+    <x:String x:Key="Ok">确定</x:String>
+    <x:String x:Key="Cancel">取消</x:String>
 
     <!-- Editor Mode -->
-    <x:String x:Key="EditorMode_Math">��ѧ</x:String>
-    <x:String x:Key="EditorMode_Text">�ı�</x:String>
+    <x:String x:Key="EditorMode_Math">数学</x:String>
+    <x:String x:Key="EditorMode_Text">文本</x:String>
 
     <!-- Font Type -->
-    <x:String x:Key="FontType_SystemDefault">ϵͳĬ��</x:String>
+    <x:String x:Key="FontType_SystemDefault">系统默认</x:String>
 
     <!-- Copy Type -->
-    <x:String x:Key="CopyType_Image">ͼ��</x:String>
+    <x:String x:Key="CopyType_Image">图像</x:String>
     <x:String x:Key="CopyType_Latex">Latex</x:String>
 
     <!-- Unicode Format -->
-    <x:String x:Key="UnicodeFormat_Decimal">ʮ����</x:String>
-    <x:String x:Key="UnicodeFormat_Octal">�˽���</x:String>
-    <x:String x:Key="UnicodeFormat_Hexadecimal">ʮ������</x:String>
+    <x:String x:Key="UnicodeFormat_Decimal">十进制</x:String>
+    <x:String x:Key="UnicodeFormat_Octal">八进制</x:String>
+    <x:String x:Key="UnicodeFormat_Hexadecimal">十六进制</x:String>
 
     <!-- Editor Control -->
-    <x:String x:Key="EditorControl_CannotOpenFile">�޷���ָ�����ļ�����鿴��־�ļ��Ի�ȡ������Ϣ��</x:String>
-    <x:String x:Key="EditorControl_CannotSaveFile">�޷�����ָ�����ļ�����鿴��־�ļ��Ի�ȡ������Ϣ��</x:String>
-    <x:String x:Key="EditorControl_CannotPrintFile">�޷���ӡָ�����ļ�����鿴��־�ļ��Ի�ȡ������Ϣ��</x:String>
-    <x:String x:Key="EditorControl_CannotFindFile">�޷��ҵ�ָ�����ļ���{0}</x:String>
+    <x:String x:Key="EditorControl_CannotOpenFile">无法打开指定的文件。请查看日志文件以获取更多信息。</x:String>
+    <x:String x:Key="EditorControl_CannotSaveFile">无法保存指定的文件。请查看日志文件以获取更多信息。</x:String>
+    <x:String x:Key="EditorControl_CannotPrintFile">无法打印指定的文件。请查看日志文件以获取更多信息。</x:String>
+    <x:String x:Key="EditorControl_CannotFindFile">无法找到指定的文件：{0}</x:String>
 
     <!-- Equation Root -->
-    <x:String x:Key="EquationRoot_FileVersionDifferent">���ļ��ɲ�ͬ�汾 (v{0}) �� Math Editor ������ʹ���˲�ͬ�ĸ�ʽ��{1}{1}Math Editor �����Դ򿪲�ת���ļ�����ǰ�汾������������ʧ�ܡ�{1}{1}��Ҫ����ԭ�ļ������ȴ������ݡ�</x:String>
+    <x:String x:Key="EquationRoot_FileVersionDifferent">该文件由不同版本 (v{0}) 的 Math Editor 创建，使用了不同的格式。{1}{1}Math Editor 将尝试打开并转换文件到当前版本，但操作可能失败。{1}{1}若要保留原文件，请先创建备份。</x:String>
 
     <!-- Latex Converter -->
-    <x:String x:Key="LatexConverter_InitializationFileNotFound">δ�ҵ� Latex �� Unicode ӳ���ļ���{0}��ĳЩ Unicode �ַ������޷��� Latex ��ʽ���ơ�</x:String>
-    <x:String x:Key="LatexConverter_InitializationJsonError">�޷��� {0} ���� Latex �� Unicode ��ӳ�䡣ĳЩ Unicode �ַ������޷��� Latex ��ʽ���ơ�</x:String>
-    <x:String x:Key="LatexConverter_InitializationIOError">�� {0} ���� Latex �� Unicode ӳ��ʱ���� I/O ����ĳЩ Unicode �ַ������޷��� Latex ��ʽ���ơ�</x:String>
-    <x:String x:Key="LatexConverter_InitializationError">�޷��� {0} ���� Latex �� Unicode ��ӳ�䡣ĳЩ Unicode �ַ������޷��� Latex ��ʽ���ơ�</x:String>
-    <x:String x:Key="LatexConverter_TranslationError">�������</x:String>
+    <x:String x:Key="LatexConverter_InitializationFileNotFound">未找到 Latex 到 Unicode 映射文件：{0}。某些 Unicode 字符可能无法以 Latex 形式复制。</x:String>
+    <x:String x:Key="LatexConverter_InitializationJsonError">无法从 {0} 解析 Latex 到 Unicode 的映射。某些 Unicode 字符可能无法以 Latex 形式复制。</x:String>
+    <x:String x:Key="LatexConverter_InitializationIOError">从 {0} 加载 Latex 到 Unicode 映射时发生 I/O 错误。某些 Unicode 字符可能无法以 Latex 形式复制。</x:String>
+    <x:String x:Key="LatexConverter_InitializationError">无法从 {0} 加载 Latex 到 Unicode 的映射。某些 Unicode 字符可能无法以 Latex 形式复制。</x:String>
+    <x:String x:Key="LatexConverter_TranslationError">翻译错误</x:String>
 
     <!-- Arrow -->
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowTop">
-    �޷�Ϊ�����ͷ����С��ͷ�����ϱ��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“大箭头覆盖小箭头并带上标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowBottom">
-    �޷�Ϊ�����ͷ����С��ͷ�����±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“大箭头覆盖小箭头并带下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowBottomAndTop">
-    �޷�Ϊ�����ͷ����С��ͷ�������±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“大箭头覆盖小箭头并带上下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowTop">
-    �޷�Ϊ��С��ͷ���Ǵ��ͷ�����ϱ��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“小箭头覆盖大箭头并带上标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowBottom">
-    �޷�Ϊ��С��ͷ���Ǵ��ͷ�����±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“小箭头覆盖大箭头并带下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowBottomAndTop">
-    �޷�Ϊ��С��ͷ���Ǵ��ͷ�������±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“小箭头覆盖大箭头并带上下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonTop">
-    �޷�Ϊ�������Ŵ��ϱ��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“鱼叉符号带上标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonBottom">
-    �޷�Ϊ�������Ŵ��±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“鱼叉符号带下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonBottomAndTop">
-    �޷�Ϊ�������Ŵ����±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“鱼叉符号带上下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonTop">
-    �޷�Ϊ������渲��С��沢���ϱ��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“大鱼叉覆盖小鱼叉并带上标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonBottom">
-    �޷�Ϊ������渲��С��沢���±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“大鱼叉覆盖小鱼叉并带下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonBottomAndTop">
-    �޷�Ϊ������渲��С��沢�����±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“大鱼叉覆盖小鱼叉并带上下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonTop">
-    �޷�Ϊ��С��渲�Ǵ���沢���ϱ��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“小鱼叉覆盖大鱼叉并带上标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottom">
-    �޷�Ϊ��С��渲�Ǵ���沢���±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“小鱼叉覆盖大鱼叉并带下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottomAndTop">
-    �޷�Ϊ��С��渲�Ǵ���沢�����±��ı����Ľṹ�ṩ���롣{0}����������������Ӧ���롣
+    无法为“小鱼叉覆盖大鱼叉并带上下标文本”的结构提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
 
     <!-- Decorated -->
     <x:String x:Key="LatexConverter_TranslationErrorParenthesisTop">
-    �޷�Ϊ�����η��š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“弧形符号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorTortoiseTop">
-    �޷�Ϊ������״̬���š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“连接状态符号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightHarpoonUpBarbTop">
-    �޷�Ϊ��������ϻ��ߡ��ṩ���롣{0}����������������Ӧ���롣
+    无法为“右鱼叉上划线”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorRightHarpoonUpBarbBottom">
-    �޷�Ϊ��������»��ߡ��ṩ���롣{0}����������������Ӧ���롣
+    无法为“右鱼叉下划线”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorLeftHarpoonUpBarbTop">
-    �޷�Ϊ��������ϻ��ߡ��ṩ���롣{0}����������������Ӧ���롣
+    无法为“左鱼叉上划线”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorLeftHarpoonUpBarbBottom">
-    �޷�Ϊ��������»��ߡ��ṩ���롣{0}����������������Ӧ���롣
+    无法为“左鱼叉下划线”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorStrikeThroughMiddle">
-    �޷�Ϊ������ɾ���ߡ��ṩ���롣{0}����������������Ӧ���롣
+    无法为“中线删除线”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
 
     <!-- Horizontal Bracket -->
     <x:String x:Key="LatexConverter_TranslationErrorTopSquare">
-    �޷�Ϊ����ˮƽ���š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“上水平括号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorBottomSquare">
-    �޷�Ϊ����ˮƽ���š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“下水平括号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
 
     <!-- Division -->
     <x:String x:Key="LatexConverter_TranslationErrorDivDoubleBar">
-    �޷�Ϊ��˫�߳��š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“双线除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorDivTripleBar">
-    �޷�Ϊ�����߳��š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“三线除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorDivHorizSmall">
-    �޷�Ϊ��С��ˮƽ���š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“小型水平除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorDivMathInverted">
-    �޷�Ϊ��������š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“反向除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorDivInvertedWithBottom">
-    �޷�Ϊ�����±�ķ�����š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“带下标的反向除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorDivTriangleFixed">
-    �޷�Ϊ�����ǹ̶����š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“三角固定除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
     <x:String x:Key="LatexConverter_TranslationErrorDivTriangleExpanding">
-    �޷�Ϊ������չ�����š��ṩ���롣{0}����������������Ӧ���롣
+    无法为“三角展开除号”提供翻译。{0}请在设置中添加相应翻译。
     </x:String>
 
     <!-- About Window -->
-    <x:String x:Key="AboutWindow_Title">���� Math Editor</x:String>
-    <x:String x:Key="AboutWindow_SourceRepository">Դ��ֿ�</x:String>
-    <x:String x:Key="AboutWindow_IssueReport">���ⱨ��</x:String>
-    <x:String x:Key="AboutWindow_SponsorAuthor">��������</x:String>
+    <x:String x:Key="AboutWindow_Title">关于 Math Editor</x:String>
+    <x:String x:Key="AboutWindow_SourceRepository">源码仓库</x:String>
+    <x:String x:Key="AboutWindow_IssueReport">问题报告</x:String>
+    <x:String x:Key="AboutWindow_SponsorAuthor">赞助作者</x:String>
 
     <!-- Codepoint Window -->
-    <x:String x:Key="CodepointWindow_Title">���� Unicode ֵ</x:String>
-    <x:String x:Key="CodepointWindow_UnicodeValue">Unicode ֵ��</x:String>
-    <x:String x:Key="CodepointWindow_Insert">����</x:String>
+    <x:String x:Key="CodepointWindow_Title">输入 Unicode 值</x:String>
+    <x:String x:Key="CodepointWindow_UnicodeValue">Unicode 值：</x:String>
+    <x:String x:Key="CodepointWindow_Insert">插入</x:String>
 
     <!-- Custom Zoom Window -->
-    <x:String x:Key="CustomZoomWindow_Title">���ż���</x:String>
+    <x:String x:Key="CustomZoomWindow_Title">缩放级别</x:String>
 
     <!-- Main Window -->
-    <x:String x:Key="MainWindow_File">�ļ�</x:String>
-    <x:String x:Key="MainWindow_New">�½�</x:String>
-    <x:String x:Key="MainWindow_Open">��</x:String>
-    <x:String x:Key="MainWindow_Recent">���</x:String>
-    <x:String x:Key="MainWindow_NoRecentFiles">������ļ�</x:String>
-    <x:String x:Key="MainWindow_ClearList">����б�</x:String>
-    <x:String x:Key="MainWindow_Save">����</x:String>
-    <x:String x:Key="MainWindow_SaveAs">����Ϊ</x:String>
-    <x:String x:Key="MainWindow_Export">����</x:String>
+    <x:String x:Key="MainWindow_File">文件</x:String>
+    <x:String x:Key="MainWindow_New">新建</x:String>
+    <x:String x:Key="MainWindow_Open">打开</x:String>
+    <x:String x:Key="MainWindow_Recent">最近</x:String>
+    <x:String x:Key="MainWindow_NoRecentFiles">无最近文件</x:String>
+    <x:String x:Key="MainWindow_ClearList">清空列表</x:String>
+    <x:String x:Key="MainWindow_Save">保存</x:String>
+    <x:String x:Key="MainWindow_SaveAs">另存为</x:String>
+    <x:String x:Key="MainWindow_Export">导出</x:String>
     <x:String x:Key="MainWindow_Export_PNG">PNG</x:String>
     <x:String x:Key="MainWindow_Export_JPG">JPG</x:String>
     <x:String x:Key="MainWindow_Export_GIF">GIF</x:String>
     <x:String x:Key="MainWindow_Export_BMP">BMP</x:String>
     <x:String x:Key="MainWindow_Export_TIFF">TIFF</x:String>
     <x:String x:Key="MainWindow_Export_WMP">WMP</x:String>
-    <x:String x:Key="MainWindow_Print">��ӡ</x:String>
-    <x:String x:Key="MainWindow_Exit">�˳�</x:String>
+    <x:String x:Key="MainWindow_Print">打印</x:String>
+    <x:String x:Key="MainWindow_Exit">退出</x:String>
 
-    <x:String x:Key="MainWindow_Edit">�༭</x:String>
-    <x:String x:Key="MainWindow_Cut">����</x:String>
-    <x:String x:Key="MainWindow_Copy">����</x:String>
-    <x:String x:Key="MainWindow_Paste">ճ��</x:String>
-    <x:String x:Key="MainWindow_SelectAll">ȫѡ</x:String>
-    <x:String x:Key="MainWindow_Delete">ɾ��</x:String>
+    <x:String x:Key="MainWindow_Edit">编辑</x:String>
+    <x:String x:Key="MainWindow_Cut">剪切</x:String>
+    <x:String x:Key="MainWindow_Copy">复制</x:String>
+    <x:String x:Key="MainWindow_Paste">粘贴</x:String>
+    <x:String x:Key="MainWindow_SelectAll">全选</x:String>
+    <x:String x:Key="MainWindow_Delete">删除</x:String>
 
-    <x:String x:Key="MainWindow_Insert">����</x:String>
-    <x:String x:Key="MainWindow_Symbol">����</x:String>
-    <x:String x:Key="MainWindow_UnicodeValue">Unicode ֵ</x:String>
+    <x:String x:Key="MainWindow_Insert">插入</x:String>
+    <x:String x:Key="MainWindow_Symbol">符号</x:String>
+    <x:String x:Key="MainWindow_UnicodeValue">Unicode 值</x:String>
 
-    <x:String x:Key="MainWindow_View">��ͼ</x:String>
-    <x:String x:Key="MainWindow_FullScreen">ȫ��</x:String>
-    <x:String x:Key="MainWindow_NormalScreen">��ͨ��Ļ</x:String>
-    <x:String x:Key="MainWindow_Zoom">����</x:String>
-    <x:String x:Key="MainWindow_Custom">�Զ���</x:String>
-    <x:String x:Key="MainWindow_CustomPercentage">�Զ��� ({0}%)</x:String>
+    <x:String x:Key="MainWindow_View">视图</x:String>
+    <x:String x:Key="MainWindow_FullScreen">全屏</x:String>
+    <x:String x:Key="MainWindow_NormalScreen">普通屏幕</x:String>
+    <x:String x:Key="MainWindow_Zoom">缩放</x:String>
+    <x:String x:Key="MainWindow_Custom">自定义</x:String>
+    <x:String x:Key="MainWindow_CustomPercentage">自定义 ({0}%)</x:String>
 
-    <x:String x:Key="MainWindow_Tools">����</x:String>
-    <x:String x:Key="MainWindow_Settings">����</x:String>
+    <x:String x:Key="MainWindow_Tools">工具</x:String>
+    <x:String x:Key="MainWindow_Settings">设置</x:String>
 
-    <x:String x:Key="MainWindow_Help">����</x:String>
-    <x:String x:Key="MainWindow_Contents">Ŀ¼</x:String>
-    <x:String x:Key="MainWindow_About">����</x:String>
+    <x:String x:Key="MainWindow_Help">帮助</x:String>
+    <x:String x:Key="MainWindow_Contents">目录</x:String>
+    <x:String x:Key="MainWindow_About">关于</x:String>
 
-    <x:String x:Key="MainWindow_ExitFullScreen">�˳�ȫ��</x:String>
-    <x:String x:Key="MainWindow_Undo">����</x:String>
-    <x:String x:Key="MainWindow_Redo">����</x:String>
-    <x:String x:Key="MainWindow_ZoomIn">�Ŵ�</x:String>
-    <x:String x:Key="MainWindow_ZoomOut">��С</x:String>
-    <x:String x:Key="MainWindow_Bold">�Ӵ�</x:String>
-    <x:String x:Key="MainWindow_Italic">б��</x:String>
-    <x:String x:Key="MainWindow_Underline">�»���</x:String>
-    <x:String x:Key="MainWindow_ShowHideUnderbar">��ʾ/�����»���</x:String>
+    <x:String x:Key="MainWindow_ExitFullScreen">退出全屏</x:String>
+    <x:String x:Key="MainWindow_Undo">撤销</x:String>
+    <x:String x:Key="MainWindow_Redo">重做</x:String>
+    <x:String x:Key="MainWindow_ZoomIn">放大</x:String>
+    <x:String x:Key="MainWindow_ZoomOut">缩小</x:String>
+    <x:String x:Key="MainWindow_Bold">加粗</x:String>
+    <x:String x:Key="MainWindow_Italic">斜体</x:String>
+    <x:String x:Key="MainWindow_Underline">下划线</x:String>
+    <x:String x:Key="MainWindow_ShowHideUnderbar">显示/隐藏下划线</x:String>
 
-    <x:String x:Key="MainWindow_Untitled">δ����</x:String>
+    <x:String x:Key="MainWindow_Untitled">未命名</x:String>
 
-    <x:String x:Key="MainWindow_ShowNesting">��ʾǶ��</x:String>
-    <x:String x:Key="MainWindow_HideNesting">����Ƕ��</x:String>
+    <x:String x:Key="MainWindow_ShowNesting">显示嵌套</x:String>
+    <x:String x:Key="MainWindow_HideNesting">隐藏嵌套</x:String>
 
     <x:String x:Key="MainWindow_StatusBarLeftMessage">ActiveStart {0}, ActiveItems {1}</x:String>
 
-    <x:String x:Key="MainWindow_OpenMathEditorFile">�� Math Editor �ļ�</x:String>
-    <x:String x:Key="MainWindow_MedFile">Math Editor �ļ�</x:String>
-    <x:String x:Key="MainWindow_AllFile">�����ļ�</x:String>
-    <x:String x:Key="MainWindow_ImageFile">ͼ���ļ�</x:String>
-    <x:String x:Key="MainWindow_SaveImageFile">����ͼ���ļ�</x:String>
-    <x:String x:Key="MainWindow_SaveMathEditorFile">���� Math Editor �ļ�</x:String>
-    <x:String x:Key="MainWindow_SaveCurrentDocument">�Ƿ��ڹر�ǰ���浱ǰ�ĵ���</x:String>
+    <x:String x:Key="MainWindow_OpenMathEditorFile">打开 Math Editor 文件</x:String>
+    <x:String x:Key="MainWindow_MedFile">Math Editor 文件</x:String>
+    <x:String x:Key="MainWindow_AllFile">所有文件</x:String>
+    <x:String x:Key="MainWindow_ImageFile">图像文件</x:String>
+    <x:String x:Key="MainWindow_SaveImageFile">保存图像文件</x:String>
+    <x:String x:Key="MainWindow_SaveMathEditorFile">保存 Math Editor 文件</x:String>
+    <x:String x:Key="MainWindow_SaveCurrentDocument">是否在关闭前保存当前文档？</x:String>
 
     <!-- Report Window -->
-    <x:String x:Key="ReportWindow_AppGotError">����������</x:String>
-    <x:String x:Key="ReportWindow_PleaseOpenIssue">��������λ�ô��������⣺</x:String>
-    <x:String x:Key="ReportWindow_UploadLog">1. �ϴ�����־�ļ���{0}</x:String>
-    <x:String x:Key="ReportWindow_CopyBelow">2. ���������쳣��Ϣ</x:String>
+    <x:String x:Key="ReportWindow_AppGotError">程序发生错误</x:String>
+    <x:String x:Key="ReportWindow_PleaseOpenIssue">请在以下位置创建新问题：</x:String>
+    <x:String x:Key="ReportWindow_UploadLog">1. 上传此日志文件：{0}</x:String>
+    <x:String x:Key="ReportWindow_CopyBelow">2. 复制以下异常信息</x:String>
 
     <!-- Matrix Input Window -->
-    <x:String x:Key="MatrixInputWindow_Title">�������</x:String>
-    <x:String x:Key="MatrixInputWindow_Rows">����</x:String>
-    <x:String x:Key="MatrixInputWindow_Columns">����</x:String>
+    <x:String x:Key="MatrixInputWindow_Title">输入矩阵</x:String>
+    <x:String x:Key="MatrixInputWindow_Rows">行数</x:String>
+    <x:String x:Key="MatrixInputWindow_Columns">列数</x:String>
 
     <!-- Settings Window -->
-    <x:String x:Key="SettingsWindow_Title">Math Editor ����</x:String>
-    <x:String x:Key="SettingsWindow_Language">����</x:String>
-    <x:String x:Key="SettingsWindow_DefaultMode">Ĭ��ģʽ</x:String>
-    <x:String x:Key="SettingsWindow_DefaultFont">Ĭ������</x:String>
-    <x:String x:Key="SettingsWindow_CopyType">��������</x:String>
+    <x:String x:Key="SettingsWindow_Title">Math Editor 设置</x:String>
+    <x:String x:Key="SettingsWindow_Language">语言</x:String>
+    <x:String x:Key="SettingsWindow_DefaultMode">默认模式</x:String>
+    <x:String x:Key="SettingsWindow_DefaultFont">默认字体</x:String>
+    <x:String x:Key="SettingsWindow_CopyType">复制类型</x:String>
 
     <!-- Unicode Selector Window -->
-    <x:String x:Key="UnicodeSelectorWindow_Title">�������</x:String>
-    <x:String x:Key="UnicodeSelectorWindow_Category">���</x:String>
-    <x:String x:Key="UnicodeSelectorWindow_RecentlyUsedSymbols">���ʹ�õķ��ţ�</x:String>
-    <x:String x:Key="UnicodeSelectorWindow_CharacterCode">�ַ����룺</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_Title">插入符号</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_Category">类别：</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_RecentlyUsedSymbols">最近使用的符号：</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_CharacterCode">字符代码：</x:String>
 
 </ResourceDictionary>
