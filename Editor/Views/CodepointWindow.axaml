@@ -1,0 +1,63 @@
+﻿<Window
+    x:Class="Editor.CodepointWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Editor"
+    x:DataType="local:CodepointWindowViewModel"
+    Title="{DynamicResource CodepointWindow_Title}"
+    Width="378"
+    Height="184"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <Label VerticalContentAlignment="Center" Content="{DynamicResource CodepointWindow_UnicodeValue}" />
+            <!-- // TODO: Set Formatter for it -->
+            <!--  Unicode Value Maximum: 0x10FFFF, 1114111, 04177777  -->
+            <NumericUpDown
+                x:Name="UnicodeValueBox"
+                Width="100"
+                Margin="5 0 0 0"
+                Maximum="4177777"
+                Minimum="0"
+                Text="{Binding Number, Mode=TwoWay}" />
+            <ComboBox
+                Width="120"
+                Margin="5 0 0 0"
+                DisplayMemberBinding="{Binding Display}"
+                ItemsSource="{Binding AllUnicodeFormats, Mode=OneTime}"
+                SelectedValue="{Binding UnicodeFormat, Mode=TwoWay}"
+                SelectedValueBinding="{Binding Value}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Margin="15"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                Name="InsertButton"
+                Width="70"
+                Margin="5 0"
+                Click="InsertButton_Click"
+                Content="{DynamicResource CodepointWindow_Insert}"
+                IsDefault="True" />
+            <Button
+                Name="CloseButton"
+                Width="70"
+                Margin="5 0"
+                Click="CloseButton_Click"
+                Content="{DynamicResource Close}" />
+        </StackPanel>
+    </Grid>
+</Window>

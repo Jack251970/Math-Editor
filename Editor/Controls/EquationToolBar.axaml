@@ -1,0 +1,108 @@
+﻿<UserControl
+    x:Class="Editor.EquationToolBar"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="34"
+    d:DesignWidth="600"
+    Loaded="UserControl_Loaded"
+    mc:Ignorable="d">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/ToolBarStyles.axaml" />
+    </UserControl.Styles>
+
+    <Canvas Name="mainToolBarPanel" Height="22">
+        <StackPanel Height="{Binding ElementName=mainToolBarPanel, Path=Height}" Orientation="Horizontal">
+            <Button
+                x:Name="bracketsButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                Height="34"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/brackets.png" />
+            </Button>
+            <Button
+                x:Name="decoratedEquationButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/decoratedEquation.png" />
+            </Button>
+            <Button
+                x:Name="sumsProductsButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/sumproduct.png" />
+            </Button>
+            <Button
+                x:Name="integralsButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/integrals.png" />
+            </Button>
+            <Button
+                x:Name="subAndSuperButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/subsuper.png" />
+            </Button>
+            <Button
+                x:Name="divAndRootsButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/divroot.png" />
+            </Button>
+            <Button
+                x:Name="arrowEquationButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/arrowEquation.png" />
+            </Button>
+            <Button
+                x:Name="compositeButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/composite.png" />
+            </Button>
+            <Button
+                x:Name="decoratedCharacterButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/decoratedCharacter.png" />
+            </Button>
+            <Button
+                x:Name="matrixButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/matrix.png" />
+            </Button>
+            <Button
+                x:Name="boxButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/boxes.png" />
+            </Button>
+        </StackPanel>
+    </Canvas>
+</UserControl>

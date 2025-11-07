@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using System.Collections.Generic;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -10,7 +11,7 @@ namespace Editor
         private FormattedText leftCurlyPart = null!;
         private FormattedText rightCurlyPart = null!;
 
-        public HorizontalBracketSign(MainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
+        public HorizontalBracketSign(IMainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
             : base(owner, parent)
         {
             SignType = signType;
@@ -38,7 +39,7 @@ namespace Editor
 
         private void DrawTopSquare(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points =
+            List<Point> points =
             [
                 new Point(Left, Top),
                 new Point(Right, Top),
@@ -53,7 +54,7 @@ namespace Editor
 
         private void DrawBottomSquare(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points =
+            List<Point> points =
             [
                 new Point(Left, Top),
                 new Point(Left + ThinLineThickness, Top),

@@ -1,0 +1,143 @@
+﻿<Window
+    x:Class="Editor.UnicodeSelectorWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Editor"
+    x:DataType="local:UnicodeSelectorWindowViewModel"
+    Title="{DynamicResource UnicodeSelectorWindow_Title}"
+    Width="750"
+    Height="432"
+    Closing="Window_Closing"
+    WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <local:NullableBoolToBoolConverter x:Key="NullableBoolToBoolConverter" />
+    </Window.Resources>
+
+    <Grid Name="mainGrid" Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <UniformGrid
+            Margin="0 0 0 5"
+            HorizontalAlignment="Stretch"
+            Columns="2">
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Margin="0 0 5 0"
+                    VerticalContentAlignment="Center"
+                    Content="{DynamicResource UnicodeSelectorWindow_Category}" />
+                <ComboBox
+                    Width="300"
+                    ItemsSource="{Binding Categories, Mode=OneWay}"
+                    MaxDropDownHeight="300"
+                    SelectedValue="{Binding SelectedCategory, Mode=TwoWay}" />
+            </StackPanel>
+        </UniformGrid>
+        <ListBox
+            Grid.Row="1"
+            FontFamily="{Binding SymbolFontFamily, Mode=OneTime}"
+            FontSize="18"
+            ItemsSource="{Binding CategorySource, Mode=OneWay}"
+            SelectedItem="{Binding SelectedSymbolItem, Mode=TwoWay}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Width="{Binding Path=Height, RelativeSource={RelativeSource Mode=Self}}"
+                        Margin="2"
+                        BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"
+                        BorderThickness="1">
+                        <TextBlock
+                            Margin="1"
+                            Padding="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ZIndex="1"
+                            Text="{Binding UnicodeText}" />
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="2" Margin="0 10 0 0">
+            <TextBlock
+                Margin="0 0 0 3"
+                FontSize="14"
+                Text="{DynamicResource UnicodeSelectorWindow_RecentlyUsedSymbols}" />
+            <ListBox
+                MinHeight="42"
+                FontFamily="{Binding SymbolFontFamily, Mode=OneTime}"
+                FontSize="16"
+                ItemsSource="{Binding Settings.RecentUnicodeItems, Mode=OneTime}"
+                SelectedItem="{Binding SelectedRecentSymbolItem, Mode=TwoWay}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Width="{Binding Path=Height, RelativeSource={RelativeSource Mode=Self}}"
+                            Margin="2"
+                            BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"
+                            BorderThickness="1">
+                            <TextBlock
+                                Margin="1"
+                                Padding="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ZIndex="1"
+                                Text="{Binding UnicodeText}" />
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="3"
+            Margin="0 10 0 0"
+            Orientation="Horizontal">
+            <Label VerticalContentAlignment="Center" Content="{DynamicResource UnicodeSelectorWindow_CharacterCode}" />
+            <TextBox
+                Width="90"
+                Margin="5 0"
+                VerticalAlignment="Center"
+                BorderThickness="1"
+                IsReadOnly="True"
+                Text="{Binding CharacterCodeText, Mode=OneWay}" />
+            <ComboBox
+                Width="120"
+                DisplayMemberBinding="{Binding Display}"
+                ItemsSource="{Binding AllUnicodeFormats, Mode=OneTime}"
+                SelectedValue="{Binding UnicodeFormat, Mode=TwoWay}"
+                SelectedValueBinding="{Binding Value}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="4"
+            Margin="0 10"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="80"
+                Margin="6 0"
+                Padding="6 2"
+                Click="InsertButton_Click"
+                Content="{DynamicResource CodepointWindow_Insert}"
+                IsEnabled="{Binding SelectRecentList, Converter={StaticResource NullableBoolToBoolConverter}, Mode=OneWay}" />
+            <Button
+                Width="80"
+                Margin="6 0"
+                Padding="6 2"
+                Click="CloseButton_Click"
+                Content="{DynamicResource Close}" />
+        </StackPanel>
+    </Grid>
+</Window>

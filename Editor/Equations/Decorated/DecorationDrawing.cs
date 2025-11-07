@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Media;
+using System.Collections.Generic;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -11,7 +12,7 @@ namespace Editor
         private FormattedText _secondSign = null!; //only used by certain decorations
         private FormattedText _bar = null!;
 
-        public DecorationDrawing(MainWindow owner, EquationContainer parent, DecorationType decorationType)
+        public DecorationDrawing(IMainWindow owner, EquationContainer parent, DecorationType decorationType)
             : base(owner, parent)
         {
             _decorationType = decorationType;
@@ -54,7 +55,7 @@ namespace Editor
         {
             if (Width < FontSize * .8)
             {
-                FitFirstSignToWidth(FontType.STIXGeneral, "\u23DC", FontWeights.Bold, forceBlackBrush);
+                FitFirstSignToWidth(FontType.STIXGeneral, "\u23DC", FontWeight.Bold, forceBlackBrush);
             }
             else if (Width < FontSize * 2)
             {
@@ -117,7 +118,7 @@ namespace Editor
 
         private void FitFirstSignToWidth(FontType fontType, string unicodeChar, bool forceBlackBrush)
         {
-            FitFirstSignToWidth(fontType, unicodeChar, FontWeights.Normal, forceBlackBrush);
+            FitFirstSignToWidth(fontType, unicodeChar, FontWeight.Normal, forceBlackBrush);
         }
 
         private void FitFirstSignToWidth(FontType fontType, string unicodeChar, FontWeight weight, bool forceBlackBrush)
@@ -331,55 +332,60 @@ namespace Editor
 
         private void DrawLeftHarpoonUpBarb(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(Left + FontSize * .3, Top),
                 //new Point(Left + FontSize * .31, Top + FontSize * .041),
                 new Point(Left + FontSize * .18, Bottom - FontSize * .06),
                 new Point(Right, Bottom - FontSize * .06),
                 new Point(Right, Bottom- FontSize * .02)
-                ];
+            ];
             dc.FillPolylineGeometry(new Point(Left, Bottom - FontSize * .02), points, forceBlackBrush);
         }
 
         private void DrawRightHarpoonUpBarb(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(Right - FontSize * .3, Top),
                 //new Point(Right - FontSize * .31, Top + FontSize * .041),
                 new Point(Right - FontSize * .18, Bottom - FontSize * .06),
                 new Point(Left, Bottom - FontSize * .06),
                 new Point(Left, Bottom - FontSize * .02)
-                ];
+            ];
             dc.FillPolylineGeometry(new Point(Right, Bottom - FontSize * .02), points, forceBlackBrush);
         }
 
         private void DrawLeftHarpoonDownBarb(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(Left + FontSize * .3, Bottom),
                 //new Point(Left + FontSize * .31, Bottom - FontSize * .041),
                 new Point(Left + FontSize * .18, Top + FontSize * .06),
                 new Point(Right, Top + FontSize * .06),
                 new Point(Right, Top + FontSize * .02)
-                ];
+            ];
             dc.FillPolylineGeometry(new Point(Left, Top + FontSize * .02), points, forceBlackBrush);
         }
 
         private void DrawRightHarpoonDownBarb(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(Right - FontSize * .3, Bottom),
                 //new Point(Right - FontSize * .31, Bottom - FontSize * .041),
                 new Point(Right - FontSize * .18, Top + FontSize * .06),
                 new Point(Left, Top + FontSize * .06),
                 new Point(Left, Top + FontSize * .02)
-                ];
+            ];
             dc.FillPolylineGeometry(new Point(Right, Top + FontSize * .02), points, forceBlackBrush);
         }
 
         private void DrawTortoise(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(Left + Height * .5, Top),
                 new Point(Right - Height * .5, Top),
                 new Point(Right, Bottom),
@@ -387,7 +393,7 @@ namespace Editor
                 new Point(Right - Height * .7, Top + Height * .3),
                 new Point(Left + Height * .7, Top + Height * .3),
                 new Point(Left + Height * .2, Bottom)
-                ];
+            ];
             dc.FillPolylineGeometry(new Point(Left, Bottom), points, forceBlackBrush);
         }
     }

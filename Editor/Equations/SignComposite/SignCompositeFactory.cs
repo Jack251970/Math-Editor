@@ -4,7 +4,7 @@ namespace Editor
 {
     public static class SignCompositeFactory
     {
-        public static EquationBase CreateEquation(MainWindow owner, EquationContainer equationParent, Position position, SignCompositeSymbol symbol, bool useUpright)
+        public static EquationBase CreateEquation(IMainWindow owner, EquationContainer equationParent, Position position, SignCompositeSymbol symbol, bool useUpright)
         {
             EquationBase equation = position switch
             {

@@ -1,15 +1,17 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Windows;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Editor;
 
 public static class WindowTracker
 {
-    private static readonly List<Window> _ownerWindows = [];
-    private static readonly ConcurrentDictionary<Window, Window> _activeWindows = [];
+    private static readonly List<IMainWindow> _ownerWindows = [];
+    private static readonly ConcurrentDictionary<Window, IMainWindow> _activeWindows = [];
 
-    public static void TrackOwner(Window owner)
+    public static void TrackOwner(MainWindow owner)
     {
         owner.Closed += (sender, args) =>
         {
@@ -29,15 +31,23 @@ public static class WindowTracker
                 _activeWindows.TryRemove(window, out var _);
             }
             _ownerWindows.Remove(owner);
-            if (_ownerWindows.Count == 0)
+            // TODO: Shutdown application when no owner windows are left
+            /*if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                Application.Current.Shutdown();
+                if (desktop.Windows.Count == 0)
+                {
+                    desktop.TryShutdown();
+                }
             }
+            else
+            {
+
+            }*/
         };
         _ownerWindows.Add(owner);
     }
 
-    public static void TrackWindow(Window window, Window owner)
+    public static void TrackWindow(Window window, IMainWindow owner)
     {
         if (!_ownerWindows.Contains(owner))
         {
@@ -50,9 +60,27 @@ public static class WindowTracker
         _activeWindows.TryAdd(window, owner);
     }
 
+    public static List<Window> GetAllWindows()
+    {
+        // TODO: Return all windows
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return [..desktop.Windows];
+        }
+        else
+        {
+            return [];
+        }
+    }
+
     public static List<Window> GetOwnerWindows()
     {
-        return [.. _ownerWindows];
+        var result = new List<Window>();
+        foreach (var owner in _ownerWindows)
+        {
+            result.Add((Window)owner);
+        }
+        return result;
     }
 
     public static List<Window> GetActiveWindows()
@@ -74,7 +102,7 @@ public static class WindowTracker
         return result;
     }
 
-    public static List<T> GetActiveWindows<T>(Window owner) where T : Window
+    public static List<T> GetActiveWindows<T>(IMainWindow owner) where T : Window
     {
         var result = new List<T>();
         foreach (var pair in _activeWindows)

@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -15,10 +15,12 @@ namespace Editor
             }
             var topExtra = text.Height + text.OverhangAfter - text.Extent;
             double padding = 0;
-            if (text.Text.Length > 0 && !char.IsWhiteSpace(text.Text[0]))
+            // TODO: Review whether this condition is necessary
+            /*if (text.Text.Length > 0 && !char.IsWhiteSpace(text.Text[0]))
             {
                 padding = text.OverhangLeading;
-            }
+            }*/
+            padding = text.OverhangLeading;
             dc.DrawText(text, new Point(topLeft.X - padding, topLeft.Y - topExtra));
             if (forceBlackBrush)
             {
@@ -32,10 +34,12 @@ namespace Editor
             {
                 text.SetForegroundBrush(Brushes.Black);
             }
-            if (text.Text.Length > 0)
+            // TODO: Review whether this condition is necessary
+            /*if (text.Text.Length > 0)
             {
                 dc.DrawText(text, new Point(topLeft.X, topLeft.Y));
-            }
+            }*/
+            dc.DrawText(text, new Point(topLeft.X, topLeft.Y));
             if (forceBlackBrush)
             {
                 text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
@@ -48,7 +52,8 @@ namespace Editor
             {
                 text.SetForegroundBrush(Brushes.Black);
             }
-            if (text.Text.Length > 0)
+            // TODO: Review whether this condition is necessary
+            /*if (text.Text.Length > 0)
             {
                 if (char.IsWhiteSpace(text.Text[0]))
                 {
@@ -58,7 +63,8 @@ namespace Editor
                 {
                     dc.DrawText(text, new Point(topLeft.X - text.OverhangLeading, topLeft.Y));
                 }
-            }
+            }*/
+            dc.DrawText(text, new Point(topLeft.X, topLeft.Y));
             if (forceBlackBrush)
             {
                 text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
@@ -71,11 +77,14 @@ namespace Editor
             {
                 text.SetForegroundBrush(Brushes.Black);
             }
-            if (text.Text.Length > 0)
+            // TODO: Review whether this condition is necessary
+            /*if (text.Text.Length > 0)
             {
                 var width = text.GetFullWidth();
                 dc.DrawText(text, new Point(hCenter.X - width / 2 - text.OverhangLeading, hCenter.Y));
-            }
+            }*/
+            var width = text.GetFullWidth();
+            dc.DrawText(text, new Point(hCenter.X - width / 2 - text.OverhangLeading, hCenter.Y));
             if (forceBlackBrush)
             {
                 text.SetForegroundBrush(PenManager.TextFillColorPrimaryBrush);
@@ -172,7 +181,8 @@ namespace Editor
 
         public static double GetFullWidth(this FormattedText ft)
         {
-            if (ft.Text.Length > 0)
+            // TODO: Review whether this condition is necessary
+            /*if (ft.Text.Length > 0)
             {
                 if (char.IsWhiteSpace(ft.Text[0]) && char.IsWhiteSpace(ft.Text[^1]))
                 {
@@ -194,8 +204,10 @@ namespace Editor
             else
             {
                 return 0;
-            }
+            }*/
+            return ft.WidthIncludingTrailingWhitespace - ft.OverhangLeading - ft.OverhangTrailing;
         }
+
         /*
         //double width = formattedText.WidthIncludingTrailingWhitespace;
         //if (formattedText.Text.Length > 0)
@@ -229,7 +241,8 @@ namespace Editor
 
         public static double GetRight(this FormattedText ft)
         {
-            if (ft.Text.Length > 0)
+            // TODO: Review whether this condition is necessary
+            /*if (ft.Text.Length > 0)
             {
                 if (char.IsWhiteSpace(ft.Text[^1]))
                 {
@@ -243,7 +256,8 @@ namespace Editor
             else
             {
                 return 0;
-            }
+            }*/
+            return ft.WidthIncludingTrailingWhitespace - ft.OverhangTrailing;
         }
     }
 }

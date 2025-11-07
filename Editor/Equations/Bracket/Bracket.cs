@@ -9,7 +9,7 @@ namespace Editor
         protected BracketSign bracketSign = null!;
         protected double ExtraHeight { get; set; }
 
-        public Bracket(MainWindow owner, EquationContainer parent)
+        public Bracket(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             ExtraHeight = FontSize * 0.2;

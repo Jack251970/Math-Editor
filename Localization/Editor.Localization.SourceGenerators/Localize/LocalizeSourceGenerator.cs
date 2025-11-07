@@ -35,11 +35,11 @@ namespace Editor.Localization.SourceGenerators.Localize
         /// <param name="context">The initialization context.</param>
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            var xamlFiles = context.AdditionalTextsProvider
-                .Where(file => Constants.LanguagesXamlRegex.IsMatch(file.Path));
+            var axamlFiles = context.AdditionalTextsProvider
+                .Where(file => Constants.LanguagesAxamlRegex.IsMatch(file.Path));
 
-            var localizedStrings = xamlFiles
-                .Select((file, ct) => ParseXamlFile(file, ct))
+            var localizedStrings = axamlFiles
+                .Select((file, ct) => ParseAxamlFile(file, ct))
                 .Collect()
                 .SelectMany((files, _) => files);
 
@@ -55,7 +55,7 @@ namespace Editor.Localization.SourceGenerators.Localize
 
             var configOptions = context.AnalyzerConfigOptionsProvider;
 
-            var combined = localizedStrings.Combine(invocationKeys).Combine(configOptions).Combine(compilation).Combine(xamlFiles.Collect());
+            var combined = localizedStrings.Combine(invocationKeys).Combine(configOptions).Combine(compilation).Combine(axamlFiles.Collect());
 
             context.RegisterSourceOutput(combined, Execute);
         }
@@ -72,8 +72,8 @@ namespace Editor.Localization.SourceGenerators.Localize
             Compilation Compilation),
             ImmutableArray<AdditionalText> AdditionalTexts) data)
         {
-            var xamlFiles = data.AdditionalTexts;
-            if (xamlFiles.Length == 0)
+            var axamlFiles = data.AdditionalTexts;
+            if (axamlFiles.Length == 0)
             {
                 spc.ReportDiagnostic(Diagnostic.Create(
                     SourceGeneratorDiagnostics.CouldNotFindResourceDictionaries,
@@ -91,7 +91,7 @@ namespace Editor.Localization.SourceGenerators.Localize
 
             GenerateSource(
                 spc,
-                xamlFiles[0],
+                axamlFiles[0],
                 localizedStrings,
                 assemblyNamespace,
                 usedKeys);
@@ -99,9 +99,9 @@ namespace Editor.Localization.SourceGenerators.Localize
 
         #endregion
 
-        #region Parse Xaml File
+        #region Parse Axaml File
 
-        private static ImmutableArray<LocalizableString> ParseXamlFile(AdditionalText file, CancellationToken ct)
+        private static ImmutableArray<LocalizableString> ParseAxamlFile(AdditionalText file, CancellationToken ct)
         {
             var content = file.GetText(ct)?.ToString();
             if (content is null)
@@ -118,7 +118,7 @@ namespace Editor.Localization.SourceGenerators.Localize
 
             // Find prefixes for the target URIs
             string systemPrefix = null;
-            string xamlPrefix = null;
+            string axamlPrefix = null;
 
             foreach (var attr in root.Attributes())
             {
@@ -132,34 +132,34 @@ namespace Editor.Localization.SourceGenerators.Localize
                     {
                         systemPrefix = prefix;
                     }
-                    else if (uri == Constants.XamlPrefixUri)
+                    if (uri == Constants.AxamlPrefixUri)
                     {
-                        xamlPrefix = prefix;
+                        axamlPrefix = prefix;
                     }
                 }
             }
 
-            if (systemPrefix is null || xamlPrefix is null)
+            if (systemPrefix is null || axamlPrefix is null)
             {
                 return _emptyLocalizableStrings;
             }
 
             var systemNs = doc.Root?.GetNamespaceOfPrefix(systemPrefix);
-            var xNs = doc.Root?.GetNamespaceOfPrefix(xamlPrefix);
+            var xNs = doc.Root?.GetNamespaceOfPrefix(axamlPrefix);
             if (systemNs is null || xNs is null)
             {
                 return _emptyLocalizableStrings;
             }
 
             var localizableStrings = new List<LocalizableString>();
-            foreach (var element in doc.Descendants(systemNs + Constants.XamlTag)) // "String" elements in system namespace
+            foreach (var element in doc.Descendants(systemNs + Constants.AxamlTag)) // "String" elements in system namespace
             {
                 if (ct.IsCancellationRequested)
                 {
                     return _emptyLocalizableStrings;
                 }
 
-                var key = element.Attribute(xNs + Constants.KeyAttribute)?.Value; // "Key" attribute in xaml namespace
+                var key = element.Attribute(xNs + Constants.KeyAttribute)?.Value; // "Key" attribute in axaml namespace
                 var value = element.Value;
                 var comment = element.PreviousNode as XComment;
 
@@ -412,7 +412,7 @@ namespace Editor.Localization.SourceGenerators.Localize
 
         private static void GenerateSource(
             SourceProductionContext spc,
-            AdditionalText xamlFile,
+            AdditionalText axamlFile,
             ImmutableArray<LocalizableString> localizedStrings,
             string assemblyNamespace,
             IEnumerable<string> usedKeys)
@@ -433,7 +433,7 @@ namespace Editor.Localization.SourceGenerators.Localize
             var sourceBuilder = new StringBuilder();
 
             // Generate header
-            GeneratedHeaderFromPath(sourceBuilder, xamlFile.Path);
+            GeneratedHeaderFromPath(sourceBuilder, axamlFile.Path);
             sourceBuilder.AppendLine();
 
             // Generate nullable enable
@@ -498,16 +498,16 @@ namespace Editor.Localization.SourceGenerators.Localize
             spc.AddSource($"{Constants.ClassName}.{assemblyNamespace}.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
 
-        private static void GeneratedHeaderFromPath(StringBuilder sb, string xamlFilePath)
+        private static void GeneratedHeaderFromPath(StringBuilder sb, string axamlFilePath)
         {
-            if (string.IsNullOrEmpty(xamlFilePath))
+            if (string.IsNullOrEmpty(axamlFilePath))
             {
                 sb.AppendLine("/// <auto-generated/>");
             }
             else
             {
                 sb.AppendLine("/// <auto-generated>")
-                    .AppendLine($"/// From: {xamlFilePath}")
+                    .AppendLine($"/// From: {axamlFilePath}")
                     .AppendLine("/// </auto-generated>");
             }
         }

@@ -4,7 +4,7 @@ namespace Editor
 {
     public sealed class DivRegularSmall : DivRegular
     {
-        public DivRegularSmall(MainWindow owner, EquationContainer parent)
+        public DivRegularSmall(IMainWindow owner, EquationContainer parent)
             : base(owner, parent, true)
         {
         }
@@ -17,7 +17,7 @@ namespace Editor
 
     public sealed class DivDoubleBar : DivRegular
     {
-        public DivDoubleBar(MainWindow owner, EquationContainer parent)
+        public DivDoubleBar(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             barCount = 2;
@@ -31,7 +31,7 @@ namespace Editor
 
     public sealed class DivTripleBar : DivRegular
     {
-        public DivTripleBar(MainWindow owner, EquationContainer parent)
+        public DivTripleBar(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             barCount = 3;

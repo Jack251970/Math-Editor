@@ -1,0 +1,447 @@
+﻿<Window
+    x:Class="Editor.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Editor"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:trace="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+    xmlns:toolbar="clr-namespace:Avalonia.Controls.ToolBar.Controls;assembly=Avalonia.Controls.ToolBar"
+    x:DataType="local:MainWindowViewModel"
+    Title="{Binding MainWindowTitle, Mode=OneWay}"
+    Width="928"
+    Height="550"
+    Closing="Window_Closing"
+    KeyDown="Window_KeyDown"
+    KeyUp="Window_KeyUp"
+    PointerPressed="Window_PointerPressed"
+    TextInput="Window_TextInput"
+    mc:Ignorable="d">
+    <Window.Styles>
+        <Style Selector="Button.MainWindowToolBarButton">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+
+        <Style Selector="ToggleButton.MainWindowToolbarToggleButton">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+
+        <Style Selector="Image.MainWindowToolbarImage">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+        </Style>
+    </Window.Styles>
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewCommand}"/>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenCommand}"/>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}"/>
+        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
+        <KeyBinding Gesture="Ctrl+P" Command="{Binding PrintCommand}"/>
+        <KeyBinding Gesture="Ctrl+Shift+W" Command="{Binding CloseCommand}"/>
+        <KeyBinding Gesture="Ctrl+Z" Command="{Binding UndoCommand}"/>
+        <KeyBinding Gesture="Ctrl+Y" Command="{Binding RedoCommand}"/>
+        <KeyBinding Gesture="Ctrl+X" Command="{Binding CutCommand}"/>
+        <KeyBinding Gesture="Ctrl+C" Command="{Binding CopyCommand}"/>
+        <KeyBinding Gesture="Ctrl+V" Command="{Binding PasteCommand}"/>
+        <KeyBinding Gesture="Ctrl+A" Command="{Binding SelectAllCommand}"/>
+    </Window.KeyBindings>
+
+    <DockPanel x:Name="MainDock" LastChildFill="True">
+        <Grid DockPanel.Dock="Top">
+            <StackPanel
+                HorizontalAlignment="Right"
+                ZIndex="10"
+                Orientation="Horizontal">
+                <Button
+                    Width="44"
+                    Height="48"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}"
+                    ToolTip.Tip="{DynamicResource MainWindow_ExitFullScreen}"
+                    IsVisible="{Binding FullScreenButtonVisible, Mode=OneWay}">
+                    <ui:FontIcon
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                        Glyph="&#xE73F;" />
+                </Button>
+                <Button
+                    Width="44"
+                    Height="48"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Command="{Binding CloseCommand, Mode=OneTime}"
+                    ToolTip.Tip="{DynamicResource Close}"
+                    IsVisible="{Binding FullScreenButtonVisible, Mode=OneWay}">
+                    <ui:FontIcon
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                        Glyph="&#xE711;" />
+                </Button>
+            </StackPanel>
+
+            <Menu>
+                <MenuItem Header="{DynamicResource MainWindow_File}">
+                    <MenuItem
+                        Command="{Binding NewCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_New}"
+                        InputGesture="Ctrl+N" />
+                    <MenuItem
+                        Command="{Binding OpenCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Open}"
+                        InputGesture="Ctrl+O" />
+                    <MenuItem x:Name="RecentFileItem" Header="{DynamicResource MainWindow_Recent}" />
+                    <MenuItem
+                        Command="{Binding SaveCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Save}"
+                        InputGesture="Ctrl+S" />
+                    <MenuItem
+                        Command="{Binding SaveAsCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_SaveAs}"
+                        InputGesture="Ctrl+Shift+S" />
+                    <MenuItem Header="{DynamicResource MainWindow_Export}">
+                        <MenuItem
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter=".png"
+                            Header="{DynamicResource MainWindow_Export_PNG}" />
+                        <MenuItem
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter=".jpg"
+                            Header="{DynamicResource MainWindow_Export_JPG}" />
+                        <MenuItem
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter=".gif"
+                            Header="{DynamicResource MainWindow_Export_GIF}" />
+                        <MenuItem
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter=".bmp"
+                            Header="{DynamicResource MainWindow_Export_BMP}" />
+                        <MenuItem
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter=".tif"
+                            Header="{DynamicResource MainWindow_Export_TIFF}" />
+                        <MenuItem
+                            Command="{Binding ExportCommand, Mode=OneTime}"
+                            CommandParameter=".wdp"
+                            Header="{DynamicResource MainWindow_Export_WMP}" />
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding PrintCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Print}"
+                        InputGesture="Ctrl+P" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding CloseCommand, Mode=OneTime}"
+                        Header="{DynamicResource Close}"
+                        InputGesture="Ctrl+Shift+W" />
+                    <MenuItem Command="{Binding ExitCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Exit}" />
+                </MenuItem>
+
+                <MenuItem Header="{DynamicResource MainWindow_Edit}">
+                    <MenuItem
+                        Command="{Binding UndoCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Undo}"
+                        InputGesture="Ctrl+Z"
+                        IsEnabled="{Binding UndoManager.CanUndo, Mode=OneWay}" />
+                    <MenuItem
+                        Command="{Binding RedoCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Redo}"
+                        InputGesture="Ctrl+Y"
+                        IsEnabled="{Binding UndoManager.CanRedo, Mode=OneWay}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding CutCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Cut}"
+                        InputGesture="Ctrl+X"
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
+                    <MenuItem
+                        Command="{Binding CopyCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Copy}"
+                        InputGesture="Ctrl+C"
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
+                    <MenuItem
+                        Command="{Binding PasteCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Paste}"
+                        InputGesture="Ctrl+V"
+                        IsEnabled="{Binding ClipboardHelper.CanPaste, Mode=OneWay}" />
+                    <MenuItem
+                        Command="{Binding DeleteCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_Delete}"
+                        InputGesture="Delete"
+                        IsEnabled="{Binding IsSelecting, Mode=OneWay}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding SelectAllCommand, Mode=OneTime}"
+                        Header="{DynamicResource MainWindow_SelectAll}"
+                        InputGesture="Ctrl+A" />
+                </MenuItem>
+
+                <MenuItem Header="{DynamicResource MainWindow_Insert}">
+                    <MenuItem Command="{Binding OpenUnicodeSelectorWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Symbol}" />
+                    <MenuItem Command="{Binding OpenCodepointWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_UnicodeValue}" />
+                </MenuItem>
+
+                <MenuItem Header="{DynamicResource MainWindow_View}">
+                    <MenuItem Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}" Header="{Binding FullScreenMenuItemHeader, Mode=OneWay}" />
+                    <MenuItem Header="{DynamicResource MainWindow_Zoom}">
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="25%"
+                            Tag="25" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="50%"
+                            Tag="50" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="75%"
+                            Tag="75" />
+                        <MenuItem
+                            x:Name="DefaultZoomPercentageItem"
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="100%"
+                            Tag="100" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="150%"
+                            Tag="150" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="200%"
+                            Tag="200" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="250%"
+                            Tag="250" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="300%"
+                            Tag="300" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="400%"
+                            Tag="400" />
+                        <MenuItem
+                            Command="{Binding ChangeZoomPercentageCommand, Mode=OneTime}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                            Header="500%"
+                            Tag="500" />
+                        <MenuItem
+                            Command="{Binding OpenCustomZoomWindowCommand, Mode=OneTime}"
+                            Header="{Binding CustomZoomMenuHeader, Mode=OneWay}"
+                            IsChecked="{Binding CustomZoomMenuChecked, Mode=OneWay}" />
+                    </MenuItem>
+                    <MenuItem Command="{Binding ToggleShowNestingCommand, Mode=OneTime}" Header="{Binding ShowNestingMenuItemHeader, Mode=OneWay}" />
+                </MenuItem>
+
+                <MenuItem Header="{DynamicResource MainWindow_Tools}">
+                    <MenuItem Command="{Binding OpenSettingsWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Settings}" />
+                </MenuItem>
+
+                <MenuItem Header="{DynamicResource MainWindow_Help}">
+                    <MenuItem Command="{Binding OpenContentsCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Contents}" />
+                    <Separator />
+                    <MenuItem Command="{Binding OpenAboutWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_About}" />
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+        <Grid
+            Margin="0 2 0 4"
+            HorizontalAlignment="Stretch"
+            DockPanel.Dock="Top">
+            <!-- // TODO: Add support for overflow items -->
+            <!-- // TODO: Add spacing for items -->
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Command="{Binding SaveCommand, Mode=OneTime}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Save}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/save.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Button
+                    Command="{Binding SaveAsCommand, Mode=OneTime}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_SaveAs}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/saveas.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Button
+                    Command="{Binding OpenCommand, Mode=OneTime}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Open}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/open.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Separator />
+                <Button
+                    Command="{Binding UndoCommand, Mode=OneTime}"
+                    IsEnabled="{Binding UndoManager.CanUndo, Mode=OneWay}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Undo}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/undo.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Button
+                    Command="{Binding RedoCommand, Mode=OneTime}"
+                    IsEnabled="{Binding UndoManager.CanRedo, Mode=OneWay}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Redo}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/redo.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Separator />
+                <Button
+                    Command="{Binding ZoomOutCommand, Mode=OneTime}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_ZoomOut}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/zoomout.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Button
+                    Command="{Binding ZoomInCommand, Mode=OneTime}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_ZoomIn}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/zoomin.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Separator />
+                <Button
+                    Command="{Binding CutCommand, Mode=OneTime}"
+                    IsEnabled="{Binding IsSelecting, Mode=OneWay}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Cut}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/cut.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Button
+                    Command="{Binding CopyCommand, Mode=OneTime}"
+                    IsEnabled="{Binding IsSelecting, Mode=OneWay}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Copy}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/copy.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Button
+                    Command="{Binding PasteCommand, Mode=OneTime}"
+                    Classes="MainWindowToolBarButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Paste}"
+                    ToolTip.ShowOnDisabled="True">
+                    <Image Source="/Images/GUI/paste.png" Classes="MainWindowToolbarImage" />
+                </Button>
+                <Separator />
+                <ComboBox
+                    Width="90"
+                    VerticalAlignment="Center"
+                    DisplayMemberBinding="{Binding Display}"
+                    ItemsSource="{Binding AllFontTypes, Mode=OneTime}"
+                    SelectedValue="{Binding TextFontType, Mode=TwoWay}"
+                    SelectedValueBinding="{Binding Value}" />
+                <Separator />
+                <ComboBox
+                    Width="90"
+                    VerticalAlignment="Center"
+                    DisplayMemberBinding="{Binding Display}"
+                    ItemsSource="{Binding AllEditModes, Mode=OneTime}"
+                    SelectedValue="{Binding TextEditorMode, Mode=TwoWay}"
+                    SelectedValueBinding="{Binding Value}" />
+                <ToggleButton
+                    IsChecked="{Binding InputBold, Mode=TwoWay}"
+                    Classes="MainWindowToolbarToggleButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Bold}">
+                    <Image Source="/Images/GUI/bold.png" Classes="MainWindowToolbarImage" />
+                </ToggleButton>
+                <ToggleButton
+                    IsChecked="{Binding InputItalic, Mode=TwoWay}"
+                    Classes="MainWindowToolbarToggleButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Italic}">
+                    <Image Source="/Images/GUI/italic.png" Classes="MainWindowToolbarImage" />
+                </ToggleButton>
+                <ToggleButton
+                    IsChecked="{Binding InputUnderline, Mode=TwoWay}"
+                    Classes="MainWindowToolbarToggleButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_Underline}">
+                    <Image Source="/Images/GUI/underline.png" Classes="MainWindowToolbarImage" />
+                </ToggleButton>
+                <Separator />
+                <ToggleButton
+                    IsChecked="{Binding ShowUnderbar, Mode=TwoWay}"
+                    Classes="MainWindowToolbarToggleButton"
+                    ToolTip.Tip="{DynamicResource MainWindow_ShowHideUnderbar}">
+                    <Image Source="/Images/GUI/underbar.png" Classes="MainWindowToolbarImage" />
+                </ToggleButton>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel
+            x:Name="TopToolBars"
+            ZIndex="100"
+            VerticalAlignment="Stretch"
+            DockPanel.Dock="Top"
+            Orientation="Vertical">
+            <!--  We use codes to add them so that we can use Window reference in its constructor  -->
+            <!--<local:CharacterToolBar
+                x:Name="CharacterToolBar"
+                Padding="0 4"
+                ZIndex="100"
+                ClipToBounds="False" />
+            <local:EquationToolBar
+                x:Name="EquationToolBar"
+                Padding="0 6" 
+                ZIndex="99"
+                ClipToBounds="False" />
+            <local:HistoryToolBar
+                x:Name="HistoryToolBar"
+                BorderBrush="#FFB6B6B6"
+                BorderThickness="0 0 0 1" />-->
+        </StackPanel>
+
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label
+                Grid.Column="0"
+                Height="25"
+                HorizontalAlignment="Left"
+                Content="{Binding StatusBarLeftMessage, Mode=OneWay}" />
+            <Label
+                Grid.Column="1"
+                Height="25"
+                HorizontalAlignment="Right"
+                Content="{Binding StatusBarRightMessage, Mode=OneWay}" />
+        </Grid>
+
+        <ScrollViewer
+            x:Name="ScrollViewer"
+            FocusAdorner="{x:Null}"
+            Focusable="True"
+            HorizontalScrollBarVisibility="Auto"
+            ScrollChanged="ScrollViewer_ScrollChanged">
+            <!--  We use codes to add EditorControl so that we can use Window reference in its constructor  -->
+            <!--<local:EditorControl
+                x:Name="Editor"
+                Background="Transparent"
+                FocusVisualStyle="{x:Null}"
+                Focusable="True"
+                Loaded="Editor_Loaded" />-->
+        </ScrollViewer>
+    </DockPanel>
+</Window>

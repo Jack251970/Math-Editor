@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿using Avalonia;
 
 namespace Editor
 {
@@ -7,7 +7,7 @@ namespace Editor
     /// </summary>
     public abstract class EquationBox
     {
-        private static Thickness ZeroMargin = new(0d);
+        private static readonly Thickness ZeroMargin = new(0d);
         public virtual Thickness Margin => ZeroMargin;
 
         private double width;
@@ -38,13 +38,13 @@ namespace Editor
         public virtual double Left
         {
             get => location.X;
-            set => location.X = value;
+            set => location = location.WithX(value);
         }
 
         public virtual double Top
         {
             get => location.Y;
-            set => location.Y = value;
+            set => location = location.WithY(value);
         }
 
         public virtual double RefX => width / 2d;

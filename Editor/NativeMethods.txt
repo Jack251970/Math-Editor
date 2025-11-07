@@ -1,4 +1,0 @@
-AddClipboardFormatListener
-RemoveClipboardFormatListener
-WM_CLIPBOARDUPDATE
-HRESULT

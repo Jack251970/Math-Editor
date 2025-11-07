@@ -8,7 +8,7 @@
         protected double SubOverlap => FontSize * .4;
         protected double SuperOverlap => FontSize * 0.32;
 
-        public CompositeBase(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+        public CompositeBase(IMainWindow owner, EquationContainer parent, bool isCompositeBig)
             : base(owner, parent)
         {
             ActiveChild = mainRowContainer = new RowContainer(owner, this);

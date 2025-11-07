@@ -3,6 +3,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -10,7 +12,7 @@ namespace Editor
     {
         private readonly RowContainer bottomRowContainer;
 
-        public CompositeSub(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+        public CompositeSub(IMainWindow owner, EquationContainer parent, bool isCompositeBig)
             : base(owner, parent, isCompositeBig)
         {
             SubLevel++;

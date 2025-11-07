@@ -1,11 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
     public sealed class DivTriangleSign : EquationBase
     {
-        public DivTriangleSign(MainWindow owner, EquationContainer parent)
+        public DivTriangleSign(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             IsStatic = true;
@@ -30,7 +30,10 @@ namespace Editor
         {
             var pen = forceBlackBrush ? BlackStandardRoundPen : StandardRoundPen;
             dc.DrawPolyline(new Point(ParentEquation.Right, Bottom),
-                [new Point(Left, Bottom), new Point(Right, Top)], pen);
+            [
+                new Point(Left, Bottom),
+                new Point(Right, Top)
+            ], pen);
         }
     }
 }

@@ -19,22 +19,17 @@ public static class Constants
     public static readonly string Version = FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion!;
     public static readonly string Dev = "Dev";
 
-    public static readonly string Images = "Images";
-    private static readonly string ImagesDirectory = Path.Combine(ProgramDirectory, Images);
-    public static readonly string AppIcon = Path.Combine(ImagesDirectory, "icon.png");
-
-    private static readonly string ResourcesDirectory = Path.Combine(ProgramDirectory, "Resources");
-    public static readonly string Latex2UnicodePath = Path.Combine(ResourcesDirectory, "unicode2latex.json");
-
     public const string Settings = "Settings";
     public const string Logs = "Logs";
 
     public const string SystemLanguageCode = "system";
 
-    public const string MedExtension = "med";
+    public const string MedExtension = ".med";
 
     public const string RepositoryUrl = "https://github.com/Jack251970/Math-Editor";
     public const string IssuesUrl = "https://github.com/Jack251970/Math-Editor/issues";
     public const string WikiUrl = "https://github.com/Jack251970/Math-Editor/wiki";
     public const string SponsorUrl = "https://ko-fi.com/jackye";
+
+    public const int MaxSymbols = 30;
 }

@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using System.Windows;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -73,7 +73,7 @@ namespace Editor
         private Point LeftBottom => new(Left + LeftPadding / 2, Bottom - BottomPadding / 2);
         private Point RightBottom => new(Right - RightPadding / 2, Bottom - BottomPadding / 2);
 
-        public Box(MainWindow owner, EquationContainer parent, BoxType boxType)
+        public Box(IMainWindow owner, EquationContainer parent, BoxType boxType)
             : base(owner, parent)
         {
             _boxType = boxType;

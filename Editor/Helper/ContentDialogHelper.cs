@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using iNKORE.UI.WPF.Modern.Controls;
+using Avalonia.Controls;
+using Avalonia.Media;
+using FluentAvalonia.UI.Controls;
 
 namespace Editor;
 
 public static class ContentDialogHelper
 {
-    public static async Task<MessageBoxResult> ShowAsync(MainWindow owner, string messageBoxText, string caption, MessageBoxButton button)
+    public static async Task<MessageBoxResult> ShowAsync(IMainWindow owner, string messageBoxText, string caption, MessageBoxButton button)
     {
+        if (owner is not Window windowOwner)
+        {
+            throw new InvalidOperationException("Owner must be a Window.");
+        }
         if (owner is not IContentDialogOwner contentDialogOwner)
         {
             throw new InvalidOperationException("Owner must implement IContentDialogOwner.");
@@ -17,7 +21,6 @@ public static class ContentDialogHelper
 
         var dialog = new ContentDialog
         {
-            Owner = owner,
             Title = caption
         };
         switch (button)
@@ -49,7 +52,7 @@ public static class ContentDialogHelper
         contentDialogOwner.ContentDialogChanged(true);
         try
         {
-            var result = await dialog.ShowAsync();
+            var result = await dialog.ShowAsync(windowOwner);
             return button switch
             {
                 MessageBoxButton.OK => result switch

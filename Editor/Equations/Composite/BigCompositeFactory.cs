@@ -4,7 +4,7 @@ namespace Editor
 {
     public static class BigCompositeFactory
     {
-        public static EquationBase CreateEquation(MainWindow owner, EquationContainer equationParent, Position position)
+        public static EquationBase CreateEquation(IMainWindow owner, EquationContainer equationParent, Position position)
         {
             return position switch
             {

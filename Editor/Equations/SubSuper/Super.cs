@@ -7,7 +7,7 @@ namespace Editor
     {
         private readonly RowContainer rowContainer;
 
-        public Super(MainWindow owner, EquationRow parent, Position position)
+        public Super(IMainWindow owner, EquationRow parent, Position position)
             : base(owner, parent, position)
         {
             ActiveChild = rowContainer = new RowContainer(owner, this);

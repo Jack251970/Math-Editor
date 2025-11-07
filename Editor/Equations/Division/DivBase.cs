@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -10,7 +10,7 @@ namespace Editor
         protected RowContainer _topEquation;
         protected RowContainer _bottomEquation;
 
-        protected DivBase(MainWindow owner, EquationContainer parent, bool isSmall = false)
+        protected DivBase(IMainWindow owner, EquationContainer parent, bool isSmall = false)
             : base(owner, parent)
         {
             if (isSmall)
@@ -74,7 +74,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = _bottomEquation;
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }
@@ -85,7 +85,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = _topEquation;
-                    point.Y = ActiveChild.Bottom - 1;
+                    point = point.WithY(ActiveChild.Bottom - 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }

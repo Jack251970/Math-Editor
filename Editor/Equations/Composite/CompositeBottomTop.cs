@@ -3,6 +3,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -11,7 +13,7 @@ namespace Editor
         private readonly RowContainer topRow;
         private readonly RowContainer bottomRow;
 
-        public CompositeBottomTop(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+        public CompositeBottomTop(IMainWindow owner, EquationContainer parent, bool isCompositeBig)
             : base(owner, parent, isCompositeBig)
         {
             SubLevel++;
@@ -119,7 +121,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = bottomRow;
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }
@@ -127,7 +129,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = mainRowContainer;
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }
@@ -138,7 +140,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = mainRowContainer;
-                    point.Y = ActiveChild.Bottom - 1;
+                    point = point.WithY(ActiveChild.Bottom - 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }
@@ -146,7 +148,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = topRow;
-                    point.Y = ActiveChild.Bottom - 1;
+                    point = point.WithY(ActiveChild.Bottom - 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -11,7 +11,7 @@ namespace Editor
     {
         private readonly RowContainer topRowContainer;
 
-        public CompositeTop(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+        public CompositeTop(IMainWindow owner, EquationContainer parent, bool isCompositeBig)
             : base(owner, parent, isCompositeBig)
         {
             SubLevel++;

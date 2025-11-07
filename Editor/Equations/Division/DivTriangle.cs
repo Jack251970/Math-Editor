@@ -16,7 +16,7 @@ namespace Editor
 
         private double LeftGap => FontSize * .1;
 
-        public DivTriangle(MainWindow owner, EquationContainer parent, bool isFixed)
+        public DivTriangle(IMainWindow owner, EquationContainer parent, bool isFixed)
             : base(owner, parent)
         {
             _isFixed = isFixed;

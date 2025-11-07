@@ -37,7 +37,7 @@
             get => buddy ?? ParentEquation.ActiveChild; set => buddy = value;
         }
 
-        public SubSuperBase(MainWindow owner, EquationRow parent, Position position)
+        public SubSuperBase(IMainWindow owner, EquationRow parent, Position position)
             : base(owner, parent)
         {
             ApplySymbolGap = false;

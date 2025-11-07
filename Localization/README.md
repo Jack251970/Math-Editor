@@ -24,7 +24,7 @@ To this:
 Localize.Editor_Localization_Demo_Value_With_Keys(firstName, lastName);
 ```
 
-If you would like to add summary for functions of localization strings, you need to comment strings in xaml files like this:
+If you would like to add summary for functions of localization strings, you need to comment strings in axaml files like this:
 ```xml
 <!--
 <summary>Demo name</summary>
@@ -32,7 +32,7 @@ If you would like to add summary for functions of localization strings, you need
 <system:String x:Key="Editor_Localization_Demo_Name">Demo</system:String>
 ```
 
-Or if you would like to change the default types or names of variables in localization strings, you need to comment strings in xaml file like this:
+Or if you would like to change the default types or names of variables in localization strings, you need to comment strings in axaml file like this:
 ```xml
 <!--
 <param index="0" name="value0" type="object" />
@@ -68,7 +68,7 @@ public enum DemoEnum
     Value3,
 
     // Using the Localize class. This way, you can't misspell localization keys, and if you rename
-    // them in your .xaml file, you won't forget to rename them here as well because the build will fail.
+    // them in your .axaml file, you won't forget to rename them here as well because the build will fail.
     [EnumLocalizeKey(nameof(Localize.Editor_Localization_Demo_Description))]
     Value4,
 }
@@ -84,7 +84,7 @@ public List<DemoEnumLocalized> AllDemoEnums { get; } = DemoEnumLocalized.GetValu
 public DemoEnum SelectedDemoEnum { get; set; }
 ```
 
-In your XAML, bind as follows:
+In your AXAML, bind as follows:
 
 ```xml
 <ComboBox

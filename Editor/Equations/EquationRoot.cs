@@ -2,12 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
+using Clowd.Clipboard;
+using Clowd.Clipboard.Formats;
 
 namespace Editor
 {
@@ -15,7 +15,10 @@ namespace Editor
     {
         private static readonly string ClassName = nameof(EquationRoot);
 
-        public static readonly string ClipboardXmlFormat = $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
+        public static readonly ClipboardFormat<string> ClipboardXmlFormat
+            = ClipboardFormat.CreateCustomFormat(
+                $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}",
+                new TextUtf8Converter());
 
         public EditorControl? Editor { get; set; } = null;
         private readonly Caret _vCaret;
@@ -23,7 +26,7 @@ namespace Editor
         private readonly string fileVersion = "1.4";
         private readonly string sessionString = Guid.NewGuid().ToString();
 
-        public EquationRoot(MainWindow owner, Caret vCaret, Caret hCaret)
+        public EquationRoot(IMainWindow owner, Caret vCaret, Caret hCaret)
             : base(owner, null!)
         {
             ApplySymbolGap = true;
@@ -90,10 +93,10 @@ namespace Editor
 
         public override void HandleMouseDrag(Point mousePoint)
         {
-            if (!Owner.ViewModel.IsSelecting)
+            if (!Owner.IsSelecting)
             {
                 ActiveChild.StartSelection();
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
             }
             ActiveChild.HandleMouseDrag(mousePoint);
             AdjustCarets();
@@ -107,16 +110,16 @@ namespace Editor
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            if (Keyboard.IsKeyDown(Owner, Key.LeftShift) || Keyboard.IsKeyDown(Owner, Key.RightShift))
             {
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
                 ActiveChild.StartSelection();
                 ActiveChild.HandleMouseDrag(mousePoint);
             }
             else
             {
                 ActiveChild.ConsumeMouseClick(mousePoint); //never forget, EquationRoot has only one child at all times!!                
-                Owner.ViewModel.IsSelecting = true; //else DeSelect() might not work!
+                Owner.IsSelecting = true; //else DeSelect() might not work!
                 DeSelect();
             }
             AdjustCarets();
@@ -127,9 +130,9 @@ namespace Editor
         {
             DeSelect();
             ActiveChild.SelectAll();
-            if (!Owner.ViewModel.IsSelecting)
+            if (!Owner.IsSelecting)
             {
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
             }
         }
 
@@ -142,12 +145,12 @@ namespace Editor
             else
             {
                 var undoCount = UndoManager.UndoCount + 1;
-                if (Owner.ViewModel.IsSelecting)
+                if (Owner.IsSelecting)
                 {
                     ActiveChild.RemoveSelection(true);
                 }
                 ((EquationContainer)ActiveChild).ExecuteCommand(commandDetails.CommandType, commandDetails.CommandParam);
-                if (Owner.ViewModel.IsSelecting && undoCount < UndoManager.UndoCount)
+                if (Owner.IsSelecting && undoCount < UndoManager.UndoCount)
                 {
                     UndoManager.ChangeUndoCountOfLastAction(1);
                 }
@@ -174,23 +177,27 @@ namespace Editor
                 throw new InvalidOperationException("Copy failed in EquationRoot.");
 
             // Prepare data object for clipboard
-            var data = new DataObject();
-            var rootElement = new XElement(GetType().Name);
-            rootElement.Add(new XElement("SessionId", sessionString));
-            rootElement.Add(TextManager.Serialize(true));
-            rootElement.Add(new XElement("payload", temp.XElement));
-            data.SetData(ClipboardXmlFormat, rootElement.ToString());
-            if (temp.Image != null)
+            _ = Task.Run(async () =>
             {
-                data.SetImage(temp.Image);
-            }
-            if (temp.Text != null)
-            {
-                data.SetText(temp.Text);
-            }
+                using (var handle = await ClipboardAvalonia.OpenAsync())
+                {
+                    var rootElement = new XElement(GetType().Name);
+                    rootElement.Add(new XElement("SessionId", sessionString));
+                    rootElement.Add(TextManager.Serialize(true));
+                    rootElement.Add(new XElement("payload", temp.XElement));
+                    handle.SetFormat(ClipboardXmlFormat, rootElement.ToString());
 
-            // Set data to clipboard
-            Clipboard.SetDataObject(data, true);
+                    if (temp.Image != null)
+                    {
+                        handle.SetImage(temp.Image);
+                    }
+                    if (temp.Text != null)
+                    {
+                        handle.SetText(temp.Text);
+                    }
+                }
+            });
+            
 
             // Remove selection if needed
             if (removeSelection)
@@ -210,12 +217,12 @@ namespace Editor
                 TextManager.ProcessPastedXML(xe);
             }
             var undoCount = UndoManager.UndoCount + 1;
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 ActiveChild.RemoveSelection(true);
             }
             ActiveChild.Paste(xe.Element("payload")!.Elements().First());
-            if (Owner.ViewModel.IsSelecting && undoCount < UndoManager.UndoCount)
+            if (Owner.IsSelecting && undoCount < UndoManager.UndoCount)
             {
                 UndoManager.ChangeUndoCountOfLastAction(1);
             }
@@ -227,7 +234,7 @@ namespace Editor
         public bool PasteFromClipBoard()
         {
             // Get data from clipboard with retries
-            object? data = Owner.ViewModel.ClipboardHelper.PasteObject;
+            object? data = Owner.ClipboardHelper.PasteObject;
 
             // Parse and paste data
             var success = false;
@@ -253,26 +260,24 @@ namespace Editor
             return success;
         }
 
-        public static bool CanPasteFromClipboard(out object? data)
+        public static async Task<object?> CanPasteFromClipboard()
         {
-            data = null;
             try
             {
-                if (Clipboard.ContainsData(ClipboardXmlFormat))
+                using var handle = await ClipboardAvalonia.OpenAsync();
+                if (handle.ContainsFormat(ClipboardXmlFormat))
                 {
-                    if (Clipboard.GetData(ClipboardXmlFormat) is string xmlString)
+                    if (handle.GetFormatType(ClipboardXmlFormat) is string xmlString)
                     {
-                        data = new MathEditorData { XmlString = xmlString };
-                        return true;
+                        return new MathEditorData { XmlString = xmlString };
                     }
                 }
-                else if (Clipboard.ContainsText())
+                else if (handle.ContainsText())
                 {
-                    var textString = Clipboard.GetText();
+                    var textString = ClipboardAvalonia.GetText();
                     if (!string.IsNullOrEmpty(textString))
                     {
-                        data = textString;
-                        return true;
+                        return textString;
                     }
                 }
             }
@@ -280,18 +285,18 @@ namespace Editor
             {
                 EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
             }
-            return false;
+            return null;
         }
 
         public override void ConsumeText(string text)
         {
             var undoCount = UndoManager.UndoCount + 1;
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 ActiveChild.RemoveSelection(true);
             }
             ActiveChild.ConsumeText(text);
-            if (Owner.ViewModel.IsSelecting && undoCount < UndoManager.UndoCount)
+            if (Owner.IsSelecting && undoCount < UndoManager.UndoCount)
             {
                 UndoManager.ChangeUndoCountOfLastAction(1);
             }
@@ -302,10 +307,10 @@ namespace Editor
 
         public override void DeSelect()
         {
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 base.DeSelect();
-                Owner.ViewModel.IsSelecting = false;
+                Owner.IsSelecting = false;
             }
         }
 
@@ -316,12 +321,13 @@ namespace Editor
 
         public async Task SaveImageToFileAsync(string path)
         {
-            var extension = Path.GetExtension(path).ToLower();
+            // TODO: Add support
+            /*var extension = Path.GetExtension(path).ToLower();
 
             var dv = new DrawingVisual();
             // Disable selection highlight during printing
-            var oldSelecting = Owner.ViewModel.IsSelecting;
-            Owner.ViewModel.IsSelecting = false;
+            var oldSelecting = Owner.IsSelecting;
+            Owner.IsSelecting = false;
             try
             {
 #pragma warning disable IDE0063
@@ -337,7 +343,7 @@ namespace Editor
             }
             finally
             {
-                Owner.ViewModel.IsSelecting = oldSelecting;
+                Owner.IsSelecting = oldSelecting;
             }
 
             var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)),
@@ -366,10 +372,10 @@ namespace Editor
                 EditorLogger.Fatal(ClassName, "Failed to save file", e);
                 await ContentDialogHelper.ShowAsync(Owner, Localize.EditorControl_CannotSaveFile(),
                     Localize.Error(), MessageBoxButton.OK);
-            }
+            }*/
         }
 
-        public async Task PrintAsync(PrintDialog printDialog)
+        /*public async Task PrintAsync(PrintDialog printDialog)
         {
             try
             {
@@ -395,8 +401,8 @@ namespace Editor
 
                 var dv = new DrawingVisual();
                 // Disable selection highlight during printing
-                var oldSelecting = Owner.ViewModel.IsSelecting;
-                Owner.ViewModel.IsSelecting = false;
+                var oldSelecting = Owner.IsSelecting;
+                Owner.IsSelecting = false;
                 try
                 {
 #pragma warning disable IDE0063
@@ -424,7 +430,7 @@ namespace Editor
                 }
                 finally
                 {
-                    Owner.ViewModel.IsSelecting = oldSelecting;
+                    Owner.IsSelecting = oldSelecting;
                 }
 
                 printDialog.PrintVisual(dv, Constants.MathEditorFullName);
@@ -435,15 +441,15 @@ namespace Editor
                 await ContentDialogHelper.ShowAsync(Owner, Localize.EditorControl_CannotPrintFile(),
                     Localize.Error(), MessageBoxButton.OK);
             }
-        }
+        }*/
 
         public override bool ConsumeKey(Key key)
         {
-            if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && (new[] { Key.Right, Key.Left, Key.Up, Key.Down, Key.Home, Key.End }).Contains(key))
+            if ((Keyboard.IsKeyDown(Owner, Key.LeftShift) || Keyboard.IsKeyDown(Owner, Key.RightShift)) && (new[] { Key.Right, Key.Left, Key.Up, Key.Down, Key.Home, Key.End }).Contains(key))
             {
-                if (!Owner.ViewModel.IsSelecting)
+                if (!Owner.IsSelecting)
                 {
-                    Owner.ViewModel.IsSelecting = true;
+                    Owner.IsSelecting = true;
                     ((RowContainer)ActiveChild).StartSelection();
                 }
                 ActiveChild.Select(key);
@@ -455,7 +461,7 @@ namespace Editor
             if (handledKeys.Contains(key))
             {
                 result = true;
-                if (Owner.ViewModel.IsSelecting && (new[] { Key.Delete, Key.Enter, Key.Back }).Contains(key))
+                if (Owner.IsSelecting && (new[] { Key.Delete, Key.Enter, Key.Back }).Contains(key))
                 {
                     ActiveChild.RemoveSelection(true);
                 }
@@ -472,7 +478,7 @@ namespace Editor
 
         public override void RemoveSelection(bool registerUndo)
         {
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 ActiveChild.RemoveSelection(registerUndo);
                 CalculateSize();
@@ -503,7 +509,7 @@ namespace Editor
 
         public void ChangeFont(FontType fontType)
         {
-            Owner.ViewModel.TextFontType = fontType;
+            Owner.TextFontType = fontType;
             ActiveChild.FontSize = FontSize;
             CalculateSize();
             AdjustCarets();

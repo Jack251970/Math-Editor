@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -8,14 +8,14 @@ namespace Editor
         protected string Text { get; set; } = string.Empty;
         protected FontType FontType { get; set; }
         protected double FontSizeFactor = 1;
-        protected FontWeight FontWeight = FontWeights.Normal;
+        protected FontWeight FontWeight = FontWeight.Normal;
         protected double TopOffestFactor = 0;
         protected double LeftMarginFactor = 0;
         protected double RightMarginFactor = 0;
 
         private FormattedText _formattedText = null!;
 
-        public StaticText(MainWindow owner, EquationContainer parent)
+        public StaticText(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             IsStatic = true;

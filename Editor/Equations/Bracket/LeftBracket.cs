@@ -4,7 +4,7 @@ namespace Editor
 {
     public sealed class LeftBracket : Bracket
     {
-        public LeftBracket(MainWindow owner, EquationContainer parent, BracketSignType bracketType)
+        public LeftBracket(IMainWindow owner, EquationContainer parent, BracketSignType bracketType)
             : base(owner, parent)
         {
             bracketSign = new BracketSign(owner, this, bracketType);

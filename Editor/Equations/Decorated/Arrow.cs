@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -31,7 +31,7 @@ namespace Editor
             }
         }
 
-        public Arrow(MainWindow owner, EquationContainer parent, ArrowType arrowType, Position equationPosition)
+        public Arrow(IMainWindow owner, EquationContainer parent, ArrowType arrowType, Position equationPosition)
             : base(owner, parent)
         {
             _arrowType = arrowType;
@@ -272,7 +272,7 @@ namespace Editor
                     {
                         var point = ActiveChild.GetVerticalCaretLocation();
                         ActiveChild = _rowContainer2;
-                        point.Y = ActiveChild.Top + 1;
+                        point = point.WithY(ActiveChild.Top + 1);
                         ActiveChild.SetCursorOnKeyUpDown(key, point);
                         return true;
                     }
@@ -289,7 +289,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = _rowContainer1;
-                    point.Y = ActiveChild.Bottom - 1;
+                    point = point.WithY(ActiveChild.Bottom - 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }

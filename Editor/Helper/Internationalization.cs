@@ -5,7 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Styling;
+using Avalonia.Threading;
 
 namespace Editor;
 
@@ -15,11 +19,11 @@ public class Internationalization(Settings settings)
 
     private const string Folder = "Languages";
     private const string DefaultLanguageCode = "en";
-    private const string DefaultFile = "en.xaml";
-    private const string Extension = ".xaml";
+    private const string DefaultFile = "en.axaml";
+    private const string Extension = ".axaml";
     private readonly Settings _settings = settings;
     private readonly List<string> _languageDirectories = [];
-    private readonly List<ResourceDictionary> _oldResources = [];
+    private readonly List<IResourceProvider> _oldResources = [];
     private static string SystemLanguageCode = null!;
 
     #region Initialization
@@ -45,8 +49,8 @@ public class Internationalization(Settings settings)
             var languageCode = language.LanguageCode;
 
             if (string.Equals(languageCode, twoLetterCode, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(languageCode, threeLetterCode, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(languageCode, fullName, StringComparison.OrdinalIgnoreCase))
+            string.Equals(languageCode, threeLetterCode, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(languageCode, fullName, StringComparison.OrdinalIgnoreCase))
             {
                 SystemLanguageCode = languageCode;
             }
@@ -132,7 +136,7 @@ public class Internationalization(Settings settings)
     private static Language GetLanguageByLanguageCode(string languageCode)
     {
         var language = AvailableLanguages.GetAvailableLanguages().
-            FirstOrDefault(o => o.LanguageCode.Equals(languageCode, StringComparison.OrdinalIgnoreCase));
+        FirstOrDefault(o => o.LanguageCode.Equals(languageCode, StringComparison.OrdinalIgnoreCase));
         if (language == null)
         {
             EditorLogger.Error(ClassName, $"Language code can't be found <{languageCode}>");
@@ -157,12 +161,12 @@ public class Internationalization(Settings settings)
         ChangeCultureInfo(language.LanguageCode);
 
         // Update translations for all windows
-        await Application.Current.Dispatcher.InvokeAsync(UpdateAllWindowsTranslations);
+        await Dispatcher.UIThread.InvokeAsync(UpdateAllWindowsTranslations);
     }
 
     private void UpdateAllWindowsTranslations()
     {
-        foreach (Window window in Application.Current.Windows)
+        foreach (var window in WindowTracker.GetActiveWindows())
         {
             if (window is ICultureInfoChanged localizable)
             {
@@ -198,7 +202,7 @@ public class Internationalization(Settings settings)
 
     private void RemoveOldLanguageFiles()
     {
-        var dicts = Application.Current.Resources.MergedDictionaries;
+        var dicts = Application.Current!.Resources.MergedDictionaries;
         foreach (var r in _oldResources)
         {
             dicts.Remove(r);
@@ -209,7 +213,7 @@ public class Internationalization(Settings settings)
     private void LoadLanguage(Language language)
     {
         var appEnglishFile = Path.Combine(Constants.ProgramDirectory, Folder, DefaultFile);
-        var dicts = Application.Current.Resources.MergedDictionaries;
+        var dicts = Application.Current!.Resources.MergedDictionaries;
         var filename = $"{language.LanguageCode}{Extension}";
         var files = _languageDirectories
             .Select(d => LanguageFile(d, filename))
@@ -222,12 +226,13 @@ public class Internationalization(Settings settings)
         {
             foreach (var f in files)
             {
-                var r = new ResourceDictionary
+                var fileUri = new Uri(f, UriKind.Absolute);
+                var include = new ResourceInclude(fileUri)
                 {
-                    Source = new Uri(f, UriKind.Absolute)
+                    Source = fileUri
                 };
-                dicts.Add(r);
-                _oldResources.Add(r);
+                dicts.Add(include);
+                _oldResources.Add(include);
             }
         }
     }
@@ -279,10 +284,9 @@ public class Internationalization(Settings settings)
 
     public static string GetTranslation(string key)
     {
-        var translation = Application.Current.TryFindResource(key);
-        if (translation is string)
+        if (Application.Current!.TryGetResource(key, ThemeVariant.Default, out var value) && value is string s)
         {
-            return translation.ToString()!;
+            return s;
         }
         else
         {

@@ -1,37 +1,47 @@
-﻿using System.Windows.Input;
+﻿using Avalonia.Input;
 
 namespace Editor;
 
-public sealed class MouseWheelGesture : MouseGesture
+// TODO: Do we need this?
+public sealed class MouseWheelGesture
 {
-    public WheelDirection Direction { get; set; }
+    public WheelDirection Direction { get; init; }
 
-    public static MouseWheelGesture CtrlDown => new(ModifierKeys.Control) { Direction = WheelDirection.Down };
+    public KeyModifiers Modifiers { get; init; }
 
-    public static MouseWheelGesture CtrlUp => new(ModifierKeys.Control) { Direction = WheelDirection.Up };
+    public static MouseWheelGesture CtrlDown => new(KeyModifiers.Control) { Direction = WheelDirection.Down };
+
+    public static MouseWheelGesture CtrlUp => new(KeyModifiers.Control) { Direction = WheelDirection.Up };
+
     public MouseWheelGesture()
-        : base(MouseAction.WheelClick)
+        : this(KeyModifiers.None)
     {
     }
 
-    public MouseWheelGesture(ModifierKeys modifiers)
-        : base(MouseAction.WheelClick, modifiers)
+    public MouseWheelGesture(KeyModifiers modifiers)
     {
+        Modifiers = modifiers;
     }
 
-    public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
+    public bool Matches(PointerWheelEventArgs e)
+        => Matches(null, e);
+
+    public bool Matches(object? targetElement, PointerWheelEventArgs e)
     {
-        if (!base.Matches(targetElement, inputEventArgs)) return false;
-        if (inputEventArgs is not MouseWheelEventArgs) return false;
-        var args = (MouseWheelEventArgs)inputEventArgs;
+        // Require that all specified modifiers are present
+        if ((e.KeyModifiers & Modifiers) != Modifiers)
+            return false;
+
+        var dy = e.Delta.Y;
         return Direction switch
         {
-            WheelDirection.None => args.Delta == 0,
-            WheelDirection.Up => args.Delta > 0,
-            WheelDirection.Down => args.Delta < 0,
+            WheelDirection.None => dy == 0,
+            WheelDirection.Up => dy > 0,
+            WheelDirection.Down => dy < 0,
             _ => false,
         };
     }
+
     public enum WheelDirection
     {
         None,

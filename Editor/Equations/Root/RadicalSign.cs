@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -7,7 +7,7 @@ namespace Editor
     {
         private static readonly double widthFactor = .9;
 
-        public RadicalSign(MainWindow owner, EquationContainer parent)
+        public RadicalSign(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             Width = FontSize * widthFactor;

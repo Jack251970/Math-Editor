@@ -1,35 +1,70 @@
 ﻿using System;
+using System.Timers;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Editor;
 
 public class ClipboardHelper : ObservableObject, IDisposable
 {
-    private readonly ClipboardMonitorW _clipboardMonitorW;
+    private static readonly string ClassName = nameof(ClipboardHelper);
 
-    public bool CanPaste => _clipboardMonitorW.CanPaste;
+    // TODO: Wait for avalonia to support image type format
+    private TopLevel _owner = null!;
+    private readonly Timer _timer = new(500);
 
-    public object? PasteObject => _clipboardMonitorW.PasteObject;
-
-    public ClipboardHelper()
+    private bool _canPaste;
+    public bool CanPaste
     {
-        _clipboardMonitorW = new ClipboardMonitorW();
+        get => _canPaste;
+        set
+        {
+            if (_canPaste != value)
+            {
+                _canPaste = value;
+                OnPropertyChanged(nameof(CanPaste));
+            }
+        }
     }
 
-    public void StartMonitoring()
+    public object? PasteObject { get; private set; }
+
+    private bool _isMonitoring;
+    private bool _isReading;
+
+    public void StartMonitoring(IMainWindow mainWindow)
     {
-        _clipboardMonitorW.CanPasteChanged += ClipboardMonitorW_CanPasteChanged;
-        _clipboardMonitorW.StartMonitoring();
+        if (_isMonitoring) return;
+
+        _isMonitoring = true;
+        _owner = mainWindow.TopLevel;
+        _timer.Elapsed += Timer_Elapsed;
+        _timer.Start();
     }
 
-    private void ClipboardMonitorW_CanPasteChanged(object? sender, bool e)
+    private async void Timer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        OnPropertyChanged(nameof(CanPaste));
+        if (_isReading) return;
+
+        _isReading = true;
+        try
+        {
+            PasteObject = await EquationRoot.CanPasteFromClipboard();
+            CanPaste = PasteObject != null;
+        }
+        catch (Exception ex)
+        {
+            EditorLogger.Error(ClassName, "Error checking clipboard contents", ex);
+        }
+        finally
+        {
+            _isReading = false;
+        }
     }
 
     public void Dispose()
     {
-        _clipboardMonitorW.CanPasteChanged -= ClipboardMonitorW_CanPasteChanged;
-        _clipboardMonitorW.Dispose();
+        _timer.Elapsed -= Timer_Elapsed;
+        _timer.Dispose();
     }
 }

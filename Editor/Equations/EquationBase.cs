@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor
@@ -48,7 +48,7 @@ namespace Editor
         protected double SubFontFactor = 0.6;
         protected double SubSubFontFactor = 0.7;
 
-        public MainWindow Owner { get; set; }
+        public IMainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }
         private Point location = new();
         /*private readonly double width;*/
@@ -63,10 +63,10 @@ namespace Editor
         private readonly byte g = 80;
         private readonly byte b = 80;
 
-        public EquationBase(MainWindow owner, EquationContainer parent)
+        public EquationBase(IMainWindow owner, EquationContainer parent)
         {
             Owner = owner;
-            UndoManager = owner.ViewModel.UndoManager;
+            UndoManager = owner.UndoManager;
             ParentEquation = parent;
             if (parent != null)
             {
@@ -78,7 +78,6 @@ namespace Editor
                 b = (byte)(parent.r + 15);
             }
             debugBrush = new SolidColorBrush(Color.FromArgb(100, r, g, b));
-            debugBrush.Freeze();
         }
 
         public virtual bool ConsumeMouseClick(Point mousePoint) { return false; }
@@ -100,7 +99,7 @@ namespace Editor
         public virtual bool Select(Key key) { return false; }
         public virtual void DeSelect() { SelectedItems = 0; }
         public virtual void RemoveSelection(bool registerUndo) { }
-        public virtual Rect GetSelectionBounds() { return Rect.Empty; }
+        public virtual Rect GetSelectionBounds() { return default; }
         public virtual CopyDataObject? Copy(bool removeSelection) { return null; } //copy & cut
         public virtual void Paste(XElement xe) { }
         public virtual void SetCursorOnKeyUpDown(Key key, Point point) { }

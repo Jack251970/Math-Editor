@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -36,7 +36,7 @@ namespace Editor
             }
         }
 
-        public EquationContainer(MainWindow owner, EquationContainer parent) : base(owner, parent) { }
+        public EquationContainer(IMainWindow owner, EquationContainer parent) : base(owner, parent) { }
 
         public virtual void ExecuteCommand(CommandType commandType, object? data)
         {

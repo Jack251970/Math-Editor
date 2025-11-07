@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace Editor;
 
@@ -23,12 +22,10 @@ public static class ErrorReporting
         Report((Exception)e.ExceptionObject);
     }
 
-    public static void DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    public static void DispatcherUnhandledException(Exception e)
     {
-        // handle ui thread exceptions
-        Report(e.Exception);
-        // prevent application exist, so the user can copy prompted error info
-        e.Handled = true;
+        // log ui thread exceptions but do not handle unobserved task exceptions on UI thread
+        Report(e, true);
     }
 
     public static void TaskSchedulerUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)

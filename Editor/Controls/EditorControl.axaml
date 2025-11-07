@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="Editor.EditorControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    MinWidth="20"
+    MinHeight="200"
+    PointerPressed="EditorControl_PointerPressed"
+    PointerEntered="EditorControl_PointerEntered"
+    PointerExited="EditorControl_PointerExited"
+    PointerMoved="EditorControl_PointerMoved"
+    PointerReleased="EditorControl_PointerReleased"
+    KeyDown="EditorControl_KeyDown"
+    KeyUp="EditorControl_KeyUp"
+    Loaded="EditorControl_Loaded"
+    TextInput="EditorControl_TextInput"
+    PointerWheelChanged="EditorControl_PointerWheelChanged"
+    UseLayoutRounding="True"
+    mc:Ignorable="d">
+    <Grid Name="MainGrid" />
+</UserControl>

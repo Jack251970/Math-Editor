@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
+using Avalonia.Input;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -12,12 +13,12 @@ namespace Editor
         public TextEquation? Next { get; set; }
 
         [Obsolete]
-        public DecoratedCharacter(MainWindow owner, EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
+        public DecoratedCharacter(IMainWindow owner, EquationContainer parent, TextEquation previous, CharacterDecorationType cdt, Position position, string sign)
             : base(owner, parent)
         {
             Previous = previous;
             charFt = TextManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
-            previous.ConsumeKey(System.Windows.Input.Key.Back);
+            previous.ConsumeKey(Key.Back);
             Height = FontSize;
             decorations.Add(new CharacterDecorationInfo() { DecorationType = cdt, Position = position, UnicodeString = sign });
             Width = charFt.Width;
