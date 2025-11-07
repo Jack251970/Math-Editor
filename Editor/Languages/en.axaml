@@ -32,7 +32,7 @@
     <x:String x:Key="EditorControl_CannotPrintFile">Cannot print the specified file. Please see log files for more information.</x:String>
     <x:String x:Key="EditorControl_CannotFindFile">Cannot find the specified file: {0}</x:String>
 
-    <!-- Euqation Root -->
+    <!-- Equation Root -->
     <x:String x:Key="EquationRoot_FileVersionDifferent">The file was created by a different version (v{0}) of Math Editor and uses a different format.{1}{1}Math Editor will still try to open and convert the file to the current version. The operation may fail.{1}{1}Please create a backup if you want to keep the original file intact.</x:String>
 
     <!-- Latex Converter -->
@@ -41,6 +41,7 @@
     <x:String x:Key="LatexConverter_InitializationIOError">I/O error while loading Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</x:String>
     <x:String x:Key="LatexConverter_InitializationError">Failed to load Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</x:String>
     <x:String x:Key="LatexConverter_TranslationError">Translation Error</x:String>
+    
     <!-- Arrow -->
     <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowTop">
     No translation available for Large over small arrow with upper text slot.{0}Please add a translation for it in the settings.
@@ -87,6 +88,7 @@
     <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottomAndTop">
     No translation available for Small over large harpoon with upper and lower text slots.{0}Please add a translation for it in the settings.
     </x:String>
+
     <!-- Decorated -->
     <x:String x:Key="LatexConverter_TranslationErrorParenthesisTop">
     No translation available for Arc.{0}Please add a translation for it in the settings.
@@ -109,6 +111,7 @@
     <x:String x:Key="LatexConverter_TranslationErrorStrikeThroughMiddle">
     No translation available for Mid-line strike-through.{0}Please add a translation for it in the settings.
     </x:String>
+
     <!-- HorizontalBracket -->
     <x:String x:Key="LatexConverter_TranslationErrorTopSquare">
     No translation available for Upper horizontal bracket.{0}Please add a translation for it in the settings.
@@ -116,6 +119,7 @@
     <x:String x:Key="LatexConverter_TranslationErrorBottomSquare">
     No translation available for Lower horizontal bracket.{0}Please add a translation for it in the settings.
     </x:String>
+
     <!-- Division -->
     <x:String x:Key="LatexConverter_TranslationErrorDivDoubleBar">
     No translation available for Double bar division.{0}Please add a translation for it in the settings.
