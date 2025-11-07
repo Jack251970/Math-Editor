@@ -22,24 +22,8 @@ public partial class CharacterToolBar : UserControl
 
     private void toolBarButton_Click(object sender, RoutedEventArgs e)
     {
-        if (visiblePanel != null)
-        {
-            visiblePanel.Visibility = Visibility.Collapsed;
-        }
-        if (buttonPanelMapping[sender].Visibility != Visibility.Visible)
-        {
-            buttonPanelMapping[sender].Visibility = Visibility.Visible;
-            visiblePanel = buttonPanelMapping[sender];
-        }
-    }
-
-    public void HideVisiblePanel()
-    {
-        if (visiblePanel != null)
-        {
-            visiblePanel.Visibility = Visibility.Collapsed;
-            visiblePanel = null;
-        }
+        TryHideVisiblePanel();
+        SetActivePanel(sender);
     }
 
     private void toolBarButton_MouseEnter(object sender, MouseEventArgs e)
@@ -54,12 +38,27 @@ public partial class CharacterToolBar : UserControl
 
     private void ChangeActivePanel(object sender)
     {
+        if (TryHideVisiblePanel())
+        {
+            SetActivePanel(sender);
+        }
+    }
+
+    public bool TryHideVisiblePanel()
+    {
         if (visiblePanel != null)
         {
             visiblePanel.Visibility = Visibility.Collapsed;
-            buttonPanelMapping[sender].Visibility = Visibility.Visible;
-            visiblePanel = buttonPanelMapping[sender];
+            visiblePanel = null;
+            return true;
         }
+        return false;
+    }
+
+    private void SetActivePanel(object sender)
+    {
+        buttonPanelMapping[sender].Visibility = Visibility.Visible;
+        visiblePanel = buttonPanelMapping[sender];
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
