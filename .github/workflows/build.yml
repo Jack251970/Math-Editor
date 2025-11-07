@@ -6,6 +6,7 @@ on:
     branches:
       - master
       - wpf
+      - dev
     paths-ignore:
       - '*.md'
   pull_request:
