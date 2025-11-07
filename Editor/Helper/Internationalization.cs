@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Threading;
 
 namespace Editor;
 
-public class Internationalization(Settings settings)
+public class Internationalization(Settings settings) : IDisposable
 {
     private static readonly string ClassName = nameof(Internationalization);
 
-    private const string Folder = "Languages";
     private const string DefaultLanguageCode = "en";
-    private const string DefaultFile = "en.axaml";
-    private const string Extension = ".axaml";
     private readonly Settings _settings = settings;
-    private readonly List<string> _languageDirectories = [];
-    private readonly List<IResourceProvider> _oldResources = [];
+    private readonly List<ResourceDictionary> _oldResources = [];
     private static string SystemLanguageCode = null!;
+    private readonly SemaphoreSlim _langChangeLock = new(1, 1);
 
     #region Initialization
 
@@ -74,35 +69,8 @@ public class Internationalization(Settings settings)
         // Get language by language code and change language
         var language = GetLanguageByLanguageCode(languageCode);
 
-        // Add app language directory
-        AddAppLanguageDirectory();
-
-        // Load default language resources
-        LoadDefaultLanguage();
-
         // Change language
         await ChangeLanguageAsync(language);
-    }
-
-    private void AddAppLanguageDirectory()
-    {
-        // Check if app language directory exists
-        var directory = Path.Combine(Constants.ProgramDirectory, Folder);
-        if (!Directory.Exists(directory))
-        {
-            EditorLogger.Error(ClassName, $"App language directory can't be found <{directory}>");
-            return;
-        }
-
-        _languageDirectories.Add(directory);
-    }
-
-    private void LoadDefaultLanguage()
-    {
-        // Prevents the language app started in from overwriting English if the user switches back to English
-        RemoveOldLanguageFiles();
-        LoadLanguage(AvailableLanguages.English);
-        _oldResources.Clear();
     }
 
     #endregion
@@ -150,18 +118,31 @@ public class Internationalization(Settings settings)
 
     private async Task ChangeLanguageAsync(Language language)
     {
-        // Remove old language files and load language
-        RemoveOldLanguageFiles();
-        if (language != AvailableLanguages.English)
+        await _langChangeLock.WaitAsync();
+
+        try
         {
-            LoadLanguage(language);
+            // Remove old language files and load language
+            RemoveOldLanguageFiles();
+            if (language != AvailableLanguages.English)
+            {
+                LoadLanguage(language);
+            }
+
+            // Change culture info
+            ChangeCultureInfo(language.LanguageCode);
+
+            // Update translations for all windows
+            await Dispatcher.UIThread.InvokeAsync(UpdateAllWindowsTranslations);
         }
-
-        // Change culture info
-        ChangeCultureInfo(language.LanguageCode);
-
-        // Update translations for all windows
-        await Dispatcher.UIThread.InvokeAsync(UpdateAllWindowsTranslations);
+        catch (Exception e)
+        {
+            EditorLogger.Fatal(ClassName, $"Failed to change language to <{language.LanguageCode}>", e);
+        }
+        finally
+        {
+            _langChangeLock.Release();
+        }
     }
 
     private void UpdateAllWindowsTranslations()
@@ -212,58 +193,16 @@ public class Internationalization(Settings settings)
 
     private void LoadLanguage(Language language)
     {
-        var appEnglishFile = Path.Combine(Constants.ProgramDirectory, Folder, DefaultFile);
-        var dicts = Application.Current!.Resources.MergedDictionaries;
-        var filename = $"{language.LanguageCode}{Extension}";
-        var files = _languageDirectories
-            .Select(d => LanguageFile(d, filename))
-            // Exclude app English language file since it's built into the binary, and there's no need to load
-            // it again from the file system.
-            .Where(f => !string.IsNullOrEmpty(f) && f != appEnglishFile)
-            .ToArray();
-
-        if (files.Length > 0)
+        if (Application.Current!.TryGetResource(language.ResourceKey, null, out var resource) &&
+            resource is ResourceDictionary languageResource)
         {
-            foreach (var f in files)
-            {
-                var fileUri = new Uri(f, UriKind.Absolute);
-                var include = new ResourceInclude(fileUri)
-                {
-                    Source = fileUri
-                };
-                dicts.Add(include);
-                _oldResources.Add(include);
-            }
-        }
-    }
-
-    private static string LanguageFile(string folder, string language)
-    {
-        if (Directory.Exists(folder))
-        {
-            var path = Path.Combine(folder, language);
-            if (File.Exists(path))
-            {
-                return path;
-            }
-            else
-            {
-                EditorLogger.Error(ClassName, $"Language path can't be found <{path}>");
-                var english = Path.Combine(folder, DefaultFile);
-                if (File.Exists(english))
-                {
-                    return english;
-                }
-                else
-                {
-                    EditorLogger.Error(ClassName, $"Default English Language path can't be found <{path}>");
-                    return string.Empty;
-                }
-            }
+            Application.Current!.Resources.MergedDictionaries.Add(languageResource);
+            _oldResources.Add(languageResource);
         }
         else
         {
-            return string.Empty;
+            EditorLogger.Error(ClassName, $"Language resource not found for language code <{language.LanguageCode}>" +
+                $" with resource key <{language.ResourceKey}>");
         }
     }
 
@@ -284,15 +223,25 @@ public class Internationalization(Settings settings)
 
     public static string GetTranslation(string key)
     {
-        if (Application.Current!.TryGetResource(key, ThemeVariant.Default, out var value) && value is string s)
+        if (Application.Current!.TryGetResource(key, ThemeVariant.Default, out var value) && value is string translatedString)
         {
-            return s;
+            return translatedString;
         }
         else
         {
             EditorLogger.Error(ClassName, $"No translation for key {key}");
             return $"No translation for key {key}";
         }
+    }
+
+    #endregion
+
+    #region IDisposable
+
+    public void Dispose()
+    {
+        RemoveOldLanguageFiles();
+        _langChangeLock.Dispose();
     }
 
     #endregion

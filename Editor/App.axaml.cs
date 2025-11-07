@@ -236,6 +236,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                 // Dispose needs to be called on the main Windows thread,
                 // since some resources owned by the thread need to be disposed.
                 Ioc.Default.GetRequiredService<ClipboardHelper>().Dispose();
+                Ioc.Default.GetRequiredService<Internationalization>().Dispose();
                 Settings.Save();
             }
 
