@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using System.Timers;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Timer = System.Timers.Timer;
 
 namespace Editor;
 
@@ -30,7 +32,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
     public object? PasteObject { get; private set; }
 
     private bool _isMonitoring;
-    private bool _isReading;
+    private readonly SemaphoreSlim _updatingLock = new(1, 1);
 
     public void StartMonitoring(IMainWindow mainWindow)
     {
@@ -44,13 +46,18 @@ public class ClipboardHelper : ObservableObject, IDisposable
 
     private async void Timer_Elapsed(object? sender, ElapsedEventArgs e)
     {
-        if (_isReading) return;
+        // If another update is in progress, skip this tick
+        if (_updatingLock.CurrentCount == 0)
+        {
+            return;
+        }
 
-        _isReading = true;
+        await _updatingLock.WaitAsync();
         try
         {
-            PasteObject = await EquationRoot.CanPasteFromClipboard();
-            CanPaste = PasteObject != null;
+            var canPaste = EquationRoot.CanPasteFromClipboard(out var data);
+            PasteObject = data;
+            CanPaste = canPaste;
         }
         catch (Exception ex)
         {
@@ -58,7 +65,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
         }
         finally
         {
-            _isReading = false;
+            _updatingLock.Release();
         }
     }
 
@@ -66,5 +73,6 @@ public class ClipboardHelper : ObservableObject, IDisposable
     {
         _timer.Elapsed -= Timer_Elapsed;
         _timer.Dispose();
+        _updatingLock.Dispose();
     }
 }

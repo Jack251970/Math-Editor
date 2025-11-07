@@ -260,16 +260,18 @@ namespace Editor
             return success;
         }
 
-        public static async Task<object?> CanPasteFromClipboard()
+        public static bool CanPasteFromClipboard(out object? data)
         {
+            data = null;
             try
             {
-                using var handle = await ClipboardAvalonia.OpenAsync();
+                using var handle = ClipboardAvalonia.Open();
                 if (handle.ContainsFormat(ClipboardXmlFormat))
                 {
                     if (handle.GetFormatType(ClipboardXmlFormat) is string xmlString)
                     {
-                        return new MathEditorData { XmlString = xmlString };
+                        data = new MathEditorData { XmlString = xmlString };
+                        return true;
                     }
                 }
                 else if (handle.ContainsText())
@@ -277,7 +279,8 @@ namespace Editor
                     var textString = ClipboardAvalonia.GetText();
                     if (!string.IsNullOrEmpty(textString))
                     {
-                        return textString;
+                        data = textString;
+                        return true;
                     }
                 }
             }
@@ -285,7 +288,7 @@ namespace Editor
             {
                 EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
             }
-            return null;
+            return false;
         }
 
         public override void ConsumeText(string text)
