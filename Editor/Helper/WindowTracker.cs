@@ -66,14 +66,17 @@ public static class WindowTracker
 
     public static List<Window> GetAllWindows()
     {
-        // TODO: Return all windows
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (Application.Current == null)
+        {
+            return [];
+        }
+        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             return [..desktop.Windows];
         }
         else
         {
-            return [];
+            throw new NotSupportedException("Unsupported application lifetime");
         }
     }
 
