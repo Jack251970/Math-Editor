@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia;
+using Avalonia.Controls;
 
 namespace Editor.Desktop;
 
@@ -19,7 +20,7 @@ internal class Program
                 // Set up Logging
                 EditorLogger.Initialize();
 
-                BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+                BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
                 if (Application.Current is IDisposable disposable)
                 {
                     disposable.Dispose();
