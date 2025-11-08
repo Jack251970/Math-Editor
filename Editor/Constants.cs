@@ -29,4 +29,6 @@ public static class Constants
     public const string SponsorUrl = "https://ko-fi.com/jackye";
 
     public const int MaxSymbols = 30;
+
+    public const string Latex2UnicodePath = "avares://Editor/Resources/unicode2latex.json";
 }

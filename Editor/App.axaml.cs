@@ -112,7 +112,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             RegisterAppDomainExceptions();
             RegisterTaskSchedulerUnhandledException();
 
-            Ioc.Default.GetRequiredService<LatexConverter>().LoadPredefinedLatexUnicodeMapping();
+            await Ioc.Default.GetRequiredService<LatexConverter>().LoadPredefinedLatexUnicodeMappingAsync();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
@@ -138,7 +138,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
 
             EditorLogger.Info(ClassName, "End Editor startup ---------------------------------------------------");
 
-            _ = Task.Run(Ioc.Default.GetRequiredService<LatexConverter>().LoadUserUnicodeMapping);
+            _ = Task.Run(Ioc.Default.GetRequiredService<LatexConverter>().LoadUserUnicodeMappingAsync);
         });
 
         base.OnFrameworkInitializationCompleted();

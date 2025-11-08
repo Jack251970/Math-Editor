@@ -16,21 +16,21 @@ public class LatexConverter
 
     private readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
 
-    public void LoadPredefinedLatexUnicodeMapping()
+    public async Task LoadPredefinedLatexUnicodeMappingAsync()
     {
         foreach (var kvp in PredefinedLatexSymbolMapping)
         {
             LatexSymbolMapping.TryAdd(kvp.Key, kvp.Value);
         }
-        LoadMapping("avares://Editor/Resources/unicode2latex.json");
+        await LoadMappingAsync(Constants.Latex2UnicodePath);
     }
 
-    public void LoadUserUnicodeMapping()
+    public async Task LoadUserUnicodeMappingAsync()
     {
         // TODO: Add support for user-defined Latex to Unicode mapping
     }
 
-    private void LoadMapping(string path)
+    private async Task LoadMappingAsync(string path)
     {
         try
         {
@@ -52,26 +52,26 @@ public class LatexConverter
         catch (FileNotFoundException e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file due to file", e);
-            /*MessageBox.Show(Localize.LatexConverter_InitializationFileNotFound(Constants.Latex2UnicodePath),
-                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);*/
+            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationFileNotFound(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (JsonException e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file due to Json", e);
-            /*MessageBox.Show(Localize.LatexConverter_InitializationJsonError(Constants.Latex2UnicodePath),
-                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);*/
+            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationJsonError(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (IOException e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file due to IO", e);
-            /*MessageBox.Show(Localize.LatexConverter_InitializationIOError(Constants.Latex2UnicodePath),
-                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);*/
+            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationIOError(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (Exception e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file", e);
-            /*MessageBox.Show(Localize.LatexConverter_InitializationError(Constants.Latex2UnicodePath),
-                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);*/
+            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationError(Constants.Latex2UnicodePath),
+                Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
