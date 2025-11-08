@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Timers;
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Timer = System.Timers.Timer;
 
@@ -70,6 +69,5 @@ public class ClipboardHelper : ObservableObject, IDisposable
     {
         _timer.Elapsed -= Timer_Elapsed;
         _timer.Dispose();
-        _updatingLock.Dispose();
     }
 }
