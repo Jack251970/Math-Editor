@@ -138,7 +138,6 @@ public partial class MainWindow : Window, IMainWindow, ICultureInfoChanged, ICon
 
     private void Window_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        // TODO: Check if this can work properly
         var source = e.Source;
         if (source != null)
         {
