@@ -246,16 +246,6 @@ public class LatexConverter
     /// </summary>
     /// <param name="rows"></param>
     /// <returns></returns>
-    // TODO: Support \begin{gathered} \hfill \\ \hfill \\ \end{gathered}??
-    // \[\begin{gathered}
-    //  1111 \hfill \\
-    //  2222 \hfill \\ 
-    // \end{gathered
-    // } \]
-    // \[\begin{array}{ l}
-    // 1111\\
-    // 2222
-    // \end{array}\]
     public StringBuilder? EscapeRows(List<StringBuilder> rows)
     {
         if (rows.Count == 0) return null;

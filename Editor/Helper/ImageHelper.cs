@@ -9,9 +9,6 @@ public static class ImageHelper
 {
     private static readonly string ClassName = nameof(ImageHelper);
 
-    // TODO: Check these two image path cases
-    // avares://Editor/Images/Commands/SumsProducts/productBottomTop.png
-    // avares://Editor/Images/Commands/Decorated/Character/VstrikeThrough.png
     public static Bitmap? GetBitmap(string path)
     {
         var uri = new Uri(path, UriKind.RelativeOrAbsolute);
