@@ -42,5 +42,6 @@ internal class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .LogToTrace();
+            // We have used Serilog for logging already
+            /*.LogToTrace()*/;
 }
