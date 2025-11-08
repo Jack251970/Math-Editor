@@ -131,7 +131,7 @@ public static class MessageBox
 
     public static IMsBox<ButtonResult> GetEditorMessageBox(string title, string text, ButtonEnum @enum = ButtonEnum.Ok, Icon icon = Icon.None)
     {
-        MsBoxStandardViewModel msBoxStandardViewModel = new MsBoxStandardViewModel(new MessageBoxStandardParams
+        var msBoxStandardViewModel = new MsBoxStandardViewModel(new MessageBoxStandardParams
         {
             ContentTitle = title,
             ContentMessage = text,

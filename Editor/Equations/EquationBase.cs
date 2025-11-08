@@ -50,7 +50,7 @@ namespace Editor
 
         public IMainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }
-        private Point location = new();
+        private readonly Point location = new();
         /*private readonly double width;*/
         private const double height = 0;
         private double fontSize = 20;

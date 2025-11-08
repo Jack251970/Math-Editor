@@ -8,7 +8,7 @@ namespace Editor;
 public partial class UnicodeSelectorWindow : Window, ICultureInfoChanged
 {
     public UnicodeSelectorWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<UnicodeSelectorWindowViewModel>();
-    
+
     public UnicodeSelectorWindow()
     {
         DataContext = ViewModel;

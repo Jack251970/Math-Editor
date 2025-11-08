@@ -82,15 +82,15 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                     .AddSingleton(_ => Settings)
                     .AddSingleton<Internationalization>()
                     .AddSingleton<LatexConverter>()
-                .AddSingleton<TextManager>()
-                .AddTransient<UndoManager>()
-                .AddSingleton<ClipboardHelper>()
-                .AddTransient<AboutWindowViewModel>()
-                .AddTransient<CodepointWindowViewModel>()
-                .AddTransient<CustomZoomWindowViewModel>()
-                .AddTransient<MainWindowViewModel>()
-                .AddTransient<SettingsWindowViewModel>()
-                .AddTransient<UnicodeSelectorWindowViewModel>()
+                    .AddSingleton<TextManager>()
+                    .AddTransient<UndoManager>()
+                    .AddSingleton<ClipboardHelper>()
+                    .AddTransient<AboutWindowViewModel>()
+                    .AddTransient<CodepointWindowViewModel>()
+                    .AddTransient<CustomZoomWindowViewModel>()
+                    .AddTransient<MainWindowViewModel>()
+                    .AddTransient<SettingsWindowViewModel>()
+                    .AddTransient<UnicodeSelectorWindowViewModel>()
             ).Build();
             Ioc.Default.ConfigureServices(host.Services);
         }
@@ -117,8 +117,8 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var strings = Environment.GetCommandLineArgs();
-                var fileName = strings.Length > 1 ? strings[1] : string.Empty;
+                var strings = desktop.Args;
+                var fileName = strings?.Length > 1 ? strings[1] : string.Empty;
                 var mainWindow = new MainWindow(fileName);
                 mainWindow.Show();
 

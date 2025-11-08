@@ -65,7 +65,9 @@ public sealed class FontFactory
     }
 
     private static string BuildAvaresUri(string subfolder, string familyName)
-        => $"avares://{assemblyName}/Fonts/{subfolder}#{familyName}";
+    {
+        return $"avares://{assemblyName}/Fonts/{subfolder}#{familyName}";
+    }
 
     private static FontFamily CreateFontFamily(FontType ft)
     {

@@ -24,7 +24,9 @@ public sealed class MouseWheelGesture
     }
 
     public bool Matches(PointerWheelEventArgs e)
-        => Matches(null, e);
+    {
+        return Matches(null, e);
+    }
 
     public bool Matches(object? targetElement, PointerWheelEventArgs e)
     {

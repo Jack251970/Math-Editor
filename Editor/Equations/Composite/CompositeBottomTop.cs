@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
 using Avalonia;
 using Avalonia.Input;

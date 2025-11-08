@@ -26,7 +26,7 @@ public partial class ReportWindow : Window
         var directory = new DirectoryInfo(path);
         var log = directory.GetFiles().OrderByDescending(f => f.LastWriteTime).First();
         var sb = new StringBuilder();
-        
+
         // Add a link to the issue tracker and instructions for uploading the log file
         sb.Append(Localize.ReportWindow_PleaseOpenIssue());
         sb.Append(' ');

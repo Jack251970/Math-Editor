@@ -33,5 +33,8 @@ public class KeyboardHelper
         _pressed.Remove(e.Key);
     }
 
-    public bool IsKeyDown(Key key) => _pressed.Contains(key);
+    public bool IsKeyDown(Key key)
+    {
+        return _pressed.Contains(key);
+    }
 }

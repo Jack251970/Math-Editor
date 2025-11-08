@@ -179,25 +179,23 @@ namespace Editor
             // Prepare data object for clipboard
             _ = Task.Run(async () =>
             {
-                using (var handle = await ClipboardAvalonia.OpenAsync())
-                {
-                    var rootElement = new XElement(GetType().Name);
-                    rootElement.Add(new XElement("SessionId", sessionString));
-                    rootElement.Add(TextManager.Serialize(true));
-                    rootElement.Add(new XElement("payload", temp.XElement));
-                    handle.SetFormat(ClipboardXmlFormat, rootElement.ToString());
+                using var handle = await ClipboardAvalonia.OpenAsync();
+                var rootElement = new XElement(GetType().Name);
+                rootElement.Add(new XElement("SessionId", sessionString));
+                rootElement.Add(TextManager.Serialize(true));
+                rootElement.Add(new XElement("payload", temp.XElement));
+                handle.SetFormat(ClipboardXmlFormat, rootElement.ToString());
 
-                    if (temp.Image != null)
-                    {
-                        handle.SetImage(temp.Image);
-                    }
-                    if (temp.Text != null)
-                    {
-                        handle.SetText(temp.Text);
-                    }
+                if (temp.Image != null)
+                {
+                    handle.SetImage(temp.Image);
+                }
+                if (temp.Text != null)
+                {
+                    handle.SetText(temp.Text);
                 }
             });
-            
+
 
             // Remove selection if needed
             if (removeSelection)
@@ -234,7 +232,7 @@ namespace Editor
         public bool PasteFromClipBoard()
         {
             // Get data from clipboard with retries
-            object? data = Owner.ClipboardHelper.PasteObject;
+            var data = Owner.ClipboardHelper.PasteObject;
 
             // Parse and paste data
             var success = false;

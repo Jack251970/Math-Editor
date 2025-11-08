@@ -48,7 +48,7 @@ public class LatexConverter
 
     public void LoadUserUnicodeMapping()
     {
-        
+
     }
 
     private void LoadMapping(string path)

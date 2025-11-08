@@ -72,7 +72,7 @@ public static class WindowTracker
         }
         if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            return [..desktop.Windows];
+            return [.. desktop.Windows];
         }
         else
         {
