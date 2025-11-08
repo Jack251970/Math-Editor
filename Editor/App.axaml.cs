@@ -187,12 +187,11 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             Dispose();
         };
 
-        // TODO: Check SessionEnding usage in Avalonia
-        /*desktop.SessionEnding += (s, e) =>
+        desktop.ShutdownRequested += (s, e) =>
         {
             EditorLogger.Info(ClassName, "Session Ending");
             Dispose();
-        };*/
+        };
     }
 
     public void OnSecondAppStarted()
