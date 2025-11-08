@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Clowd.Clipboard;
 using Clowd.Clipboard.Formats;
 
@@ -323,57 +324,52 @@ namespace Editor
         public async Task SaveImageToFileAsync(string path)
         {
             // TODO: Support save image to files
-            /*var extension = Path.GetExtension(path).ToLower();
+            var extension = Path.GetExtension(path).ToLower();
 
-            var dv = new DrawingVisual();
+            var bmpWidth = (int)Math.Ceiling(Width + Location.X * 2);
+            var bmpHeight = (int)Math.Ceiling(Width + Location.Y * 2);
+
+            // Create Avalonia RenderTargetBitmap
+            var bitmap = new RenderTargetBitmap(new PixelSize(bmpWidth, bmpHeight), new Vector(96, 96));
+
             // Disable selection highlight during printing
             var oldSelecting = Owner.IsSelecting;
             Owner.IsSelecting = false;
             try
             {
-#pragma warning disable IDE0063
-                using (var dc = dv.RenderOpen())
+                // Draw directly into the bitmap using Avalonia drawing context
+                using var dc = bitmap.CreateDrawingContext();
+
+                // Fill background white for bmp and jpg
+                if (extension is ".bmp" or ".jpg")
                 {
-                    if (extension is ".bmp" or ".jpg")
-                    {
-                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
-                    }
-                    ActiveChild.DrawEquation(dc, true);
+                    dc.FillRectangle(Brushes.White, new Rect(0, 0, bmpWidth, bmpHeight));
                 }
-#pragma warning restore IDE0063
+
+                // Draw the equation into the bitmap context, forcing black brush for fidelity
+                ActiveChild.DrawEquation(dc, true);
             }
             finally
             {
                 Owner.IsSelecting = oldSelecting;
             }
 
-            var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)),
-                (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
-            bitmap.Render(dv);
-
-            BitmapEncoder encoder = extension switch
+            if (extension is not ".png" and not ".jpg" and not ".bmp" and not ".gif" and not ".tif" and not ".wdp")
             {
-                ".jpg" => new JpegBitmapEncoder(),
-                ".gif" => new GifBitmapEncoder(),
-                ".bmp" => new BmpBitmapEncoder(),
-                ".png" => new PngBitmapEncoder(),
-                ".wdp" => new WmpBitmapEncoder(),
-                ".tif" => new TiffBitmapEncoder(),
-                _ => throw new InvalidOperationException("Unsupported image format."),
-            };
+                throw new InvalidOperationException("Unsupported image format.");
+            }
 
             try
             {
-                encoder.Frames.Add(BitmapFrame.Create(bitmap));
                 using Stream s = File.Create(path);
-                encoder.Save(s);
+                bitmap.Save(s);
             }
             catch (Exception e)
             {
                 EditorLogger.Fatal(ClassName, "Failed to save file", e);
                 await ContentDialogHelper.ShowAsync(Owner, Localize.EditorControl_CannotSaveFile(),
                     Localize.Error(), MessageBoxButton.OK);
-            }*/
+            }
         }
 
         /*public async Task PrintAsync(PrintDialog printDialog)
