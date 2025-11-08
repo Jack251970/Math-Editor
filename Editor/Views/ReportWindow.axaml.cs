@@ -45,7 +45,6 @@ public partial class ReportWindow : Window
 
         ErrorTextBox.Text = sb.ToString();
 
-        // TODO: Add a hyper button with issue url
         // Constants.IssuesUrl
     }
 }

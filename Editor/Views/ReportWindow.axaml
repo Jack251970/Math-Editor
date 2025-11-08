@@ -10,7 +10,6 @@
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d">
 
-    <!-- // TODO: Add ScrollViewer Support & HyperLinkButton Support? -->
     <TextBox
         x:Name="ErrorTextBox"
         Margin="12 0 12 12"

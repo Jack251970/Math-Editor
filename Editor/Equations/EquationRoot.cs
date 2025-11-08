@@ -323,7 +323,6 @@ namespace Editor
 
         public async Task SaveImageToFileAsync(string path)
         {
-            // TODO: Support save image to files
             var extension = Path.GetExtension(path).ToLower();
 
             var bmpWidth = (int)Math.Ceiling(Width + Location.X * 2);

@@ -241,7 +241,6 @@ public partial class MainWindow : Window, IMainWindow, ICultureInfoChanged, ICon
     public void ContentDialogChanged(bool isShown)
     {
         Editor.SetTimer(!isShown);
-        // TODO: Set window non-draggable when dialog is shown
         ContentDialogShown = isShown;
     }
 
