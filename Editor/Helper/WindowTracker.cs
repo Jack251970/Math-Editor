@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
@@ -31,18 +32,21 @@ public static class WindowTracker
                 _activeWindows.TryRemove(window, out var _);
             }
             _ownerWindows.Remove(owner);
-            // TODO: Shutdown application when no owner windows are left
-            /*if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            if (Application.Current == null)
             {
-                if (desktop.Windows.Count == 0)
+                return;
+            }
+            if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (_ownerWindows.Count == 0)
                 {
-                    desktop.TryShutdown();
+                    desktop.Shutdown();
                 }
             }
             else
             {
-
-            }*/
+                throw new NotSupportedException("Unsupported application lifetime");
+            }
         };
         _ownerWindows.Add(owner);
     }
