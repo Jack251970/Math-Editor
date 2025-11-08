@@ -10,6 +10,7 @@ public interface IMainWindow
 
     TopLevel TopLevel { get; }
     WindowState WindowState { get; set; }
+    SystemDecorations SystemDecorations { get; set; }
     bool ContentDialogShown { get; }
     bool IsSelecting { get; set; }
     bool IsEditorLoaded { get; }
