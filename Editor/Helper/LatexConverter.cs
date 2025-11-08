@@ -16,6 +16,27 @@ public class LatexConverter
 
     private readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
 
+    // Predefined Latex to Unicode mapping for known functions
+    private readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
+    {
+        { '{', ToChars("\\{ ") },
+        { '}', ToChars("\\} ") },
+        { '\u2211', ToChars("\\sum") }, // ∑
+        { '\u220F', ToChars("\\prod") }, // ∏
+        { '\u2210', ToChars("\\coprod") }, // ∐
+        { '\u22C2', ToChars("\\bigcap") }, // ⋂
+        { '\u22C3', ToChars("\\bigcup") }, // ⋃
+        { '\u222B', ToChars("\\int") }, // ∫
+        { '\u222C', ToChars("\\iint") }, // ∬
+        { '\u222D', ToChars("\\iiint") }, // ∭
+        { '\u222E', ToChars("\\oint") }, // ∮
+        { '\u222F', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}") }, // ∯
+        { '\u2230', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}") }, // ∰
+        { '\u2232', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}") }, // ∲
+        { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
+        { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
+    };
+
     public async Task LoadPredefinedLatexUnicodeMappingAsync()
     {
         foreach (var kvp in PredefinedLatexSymbolMapping)
@@ -27,7 +48,7 @@ public class LatexConverter
 
     public async Task LoadUserUnicodeMappingAsync()
     {
-        // TODO: Add support for user-defined Latex to Unicode mapping
+        
     }
 
     private async Task LoadMappingAsync(string path)
@@ -45,7 +66,7 @@ public class LatexConverter
                 }
                 else
                 {
-                    // TODO: Add support for multi-character Unicode mappings
+
                 }
             });
         }
@@ -191,25 +212,6 @@ public class LatexConverter
     /// <param name="c"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    private readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
-    {
-        { '{', ToChars("\\{ ") },
-        { '}', ToChars("\\} ") },
-        { '\u2211', ToChars("\\sum") }, // ∑
-        { '\u220F', ToChars("\\prod") }, // ∏
-        { '\u2210', ToChars("\\coprod") }, // ∐
-        { '\u22C2', ToChars("\\bigcap") }, // ⋂
-        { '\u22C3', ToChars("\\bigcup") }, // ⋃
-        { '\u222B', ToChars("\\int") }, // ∫
-        { '\u222C', ToChars("\\iint") }, // ∬
-        { '\u222D', ToChars("\\iiint") }, // ∭
-        { '\u222E', ToChars("\\oint") }, // ∮
-        { '\u222F', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}") }, // ∯
-        { '\u2230', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}") }, // ∰
-        { '\u2232', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}") }, // ∲
-        { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
-        { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
-    };
     private char[] ConvertToLatexSymbol(char c, bool convertWrapper)
     {
         if (c == '{')
