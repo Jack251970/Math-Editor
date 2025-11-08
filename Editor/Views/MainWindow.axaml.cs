@@ -75,27 +75,6 @@ public partial class MainWindow : Window, IMainWindow, ICultureInfoChanged, ICon
         EquationToolBar.CommandCompleted += EquationToolBar_CommandCompleted;
     }
 
-    // TODO: If we need this?
-    // https://github.com/SuGar0218/NativeLikeCaptionButton-WPF
-    /*private void Window_StateChanged(object sender, EventArgs e)
-    {
-        switch (WindowState)
-        {
-            case WindowState.Maximized:
-                double left = SystemParameters.ResizeFrameVerticalBorderWidth + SystemParameters.FixedFrameVerticalBorderWidth + SystemParameters.BorderWidth;
-                double top = SystemParameters.ResizeFrameHorizontalBorderHeight + SystemParameters.FixedFrameHorizontalBorderHeight + SystemParameters.BorderWidth;
-                MainDock.Margin = new Thickness(left, top, left, top);
-                break;
-            default:
-                MainDock.Margin = new Thickness(0);
-                break;
-        }
-        if (WindowState == WindowState.Normal)
-        {
-            ViewModel.ExitFullScreen(WindowState.Normal);
-        }
-    }*/
-
     private async void Editor_Loaded(object? sender, RoutedEventArgs e)
     {
         ViewModel.Editor = Editor;
