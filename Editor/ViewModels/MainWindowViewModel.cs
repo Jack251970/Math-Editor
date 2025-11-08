@@ -355,8 +355,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             }
 
             _windowState = MainWindow.WindowState;
-            MainWindow.WindowState = WindowState.Normal;
-            MainWindow.WindowState = WindowState.Maximized;
+            MainWindow.WindowState = WindowState.FullScreen;
 
             _fullScreenModeEntered = true;
         }
