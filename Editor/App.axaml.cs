@@ -122,10 +122,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                 mainWindow.Show();
 
                 RegisterExitEvents(desktop);
-
-                Ioc.Default.GetRequiredService<ClipboardHelper>().StartMonitoring(mainWindow);
             }
-            // TODO: Support ISingleViewApplicationLifetime.
             /*else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
             {
                 singleView.MainView = new MainView();
@@ -134,6 +131,8 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             {
                 throw new NotSupportedException("Unsupported application lifetime");
             }
+
+            Ioc.Default.GetRequiredService<ClipboardHelper>().StartMonitoring();
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -205,7 +204,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
         }
         else
         {
-            // TODO: Open multiple tabs in ISingleViewApplicationLifetime
+            throw new NotSupportedException("Unsupported application lifetime");
         }
     }
 

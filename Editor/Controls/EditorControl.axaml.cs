@@ -476,7 +476,6 @@ public partial class EditorControl : UserControl, IDisposable
         await equationRoot.SaveImageToFileAsync(filePath);
     }
 
-    // TODO: Implement printing
     /*public async Task PrintAsync(PrintDialog printDialog)
     {
         await equationRoot.PrintAsync(printDialog);

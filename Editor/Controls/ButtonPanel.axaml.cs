@@ -30,7 +30,6 @@ public partial class ButtonPanel : UserControl
             var button = new EditorToolBarButton(mainWindow, _commandDetails[i])
             {
                 Padding = new Thickness(buttonPadding),
-                // TODO: Add theme-aware styling and remove this
                 Foreground = Brushes.Black
             };
             button.Click += PanelButton_Click;

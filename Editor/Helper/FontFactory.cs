@@ -44,14 +44,12 @@ public sealed class FontFactory
     public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, SolidColorBrush brush)
     {
         var typeface = GetTypeface(fontType, fontStyle, fontWeight);
-#pragma warning disable CS0618 // Type or member is obsolete
         return new FormattedText(textToFormat,
             CultureInfo.InvariantCulture,
             FlowDirection.LeftToRight,
             typeface,
             fontSize,
             brush);
-#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     public static FontFamily GetFontFamily(FontType fontType)

@@ -11,8 +11,6 @@ public class ClipboardHelper : ObservableObject, IDisposable
 {
     private static readonly string ClassName = nameof(ClipboardHelper);
 
-    // TODO: Wait for avalonia to support image type format
-    private TopLevel _owner = null!;
     private readonly Timer _timer = new(500);
 
     private bool _canPaste;
@@ -34,12 +32,11 @@ public class ClipboardHelper : ObservableObject, IDisposable
     private bool _isMonitoring;
     private readonly SemaphoreSlim _updatingLock = new(1, 1);
 
-    public void StartMonitoring(IMainWindow mainWindow)
+    public void StartMonitoring()
     {
         if (_isMonitoring) return;
 
         _isMonitoring = true;
-        _owner = mainWindow.TopLevel;
         _timer.Elapsed += Timer_Elapsed;
         _timer.Start();
     }

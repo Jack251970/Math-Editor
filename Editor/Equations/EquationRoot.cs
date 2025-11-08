@@ -324,7 +324,7 @@ namespace Editor
 
         public async Task SaveImageToFileAsync(string path)
         {
-            // TODO: Add support
+            // TODO: Support save image to files
             /*var extension = Path.GetExtension(path).ToLower();
 
             var dv = new DrawingVisual();

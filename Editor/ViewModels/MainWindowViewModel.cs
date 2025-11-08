@@ -519,7 +519,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [RelayCommand]
     private async Task PrintAsync()
     {
-        // TODO: Implement PrintDialog for Avalonia
+        // TODO: Support print
         /*var printDialog = new PrintDialog();
         if (printDialog.ShowDialog() == true)
         {

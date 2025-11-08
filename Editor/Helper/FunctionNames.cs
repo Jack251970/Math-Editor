@@ -21,7 +21,7 @@ namespace Editor
             return _knownFunctionNames.Contains(text);
         }
 
-        // TODO:
+        // TODO: Optimize performance if needed
         // The CheckForFunctionName method uses a linear search with EndsWith checks,
         // which is inefficient for repeated calls.
         // Consider building a trie or using a more efficient data structure to improve performance,

@@ -2,7 +2,6 @@
 
 namespace Editor;
 
-// TODO: Add support for overflow items
 public partial class HistoryToolBar : UserControl
 {
     private readonly IMainWindow _mainWindow = null!;

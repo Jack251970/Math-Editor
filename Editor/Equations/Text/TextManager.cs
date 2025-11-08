@@ -372,10 +372,7 @@ namespace Editor
         public double GetBaseline(int formatId)
         {
             var tf = formattingList[formatId];
-            // TODO: Remove this warning
-#pragma warning disable CS0618 // Type or member is obsolete
             var ft = new FormattedText("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
-#pragma warning restore CS0618 // Type or member is obsolete
             return ft.Baseline;
         }
 
