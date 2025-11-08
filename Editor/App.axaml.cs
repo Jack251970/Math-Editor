@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -109,6 +109,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             EditorLogger.Info(ClassName, "Begin Editor startup -------------------------------------------------");
             EditorLogger.Info(ClassName, $"Runtime info:{ExceptionFormatter.RuntimeInfo()}");
 
+            RegisterDispatcherUnhandledException();
             RegisterAppDomainExceptions();
             RegisterTaskSchedulerUnhandledException();
 
@@ -156,18 +157,17 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
         Environment.Exit(-1);
     }
 
-    /// <summary>
-    /// Let exception throw as normal is better for Debug.
-    /// </summary>
-    [Conditional("RELEASE")]
+    private static void RegisterDispatcherUnhandledException()
+    {
+        Dispatcher.UIThread.UnhandledException += ErrorReporting.DispatcherUnhandledException;
+        Dispatcher.UIThread.UnhandledExceptionFilter += ErrorReporting.DispatcherUnhandledExceptionFilter;
+    }
+
     private static void RegisterAppDomainExceptions()
     {
         AppDomain.CurrentDomain.UnhandledException += ErrorReporting.UnhandledException;
     }
 
-    /// <summary>
-    /// Let exception throw as normal is better for Debug.
-    /// </summary>
     private static void RegisterTaskSchedulerUnhandledException()
     {
         TaskScheduler.UnobservedTaskException += ErrorReporting.TaskSchedulerUnobservedTaskException;

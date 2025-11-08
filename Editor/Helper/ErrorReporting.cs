@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 
 namespace Editor;
 
@@ -18,21 +19,34 @@ public static class ErrorReporting
 
     public static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        // handle non-ui thread exceptions
+        // Handle non-ui thread exceptions
         Report((Exception)e.ExceptionObject);
     }
 
-    public static void DispatcherUnhandledException(Exception e)
+    public static void DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        // log ui thread exceptions but do not handle unobserved task exceptions on UI thread
-        Report(e, true);
+        // Handle ui thread exceptions
+        Report(e.Exception);
+        // Prevent application exit, so the user can copy prompted error info
+        e.Handled = true;
+    }
+
+    public static void DispatcherUnhandledExceptionFilter(object sender, DispatcherUnhandledExceptionFilterEventArgs e)
+    {
+#if DEBUG
+        // Log and break the debugger without showing the report window
+        Report(e.Exception, true);
+        e.RequestCatch = false;
+#else
+        e.RequestCatch = true;
+#endif
     }
 
     public static void TaskSchedulerUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
-        // log exception but do not handle unobserved task exceptions on UI thread
+        // Log exception but do not handle unobserved task exceptions on UI thread
         Report(e.Exception, true);
-        // prevent application exit, so the user can copy the prompted error info
+        // Prevent application exit, so the user can copy the prompted error info
         e.SetObserved();
     }
 }

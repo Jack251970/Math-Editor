@@ -6,6 +6,8 @@ namespace Editor.Desktop;
 
 internal class Program
 {
+    private static readonly string ClassName = nameof(Program);
+
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
@@ -32,7 +34,7 @@ internal class Program
         }
         catch (Exception e)
         {
-            ErrorReporting.DispatcherUnhandledException(e);
+            EditorLogger.Fatal(ClassName, "Fatal error in Main method", e);
         }
     }
 
