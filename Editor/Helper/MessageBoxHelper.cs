@@ -1,48 +1,107 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Base;
+using MsBox.Avalonia.Controls;
+using MsBox.Avalonia.Dto;
 using MsBox.Avalonia.Enums;
+using MsBox.Avalonia.ViewModels;
 
 namespace Editor;
 
 public static class MessageBox
 {
+    private static readonly SemaphoreSlim _messageBoxSlim = new(1, 1);
+
+    public static void Show(string messageBoxText)
+    {
+        _ = ShowAsync(messageBoxText);
+    }
+
+    public static void Show(string messageBoxText, string caption)
+    {
+        _ = ShowAsync(messageBoxText, caption);
+    }
+
+    public static void Show(string messageBoxText, string caption, MessageBoxButton button)
+    {
+        _ = ShowAsync(messageBoxText, caption, button);
+    }
+
+    public static void Show(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon)
+    {
+        _ = ShowAsync(messageBoxText, caption, button, icon);
+    }
+
     public static async Task<MessageBoxResult> ShowAsync(string messageBoxText)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(messageBoxText, string.Empty, ButtonEnum.Ok);
-        return await GetResultAsync(box);
+        await _messageBoxSlim.WaitAsync();
+        try
+        {
+            var box = GetEditorMessageBox(messageBoxText, string.Empty, ButtonEnum.Ok);
+            return await GetResultAsync(box);
+        }
+        finally
+        {
+            _messageBoxSlim.Release();
+        }
     }
 
     public static async Task<MessageBoxResult> ShowAsync(string messageBoxText, string caption)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.Ok);
-        return await GetResultAsync(box);
+        await _messageBoxSlim.WaitAsync();
+        try
+        {
+            var box = GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok);
+            return await GetResultAsync(box);
+        }
+        finally
+        {
+            _messageBoxSlim.Release();
+        }
     }
 
     public static async Task<MessageBoxResult> ShowAsync(string messageBoxText, string caption, MessageBoxButton button)
     {
-        var box = button switch
+        await _messageBoxSlim.WaitAsync();
+        try
         {
-            MessageBoxButton.OK => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.Ok),
-            MessageBoxButton.OKCancel => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.OkCancel),
-            MessageBoxButton.YesNo => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.YesNo),
-            MessageBoxButton.YesNoCancel => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.YesNoCancel),
-            _ => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.Ok),
-        };
-        return await GetResultAsync(box);
+            var box = button switch
+            {
+                MessageBoxButton.OK => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok),
+                MessageBoxButton.OKCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.OkCancel),
+                MessageBoxButton.YesNo => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNo),
+                MessageBoxButton.YesNoCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNoCancel),
+                _ => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok),
+            };
+            return await GetResultAsync(box);
+        }
+        finally
+        {
+            _messageBoxSlim.Release();
+        }
     }
 
     public static async Task<MessageBoxResult> ShowAsync(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon)
     {
-        var box = button switch
+        await _messageBoxSlim.WaitAsync();
+        try
         {
-            MessageBoxButton.OK => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.Ok, GetIcon(icon)),
-            MessageBoxButton.OKCancel => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.OkCancel, GetIcon(icon)),
-            MessageBoxButton.YesNo => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.YesNo, GetIcon(icon)),
-            MessageBoxButton.YesNoCancel => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.YesNoCancel, GetIcon(icon)),
-            _ => MessageBoxManager.GetMessageBoxStandard(messageBoxText, caption, ButtonEnum.Ok, GetIcon(icon)),
-        };
-        return await GetResultAsync(box);
+            var box = button switch
+            {
+                MessageBoxButton.OK => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok, GetIcon(icon)),
+                MessageBoxButton.OKCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.OkCancel, GetIcon(icon)),
+                MessageBoxButton.YesNo => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNo, GetIcon(icon)),
+                MessageBoxButton.YesNoCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNoCancel, GetIcon(icon)),
+                _ => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok, GetIcon(icon)),
+            };
+            return await GetResultAsync(box);
+        }
+        finally
+        {
+            _messageBoxSlim.Release();
+        }
     }
 
     private static async Task<MessageBoxResult> GetResultAsync(this IMsBox<ButtonResult> box)
@@ -68,6 +127,23 @@ public static class MessageBox
             MessageBoxImage.Information => Icon.Info,
             _ => Icon.None,
         };
+    }
+
+    public static IMsBox<ButtonResult> GetEditorMessageBox(string title, string text, ButtonEnum @enum = ButtonEnum.Ok, Icon icon = Icon.None)
+    {
+        MsBoxStandardViewModel msBoxStandardViewModel = new MsBoxStandardViewModel(new MessageBoxStandardParams
+        {
+            ContentTitle = title,
+            ContentMessage = text,
+            ButtonDefinitions = @enum,
+            Icon = icon,
+            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+            Topmost = true
+        });
+        return new MsBox<MsBoxStandardView, MsBoxStandardViewModel, ButtonResult>(new MsBoxStandardView
+        {
+            DataContext = msBoxStandardViewModel
+        }, msBoxStandardViewModel);
     }
 }
 

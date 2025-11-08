@@ -37,21 +37,21 @@ public class LatexConverter
         { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
     };
 
-    public async Task LoadPredefinedLatexUnicodeMappingAsync()
+    public void LoadPredefinedLatexUnicodeMapping()
     {
         foreach (var kvp in PredefinedLatexSymbolMapping)
         {
             LatexSymbolMapping.TryAdd(kvp.Key, kvp.Value);
         }
-        await LoadMappingAsync(Constants.Latex2UnicodePath);
+        LoadMapping(Constants.Latex2UnicodePath);
     }
 
-    public async Task LoadUserUnicodeMappingAsync()
+    public void LoadUserUnicodeMapping()
     {
         
     }
 
-    private async Task LoadMappingAsync(string path)
+    private void LoadMapping(string path)
     {
         try
         {
@@ -73,25 +73,25 @@ public class LatexConverter
         catch (FileNotFoundException e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file due to file", e);
-            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationFileNotFound(Constants.Latex2UnicodePath),
+            MessageBox.Show(Localize.LatexConverter_InitializationFileNotFound(Constants.Latex2UnicodePath),
                 Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (JsonException e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file due to Json", e);
-            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationJsonError(Constants.Latex2UnicodePath),
+            MessageBox.Show(Localize.LatexConverter_InitializationJsonError(Constants.Latex2UnicodePath),
                 Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (IOException e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file due to IO", e);
-            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationIOError(Constants.Latex2UnicodePath),
+            MessageBox.Show(Localize.LatexConverter_InitializationIOError(Constants.Latex2UnicodePath),
                 Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch (Exception e)
         {
             EditorLogger.Fatal(ClassName, "Failed to initialize file", e);
-            await MessageBox.ShowAsync(Localize.LatexConverter_InitializationError(Constants.Latex2UnicodePath),
+            MessageBox.Show(Localize.LatexConverter_InitializationError(Constants.Latex2UnicodePath),
                 Localize.Error(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -489,11 +489,10 @@ public class LatexConverter
                         .Append('}').Append('}'),
                     _ => throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}"),
                 };
-            // TODO: Support editting these in the settings.
             case ArrowType.RightSmallLeftArrow:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftArrowTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -510,14 +509,14 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
                 }
             case ArrowType.SmallRightLeftArrow:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftArrowTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -534,14 +533,14 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
                 }
             case ArrowType.RightLeftHarpoon:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorRightLeftHarpoonTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -558,14 +557,14 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
                 }
             case ArrowType.RightSmallLeftHarpoon:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorRightSmallLeftHarpoonTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -582,14 +581,14 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
                 }
             case ArrowType.SmallRightLeftHarpoon:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorSmallRightLeftHarpoonTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -606,7 +605,7 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}");
                 }
@@ -649,24 +648,24 @@ public class LatexConverter
             case DecorationType.Parenthesis:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorParenthesisTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for Parenthesis decoration: {position}");
                 }
             case DecorationType.Tortoise:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorTortoiseTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for Tortoise decoration: {position}");
                 }
@@ -711,7 +710,7 @@ public class LatexConverter
             case DecorationType.RightHarpoonUpBarb:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorRightHarpoonUpBarbTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -722,14 +721,14 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for RightHarpoonUpBarb decoration: {position}");
                 }
             case DecorationType.LeftHarpoonUpBarb:
                 switch (position)
                 {
-                    /*case Position.Top:
+                    case Position.Top:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorLeftHarpoonUpBarbTop(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
@@ -740,7 +739,7 @@ public class LatexConverter
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for LeftHarpoonUpBarb decoration: {position}");
                 }
@@ -756,12 +755,12 @@ public class LatexConverter
             case DecorationType.StrikeThrough:
                 switch (position)
                 {
-                    /*case Position.Middle:
+                    case Position.Middle:
                         MessageBox.Show(Localize.LatexConverter_TranslationErrorStrikeThroughMiddle(Environment.NewLine),
                             Localize.LatexConverter_TranslationError(),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-                        return null;*/
+                        return null;
                     default:
                         throw new InvalidOperationException($"Invalid position for StrikeThrough decoration: {position}");
                 }
@@ -806,7 +805,7 @@ public class LatexConverter
                 /// \underbrace topEquation_bottomEquation
                 return Append(UnderBrace).Append(WhiteSpace).Append(topEquation).Append('_')
                     .Append(bottomEquation);
-            /*case HorizontalBracketSignType.TopSquare:
+            case HorizontalBracketSignType.TopSquare:
                 MessageBox.Show(Localize.LatexConverter_TranslationErrorTopSquare(Environment.NewLine),
                     Localize.LatexConverter_TranslationError(),
                     MessageBoxButton.OK,
@@ -817,7 +816,7 @@ public class LatexConverter
                     Localize.LatexConverter_TranslationError(),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                return null;*/
+                return null;
             default:
                 throw new InvalidOperationException($"Invalid HorizontalBracketSignType: {type}");
         }
@@ -910,7 +909,7 @@ public class LatexConverter
             case DivisionType.DivRegular:
                 /// \frac{a}{b}
                 return Append(Frac).AppendWithWrapper(insideOrTopEquation).AppendWithWrapper(bottomEquation);
-            /*case DivisionType.DivDoubleBar:
+            case DivisionType.DivDoubleBar:
                 MessageBox.Show(Localize.LatexConverter_TranslationErrorDivDoubleBar(Environment.NewLine),
                     Localize.LatexConverter_TranslationError(),
                     MessageBoxButton.OK,
@@ -921,7 +920,7 @@ public class LatexConverter
                     Localize.LatexConverter_TranslationError(),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                return null;*/
+                return null;
             case DivisionType.DivRegularSmall:
                 /// {\textstyle{a \over b}}
                 return Append(DivRegularSmall1).Append(insideOrTopEquation).Append(DivRegularSmall2)
@@ -946,7 +945,7 @@ public class LatexConverter
                 return Append('{').Append(insideOrTopEquation).Append(DivHoriz1)
                     .Append(insideOrTopEquation).Append(WhiteSpace).Append(bottomEquation)
                     .Append(DivHoriz2).Append(bottomEquation).Append('}');
-            /*case DivisionType.DivHorizSmall:
+            case DivisionType.DivHorizSmall:
                 MessageBox.Show(Localize.LatexConverter_TranslationErrorDivHorizSmall(Environment.NewLine),
                     Localize.LatexConverter_TranslationError(),
                     MessageBoxButton.OK,
@@ -975,7 +974,7 @@ public class LatexConverter
                     Localize.LatexConverter_TranslationError(),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                return null;*/
+                return null;
             default:
                 throw new InvalidOperationException($"Invalid DivisionType: {type}");
         }
