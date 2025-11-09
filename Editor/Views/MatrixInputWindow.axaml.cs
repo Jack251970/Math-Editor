@@ -22,14 +22,17 @@ public partial class MatrixInputWindow : Window
 
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.Rows > 0 && ViewModel.Columns > 0)
+        if (ViewModel.Rows.HasValue &&
+            ViewModel.Rows.Value > 0 &&
+            ViewModel.Columns.HasValue &&
+            ViewModel.Columns.Value > 0)
         {
             var newCommand = new CommandDetails
             {
                 CommandType = CommandType.Matrix,
                 CommandParam = new int[]
                 {
-                    ViewModel.Rows, ViewModel.Columns
+                    ViewModel.Rows.Value, ViewModel.Columns.Value
                 }
             };
             ((IMainWindow)Owner!).HandleUserCommand(newCommand);
