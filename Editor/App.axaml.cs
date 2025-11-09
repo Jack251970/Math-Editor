@@ -129,6 +129,10 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             {
                 singleView.MainView = new MainView();
             }*/
+            else if (Design.IsDesignMode)
+            {
+                // Ignored so that Avalonia previewer can work
+            }
             else
             {
                 throw new NotSupportedException("Unsupported application lifetime");
