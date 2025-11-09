@@ -89,6 +89,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                     .AddTransient<CodepointWindowViewModel>()
                     .AddTransient<CustomZoomWindowViewModel>()
                     .AddTransient<MainWindowViewModel>()
+                    .AddTransient<MatrixInputWindowViewModel>()
                     .AddTransient<SettingsWindowViewModel>()
                     .AddTransient<UnicodeSelectorWindowViewModel>()
             ).Build();
