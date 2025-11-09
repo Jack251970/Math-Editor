@@ -13,7 +13,6 @@ public partial class HistoryToolBar : UserControl
     public HistoryToolBar(IMainWindow mainWindow)
     {
         _mainWindow = mainWindow;
-        DataContext = this;
         InitializeComponent();
         RecentListBox.ItemsSource = App.Settings.RecentSymbolList;
         RecentListBox.FontFamily = FontFactory.GetFontFamily(FontType.STIXGeneral);
