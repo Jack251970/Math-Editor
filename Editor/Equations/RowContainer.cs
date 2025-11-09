@@ -977,8 +977,6 @@ namespace Editor
                 pasteAction.Equations[^2].Merge(newRow);
                 ActiveChild = childEquations[index + pasteAction.Equations.Count - 3];
                 ((EquationRow)ActiveChild).MoveToEnd();
-                // TODO: Check if we need this?
-                FontSize = FontSize;
                 SelectedItems = 0;
             }
         }

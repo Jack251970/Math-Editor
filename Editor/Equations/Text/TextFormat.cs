@@ -10,7 +10,7 @@ namespace Editor
 
         public double FontSize { get; private set; }
         public FontType FontType { get; private set; }
-        public FontFamily FontFamily { get; private set; }
+        public FontFamily FontFamily { get; private set; } = null!;
         public FontStyle FontStyle { get; private set; }
         public FontWeight FontWeight { get; private set; }
         public SolidColorBrush TextBrush { get; private set; }
@@ -58,8 +58,7 @@ namespace Editor
             SolidColorBrush brush;
             if (string.Equals(brushString, ThemeAwareTextBrushString, StringComparison.OrdinalIgnoreCase))
             {
-                // TODO: Check if this can work?
-                brush = (SolidColorBrush)PenManager.TextFillColorPrimaryBrush;
+                brush = PenManager.TextFillColorPrimaryBrush;
             }
             else
             {
