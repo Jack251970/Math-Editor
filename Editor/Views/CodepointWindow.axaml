@@ -23,15 +23,12 @@
             VerticalAlignment="Center"
             Orientation="Horizontal">
             <Label VerticalContentAlignment="Center" Content="{DynamicResource CodepointWindow_UnicodeValue}" />
-            <!-- // TODO: Set Formatter for it -->
-            <!--  Unicode Value Maximum: 0x10FFFF, 1114111, 04177777  -->
-            <NumericUpDown
+            <TextBox
                 x:Name="UnicodeValueBox"
                 Width="100"
                 Margin="5 0 0 0"
-                Maximum="4177777"
-                Minimum="0"
-                Text="{Binding Number, Mode=TwoWay}" />
+                VerticalAlignment="Center"
+                Text="{Binding NumberText, Mode=TwoWay}" />
             <ComboBox
                 Width="125"
                 VerticalAlignment="Center"

@@ -14,17 +14,16 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
     {
         DataContext = ViewModel;
         InitializeComponent();
-        // TODO: Add support for this.
-        /*UnicodeValueBox.NumberFormatter = new CodepointNumberFormatter(this);*/
     }
 
     private void InsertButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.Number > 0)
+        if (ViewModel.Number.HasValue &&
+            ViewModel.Number.Value > 0)
         {
             var commandDetails = new CommandDetails
             {
-                UnicodeString = Convert.ToChar((uint)ViewModel.Number).ToString(),
+                UnicodeString = Convert.ToChar(ViewModel.Number.Value).ToString(),
                 CommandType = CommandType.Text
             };
             ((IMainWindow)Owner!).HandleToolBarCommand(commandDetails);
