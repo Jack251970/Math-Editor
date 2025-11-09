@@ -8,17 +8,15 @@ public partial class MatrixInputWindow : Window
 {
     public MatrixInputWindowViewModel ViewModel { get; } = Ioc.Default.GetRequiredService<MatrixInputWindowViewModel>();
 
-    public MatrixInputWindow()
+    public MatrixInputWindow() : this(3, 3)
     {
-        DataContext = ViewModel;
-        InitializeComponent();
     }
 
     public MatrixInputWindow(int rows, int columns)
     {
         ViewModel.Rows = rows;
         ViewModel.Columns = columns;
-        DataContext = this;
+        DataContext = ViewModel;
         InitializeComponent();
     }
 

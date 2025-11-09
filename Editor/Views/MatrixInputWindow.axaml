@@ -33,23 +33,29 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Text="{DynamicResource MatrixInputWindow_Rows}" />
-            <!-- NumberFormatter="{StaticResource IntegerNumberFormatter}" -->
             <NumericUpDown
                 Grid.Column="2"
-                Width="120"
+                Width="150"
                 Minimum="1"
+                Maximum="100"
+                Increment="1"
+                ParsingNumberStyle="Integer"
+                FormatString="N0"
                 Value="{Binding Rows, Mode=TwoWay}" />
             <TextBlock
                 Grid.Row="2"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Text="{DynamicResource MatrixInputWindow_Columns}" />
-            <!-- NumberFormatter="{StaticResource IntegerNumberFormatter}" -->
             <NumericUpDown
                 Grid.Row="2"
                 Grid.Column="2"
-                Width="120"
+                Width="150"
                 Minimum="1"
+                Maximum="100"
+                Increment="1"
+                ParsingNumberStyle="Integer"
+                FormatString="N0"
                 Value="{Binding Columns, Mode=TwoWay}" />
         </Grid>
         <StackPanel
