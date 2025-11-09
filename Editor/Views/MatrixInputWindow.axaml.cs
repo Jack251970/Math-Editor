@@ -29,7 +29,7 @@ public partial class MatrixInputWindow : Window
                 CommandType = CommandType.Matrix,
                 CommandParam = new int[]
                 {
-                    (int)ViewModel.Rows, (int)ViewModel.Columns
+                    ViewModel.Rows, ViewModel.Columns
                 }
             };
             ((IMainWindow)Owner!).HandleUserCommand(newCommand);
