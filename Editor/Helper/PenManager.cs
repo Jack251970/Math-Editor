@@ -83,15 +83,11 @@ namespace Editor
             {
                 lock (_rowBoxPenLock)
                 {
-                    // TODO: Do we need ToImmutable()?
-                    if (_rowBoxPen is null)
+                    _rowBoxPen ??= new(GetAccentFillColorDefaultBrush(), 1.1)
                     {
-                        _rowBoxPen = new(GetAccentFillColorDefaultBrush(), 1.1)
-                        {
-                            LineCap = PenLineCap.Flat,
-                            DashStyle = new DashStyle([2, 2], 0)
-                        };
-                    }
+                        LineCap = PenLineCap.Flat,
+                        DashStyle = new DashStyle([2, 2], 0)
+                    };
                     return _rowBoxPen;
                 }
             }
@@ -115,13 +111,10 @@ namespace Editor
             {
                 lock (_deleteableBrushLock)
                 {
-                    if (_deleteableBrush is null)
+                    _deleteableBrush ??= new SolidColorBrush(Colors.Gray)
                     {
-                        _deleteableBrush = new SolidColorBrush(Colors.Gray)
-                        {
-                            Opacity = 0.5
-                        };
-                    }
+                        Opacity = 0.5
+                    };
                     return _deleteableBrush;
                 }
             }
