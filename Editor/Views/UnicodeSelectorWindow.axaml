@@ -114,7 +114,8 @@
                 IsReadOnly="True"
                 Text="{Binding CharacterCodeText, Mode=OneWay}" />
             <ComboBox
-                Width="120"
+                Width="125"
+                VerticalAlignment="Center"
                 DisplayMemberBinding="{Binding Display}"
                 ItemsSource="{Binding AllUnicodeFormats, Mode=OneTime}"
                 SelectedValue="{Binding UnicodeFormat, Mode=TwoWay}"
