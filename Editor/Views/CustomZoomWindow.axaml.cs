@@ -16,11 +16,8 @@ public partial class CustomZoomWindow : Window
 
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.Number is null)
-        {
-            return;
-        }
-        var percentage = (int)ViewModel.Number;
+        if (!ViewModel.Number.HasValue) return;
+        var percentage = ViewModel.Number.Value;
         if (percentage > 0 && percentage < ViewModel.MaxPercentage)
         {
             ((IMainWindow)Owner!).CustomZoomPercentage = percentage;

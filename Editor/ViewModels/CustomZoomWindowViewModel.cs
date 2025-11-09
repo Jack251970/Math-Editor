@@ -7,5 +7,5 @@ public partial class CustomZoomWindowViewModel : ObservableObject
     public int MaxPercentage { get; } = 9999;
 
     [ObservableProperty]
-    private double? _number = null;
+    private int? _number = null;
 }
