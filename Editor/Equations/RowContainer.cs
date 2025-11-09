@@ -618,13 +618,40 @@ namespace Editor
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            foreach (var eb in childEquations)
+            if (mousePoint.X < 0 || childEquations.Count == 0) return false;
+            if (childEquations.Count == 1)
             {
-                var rect = new Rect(0, eb.Top, double.MaxValue, eb.Height);
-                if (rect.Contains(mousePoint))
+                ActiveChild = childEquations[0];
+                return childEquations[0].ConsumeMouseClick(mousePoint);
+            }
+            else
+            {
+                foreach (var eb in childEquations)
                 {
-                    ActiveChild = eb;
-                    return eb.ConsumeMouseClick(mousePoint);
+                    if (eb == childEquations.First())
+                    {
+                        if (mousePoint.Y <= eb.Bottom)
+                        {
+                            ActiveChild = childEquations[0];
+                            return childEquations[0].ConsumeMouseClick(mousePoint);
+                        }
+                    }
+                    else if (eb == childEquations.Last())
+                    {
+                        if (mousePoint.Y >= eb.Top)
+                        {
+                            ActiveChild = eb;
+                            return eb.ConsumeMouseClick(mousePoint);
+                        }
+                    }
+                    else
+                    {
+                        if (mousePoint.Y <= eb.Bottom && mousePoint.Y >= eb.Top)
+                        {
+                            ActiveChild = eb;
+                            return eb.ConsumeMouseClick(mousePoint);
+                        }
+                    }
                 }
             }
             return false;
