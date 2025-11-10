@@ -188,6 +188,7 @@ public partial class EditorControl : UserControl, IDisposable
             ForceCaretVisible(false); // When we click, we want to see the caret immediately
             lastMouseLocation = mousePosition;
             isDragging = true;
+            // TODO: Implement isDoubleClicked properly
             if (isDoubleClicked)
             {
                 isDoubleClicked = false;
@@ -206,6 +207,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         Focus();
 
+        // TODO: It cannot be displayed?
         // Build context menu
         var menu = new ContextMenu();
 
