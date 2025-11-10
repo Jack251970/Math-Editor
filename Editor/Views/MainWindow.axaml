@@ -131,11 +131,13 @@
                             Header="{DynamicResource MainWindow_Export_WMP}" />
                     </MenuItem>
                     <Separator />
+                    <!--
                     <MenuItem
                         Command="{Binding PrintCommand, Mode=OneTime}"
                         Header="{DynamicResource MainWindow_Print}"
                         InputGesture="Ctrl+P" />
                     <Separator />
+                    -->
                     <MenuItem
                         Command="{Binding CloseCommand, Mode=OneTime}"
                         Header="{DynamicResource Close}"

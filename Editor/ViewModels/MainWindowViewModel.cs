@@ -519,7 +519,6 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [RelayCommand]
     private async Task PrintAsync()
     {
-        // TODO: Support print
         /*var printDialog = new PrintDialog();
         if (printDialog.ShowDialog() == true)
         {
