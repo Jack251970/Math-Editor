@@ -58,7 +58,7 @@ namespace Editor
         public int SelectionStartIndex { get; set; }
         public int SelectedItems { get; set; } //this is a directed value (as on a real line!!)
 
-        protected Brush debugBrush;
+        protected IImmutableBrush debugBrush;
         private readonly byte r = 80;
         private readonly byte g = 80;
         private readonly byte b = 80;
@@ -77,7 +77,7 @@ namespace Editor
                 g = (byte)(parent.r + 15);
                 b = (byte)(parent.r + 15);
             }
-            debugBrush = new SolidColorBrush(Color.FromArgb(100, r, g, b));
+            debugBrush = new SolidColorBrush(Color.FromArgb(100, r, g, b)).ToImmutable();
         }
 
         public virtual bool ConsumeMouseClick(Point mousePoint) { return false; }
