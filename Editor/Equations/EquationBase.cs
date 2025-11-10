@@ -105,6 +105,14 @@ namespace Editor
         public virtual void Paste(XElement xe) { }
         public virtual void SetCursorOnKeyUpDown(Key key, Point point) { }
         public virtual void ModifySelection(string operation, object argument, bool applied, bool addUndo) { }
+        public virtual IEnumerable<EquationBase> GetChildrens() { return []; }
+        public virtual void ModifySolidBrush()
+        {
+            foreach (var item in GetChildrens())
+            {
+                item.ModifySolidBrush();
+            }
+        }
 
         public virtual void CalculateSize()
         {

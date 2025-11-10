@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using iNKORE.UI.WPF.Modern;
 using iNKORE.UI.WPF.Modern.Controls;
 using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
 using Timer = System.Timers.Timer;
@@ -44,6 +45,12 @@ public partial class EditorControl : UserControl, IDisposable
         };
         timer = new Timer(BlinkPeriod);
         timer.Elapsed += Timer_Elapsed;
+        ThemeManager.Current.ActualApplicationThemeChanged += ThemeManager_ActualApplicationThemeChanged;
+    }
+
+    private void ThemeManager_ActualApplicationThemeChanged(ThemeManager sender, object args)
+    {
+        equationRoot.ModifySolidBrush();
     }
 
     public void SetTimer(bool enabled)
@@ -549,6 +556,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         if (!_isDisposed)
         {
+            ThemeManager.Current.ActualApplicationThemeChanged += ThemeManager_ActualApplicationThemeChanged;
             vCaret.Dispose();
             hCaret.Dispose();
             timer.Dispose();

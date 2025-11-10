@@ -7,7 +7,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using iNKORE.UI.WPF.Modern;
 
 namespace Editor
 {
@@ -101,13 +100,6 @@ namespace Editor
             : base(owner, parent)
         {
             CalculateSize();
-            // TODO: Find correct way to unsubscribe this event
-            ThemeManager.Current.ActualApplicationThemeChanged += ThemeManager_ActualApplicationThemeChanged;
-        }
-
-        private void ThemeManager_ActualApplicationThemeChanged(ThemeManager sender, object args)
-        {
-            ModifySolidBrush();
         }
 
         private void SetCaretIndex(int index)
@@ -907,7 +899,7 @@ namespace Editor
             }
         }
 
-        private void ModifySolidBrush()
+        public override void ModifySolidBrush()
         {
             var startIndex = 0;
             var count = formats.Count;
