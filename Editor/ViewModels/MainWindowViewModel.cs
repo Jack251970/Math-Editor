@@ -255,7 +255,6 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         }
         else
         {
-            // TODO: Fix issue that this item will be unchecked after many changes
             CustomZoomMenuChecked = true;
             CustomZoomMenuHeader = Localize.MainWindow_CustomPercentage(CustomZoomPercentage);
             if (_lastZoomPercentageItem != null)
