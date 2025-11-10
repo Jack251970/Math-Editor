@@ -100,7 +100,7 @@ namespace Editor
             : base(owner, parent)
         {
             CalculateSize();
-            // TODO: Check if we need this?
+            // TODO: Fix issue that text is not redrawn when theme changes (We need to select it?)
             // TODO: Find correct way to unsubscribe this event?
             Application.Current!.ActualThemeVariantChanged += Application_ActualThemeVariantChanged;
         }
