@@ -28,6 +28,7 @@
                 Width="100"
                 Margin="5 0 0 0"
                 VerticalAlignment="Center"
+                TextChanging="UnicodeValueBox_TextChanging"
                 Text="{Binding NumberText, Mode=TwoWay}" />
             <ComboBox
                 Width="125"

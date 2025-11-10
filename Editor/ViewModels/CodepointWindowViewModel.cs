@@ -20,41 +20,43 @@ public partial class CodepointWindowViewModel : ObservableObject, ICultureInfoCh
     [ObservableProperty]
     private string? _numberText = null;
 
-    [ObservableProperty]
-    private uint? _number = null;
+    public uint? Number { get; private set; } = null;
 
     partial void OnUnicodeFormatChanged(UnicodeFormat value)
     {
-        UpdateNumberTextFromNumber();
+        NumberText = GetNumberTextFromNumber();
     }
 
-    partial void OnNumberTextChanged(string? value)
+    public bool TryUpdateNumberFromNumberText(string text)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(text))
         {
             Number = null;
-            return;
+            return false;
         }
 
-        if (TryConvertToNumber(value.Trim(), out var parsed, out var _))
+        if (TryConvertToNumber(text, out var parsed, out var _))
         {
             if (parsed < 0)
             {
                 Number = 0;
+                return true;
             }
             else if (parsed > MaxUnicodeValue)
             {
                 Number = MaxUnicodeValue;
+                return true;
             }
             else
             {
                 Number = parsed;
+                return false;
             }
-            UpdateNumberTextFromNumber();
         }
         else
         {
             Number = null;
+            return true;
         }
     }
 
@@ -89,13 +91,13 @@ public partial class CodepointWindowViewModel : ObservableObject, ICultureInfoCh
         }
     }
 
-    private void UpdateNumberTextFromNumber()
+    public string GetNumberTextFromNumber()
     {
         try
         {
             if (Number.HasValue)
             {
-                NumberText = UnicodeFormat switch
+                return UnicodeFormat switch
                 {
                     UnicodeFormat.Decimal => Number.Value.ToString(CultureInfo.InvariantCulture),
                     UnicodeFormat.Octal => Convert.ToString(Number.Value, 8),
@@ -105,12 +107,13 @@ public partial class CodepointWindowViewModel : ObservableObject, ICultureInfoCh
             }
             else
             {
-                NumberText = string.Empty;
+                return string.Empty;
             }
         }
         catch (Exception e)
         {
             EditorLogger.Error(ClassName, "Failed to update number text from number.", e);
+            return string.Empty;
         }
     }
 
