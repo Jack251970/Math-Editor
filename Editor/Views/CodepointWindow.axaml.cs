@@ -95,7 +95,7 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
         if (handled)
         {
             // This is a workaround for Avalonia not supporting updating text in TextBox.TextChanging event:
-            // https://github.com/AvaloniaUI/Avalonia/issues/20022
+            // https://github.com/AvaloniaUI/Avalonia/issues/20038
             // It can cause little flicker when updating the TextBox.Text property but we have no choice.
             _ = Dispatcher.UIThread.InvokeAsync(() =>
             {
