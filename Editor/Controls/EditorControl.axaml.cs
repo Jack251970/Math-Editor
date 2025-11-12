@@ -176,41 +176,33 @@ public partial class EditorControl : UserControl, IDisposable
     }
 
     private bool isDragging = false;
-    private bool isDoubleClicked = false;
 
     private void EditorControl_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is UserControl control)
+        var mousePosition = e.GetPosition(this);
+        if (equationRoot.ConsumeMouseClick(mousePosition))
         {
-            if (e.Properties.IsRightButtonPressed)
-            {
-                EditorControl_PointerRightButtonPressed(control, e);
-            }
-            var mousePosition = e.GetPosition(this);
-            if (equationRoot.ConsumeMouseClick(mousePosition))
-            {
-                InvalidateVisual();
-            }
-            Focus();
-            ForceCaretVisible(false); // When we click, we want to see the caret immediately
-            lastMouseLocation = mousePosition;
-            isDragging = true;
-            // TODO: Implement isDoubleClicked properly
-            if (isDoubleClicked)
-            {
-                isDoubleClicked = false;
-                equationRoot.HandleMouseDoubleClick(mousePosition);
-                InvalidateVisual();
-            }
+            InvalidateVisual();
+        }
+        Focus();
+        ForceCaretVisible(false); // When we click, we want to see the caret immediately
+        lastMouseLocation = mousePosition;
+        isDragging = true;
+
+        // Raise right button pressed event after handling left button pressed event
+        if (e.Properties.IsRightButtonPressed)
+        {
+            EditorControl_PointerRightButtonPressed(sender, e);
         }
     }
 
-    private void EditorControl_PointerDoubleClicked(object sender, PointerPressedEventArgs e)
+    private void EditorControl_DoubleTapped(object? sender, TappedEventArgs e)
     {
-        isDoubleClicked = true;
+        equationRoot.HandleMouseDoubleClick(e.GetPosition(this));
+        InvalidateVisual();
     }
 
-    private void EditorControl_PointerRightButtonPressed(object sender, PointerPressedEventArgs e)
+    private void EditorControl_PointerRightButtonPressed(object? sender, PointerPressedEventArgs e)
     {
         Focus();
 

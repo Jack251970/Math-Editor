@@ -12,6 +12,7 @@
     PointerExited="EditorControl_PointerExited"
     PointerMoved="EditorControl_PointerMoved"
     PointerReleased="EditorControl_PointerReleased"
+    DoubleTapped="EditorControl_DoubleTapped"
     KeyDown="EditorControl_KeyDown"
     KeyUp="EditorControl_KeyUp"
     Loaded="EditorControl_Loaded"
