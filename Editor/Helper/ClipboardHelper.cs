@@ -84,9 +84,9 @@ public class ClipboardHelper : ObservableObject, IDisposable
     {
         if (!_isDisposed)
         {
-            _isDisposed = true;
             _timer.Elapsed -= Timer_Elapsed;
             _timer.Dispose();
+            _isDisposed = true;
         }
     }
 
