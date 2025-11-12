@@ -206,9 +206,8 @@ public partial class EditorControl : UserControl, IDisposable
     {
         Focus();
 
-        // TODO: It cannot be displayed?
-        // Build context menu
-        var menu = new ContextMenu();
+        // Build context menu using FluentAvalonia MenuFlyout to reliably show at pointer
+        var menu = new MenuFlyout();
 
         var hasSelection = _mainWindow.IsSelecting == true;
         var canPaste = _mainWindow.ClipboardHelper.CanPaste;
@@ -218,9 +217,10 @@ public partial class EditorControl : UserControl, IDisposable
             var mi = new MenuItem
             {
                 Header = header,
-                Icon = new FontIcon()
+                Icon = new FontIcon
                 {
-                    Glyph = glyph
+                    Glyph = glyph,
+                    FontFamily = (FontFamily)Application.Current!.FindResource("SymbolThemeFontFamily")!
                 },
                 IsEnabled = isEnabled
             };
@@ -259,12 +259,7 @@ public partial class EditorControl : UserControl, IDisposable
         AddMenuItem(Localize.MainWindow_SelectAll(), "\uE8B3", true, SelectAll);
 
         // Show at mouse position
-        var pos = e.GetPosition(this);
-        menu.PlacementTarget = this;
-        menu.Placement = PlacementMode.Pointer;
-        menu.HorizontalOffset = pos.X;
-        menu.VerticalOffset = pos.Y;
-        menu.Open(this);
+        menu.ShowAt(this, true);
 
         e.Handled = true;
     }
