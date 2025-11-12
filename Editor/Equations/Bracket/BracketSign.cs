@@ -9,10 +9,10 @@ namespace Editor
     public sealed class BracketSign : EquationBase
     {
         public BracketSignType SignType { get; set; }
-        private FormattedText? signText; //used by certain brackets
-        private FormattedText? signText2; //used by certain brackets
-        private FormattedText? midText; //for bigger curly brackets
-        private FormattedText? extension; //for bigger curly brackets
+        private FormattedTextExtended? signText; //used by certain brackets
+        private FormattedTextExtended? signText2; //used by certain brackets
+        private FormattedTextExtended? midText; //for bigger curly brackets
+        private FormattedTextExtended? extension; //for bigger curly brackets
 
         private double BracketBreakLimit => FontSize * 2.8;
 
@@ -90,9 +90,9 @@ namespace Editor
                 var text1 = SignType == BracketSignType.LeftRound ? "\u239b" : "\u239e";
                 var text2 = SignType == BracketSignType.LeftRound ? "\u239d" : "\u23a0";
                 var ext = SignType == BracketSignType.LeftRound ? "\u239c" : "\u239f";
-                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                extension = FontFactory.GetFormattedText(ext, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText = FontFactory.GetFormattedTextExtended(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText2 = FontFactory.GetFormattedTextExtended(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                extension = FontFactory.GetFormattedTextExtended(ext, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
             }
         }
 
@@ -123,10 +123,10 @@ namespace Editor
                 var text1 = SignType == BracketSignType.LeftCurly ? "\u23a7" : "\u23ab";
                 var midtex = SignType == BracketSignType.LeftCurly ? "\u23a8" : "\u23ac";
                 var text2 = SignType == BracketSignType.LeftCurly ? "\u23a9" : "\u23ad";
-                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                midText = FontFactory.GetFormattedText(midtex, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                extension = FontFactory.GetFormattedText("\u23AA", FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText = FontFactory.GetFormattedTextExtended(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                midText = FontFactory.GetFormattedTextExtended(midtex, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                extension = FontFactory.GetFormattedTextExtended("\u23AA", FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText2 = FontFactory.GetFormattedTextExtended(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Editor
             var factor = .4;
             do
             {
-                signText = FontFactory.GetFormattedText(unicodeCharText, fontType, FontSize * factor, forceBlackBrush);
+                signText = FontFactory.GetFormattedTextExtended(unicodeCharText, fontType, FontSize * factor, forceBlackBrush);
                 factor += .02;
             }
             while (Height > signText.Extent);

@@ -340,7 +340,7 @@ namespace Editor
                     var index = childEquations.IndexOf(ActiveChild) + 1;
                     newChildren.RemoveAt(0);
                     childEquations.InsertRange(index, newChildren);
-                    ((TextEquation)ActiveChild).ConsumeFormattedText(action.FirstNewText, action.FirstNewFormats, action.FirstNewModes, action.FirstNewDecorations, false);
+                    ((TextEquation)ActiveChild).ConsumeFormattedTextExtended(action.FirstNewText, action.FirstNewFormats, action.FirstNewModes, action.FirstNewDecorations, false);
                     ((TextEquation)newChildren.Last()).Merge((TextEquation)newChild!);
                     ActiveChild = newChildren.Last();
                     UndoManager.AddUndoAction(action);
@@ -378,8 +378,8 @@ namespace Editor
 
                 var firstEquation = new TextEquation(Owner, this);
                 var lastEquation = new TextEquation(Owner, this);
-                firstEquation.ConsumeFormattedText(firstText, firstFormats, firstModes, firstDecorations, false);
-                lastEquation.ConsumeFormattedText(lastText, lastFormats, lastModes, lastDecorations, false);
+                firstEquation.ConsumeFormattedTextExtended(firstText, firstFormats, firstModes, firstDecorations, false);
+                lastEquation.ConsumeFormattedTextExtended(lastText, lastFormats, lastModes, lastDecorations, false);
 
                 var equations = new List<EquationBase>() { firstEquation };
                 for (var i = startIndex + 1; i < startIndex + count; i++)
@@ -1243,7 +1243,7 @@ namespace Editor
                 var newChild = ActiveChild.Split(this);
                 var index = childEquations.IndexOf(ActiveChild) + 1;
                 childEquations.InsertRange(index, pasteAction.Equations);
-                ((TextEquation)ActiveChild).ConsumeFormattedText(pasteAction.FirstNewText, pasteAction.FirstNewFormats, pasteAction.FirstNewModes, pasteAction.FirstNewDecorations, false);
+                ((TextEquation)ActiveChild).ConsumeFormattedTextExtended(pasteAction.FirstNewText, pasteAction.FirstNewFormats, pasteAction.FirstNewModes, pasteAction.FirstNewDecorations, false);
                 ((TextEquation)pasteAction.Equations.Last()).Merge((TextEquation)newChild!);
                 ActiveChild = childEquations[index + pasteAction.Equations.Count - 1];
                 foreach (var eb in pasteAction.Equations)

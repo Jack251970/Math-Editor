@@ -86,7 +86,7 @@ namespace Editor
 
         public virtual EquationBase? Split(EquationContainer newParent) { return null; }
         public virtual void ConsumeText(string text) { }
-        public virtual void ConsumeFormattedText(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo) { }
+        public virtual void ConsumeFormattedTextExtended(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo) { }
         public virtual bool ConsumeKey(Key key) { return false; }
         public virtual Point GetVerticalCaretLocation() { return location; }
         public virtual double GetVerticalCaretLength() { return height; }

@@ -288,11 +288,11 @@ namespace Editor
 
                 var newFirstRow = new EquationRow(Owner, this);
                 var newLastRow = new EquationRow(Owner, this);
-                newFirstRow.GetFirstTextEquation()!.ConsumeFormattedText(firstRowSelectedItems.First().GetSelectedText(),
+                newFirstRow.GetFirstTextEquation()!.ConsumeFormattedTextExtended(firstRowSelectedItems.First().GetSelectedText(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedFormats(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedModes(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedDecorations(), false);
-                newLastRow.GetFirstTextEquation()!.ConsumeFormattedText(lastRowSelectedItems.Last().GetSelectedText(),
+                newLastRow.GetFirstTextEquation()!.ConsumeFormattedTextExtended(lastRowSelectedItems.Last().GetSelectedText(),
                                                                        ((TextEquation)lastRowSelectedItems.Last()).GetSelectedFormats(),
                                                                        ((TextEquation)lastRowSelectedItems.Last()).GetSelectedModes(),
                                                                        ((TextEquation)lastRowSelectedItems.First()).GetSelectedDecorations(),
@@ -996,7 +996,7 @@ namespace Editor
             {
                 activeRow.ResetRowEquation(pasteAction.ActiveTextInChildRow, pasteAction.ActiveEquationSelectionIndex, pasteAction.ActiveEquationSelectedItems);
                 var newRow = (EquationRow)activeRow.Split(this)!;
-                pasteAction.Equations[^2].GetLastTextEquation()!.SetFormattedText(pasteAction.TailTextOfPastedRows, pasteAction.TailFormatsOfPastedRows, pasteAction.TailModesOfPastedRows);
+                pasteAction.Equations[^2].GetLastTextEquation()!.SetFormattedTextExtended(pasteAction.TailTextOfPastedRows, pasteAction.TailFormatsOfPastedRows, pasteAction.TailModesOfPastedRows);
                 activeRow.Merge(pasteAction.Equations.First());
                 var index = childEquations.IndexOf(ActiveChild) + 1;
                 childEquations.InsertRange(index, pasteAction.Equations.Skip(1));
@@ -1018,7 +1018,7 @@ namespace Editor
             {
                 textAction.ActiveTextInRow.ResetTextEquation(textAction.CaretIndexOfActiveText, textAction.SelectionStartIndexOfTextEquation, textAction.SelectedItemsOfTextEquation, textAction.TextEquationContents, textAction.TextEquationFormats, textAction.TextEquationModes, textAction.TextEquationDecoration);
                 UndoManager.DisableAddingActions = true;
-                ActiveChild.ConsumeFormattedText(textAction.FirstLineOfInsertedText, textAction.FirstFormatsOfInsertedText, textAction.FirstModesOfInsertedText, textAction.FirstDecorationsOfInsertedText, false);
+                ActiveChild.ConsumeFormattedTextExtended(textAction.FirstLineOfInsertedText, textAction.FirstFormatsOfInsertedText, textAction.FirstModesOfInsertedText, textAction.FirstDecorationsOfInsertedText, false);
                 UndoManager.DisableAddingActions = false;
                 var splitRow = (EquationRow)ActiveChild.Split(this)!;
                 childEquations.InsertRange(childEquations.IndexOf(ActiveChild) + 1, textAction.Equations);

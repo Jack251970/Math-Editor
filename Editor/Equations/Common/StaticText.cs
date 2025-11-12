@@ -13,7 +13,7 @@ namespace Editor
         protected double LeftMarginFactor = 0;
         protected double RightMarginFactor = 0;
 
-        private FormattedText _formattedText = null!;
+        private FormattedTextExtended _formattedTextExtended = null!;
 
         public StaticText(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
@@ -23,8 +23,8 @@ namespace Editor
 
         public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            //dc.DrawText(formattedText, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height));
-            _formattedText.DrawTextTopLeftAligned(dc, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height), forceBlackBrush);
+            //dc.DrawText(formattedTextExtended, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height));
+            _formattedTextExtended.DrawTextTopLeftAligned(dc, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height), forceBlackBrush);
         }
 
         public override double FontSize
@@ -39,13 +39,13 @@ namespace Editor
 
         protected void ReformatSign()
         {
-            _formattedText = FontFactory.GetFormattedText(Text, FontType, FontSize * FontSizeFactor, FontWeight, false);
-            Width = _formattedText.GetFullWidth() + LeftMarginFactor * FontSize + RightMarginFactor * FontSize; // * WidthFactor;
-            Height = _formattedText.Extent;
+            _formattedTextExtended = FontFactory.GetFormattedTextExtended(Text, FontType, FontSize * FontSizeFactor, FontWeight, false);
+            Width = _formattedTextExtended.GetFullWidth() + LeftMarginFactor * FontSize + RightMarginFactor * FontSize; // * WidthFactor;
+            Height = _formattedTextExtended.Extent;
         }
 
-        public double OverhangTrailing => _formattedText.OverhangTrailing;
+        public double OverhangTrailing => _formattedTextExtended.OverhangTrailing;
 
-        public double OverhangLeading => _formattedText.OverhangLeading;
+        public double OverhangLeading => _formattedTextExtended.OverhangLeading;
     }
 }

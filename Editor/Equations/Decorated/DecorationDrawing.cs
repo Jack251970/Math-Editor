@@ -8,9 +8,9 @@ namespace Editor
     public sealed class DecorationDrawing : EquationBase
     {
         private readonly DecorationType _decorationType;
-        private FormattedText _firstSign = null!; //only used by certain decorations
-        private FormattedText _secondSign = null!; //only used by certain decorations
-        private FormattedText _bar = null!;
+        private FormattedTextExtended _firstSign = null!; //only used by certain decorations
+        private FormattedTextExtended _secondSign = null!; //only used by certain decorations
+        private FormattedTextExtended _bar = null!;
 
         public DecorationDrawing(IMainWindow owner, EquationContainer parent, DecorationType decorationType)
             : base(owner, parent)
@@ -26,21 +26,21 @@ namespace Editor
             switch (_decorationType)
             {
                 case DecorationType.DoubleArrow:
-                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
-                    _secondSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
+                    _firstSign = FontFactory.GetFormattedTextExtended("\u02C2", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
+                    _secondSign = FontFactory.GetFormattedTextExtended("\u02C3", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
                     break;
                 case DecorationType.LeftArrow:
-                    _firstSign = FontFactory.GetFormattedText("\u02C2", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
+                    _firstSign = FontFactory.GetFormattedTextExtended("\u02C2", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
                     break;
                 case DecorationType.RightArrow:
-                    _firstSign = FontFactory.GetFormattedText("\u02C3", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
+                    _firstSign = FontFactory.GetFormattedTextExtended("\u02C3", FontType.STIXGeneral, FontSize * .7, forceBlackBrush);
                     break;
                 // It looks like it is unnecessary?
                 //case DecorationType.RightHarpoonUpBarb:
                 //case DecorationType.LeftHarpoonUpBarb:
                 //case DecorationType.RightHarpoonDownBarb:
                 //case DecorationType.LeftHarpoonDownBarb:
-                //    _firstSign = FontFactory.GetFormattedText("\u21BC", FontType.STIXGeneral, FontSize);
+                //    _firstSign = FontFactory.GetFormattedTextExtended("\u21BC", FontType.STIXGeneral, FontSize);
                 //    break;
                 case DecorationType.Parenthesis:
                     CreateParenthesisSigns(forceBlackBrush);
@@ -67,9 +67,9 @@ namespace Editor
             }
             else
             {
-                _firstSign = FontFactory.GetFormattedText("\uE142", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
-                _secondSign = FontFactory.GetFormattedText("\uE143", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
-                _bar = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                _firstSign = FontFactory.GetFormattedTextExtended("\uE142", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                _secondSign = FontFactory.GetFormattedTextExtended("\uE143", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                _bar = FontFactory.GetFormattedTextExtended("\uE14A", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
             }
         }
 
@@ -126,7 +126,7 @@ namespace Editor
             var factor = .1;
             do
             {
-                _firstSign = FontFactory.GetFormattedText(unicodeChar, fontType, FontSize * factor, forceBlackBrush);
+                _firstSign = FontFactory.GetFormattedTextExtended(unicodeChar, fontType, FontSize * factor, forceBlackBrush);
                 factor += .1;
             }
             while (Width > _firstSign.Width - _firstSign.OverhangLeading - _firstSign.OverhangTrailing);
@@ -284,11 +284,11 @@ namespace Editor
             var pen = forceBlackBrush ? BlackThinPen : ThinPen;
             if (Width < FontSize * 0.8)
             {
-                var text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, Width * 1.5, forceBlackBrush);
+                var text = FontFactory.GetFormattedTextExtended("\u2194", FontType.STIXGeneral, Width * 1.5, forceBlackBrush);
                 var factor = .1;
                 do
                 {
-                    text = FontFactory.GetFormattedText("\u2194", FontType.STIXGeneral, FontSize * factor, forceBlackBrush);
+                    text = FontFactory.GetFormattedTextExtended("\u2194", FontType.STIXGeneral, FontSize * factor, forceBlackBrush);
                     factor += .1;
                 }
                 while (Width > text.GetFullWidth());

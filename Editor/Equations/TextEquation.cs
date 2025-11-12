@@ -335,7 +335,7 @@ namespace Editor
                         var prevChar = textData[startIndex - 1];
                         if (!char.IsWhiteSpace(prevChar))
                         {
-                            var ftPrev = TextManager.GetFormattedText(prevChar.ToString(), formats[startIndex - 1]);
+                            var ftPrev = TextManager.GetFormattedTextExtended(prevChar.ToString(), formats[startIndex - 1]);
                             wStart += ftPrev.OverhangTrailing;
                         }
                     }
@@ -349,7 +349,7 @@ namespace Editor
                         var lastSelChar = textData[endIndexExclusive - 1];
                         if (!char.IsWhiteSpace(lastSelChar))
                         {
-                            var ftLast = TextManager.GetFormattedText(lastSelChar.ToString(), formats[endIndexExclusive - 1]);
+                            var ftLast = TextManager.GetFormattedTextExtended(lastSelChar.ToString(), formats[endIndexExclusive - 1]);
                             wEnd += ftLast.OverhangTrailing;
                         }
                     }
@@ -481,7 +481,7 @@ namespace Editor
                         modes[i] = EditorMode.Math;
                     }
                 }
-                ConsumeFormattedText(text, formats, modes, decorations, true);
+                ConsumeFormattedTextExtended(text, formats, modes, decorations, true);
             }
         }
 
@@ -705,7 +705,7 @@ namespace Editor
             FormatText();
         }
 
-        public override void ConsumeFormattedText(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo)
+        public override void ConsumeFormattedTextExtended(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo)
         {
             //this.decorations.AddRange(decorations);
             textData.Insert(caretIndex, text);
@@ -727,7 +727,7 @@ namespace Editor
             FormatText();
         }
 
-        public void SetFormattedText(string text, int[] formats, EditorMode[] modes)
+        public void SetFormattedTextExtended(string text, int[] formats, EditorMode[] modes)
         {
             textData.Clear();
             this.formats.Clear();
@@ -929,8 +929,8 @@ namespace Editor
             double left;
             for (caretIndex = textData.Length; caretIndex > 0; caretIndex--)
             {
-                var lastChar = TextManager.GetFormattedText(textData.ToString(caretIndex - 1, 1), formats.GetRange(caretIndex - 1, 1), forceBlackBrush);
-                //FormattedText textPart = textManager.GetFormattedText(textData.ToString(0, caretIndex), formats.GetRange(0, caretIndex));
+                var lastChar = TextManager.GetFormattedTextExtended(textData.ToString(caretIndex - 1, 1), formats.GetRange(caretIndex - 1, 1), forceBlackBrush);
+                //FormattedTextExtended textPart = textManager.GetFormattedTextExtended(textData.ToString(0, caretIndex), formats.GetRange(0, caretIndex));
                 left = GetWidth(0, caretIndex, false) + Left;
                 //left = textPart.GetFullWidth() + Left;
                 if (left <= mousePoint.X + lastChar.GetFullWidth() / 2)
@@ -990,14 +990,13 @@ namespace Editor
                             var text = textData.ToString(done, subLimit - done);
                             if (text.Length > 0)
                             {
-                                var ft = TextManager.GetFormattedText(text, [.. formats.Skip(done).Take(text.Length)], forceBlackBrush);
+                                var ft = TextManager.GetFormattedTextExtended(text, [.. formats.Skip(done).Take(text.Length)], forceBlackBrush);
                                 width += ft.GetFullWidth();
-                                // TODO: Changed from done += ft.Text.Length;
-                                done += text.Length;
+                                done += ft.Text.Length;
                             }
                             if (j < subGroups.Count)
                             {
-                                var charFt = TextManager.GetFormattedText(textData[subGroups[j].Key].ToString(), formats[subGroups[j].Key]);
+                                var charFt = TextManager.GetFormattedTextExtended(textData[subGroups[j].Key].ToString(), formats[subGroups[j].Key]);
                                 var decoWidth = GetDecoratedCharWidth(charFt, [.. subGroups[j]], done, out var charLeft, out var hCenter);
                                 width += decoWidth;
                                 done++;
@@ -1012,7 +1011,7 @@ namespace Editor
                     {
                         var addSpaceBefore = symIndexes[i] <= 0 || !symbols.Contains(textData[symIndexes[i] - 1]);
                         width += addSpaceBefore ? SymSpace : 0;
-                        var ft = TextManager.GetFormattedText(textData[symIndexes[i]].ToString(), formats[symIndexes[i]]);
+                        var ft = TextManager.GetFormattedTextExtended(textData[symIndexes[i]].ToString(), formats[symIndexes[i]]);
                         var group = groups.FirstOrDefault(x => x.Key == symIndexes[i]);
                         width += ft.GetFullWidth() + SymSpace;
                         //dc.DrawLine(new Pen(Brushes.Purple, 1), new Point(left, Top), new Point(left, Bottom));
@@ -1052,7 +1051,7 @@ namespace Editor
                             var text = textData.ToString(done, subLimit - done);
                             if (text.Length > 0)
                             {
-                                var ft = TextManager.GetFormattedText(text, [.. formats.Skip(done).Take(text.Length)], forceBlackBrush);
+                                var ft = TextManager.GetFormattedTextExtended(text, [.. formats.Skip(done).Take(text.Length)], forceBlackBrush);
                                 ft.DrawTextLeftAligned(dc, new Point(left, Top - topExtra), forceBlackBrush);
                                 left += ft.GetFullWidth();
                                 //dc.DrawLine(new Pen(Brushes.Blue, 1), new Point(left, Top), new Point(left, Bottom));
@@ -1066,12 +1065,11 @@ namespace Editor
                                     //left -= ft.OverhangTrailing;
                                     //dc.DrawLine(new Pen(Brushes.Green, 1), new Point(left, Top), new Point(left, Bottom));
                                 }
-                                // TODO: Changed from done += ft.Text.Length;
-                                done += text.Length;
+                                done += ft.Text.Length;
                             }
                             if (j < subGroups.Count)
                             {
-                                var charFt = TextManager.GetFormattedText(textData[subGroups[j].Key].ToString(), formats[subGroups[j].Key]);
+                                var charFt = TextManager.GetFormattedTextExtended(textData[subGroups[j].Key].ToString(), formats[subGroups[j].Key]);
                                 var decoWidth = GetDecoratedCharWidth(charFt, [.. subGroups[j]], done, out var charLeft, out var hCenter);
                                 charFt.DrawTextCenterAligned(dc, new Point(left + hCenter, Top - topExtra), forceBlackBrush);
                                 DrawAllDecorations(dc, left, hCenter, Top - topExtra, charLeft, charFt, done, [.. subGroups[j]], forceBlackBrush);
@@ -1088,7 +1086,7 @@ namespace Editor
                     {
                         var addSpaceBefore = symIndexes[i] <= 0 || !symbols.Contains(textData[symIndexes[i] - 1]);
                         left += addSpaceBefore ? SymSpace : 0;
-                        var ft = TextManager.GetFormattedText(textData[symIndexes[i]].ToString(), formats[symIndexes[i]]);
+                        var ft = TextManager.GetFormattedTextExtended(textData[symIndexes[i]].ToString(), formats[symIndexes[i]]);
                         ft.DrawTextLeftAligned(dc, new Point(left, Top - topExtra), forceBlackBrush);
                         //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(Left, refY + Top), new Point(Right, refY + Top));
                         //dc.DrawLine(new Pen(Brushes.Red, 1), new Point(Left, Top - topExtra), new Point(Right, Top - topExtra));
@@ -1148,7 +1146,7 @@ namespace Editor
                     InputItalic ? FontStyle.Italic : FontStyle.Normal,
                     InputBold ? FontWeight.Bold : FontWeight.Normal,
                     PenManager.TextFillColorPrimaryBrush, InputUnderline);
-                var ft = TextManager.GetFormattedText("d", formatId);
+                var ft = TextManager.GetFormattedTextExtended("d", formatId);
                 //hm.TopExtra = Math.Min(ft.Baseline * .30, ft.TopExtra());
                 topExtra = ft.Baseline * .26;
                 refY = ft.Baseline * .5;
@@ -1169,7 +1167,7 @@ namespace Editor
             if (list == null)
             {
                 var text = textData.ToString(start, limit - start);
-                var ft = TextManager.GetFormattedText(text, [.. formats.Skip(start).Take(text.Length)], forceBlackBrush);
+                var ft = TextManager.GetFormattedTextExtended(text, [.. formats.Skip(start).Take(text.Length)], forceBlackBrush);
                 //hm.TopExtra = Math.Min(ft.Baseline * .30, ft.TopExtra());
                 hm.TopExtra = ft.Baseline * .26;
                 hm.UpperHalf = ft.Baseline * .5;
@@ -1177,7 +1175,7 @@ namespace Editor
             }
             else
             {
-                var charFt = TextManager.GetFormattedText(textData[limit - 1].ToString(), formats[limit - 1]);
+                var charFt = TextManager.GetFormattedTextExtended(textData[limit - 1].ToString(), formats[limit - 1]);
                 var bottomGroup = (from x in list where x.Position == Position.Bottom select x).ToList();
                 var topGroup = (from x in list where x.Position == Position.Top select x).ToList();
                 var lowerHalf = charFt.Descent() + charFt.Baseline * .24;
@@ -1186,12 +1184,12 @@ namespace Editor
                 double bottomHeight = 0;
                 foreach (var v in topGroup)
                 {
-                    var sign = TextManager.GetFormattedText(v.UnicodeString, formats[v.Index]);
+                    var sign = TextManager.GetFormattedTextExtended(v.UnicodeString, formats[v.Index]);
                     topHeight += sign.Extent + FontSize * .1;
                 }
                 foreach (var v in bottomGroup)
                 {
-                    var sign = TextManager.GetFormattedText(v.UnicodeString, formats[v.Index]);
+                    var sign = TextManager.GetFormattedTextExtended(v.UnicodeString, formats[v.Index]);
                     bottomHeight += sign.Extent + FontSize * .1;
                 }
                 var diff = upperHalf - (charFt.Extent - lowerHalf + topHeight);
@@ -1446,7 +1444,7 @@ namespace Editor
         }
 
         private void DrawAllDecorations(DrawingContext dc, double left, double hCenter, double top, double charLeft,
-            FormattedText charFt, int index, List<CharacterDecorationInfo> decorationList, bool forceBlackBrush)
+            FormattedTextExtended charFt, int index, List<CharacterDecorationInfo> decorationList, bool forceBlackBrush)
         {
             DrawRightDecorations(dc, decorationList, top, left + charLeft + charFt.GetFullWidth(), formats[index], forceBlackBrush);
             DrawLeftDecorations(dc, decorationList, top, left + charLeft, formats[index], forceBlackBrush);
@@ -1456,7 +1454,7 @@ namespace Editor
         }
 
         /*
-        void DrawDecorations(DrawingContext dc, List<CharacterDecorationInfo> decorationList, FormattedText ft, int index, double hCenter)
+        void DrawDecorations(DrawingContext dc, List<CharacterDecorationInfo> decorationList, FormattedTextExtended ft, int index, double hCenter)
         {
         double offset = FontSize * .05;
         //character metrics    
@@ -1470,7 +1468,7 @@ namespace Editor
         }
         */
 
-        private void DrawTopDecorations(DrawingContext dc, FormattedText ft, List<CharacterDecorationInfo> cdiList, double top, double center, int formatId, bool forceBlackBrush)
+        private void DrawTopDecorations(DrawingContext dc, FormattedTextExtended ft, List<CharacterDecorationInfo> cdiList, double top, double center, int formatId, bool forceBlackBrush)
         {
             var topDecorations = (from x in cdiList where x.Position == Position.Top select x).ToList();
             if (topDecorations.Count > 0)
@@ -1479,14 +1477,14 @@ namespace Editor
                 foreach (var d in topDecorations)
                 {
                     var text = d.UnicodeString;
-                    var sign = TextManager.GetFormattedText(text, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
+                    var sign = TextManager.GetFormattedTextExtended(text, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
                     sign.DrawTextBottomCenterAligned(dc, new Point(center, top), forceBlackBrush);
                     top -= sign.Extent + FontSize * .1;
                 }
             }
         }
 
-        private void DrawBottomDecorations(DrawingContext dc, FormattedText ft, List<CharacterDecorationInfo> cdiList, double top, double hCenter, int formatId, bool forceBlackBrush)
+        private void DrawBottomDecorations(DrawingContext dc, FormattedTextExtended ft, List<CharacterDecorationInfo> cdiList, double top, double hCenter, int formatId, bool forceBlackBrush)
         {
             var bottomDecorations = (from x in cdiList where x.Position == Position.Bottom select x).ToList();
             if (bottomDecorations.Count > 0)
@@ -1495,7 +1493,7 @@ namespace Editor
                 foreach (var d in bottomDecorations)
                 {
                     var text = d.UnicodeString;
-                    var sign = TextManager.GetFormattedText(text, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
+                    var sign = TextManager.GetFormattedTextExtended(text, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
                     sign.DrawTextTopCenterAligned(dc, new Point(hCenter, top), forceBlackBrush);
                     top += sign.Extent + FontSize * .1;
                 }
@@ -1512,8 +1510,8 @@ namespace Editor
                 {
                     s += d.UnicodeString;
                 }
-                var formattedText = TextManager.GetFormattedText(s, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
-                formattedText.DrawTextRightAligned(dc, new Point(left - FontSize * .05, top), forceBlackBrush);
+                var formattedTextExtended = TextManager.GetFormattedTextExtended(s, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
+                formattedTextExtended.DrawTextRightAligned(dc, new Point(left - FontSize * .05, top), forceBlackBrush);
             }
         }
 
@@ -1527,13 +1525,13 @@ namespace Editor
                 {
                     s += d.UnicodeString;
                 }
-                var var = TextManager.GetFormattedText(s, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
+                var var = TextManager.GetFormattedTextExtended(s, TextManager.GetFormatIdForNewStyle(formatId, FontStyle.Normal));
                 var.DrawTextLeftAligned(dc, new Point(right, top), forceBlackBrush);
             }
         }
 
         //index = index of the decorated character in this.textData
-        private void DrawFaceDecorations(DrawingContext dc, FormattedText charText,
+        private void DrawFaceDecorations(DrawingContext dc, FormattedTextExtended charText,
             List<CharacterDecorationInfo> cdiList, double top, double hCenter, bool forceBlackBrush)
         {
             var decorations = (from x in cdiList where x.Position == Position.Over select x).ToList();
@@ -1586,7 +1584,7 @@ namespace Editor
             }
         }
 
-        private double GetDecoratedCharWidth(FormattedText ft, List<CharacterDecorationInfo> decorationList,
+        private double GetDecoratedCharWidth(FormattedTextExtended ft, List<CharacterDecorationInfo> decorationList,
                                              int index, out double charLeft, out double hCenter)
         {
             charLeft = 0;
@@ -1606,19 +1604,19 @@ namespace Editor
             }
             if (text.Length > 0)
             {
-                var t = TextManager.GetFormattedText(text, TextManager.GetFormatIdForNewStyle(formats[index], FontStyle.Normal));
+                var t = TextManager.GetFormattedTextExtended(text, TextManager.GetFormatIdForNewStyle(formats[index], FontStyle.Normal));
                 width += t.GetFullWidth();
                 charLeft = t.GetFullWidth();
                 hCenter += charLeft;
             }
             foreach (var v in topList)
             {
-                var f = TextManager.GetFormattedText("f", formats[index]);
+                var f = TextManager.GetFormattedTextExtended("f", formats[index]);
                 var fTop = f.TopExtra();
                 var ftTop = ft.TopExtra();
                 if (fTop < ftTop)
                 {
-                    var t = TextManager.GetFormattedText(v.UnicodeString, formats[index]);
+                    var t = TextManager.GetFormattedTextExtended(v.UnicodeString, formats[index]);
                     var diff = t.GetFullWidth() - charWidth;
                     if (diff > 0)
                     {
@@ -1630,7 +1628,7 @@ namespace Editor
             }
             foreach (var v in bottomList)
             {
-                var t = TextManager.GetFormattedText(v.UnicodeString, formats[index]);
+                var t = TextManager.GetFormattedTextExtended(v.UnicodeString, formats[index]);
                 var diff = t.GetFullWidth() - charWidth;
                 if (diff > 0)
                 {
@@ -1662,7 +1660,7 @@ namespace Editor
             }
             if (text.Length > 0)
             {
-                var t = TextManager.GetFormattedText(text, formats[index]);
+                var t = TextManager.GetFormattedTextExtended(text, formats[index]);
                 width += t.GetFullWidth();
             }
             return width;
@@ -1674,7 +1672,7 @@ namespace Editor
             {
                 if (textData.Length > 0 && !char.IsWhiteSpace(textData[^1]))
                 {
-                    var ft = TextManager.GetFormattedText(textData[^1].ToString(), formats[^1]);
+                    var ft = TextManager.GetFormattedTextExtended(textData[^1].ToString(), formats[^1]);
                     return ft.OverhangTrailing;
                 }
                 else
@@ -1690,7 +1688,7 @@ namespace Editor
             {
                 if (textData.Length >0)
                 {
-                    var ft = TextManager.GetFormattedText(textData.ToString(), formats, forceBlackBrush);
+                    var ft = TextManager.GetFormattedTextExtended(textData.ToString(), formats, forceBlackBrush);
                     return ft.OverhangAfter;
                 }
                 else
@@ -1708,7 +1706,7 @@ namespace Editor
                 {
                     if (!char.IsWhiteSpace(textData[^1]))
                     {
-                        var ft = TextManager.GetFormattedText(textData[^1].ToString(), formats[^1]);
+                        var ft = TextManager.GetFormattedTextExtended(textData[^1].ToString(), formats[^1]);
                         return ft.Descent();
                     }
                 }
@@ -1716,7 +1714,7 @@ namespace Editor
                 {
                     if (!char.IsWhiteSpace(textData[0]))
                     {
-                        var ft = TextManager.GetFormattedText(textData[0].ToString(), formats[0]);
+                        var ft = TextManager.GetFormattedTextExtended(textData[0].ToString(), formats[0]);
                         return ft.Descent();
                     }
                 }

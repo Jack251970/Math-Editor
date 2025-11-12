@@ -139,9 +139,9 @@ namespace Editor
             CalculateSize();
         }
 
-        public override void ConsumeFormattedText(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo)
+        public override void ConsumeFormattedTextExtended(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo)
         {
-            ActiveChild.ConsumeFormattedText(text, formats, modes, decorations, addUndo);
+            ActiveChild.ConsumeFormattedTextExtended(text, formats, modes, decorations, addUndo);
             CalculateSize();
         }
 

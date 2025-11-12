@@ -8,7 +8,7 @@ namespace Editor
     public sealed class DecoratedCharacter : EquationBase
     {
         private readonly List<CharacterDecorationInfo> decorations = [];
-        private readonly FormattedText charFt;
+        private readonly FormattedTextExtended charFt;
         public TextEquation Previous { get; set; }
         public TextEquation? Next { get; set; }
 
@@ -17,7 +17,7 @@ namespace Editor
             : base(owner, parent)
         {
             Previous = previous;
-            charFt = TextManager.GetFormattedText(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
+            charFt = TextManager.GetFormattedTextExtended(previous.Text[previous.CaretIndex - 1].ToString(), previous.GetFormats()[previous.CaretIndex - 1]);
             previous.ConsumeKey(Key.Back);
             Height = FontSize;
             decorations.Add(new CharacterDecorationInfo() { DecorationType = cdt, Position = position, UnicodeString = sign });
@@ -32,13 +32,13 @@ namespace Editor
             for (var i = 0; i < decorations.Count; i++)
             {
                 //var item = decorations[i];
-                //var charFt = textManager.GetFormattedText(character, 0);
+                //var charFt = textManager.GetFormattedTextExtended(character, 0);
                 //double decoWidth = 0; //;GetDecoratedCharWidth(charFt, item.ToList(), i, out hCenter);
                 //count = item.Key - done;
                 //if (count > 0)
                 //{
                 //    text = textData.ToString(done, count);
-                //    ft = textManager.GetFormattedText(text, formats.Skip(done).Take(count).ToList());
+                //    ft = textManager.GetFormattedTextExtended(text, formats.Skip(done).Take(count).ToList());
                 //    ft.DrawTextLeftAligned(dc, new Point(left, Top));
                 //    done += ft.Text.Length;
                 //    left += ft.GetFullWidth() + ft.OverhangTrailing;
@@ -62,7 +62,7 @@ namespace Editor
             }
         }
 
-        //void DrawDecorations(DrawingContext dc, List<CharacterDecorationInfo> decorationList, FormattedText ft, int index, double hCenter)
+        //void DrawDecorations(DrawingContext dc, List<CharacterDecorationInfo> decorationList, FormattedTextExtended ft, int index, double hCenter)
         //{
         //    double offset = FontSize * .05;
         //    //character metrics    
@@ -75,7 +75,7 @@ namespace Editor
         //    double bottom = Top + ft.Baseline + descent + offset;
         //}
 
-        //private void DrawTopDecorations(DrawingContext dc, FormattedText ft, List<CharacterDecorationInfo> cdiList, double center, int formatId)
+        //private void DrawTopDecorations(DrawingContext dc, FormattedTextExtended ft, List<CharacterDecorationInfo> cdiList, double center, int formatId)
         //{
         //    var topDecorations = (from x in cdiList where x.Position == Position.Top select x).ToList();
         //    if (topDecorations.Count > 0)
@@ -84,14 +84,14 @@ namespace Editor
         //        foreach (var d in topDecorations)
         //        {
         //            string text = d.UnicodeString;
-        //            var sign = textManager.GetFormattedText(text, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal));
+        //            var sign = textManager.GetFormattedTextExtended(text, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal));
         //            sign.DrawTextBottomCenterAligned(dc, new Point(center, top));
         //            top -= sign.Extent + FontSize * .08;
         //        }
         //    }
         //}
 
-        //private void DrawBottomDecorations(DrawingContext dc, FormattedText ft, List<CharacterDecorationInfo> cdiList, double hCenter, int formatId)
+        //private void DrawBottomDecorations(DrawingContext dc, FormattedTextExtended ft, List<CharacterDecorationInfo> cdiList, double hCenter, int formatId)
         //{
         //    var bottomDecorations = (from x in cdiList where x.Position == Position.Bottom select x).ToList();
         //    if (bottomDecorations.Count > 0)
@@ -100,7 +100,7 @@ namespace Editor
         //        foreach (var d in bottomDecorations)
         //        {
         //            string text = d.UnicodeString;
-        //            var sign = textManager.GetFormattedText(text, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal));
+        //            var sign = textManager.GetFormattedTextExtended(text, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal));
         //            sign.DrawTextBottomCenterAligned(dc, new Point(hCenter, bottom));
         //            bottom += sign.Extent + FontSize * .08;
         //        }
@@ -117,8 +117,8 @@ namespace Editor
         //        {
         //            s = s + d.UnicodeString;
         //        }
-        //        var formattedText = textManager.GetFormattedText(s, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal));
-        //        formattedText.DrawTextRightAligned(dc, new Point(left, Top));
+        //        var formattedTextExtended = textManager.GetFormattedTextExtended(s, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal));
+        //        formattedTextExtended.DrawTextRightAligned(dc, new Point(left, Top));
         //    }
         //}
 
@@ -132,12 +132,12 @@ namespace Editor
         //        {
         //            s = s + d.UnicodeString;
         //        }
-        //        dc.DrawText(textManager.GetFormattedText(s, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal)), new Point(right, Top));
+        //        dc.DrawText(textManager.GetFormattedTextExtended(s, textManager.GetFormatIdForNewStyle(formatId, FontStyles.Normal)), new Point(right, Top));
         //    }
         //}
 
         ////index = index of the decorated character in this.textData
-        //private void DrawFaceDecorations(DrawingContext dc, FormattedText charText, List<CharacterDecorationInfo> cdiList, double hCenter)
+        //private void DrawFaceDecorations(DrawingContext dc, FormattedTextExtended charText, List<CharacterDecorationInfo> cdiList, double hCenter)
         //{
         //    var decorations = (from x in cdiList where x.Position == Position.Over select x).ToList();
         //    if (decorations.Count > 0)
@@ -205,7 +205,7 @@ namespace Editor
         }
 
         /*
-        private double GetDecoratedCharWidth(FormattedText ft, List<CharacterDecorationInfo> decorationList, int index, out double hCenter)
+        private double GetDecoratedCharWidth(FormattedTextExtended ft, List<CharacterDecorationInfo> decorationList, int index, out double hCenter)
         {
             double width = ft.GetFullWidth();
             double charWidth = width;
@@ -220,12 +220,12 @@ namespace Editor
             }
             if (text.Length > 0)
             {
-                var t = textManager.GetFormattedText(text, formats[index]);
+                var t = textManager.GetFormattedTextExtended(text, formats[index]);
                 width += t.GetFullWidth();
             }
             foreach (var v in vList)
             {
-                var t = textManager.GetFormattedText(v.UnicodeString, formats[index]);
+                var t = textManager.GetFormattedTextExtended(v.UnicodeString, formats[index]);
                 charWidth = Math.Max(t.GetFullWidth(), charWidth);
             }
             width = Math.Max(width, charWidth);
@@ -246,7 +246,7 @@ namespace Editor
             }
             if (text.Length > 0)
             {
-                var t = textManager.GetFormattedText(text, formats[index]);
+                var t = textManager.GetFormattedTextExtended(text, formats[index]);
                 width += t.GetFullWidth();
             }
             return width;

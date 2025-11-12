@@ -21,30 +21,30 @@ public sealed class FontFactory
         }
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, bool forceBlackBrush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyle.Normal, FontWeight.Normal, forceBlackBrush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, FontStyle.Normal, FontWeight.Normal, forceBlackBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontWeight fontWeight, bool forceBlackBrush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, FontWeight fontWeight, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyle.Normal, fontWeight, forceBlackBrush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, FontStyle.Normal, fontWeight, forceBlackBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, bool forceBlackBrush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, forceBlackBrush ? PenManager.Black : PenManager.TextFillColorPrimaryBrush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, fontStyle, fontWeight, forceBlackBrush ? PenManager.Black : PenManager.TextFillColorPrimaryBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, SolidColorBrush brush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, SolidColorBrush brush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyle.Normal, FontWeight.Normal, brush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, FontStyle.Normal, FontWeight.Normal, brush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, SolidColorBrush brush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, SolidColorBrush brush)
     {
         var typeface = GetTypeface(fontType, fontStyle, fontWeight);
-        return new FormattedText(textToFormat,
+        return new FormattedTextExtended(textToFormat,
             CultureInfo.InvariantCulture,
             FlowDirection.LeftToRight,
             typeface,

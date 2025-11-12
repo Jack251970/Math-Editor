@@ -308,9 +308,9 @@ namespace Editor
             return Math.Abs(a.A - b.A) <= threshold && Math.Abs(a.R - b.R) <= threshold && Math.Abs(a.G - b.G) <= threshold && Math.Abs(a.B - b.B) <= threshold;
         }
 
-        public FormattedText GetFormattedText(string text, List<int> formats, bool forceBlackBrush = false)
+        public FormattedTextExtended GetFormattedTextExtended(string text, List<int> formats, bool forceBlackBrush = false)
         {
-            var formattedText = new FormattedText(text,
+            var formattedTextExtended = new FormattedTextExtended(text,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 formattingList[formats[0]].TypeFace,
@@ -318,21 +318,21 @@ namespace Editor
                 forceBlackBrush ? Brushes.Black : formattingList[formats[0]].TextBrush);
             for (var i = 0; i < formats.Count; i++)
             {
-                FormatText(formats, formattedText, i, forceBlackBrush);
+                FormatText(formats, formattedTextExtended, i, forceBlackBrush);
             }
-            return formattedText;
+            return formattedTextExtended;
         }
 
-        private void FormatText(List<int> formats, FormattedText formattedText, int i, bool forceBlackBrush = false)
+        private void FormatText(List<int> formats, FormattedTextExtended formattedTextExtended, int i, bool forceBlackBrush = false)
         {
-            formattedText.SetFontFamily(formattingList[formats[i]].FontFamily, i, 1);
-            formattedText.SetFontSize(formattingList[formats[i]].FontSize, i, 1);
-            formattedText.SetFontStyle(formattingList[formats[i]].FontStyle, i, 1);
-            formattedText.SetFontWeight(formattingList[formats[i]].FontWeight, i, 1);
-            formattedText.SetForegroundBrush(forceBlackBrush ? Brushes.Black : formattingList[formats[i]].TextBrush, i, 1);
+            formattedTextExtended.SetFontFamily(formattingList[formats[i]].FontFamily, i, 1);
+            formattedTextExtended.SetFontSize(formattingList[formats[i]].FontSize, i, 1);
+            formattedTextExtended.SetFontStyle(formattingList[formats[i]].FontStyle, i, 1);
+            formattedTextExtended.SetFontWeight(formattingList[formats[i]].FontWeight, i, 1);
+            formattedTextExtended.SetForegroundBrush(forceBlackBrush ? Brushes.Black : formattingList[formats[i]].TextBrush, i, 1);
             if (formattingList[formats[i]].UseUnderline)
             {
-                formattedText.SetTextDecorations(decorations[0], i, 1);
+                formattedTextExtended.SetTextDecorations(decorations[0], i, 1);
             }
         }
 
@@ -356,30 +356,30 @@ namespace Editor
             return formattingList[formatId].FontType;
         }
 
-        public FormattedText GetFormattedText(string text, int format)
+        public FormattedTextExtended GetFormattedTextExtended(string text, int format)
         {
-            var formattedText = new FormattedText(text,
+            var formattedTextExtended = new FormattedTextExtended(text,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 formattingList[format].TypeFace,
                 formattingList[format].FontSize,
                 formattingList[format].TextBrush);
-            formattedText.SetFontStyle(formattingList[format].FontStyle);
-            formattedText.SetFontWeight(formattingList[format].FontWeight);
-            return formattedText;
+            formattedTextExtended.SetFontStyle(formattingList[format].FontStyle);
+            formattedTextExtended.SetFontWeight(formattingList[format].FontWeight);
+            return formattedTextExtended;
         }
 
         public double GetBaseline(int formatId)
         {
             var tf = formattingList[formatId];
-            var ft = new FormattedText("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
+            var ft = new FormattedTextExtended("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
             return ft.Baseline;
         }
 
         public double GetLineSpacing(int formatId)
         {
             var tf = formattingList[formatId];
-            var ft = new FormattedText("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
+            var ft = new FormattedTextExtended("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
             // Return line spacing as ratio (height / font size) which approximates LineSpacing from WPF
             return ft.Height / tf.FontSize;
         }
@@ -387,7 +387,7 @@ namespace Editor
         public double GetFontHeight(int formatId)
         {
             var tf = formattingList[formatId];
-            var ft = new FormattedText("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
+            var ft = new FormattedTextExtended("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
             return ft.Height;
         }
     }
