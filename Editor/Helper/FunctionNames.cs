@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Editor
 {
     internal static class FunctionNames
     {
         private static readonly List<string> _knownFunctionNames = [];
+        private static readonly TrieNode _root = new();
 
         static FunctionNames()
         {
@@ -14,28 +16,55 @@ namespace Editor
                 "inf", "int", "ker", "lg", "lim", "ln", "log", "lub", "max",
                 "min", "mod", "Pr", "Re", "rot", "sec", "sgn", "sin", "sinh", "sup", "tan", "tanh", "var",
             ]);
-        }
 
-        public static bool IsFunctionName(string text)
-        {
-            return _knownFunctionNames.Contains(text);
-        }
-
-        // TODO:
-        // The CheckForFunctionName method uses a linear search with EndsWith checks,
-        // which is inefficient for repeated calls.
-        // Consider building a trie or using a more efficient data structure to improve performance,
-        // especially since function names have fixed lengths.
-        public static string? CheckForFunctionName(string text)
-        {
             foreach (var name in _knownFunctionNames)
             {
-                if (text.EndsWith(name))
+                AddToTrie(name);
+            }
+        }
+
+        private static void AddToTrie(string word)
+        {
+            var node = _root;
+            for (var i = word.Length - 1; i >= 0; i--)
+            {
+                var c = word[i];
+
+                if (!node.Children.TryGetValue(c, out var next))
                 {
-                    return name;
+                    next = new TrieNode();
+                    node.Children[c] = next;
+                }
+                node = next;
+            }
+            node.IsWord = true;
+            node.Word = word;
+        }
+
+        public static string? CheckForFunctionName(string text)
+        {
+            var node = _root;
+            for (var i = text.Length - 1; i >= 0; i--)
+            {
+                if (!node.Children.TryGetValue(text[i], out node))
+                {
+                    return null;
+                }
+
+                if (node.IsWord)
+                {
+                    return node.Word;
                 }
             }
+
             return null;
+        }
+
+        private class TrieNode
+        {
+            public readonly Dictionary<char, TrieNode> Children = [];
+            public bool IsWord;
+            public string? Word;
         }
     }
 }
