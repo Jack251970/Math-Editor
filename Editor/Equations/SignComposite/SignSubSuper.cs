@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -16,7 +16,7 @@ namespace Editor
         private double SubMinus = 0;
         private double SuperMinus = 0;
 
-        public SignSubSuper(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+        public SignSubSuper(IMainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(owner, parent)
         {
             ActiveChild = mainEquation = new RowContainer(owner, this);

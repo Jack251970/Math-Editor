@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -16,7 +16,7 @@ namespace Editor
         private double ExtraHeight { get; set; }
         private double MidSpace { get; set; }
 
-        public DoubleArrowBarBracket(MainWindow owner, EquationContainer parent)
+        public DoubleArrowBarBracket(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             ExtraHeight = FontSize * 0.2;

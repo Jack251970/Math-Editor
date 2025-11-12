@@ -6,9 +6,9 @@ namespace Editor.Localization.Shared
     {
         public const string DefaultNamespace = "Editor";
         public const string ClassName = "Localize";
-        public const string SystemPrefixUri = "clr-namespace:System;assembly=mscorlib";
-        public const string XamlPrefixUri = "http://schemas.microsoft.com/winfx/2006/xaml";
-        public const string XamlTag = "String";
+        public const string SystemPrefixUri = "http://schemas.microsoft.com/winfx/2006/xaml";
+        public const string AxamlPrefixUri = "http://schemas.microsoft.com/winfx/2006/xaml";
+        public const string AxamlTag = "String";
         public const string KeyAttribute = "Key";
         public const string SummaryElementName = "summary";
         public const string ParamElementName = "param";
@@ -25,7 +25,7 @@ namespace Editor.Localization.Shared
         public const string Internationalization = "Internationalization";
         public const string SuppressWarning = "#pragma warning disable FLAN0001 // Old localization API used";
 
-        public static readonly Regex LanguagesXamlRegex = new Regex(@"\\Languages\\[^\\]+\.xaml$", RegexOptions.IgnoreCase);
+        public static readonly Regex LanguagesAxamlRegex = new Regex(@"\\Languages\\en\.axaml$", RegexOptions.IgnoreCase);
         public static readonly string[] OldLocalizationClasses = { "Internationalization" };
     }
 }

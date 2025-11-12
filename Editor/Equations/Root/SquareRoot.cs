@@ -12,7 +12,7 @@ namespace Editor
         private double ExtraHeight => FontSize * .15;
         private double LeftGap => FontSize * .1;
 
-        public SquareRoot(MainWindow owner, EquationContainer parent)
+        public SquareRoot(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             _radicalSign = new RadicalSign(owner, this);

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Windows;
-using System.Windows.Media;
+using Avalonia.Media;
 
 namespace Editor;
 
@@ -10,6 +9,9 @@ public sealed class FontFactory
 {
     private FontFactory() { }
     private static readonly Dictionary<FontType, FontFamily> fontFamilies = [];
+
+    // Resolve assembly name once to build avares:// URIs dynamically
+    private static readonly string assemblyName = typeof(FontFactory).Assembly.GetName().Name!;
 
     static FontFactory()
     {
@@ -19,37 +21,35 @@ public sealed class FontFactory
         }
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, bool forceBlackBrush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, FontWeights.Normal, forceBlackBrush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, FontStyle.Normal, FontWeight.Normal, forceBlackBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontWeight fontWeight, bool forceBlackBrush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, FontWeight fontWeight, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, fontWeight, forceBlackBrush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, FontStyle.Normal, fontWeight, forceBlackBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, bool forceBlackBrush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, bool forceBlackBrush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, fontStyle, fontWeight, forceBlackBrush ? Brushes.Black : PenManager.TextFillColorPrimaryBrush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, fontStyle, fontWeight, forceBlackBrush ? PenManager.Black : PenManager.TextFillColorPrimaryBrush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, Brush brush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, SolidColorBrush brush)
     {
-        return GetFormattedText(textToFormat, fontType, fontSize, FontStyles.Normal, FontWeights.Normal, brush);
+        return GetFormattedTextExtended(textToFormat, fontType, fontSize, FontStyle.Normal, FontWeight.Normal, brush);
     }
 
-    public static FormattedText GetFormattedText(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, Brush brush)
+    public static FormattedTextExtended GetFormattedTextExtended(string textToFormat, FontType fontType, double fontSize, FontStyle fontStyle, FontWeight fontWeight, SolidColorBrush brush)
     {
         var typeface = GetTypeface(fontType, fontStyle, fontWeight);
-#pragma warning disable CS0618 // Type or member is obsolete
-        return new FormattedText(textToFormat,
+        return new FormattedTextExtended(textToFormat,
             CultureInfo.InvariantCulture,
             FlowDirection.LeftToRight,
             typeface,
             fontSize,
             brush);
-#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     public static FontFamily GetFontFamily(FontType fontType)
@@ -64,23 +64,32 @@ public sealed class FontFactory
         }
     }
 
+    private static string BuildAvaresUri(string subfolder, string familyName)
+    {
+        return $"avares://{assemblyName}/Fonts/{subfolder}#{familyName}";
+    }
+
     private static FontFamily CreateFontFamily(FontType ft)
     {
         return ft switch
         {
-            FontType.STIXGeneral => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXGeneral"),
-            FontType.STIXIntegralsD => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsD"),
-            FontType.STIXIntegralsSm => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsSm"),
-            FontType.STIXIntegralsUp => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUp"),
-            FontType.STIXIntegralsUpD => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpD"),
-            FontType.STIXIntegralsUpSm => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXIntegralsUpSm"),
-            FontType.STIXNonUnicode => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXNonUnicode"),
-            FontType.STIXSizeFiveSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFiveSym"),
-            FontType.STIXSizeFourSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeFourSym"),
-            FontType.STIXSizeOneSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeOneSym"),
-            FontType.STIXSizeThreeSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeThreeSym"),
-            FontType.STIXSizeTwoSym => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXSizeTwoSym"),
-            FontType.STIXVariants => new FontFamily(new Uri("pack://application:,,,/Fonts/STIX/"), "./#STIXVariants"),
+            // STIX families embedded as Avalonia resources:
+            // Ensure the font files are included in your .csproj as <AvaloniaResource Include="Fonts\**\*" />
+            FontType.STIXGeneral => new FontFamily(BuildAvaresUri("STIX", "STIXGeneral")),
+            FontType.STIXIntegralsD => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsD")),
+            FontType.STIXIntegralsSm => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsSm")),
+            FontType.STIXIntegralsUp => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsUp")),
+            FontType.STIXIntegralsUpD => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsUpD")),
+            FontType.STIXIntegralsUpSm => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsUpSm")),
+            FontType.STIXNonUnicode => new FontFamily(BuildAvaresUri("STIX", "STIXNonUnicode")),
+            FontType.STIXSizeFiveSym => new FontFamily(BuildAvaresUri("STIX", "STIXSizeFiveSym")),
+            FontType.STIXSizeFourSym => new FontFamily(BuildAvaresUri("STIX", "STIXSizeFourSym")),
+            FontType.STIXSizeOneSym => new FontFamily(BuildAvaresUri("STIX", "STIXSizeOneSym")),
+            FontType.STIXSizeThreeSym => new FontFamily(BuildAvaresUri("STIX", "STIXSizeThreeSym")),
+            FontType.STIXSizeTwoSym => new FontFamily(BuildAvaresUri("STIX", "STIXSizeTwoSym")),
+            FontType.STIXVariants => new FontFamily(BuildAvaresUri("STIX", "STIXVariants")),
+
+            // System-installed fonts (platform-dependent availability)
             FontType.Arial => new FontFamily("Arial"),
             FontType.ArialBlack => new FontFamily("Arial Black"),
             FontType.ComicSansMS => new FontFamily("Comic Sans MS"),
@@ -101,12 +110,14 @@ public sealed class FontFactory
             FontType.Verdana => new FontFamily("Verdana"),
             FontType.Webdings => new FontFamily("Webdings"),
             FontType.Wingdings => new FontFamily("Wingdings"),
+
+            // Fallback/default
             _ => new FontFamily("Segoe UI"),
         };
     }
 
     public static Typeface GetTypeface(FontType fontType, FontStyle fontStyle, FontWeight fontWeight)
     {
-        return new Typeface(GetFontFamily(fontType), fontStyle, fontWeight, FontStretches.Normal, GetFontFamily(FontType.STIXGeneral));
+        return new Typeface(GetFontFamily(fontType) ?? GetFontFamily(FontType.STIXGeneral), fontStyle, fontWeight, FontStretch.Normal);
     }
 }

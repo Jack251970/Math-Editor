@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -10,12 +10,12 @@ namespace Editor
     {
         private double ExtraWidth => FontSize * .3;
 
-        public DivHorizontal(MainWindow owner, EquationContainer parent)
+        public DivHorizontal(IMainWindow owner, EquationContainer parent)
             : base(owner, parent, false)
         {
         }
 
-        public DivHorizontal(MainWindow owner, EquationContainer parent, bool isSmall)
+        public DivHorizontal(IMainWindow owner, EquationContainer parent, bool isSmall)
             : base(owner, parent, isSmall)
         {
         }
@@ -102,7 +102,7 @@ namespace Editor
 
     public sealed class DivHorizSmall : DivHorizontal
     {
-        public DivHorizSmall(MainWindow owner, EquationContainer parent)
+        public DivHorizSmall(IMainWindow owner, EquationContainer parent)
             : base(owner, parent, true)
         {
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -15,7 +15,7 @@ namespace Editor
         private double HGap => FontSize * .02;
         private double VGap => FontSize * .05;
 
-        public SignBottomTop(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+        public SignBottomTop(IMainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(owner, parent)
         {
             ActiveChild = mainEquation = new RowContainer(owner, this);

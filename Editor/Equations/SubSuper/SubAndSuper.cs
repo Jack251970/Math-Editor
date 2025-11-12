@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -10,7 +10,7 @@ namespace Editor
         private readonly RowContainer superEquation;
         private readonly RowContainer subEquation;
 
-        public SubAndSuper(MainWindow owner, EquationRow parent, Position position)
+        public SubAndSuper(IMainWindow owner, EquationRow parent, Position position)
             : base(owner, parent, position)
         {
             ActiveChild = superEquation = new RowContainer(owner, this);

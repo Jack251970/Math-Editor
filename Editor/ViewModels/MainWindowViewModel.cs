@@ -4,11 +4,11 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Win32;
 
 namespace Editor;
 
@@ -19,12 +19,12 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     public Settings Settings { get; init; }
     public UndoManager UndoManager { get; init; }
     public ClipboardHelper ClipboardHelper { get; init; }
-    public MainWindow MainWindow { get; set; } = null!;
+    public IMainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
     private MenuItem _recentFileItem = null!;
 
-    private WindowStyle _windowStyle;
     private WindowState _windowState;
+    private SystemDecorations _systemDecorations;
     private bool _fullScreenModeEntered;
     private readonly Lock _fullScreenModeLock = new();
 
@@ -98,7 +98,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     private string _fullScreenMenuItemHeader = null!;
 
     [ObservableProperty]
-    private Visibility _fullScreenButtonVisibility = Visibility.Collapsed;
+    private bool _fullScreenButtonVisible = false;
 
     [ObservableProperty]
     private int _customZoomPercentage = 0;
@@ -255,7 +255,6 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         }
         else
         {
-            // TODO: Fix issue that this item will be unchecked after many changes
             CustomZoomMenuChecked = true;
             CustomZoomMenuHeader = Localize.MainWindow_CustomPercentage(CustomZoomPercentage);
             if (_lastZoomPercentageItem != null)
@@ -337,13 +336,12 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         if (value)
         {
             EnterFullScreen();
-            FullScreenButtonVisibility = Visibility.Visible;
         }
         else
         {
             ExitFullScreen();
-            FullScreenButtonVisibility = Visibility.Collapsed;
         }
+        FullScreenButtonVisible = value;
         UpdateFullScreenMenuItemHeader();
     }
 
@@ -351,17 +349,12 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     {
         lock (_fullScreenModeLock)
         {
-            if (_fullScreenModeEntered)
-            {
-                return;
-            }
-
-            _windowStyle = MainWindow.WindowStyle;
-            MainWindow.WindowStyle = WindowStyle.None;
+            if (_fullScreenModeEntered) return;
 
             _windowState = MainWindow.WindowState;
-            MainWindow.WindowState = WindowState.Normal;
-            MainWindow.WindowState = WindowState.Maximized;
+            _systemDecorations = MainWindow.SystemDecorations;
+            MainWindow.WindowState = WindowState.FullScreen;
+            MainWindow.SystemDecorations = SystemDecorations.None;
 
             _fullScreenModeEntered = true;
         }
@@ -376,13 +369,10 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     {
         lock (_fullScreenModeLock)
         {
-            if (!_fullScreenModeEntered)
-            {
-                return;
-            }
+            if (!_fullScreenModeEntered) return;
 
-            MainWindow.WindowStyle = _windowStyle;
             MainWindow.WindowState = windowState;
+            MainWindow.SystemDecorations = _systemDecorations;
 
             _fullScreenModeEntered = false;
         }
@@ -444,15 +434,26 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             return;
         }
 
-        var ofd = new OpenFileDialog
+        var files = await MainWindow.TopLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            CheckPathExists = true,
-            Filter = Localize.MainWindow_MedFileFilter(Constants.MedExtension)
-        };
-        var result = ofd.ShowDialog(MainWindow);
-        if (result == true)
+            AllowMultiple = false,
+            Title = Localize.MainWindow_OpenMathEditorFile(),
+            FileTypeFilter =
+            [
+                new FilePickerFileType(Localize.MainWindow_MedFile())
+                {
+                    Patterns = [$"*{Constants.MedExtension}"]
+                },
+                new FilePickerFileType(Localize.MainWindow_AllFile())
+                {
+                    Patterns = ["*.*"]
+                }
+            ]
+        });
+
+        if (files.Count >= 1)
         {
-            await OpenFileAsync(ofd.FileName);
+            await OpenFileAsync(files[0].Path.LocalPath);
         }
     }
 
@@ -465,8 +466,8 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [RelayCommand]
     private async Task SaveAsAsync()
     {
-        var result = ShowSaveFileDialog(Constants.MedExtension,
-            Localize.MainWindow_MedFileFilter(Constants.MedExtension));
+        var result = await ShowSaveFileDialog(Localize.MainWindow_SaveMathEditorFile(), Localize.MainWindow_MedFile(),
+            Constants.MedExtension);
         if (!string.IsNullOrEmpty(result))
         {
             await SaveFileAsync(result);
@@ -504,14 +505,12 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     }
 
     [RelayCommand]
-    private async Task ExportAsync(string imageType)
+    private async Task ExportAsync(string imageExtension)
     {
-        var extension = $".{imageType}";
-        var fileName = ShowSaveFileDialog(imageType, Localize.MainWindow_ImageFileFilter(imageType));
+        var fileName = await ShowSaveFileDialog(Localize.MainWindow_SaveImageFile(), Localize.MainWindow_SaveImageFile(),
+            imageExtension);
         if (!string.IsNullOrEmpty(fileName))
         {
-            var ext = Path.GetExtension(fileName);
-            if (ext != extension) fileName += extension;
             await Editor!.ExportImageAsync(fileName);
         }
     }
@@ -519,11 +518,11 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [RelayCommand]
     private async Task PrintAsync()
     {
-        var printDialog = new PrintDialog();
+        /*var printDialog = new PrintDialog();
         if (printDialog.ShowDialog() == true)
         {
             await Editor!.PrintAsync(printDialog);
-        }
+        }*/
     }
 
     [RelayCommand]
@@ -653,8 +652,8 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         var savePath = CurrentLocalFile;
         if (!File.Exists(savePath))
         {
-            var result = ShowSaveFileDialog(Constants.MedExtension,
-                Localize.MainWindow_MedFileFilter(Constants.MedExtension));
+            var result = await ShowSaveFileDialog(Localize.MainWindow_SaveMathEditorFile(), Localize.MainWindow_MedFile(),
+                Constants.MedExtension);
             if (string.IsNullOrEmpty(result))
             {
                 return false;
@@ -667,22 +666,25 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         return await SaveFileAsync(savePath);
     }
 
-    private string? ShowSaveFileDialog(string extension, string filter)
+    private async Task<string?> ShowSaveFileDialog(string title, string extensionName, string extension)
     {
-        var sfd = new SaveFileDialog
+        var files = await MainWindow.TopLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            DefaultExt = "." + extension,
-            Filter = filter
-        };
-        var result = sfd.ShowDialog(MainWindow);
-        if (result == true)
-        {
-            return Path.GetExtension(sfd.FileName) == "." + extension ? sfd.FileName : sfd.FileName + "." + extension;
-        }
-        else
-        {
-            return null;
-        }
+            Title = title,
+            FileTypeChoices =
+            [
+                new FilePickerFileType(extensionName)
+                {
+                    Patterns = [$"*{extension}"]
+                },
+                new FilePickerFileType(Localize.MainWindow_AllFile())
+                {
+                    Patterns = ["*.*"]
+                }
+            ]
+        });
+
+        return files?.TryGetLocalPath() ?? string.Empty;
     }
 
     public void InitializeRecentFiles(MenuItem recentFileItem)
@@ -718,7 +720,10 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             {
                 IsEnabled = false
             };
-            menuItem.SetResourceReference(MenuItem.HeaderProperty, nameof(Localize.MainWindow_NoRecentFiles));
+            menuItem.Bind(
+                MenuItem.HeaderProperty,
+                new DynamicResourceExtension(nameof(Localize.MainWindow_NoRecentFiles))
+            );
             _recentFileItem.Items.Add(menuItem);
         }
         else
@@ -737,7 +742,10 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             {
                 Command = ClearRecentFilesCommand
             };
-            menuItem.SetResourceReference(MenuItem.HeaderProperty, nameof(Localize.MainWindow_ClearList));
+            menuItem.Bind(
+                MenuItem.HeaderProperty,
+                new DynamicResourceExtension(nameof(Localize.MainWindow_ClearList))
+            );
             _recentFileItem.Items.Add(menuItem);
         }
     }

@@ -4,7 +4,7 @@ namespace Editor
 {
     public static class DivisionFactory
     {
-        public static EquationBase CreateEquation(MainWindow owner, EquationContainer equationParent, DivisionType divType)
+        public static EquationBase CreateEquation(IMainWindow owner, EquationContainer equationParent, DivisionType divType)
         {
             EquationBase equation = divType switch
             {

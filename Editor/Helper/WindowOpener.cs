@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Windows;
+using Avalonia.Controls;
 
 namespace Editor;
 
@@ -9,7 +9,7 @@ public static class WindowOpener
     /// <summary>
     /// Single for the application
     /// </summary>
-    public static T OpenSingle<T>(Window owner, params object[] args) where T : Window
+    public static T OpenSingle<T>(IMainWindow owner, params object[] args) where T : Window
     {
         var window = WindowTracker.GetActiveWindows<T>().FirstOrDefault()
             ?? (T?)Activator.CreateInstance(typeof(T), args)
@@ -23,7 +23,7 @@ public static class WindowOpener
     /// <summary>
     /// Single for one owner
     /// </summary>
-    public static T OpenScoped<T>(Window owner, params object[] args) where T : Window
+    public static T OpenScoped<T>(IMainWindow owner, params object[] args) where T : Window
     {
         var window = WindowTracker.GetActiveWindows<T>(owner).FirstOrDefault()
             ?? (T?)Activator.CreateInstance(typeof(T), args)
@@ -37,7 +37,7 @@ public static class WindowOpener
     /// <summary>
     /// Create new every time
     /// </summary>
-    public static T OpenTransient<T>(Window owner, params object[] args) where T : Window
+    public static T OpenTransient<T>(IMainWindow owner, params object[] args) where T : Window
     {
         var window = (T?)Activator.CreateInstance(typeof(T), args)
             ?? throw new ArgumentNullException(null, $"{nameof(Window)} instance could not be created or found");
@@ -50,7 +50,7 @@ public static class WindowOpener
     /// <summary>
     /// Open dialog for one window
     /// </summary>
-    public static T OpenDialog<T>(Window owner, params object[] args) where T : Window
+    public static T OpenDialog<T>(IMainWindow owner, params object[] args) where T : Window
     {
         var window = (T?)Activator.CreateInstance(typeof(T), args)
             ?? throw new ArgumentNullException(null, $"{nameof(Window)} instance could not be created or found");
@@ -60,10 +60,8 @@ public static class WindowOpener
         return ShowWindowDialog(window, owner);
     }
 
-    private static T ShowWindow<T>(T window, Window owner) where T : Window
+    private static T ShowWindow<T>(T window, IMainWindow owner) where T : Window
     {
-        window.Owner = owner;
-
         // Fix UI bug
         // Add `window.WindowState = WindowState.Normal`
         // If only use `window.Show()`, Settings-window doesn't show when minimized in taskbar 
@@ -77,24 +75,15 @@ public static class WindowOpener
         }
 
         // Ensure the window is visible
-        if (!window.IsVisible)
-        {
-            window.Show();
-        }
-        else
-        {
-            window.Activate(); // Bring the window to the foreground if already open
-        }
+        window.Show((Window)owner);
 
         window.Focus();
 
         return window;
     }
 
-    private static T ShowWindowDialog<T>(T window, Window owner) where T : Window
+    private static T ShowWindowDialog<T>(T window, IMainWindow owner) where T : Window
     {
-        window.Owner = owner;
-
         // Fix UI bug
         // Add `window.WindowState = WindowState.Normal`
         // If only use `window.Show()`, Settings-window doesn't show when minimized in taskbar 
@@ -108,7 +97,7 @@ public static class WindowOpener
         }
 
         // Show the window dialog
-        window.ShowDialog();
+        window.ShowDialog((Window)owner);
 
         window.Focus();
 

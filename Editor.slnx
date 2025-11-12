@@ -19,6 +19,7 @@
     <File Path="README.md" />
     <File Path="Settings.XamlStyler" />
   </Folder>
+  <Project Path="Editor.Desktop/Editor.Desktop.csproj" />
   <Project Path="Editor/Editor.csproj" />
   
 </Solution>

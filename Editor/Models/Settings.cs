@@ -30,7 +30,7 @@ public class Settings : ObservableObject
 
     public Dictionary<string, int> UsedSymbolList { get; set; } = [];
 
-    public ObservableCollection<UnicodeListItem> RecentUnicodeItems { get; set; } = [];
+    public ObservableCollection<UnicodeItem> RecentUnicodeItems { get; set; } = [];
 
     public bool ShowNesting { get; set; } = false;
 

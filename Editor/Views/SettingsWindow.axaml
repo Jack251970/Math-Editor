@@ -1,0 +1,80 @@
+﻿<Window
+    x:Class="Editor.SettingsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DataType="local:SettingsWindowViewModel"
+    Title="{DynamicResource SettingsWindow_Title}"
+    Width="485"
+    Height="300"
+    Closed="Window_Closed"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <Grid x:Name="MainGrid">
+        <ScrollViewer Margin="15" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_Language}" />
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="150"
+                        DisplayMemberBinding="{Binding Display}"
+                        ItemsSource="{Binding Languages, Mode=OneTime}"
+                        SelectedValue="{Binding Language, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding LanguageCode}" />
+                </Grid>
+                <Grid Margin="0 12 0 0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_DefaultMode}" />
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="150"
+                        DisplayMemberBinding="{Binding Display}"
+                        ItemsSource="{Binding AllEditModes, Mode=OneTime}"
+                        SelectedValue="{Binding Settings.DefaultMode, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding Value}" />
+                </Grid>
+                <Grid Margin="0 12 0 0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_DefaultFont}" />
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="150"
+                        DisplayMemberBinding="{Binding Display}"
+                        ItemsSource="{Binding AllFontTypes, Mode=OneTime}"
+                        SelectedValue="{Binding Settings.DefaultFont, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding Value}" />
+                </Grid>
+                <Grid Margin="0 12 0 0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label VerticalContentAlignment="Center" Content="{DynamicResource SettingsWindow_CopyType}" />
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="150"
+                        DisplayMemberBinding="{Binding Display}"
+                        ItemsSource="{Binding AllCopyTypes, Mode=OneTime}"
+                        SelectedIndex="0"
+                        SelectedValue="{Binding Settings.CopyType, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding Value}" />
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

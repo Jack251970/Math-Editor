@@ -1,11 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
-    public static class FormattedTextHelper
+    public static class FormattedTextExtendedHelper
     {
-        public static void DrawTextTopLeftAligned(this FormattedText text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
+        public static void DrawTextTopLeftAligned(this FormattedTextExtended text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
         {
             //double descent = text.Height - text.Baseline + text.OverhangAfter;
             //double topExtra = text.Baseline - text.Extent + descent;
@@ -26,7 +26,7 @@ namespace Editor
             }
         }
 
-        public static void DrawText(this FormattedText text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
+        public static void DrawText(this FormattedTextExtended text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -42,7 +42,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextLeftAligned(this FormattedText text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
+        public static void DrawTextLeftAligned(this FormattedTextExtended text, DrawingContext dc, Point topLeft, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -65,7 +65,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextCenterAligned(this FormattedText text, DrawingContext dc, Point hCenter, bool forceBlackBrush)
+        public static void DrawTextCenterAligned(this FormattedTextExtended text, DrawingContext dc, Point hCenter, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -82,7 +82,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextRightAligned(this FormattedText text, DrawingContext dc, Point topRight, bool forceBlackBrush)
+        public static void DrawTextRightAligned(this FormattedTextExtended text, DrawingContext dc, Point topRight, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -95,7 +95,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextTopRightAligned(this FormattedText text, DrawingContext dc, Point topRight, bool forceBlackBrush)
+        public static void DrawTextTopRightAligned(this FormattedTextExtended text, DrawingContext dc, Point topRight, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -110,7 +110,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextBottomLeftAligned(this FormattedText text, DrawingContext dc, Point bottomLeft, bool forceBlackBrush)
+        public static void DrawTextBottomLeftAligned(this FormattedTextExtended text, DrawingContext dc, Point bottomLeft, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -125,7 +125,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextBottomCenterAligned(this FormattedText text, DrawingContext dc, Point bottomCenter, bool forceBlackBrush)
+        public static void DrawTextBottomCenterAligned(this FormattedTextExtended text, DrawingContext dc, Point bottomCenter, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -140,7 +140,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextTopCenterAligned(this FormattedText text, DrawingContext dc, Point topCenter, bool forceBlackBrush)
+        public static void DrawTextTopCenterAligned(this FormattedTextExtended text, DrawingContext dc, Point topCenter, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -155,7 +155,7 @@ namespace Editor
             }
         }
 
-        public static void DrawTextBottomRightAligned(this FormattedText text, DrawingContext dc, Point bottomRight, bool forceBlackBrush)
+        public static void DrawTextBottomRightAligned(this FormattedTextExtended text, DrawingContext dc, Point bottomRight, bool forceBlackBrush)
         {
             if (forceBlackBrush)
             {
@@ -170,7 +170,7 @@ namespace Editor
             }
         }
 
-        public static double GetFullWidth(this FormattedText ft)
+        public static double GetFullWidth(this FormattedTextExtended ft)
         {
             if (ft.Text.Length > 0)
             {
@@ -197,37 +197,37 @@ namespace Editor
             }
         }
         /*
-        //double width = formattedText.WidthIncludingTrailingWhitespace;
-        //if (formattedText.Text.Length > 0)
+        //double width = formattedTextExtended.WidthIncludingTrailingWhitespace;
+        //if (formattedTextExtended.Text.Length > 0)
         //{
-        //    if (!char.IsSeparator(formattedText.Text[0]))
+        //    if (!char.IsSeparator(formattedTextExtended.Text[0]))
         //    {
-        //        if (formattedText.OverhangLeading < 0)
+        //        if (formattedTextExtended.OverhangLeading < 0)
         //        {
-        //            width -= formattedText.OverhangLeading;
+        //            width -= formattedTextExtended.OverhangLeading;
         //        }
         //    }
-        //    if (!char.IsSeparator(formattedText.Text[formattedText.Text.Length - 1]))
+        //    if (!char.IsSeparator(formattedTextExtended.Text[formattedTextExtended.Text.Length - 1]))
         //    {
-        //        width -= formattedText.OverhangTrailing;
+        //        width -= formattedTextExtended.OverhangTrailing;
         //    }
         //}
         //return width;
         */
 
-        public static double Descent(this FormattedText ft)
+        public static double Descent(this FormattedTextExtended ft)
         {
             return ft.Height - ft.Baseline + ft.OverhangAfter;
         }
 
-        public static double TopExtra(this FormattedText ft)
+        public static double TopExtra(this FormattedTextExtended ft)
         {
             // = ft.Baseline - ft.Extent + ft.Descent() 
             // = ft.Baseline - ft.Extent + (ft.Height - ft.Baseline + ft.OverhangAfter)
             return ft.Height - ft.Extent + ft.OverhangAfter;
         }
 
-        public static double GetRight(this FormattedText ft)
+        public static double GetRight(this FormattedTextExtended ft)
         {
             if (ft.Text.Length > 0)
             {

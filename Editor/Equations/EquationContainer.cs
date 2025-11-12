@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -21,6 +21,7 @@ namespace Editor
         }
 
         protected List<EquationBase> childEquations = [];
+
         private EquationBase? active = null;
         public EquationBase ActiveChild
         {
@@ -36,7 +37,7 @@ namespace Editor
             }
         }
 
-        public EquationContainer(MainWindow owner, EquationContainer parent) : base(owner, parent) { }
+        public EquationContainer(IMainWindow owner, EquationContainer parent) : base(owner, parent) { }
 
         public virtual void ExecuteCommand(CommandType commandType, object? data)
         {
@@ -103,6 +104,14 @@ namespace Editor
             CalculateSize();
         }
 
+        public override void ModifySolidBrush()
+        {
+            foreach (var eb in childEquations)
+            {
+                eb.ModifySolidBrush();
+            }
+        }
+
         public override bool Select(Key key)
         {
             return ActiveChild.Select(key);
@@ -130,9 +139,9 @@ namespace Editor
             CalculateSize();
         }
 
-        public override void ConsumeFormattedText(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo)
+        public override void ConsumeFormattedTextExtended(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo)
         {
-            ActiveChild.ConsumeFormattedText(text, formats, modes, decorations, addUndo);
+            ActiveChild.ConsumeFormattedTextExtended(text, formats, modes, decorations, addUndo);
             CalculateSize();
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -11,7 +11,7 @@ namespace Editor
         private readonly DecorationType _decorationType;
         private readonly Position _decorationPosition;
 
-        public Decorated(MainWindow owner, EquationContainer parent, DecorationType decorationType, Position decorationPosition)
+        public Decorated(IMainWindow owner, EquationContainer parent, DecorationType decorationType, Position decorationPosition)
             : base(owner, parent)
         {
             ActiveChild = _rowContainer = new RowContainer(owner, this);

@@ -1,0 +1,80 @@
+﻿<Window
+    x:Class="Editor.MatrixInputWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DataType="local:MatrixInputWindowViewModel"
+    Title="{DynamicResource MatrixInputWindow_Title}"
+    Width="378"
+    Height="184"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Text="{DynamicResource MatrixInputWindow_Rows}" />
+            <NumericUpDown
+                Grid.Column="2"
+                Width="150"
+                Minimum="1"
+                Maximum="100"
+                Increment="1"
+                ParsingNumberStyle="Integer"
+                FormatString="N0"
+                Value="{Binding Rows, Mode=TwoWay}" />
+            <TextBlock
+                Grid.Row="2"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Text="{DynamicResource MatrixInputWindow_Columns}" />
+            <NumericUpDown
+                Grid.Row="2"
+                Grid.Column="2"
+                Width="150"
+                Minimum="1"
+                Maximum="100"
+                Increment="1"
+                ParsingNumberStyle="Integer"
+                FormatString="N0"
+                Value="{Binding Columns, Mode=TwoWay}" />
+        </Grid>
+        <StackPanel
+            Grid.Row="1"
+            Margin="15"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                Width="70"
+                Margin="5 0"
+                Click="OkButton_Click"
+                Content="{DynamicResource Ok}"
+                IsDefault="True" />
+            <Button
+                Width="70"
+                Margin="5 0"
+                Click="CancelButton_Click"
+                Content="{DynamicResource Cancel}"
+                IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

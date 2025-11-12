@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="Editor.CharacterToolBar"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="34"
+    d:DesignWidth="600"
+    Loaded="UserControl_Loaded"
+    mc:Ignorable="d">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/ToolBarStyles.axaml" />
+    </UserControl.Styles>
+
+    <Canvas Name="mainToolBarPanel" Height="22">
+        <StackPanel Height="{Binding ElementName=mainToolBarPanel, Path=Height}" Orientation="Horizontal">
+            <Button
+                x:Name="symbolsButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/symbols.png" />
+            </Button>
+            <Button
+                x:Name="greekCapitalButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/greekcapital.png" />
+            </Button>
+            <Button
+                x:Name="greekSmallButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/greeksmall.png" />
+            </Button>
+            <Button
+                x:Name="arrowsButton"
+                Click="ToolBarButton_Click"
+                Classes="ToolBarButton"
+                GotFocus="ToolBarButton_GotFocus"
+                PointerEntered="ToolBarButton_PointerEntered">
+                <Image Source="/Images/MathButtons/arrows.png" />
+            </Button>
+        </StackPanel>
+    </Canvas>
+</UserControl>

@@ -1,0 +1,70 @@
+<Window
+    x:Class="Editor.AboutWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:Editor"
+    x:DataType="local:AboutWindowViewModel"
+    mc:Ignorable="d"
+    d:DesignWidth="436"
+    d:DesignHeight="262"
+    Title="{DynamicResource AboutWindow_Title}"
+    Width="436"
+    Height="262"
+    CanResize="False"
+    WindowStartupLocation="CenterOwner">
+
+    <Grid Name="MainGrid" Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="80">
+            <Image
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Source="avares://Editor/Images/icon.png" />
+        </Grid>
+        <TextBlock
+            Name="VersionLabel"
+            Grid.Row="0"
+            Grid.Column="1"
+            VerticalAlignment="Center"
+            Text="Math Editor v1.0.0.0" />
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Width="{Binding ElementName=MainGrid, Path=Width}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <HyperlinkButton
+                Grid.Column="0"
+                Padding="4"
+                Content="{DynamicResource AboutWindow_SourceRepository}"
+                NavigateUri="{Binding RepositoryUrl, Mode=OneTime}" />
+            <HyperlinkButton
+                Grid.Column="1"
+                Padding="4"
+                HorizontalAlignment="Center"
+                Content="{DynamicResource AboutWindow_IssueReport}"
+                NavigateUri="{Binding IssuesUrl, Mode=OneTime}" />
+            <HyperlinkButton
+                Grid.Column="2"
+                Padding="4"
+                Content="{DynamicResource AboutWindow_SponsorAuthor}"
+                NavigateUri="{Binding SponsorUrl, Mode=OneTime}" />
+        </Grid>
+    </Grid>
+</Window>

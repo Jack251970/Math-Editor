@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows;
-using System.Windows.Media;
-using iNKORE.UI.WPF.Modern;
+using Avalonia;
+using Avalonia.Media;
+using Avalonia.Styling;
 
 namespace Editor
 {
@@ -12,9 +12,9 @@ namespace Editor
         /*
          * Pens
          */
-        private static readonly Dictionary<(double, ApplicationTheme), Pen> _bevelPens = [];
-        private static readonly Dictionary<(double, ApplicationTheme), Pen> _miterPens = [];
-        private static readonly Dictionary<(double, ApplicationTheme), Pen> _roundPens = [];
+        private static readonly Dictionary<(double, ThemeVariant), Pen> _bevelPens = [];
+        private static readonly Dictionary<(double, ThemeVariant), Pen> _miterPens = [];
+        private static readonly Dictionary<(double, ThemeVariant), Pen> _roundPens = [];
 
         private static readonly Lock _bevelLock = new();
         private static readonly Lock _miterLock = new();
@@ -22,7 +22,7 @@ namespace Editor
 
         public static Pen GetBlackPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
         {
-            var key = (thickness, ApplicationTheme.Light);
+            var key = (thickness, ThemeVariant.Light);
             if (lineJoin == PenLineJoin.Bevel)
             {
                 return GetPen(_bevelLock, _bevelPens, key, lineJoin);
@@ -39,7 +39,7 @@ namespace Editor
 
         public static Pen GetPen(double thickness, PenLineJoin lineJoin = PenLineJoin.Bevel)
         {
-            var key = (thickness, ThemeManager.Current.ActualApplicationTheme);
+            var key = (thickness, Application.Current!.RequestedThemeVariant!);
             if (lineJoin == PenLineJoin.Bevel)
             {
                 return GetPen(_bevelLock, _bevelPens, key, lineJoin);
@@ -54,7 +54,7 @@ namespace Editor
             }
         }
 
-        private static Pen GetPen(Lock lockObj, Dictionary<(double, ApplicationTheme), Pen> penDictionary, (double, ApplicationTheme) key, PenLineJoin lineJoin, Brush? brush = null)
+        private static Pen GetPen(Lock lockObj, Dictionary<(double, ThemeVariant), Pen> penDictionary, (double, ThemeVariant) key, PenLineJoin lineJoin, IBrush? brush = null)
         {
             lock (lockObj)
             {
@@ -67,7 +67,6 @@ namespace Editor
                     {
                         LineJoin = lineJoin
                     };
-                    pen.Freeze();
                     value = pen;
                     penDictionary.Add(newKey, value);
                 }
@@ -84,16 +83,11 @@ namespace Editor
             {
                 lock (_rowBoxPenLock)
                 {
-                    if (_rowBoxPen is null)
+                    _rowBoxPen ??= new(GetAccentFillColorDefaultBrush(), 1.1)
                     {
-                        _rowBoxPen = new(GetAccentFillColorDefaultBrush(), 1.1)
-                        {
-                            StartLineCap = PenLineCap.Flat,
-                            EndLineCap = PenLineCap.Flat,
-                            DashStyle = DashStyles.Dash
-                        };
-                        _rowBoxPen.Freeze();
-                    }
+                        LineCap = PenLineCap.Flat,
+                        DashStyle = new DashStyle([2, 2], 0)
+                    };
                     return _rowBoxPen;
                 }
             }
@@ -102,8 +96,11 @@ namespace Editor
         /*
          * Brushes
          */
+        public static SolidColorBrush Black { get; } = new(Colors.Black);
+        public static SolidColorBrush White { get; } = new(Colors.White);
+
         public static SolidColorBrush TextFillColorPrimaryBrush =>
-            GetTextFillColorPrimaryBrush(ThemeManager.Current.ActualApplicationTheme);
+            GetTextFillColorPrimaryBrush(Application.Current!.RequestedThemeVariant);
 
         private static readonly Lock _deleteableBrushLock = new();
 
@@ -114,14 +111,10 @@ namespace Editor
             {
                 lock (_deleteableBrushLock)
                 {
-                    if (_deleteableBrush is null)
+                    _deleteableBrush ??= new SolidColorBrush(Colors.Gray)
                     {
-                        _deleteableBrush = new SolidColorBrush(Colors.Gray)
-                        {
-                            Opacity = 0.5
-                        };
-                        _deleteableBrush.Freeze();
-                    }
+                        Opacity = 0.5
+                    };
                     return _deleteableBrush;
                 }
             }
@@ -136,26 +129,23 @@ namespace Editor
             {
                 lock (_selectionBrushLock)
                 {
-                    if (_selectionBrush is null)
-                    {
-                        // From WinUI3 TextBox #0063B1
-                        _selectionBrush = new SolidColorBrush(Color.FromRgb(0, 99, 177));
-                        _selectionBrush.Freeze();
-                    }
+                    // From WinUI3 TextBox #0063B1
+                    _selectionBrush ??= new SolidColorBrush(Color.FromRgb(0, 99, 177));
                     return _selectionBrush;
                 }
             }
         }
 
-        private static SolidColorBrush GetTextFillColorPrimaryBrush(ApplicationTheme? theme)
+        private static SolidColorBrush GetTextFillColorPrimaryBrush(ThemeVariant? theme)
         {
-            theme ??= ThemeManager.Current.ActualApplicationTheme;
-            return theme == ApplicationTheme.Light ? Brushes.Black : Brushes.White;
+            theme ??= Application.Current!.RequestedThemeVariant!;
+            return theme == ThemeVariant.Light ? Black : White;
         }
 
         private static SolidColorBrush GetAccentFillColorDefaultBrush()
         {
-            return new(((SolidColorBrush)Application.Current.Resources[ThemeKeys.AccentFillColorDefaultBrushKey]).Color);
+            // From WinUI3 Gallery #40BDFF
+            return new SolidColorBrush(Color.FromRgb(64, 189, 255));
         }
     }
 }

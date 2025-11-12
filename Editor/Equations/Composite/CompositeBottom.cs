@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -11,7 +11,7 @@ namespace Editor
     {
         private readonly RowContainer bottomRowContainer;
 
-        public CompositeBottom(MainWindow owner, EquationContainer parent, bool isCompositeBig)
+        public CompositeBottom(IMainWindow owner, EquationContainer parent, bool isCompositeBig)
             : base(owner, parent, isCompositeBig)
         {
             SubLevel++;
@@ -110,7 +110,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = bottomRowContainer;
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }
@@ -121,7 +121,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = mainRowContainer;
-                    point.Y = ActiveChild.Bottom - 1;
+                    point = point.WithY(ActiveChild.Bottom - 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }

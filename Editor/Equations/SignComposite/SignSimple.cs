@@ -9,7 +9,7 @@ namespace Editor
         private readonly RowContainer _mainEquation;
         private readonly StaticSign _sign;
 
-        public SignSimple(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
+        public SignSimple(IMainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useUpright)
             : base(owner, parent)
         {
             ActiveChild = _mainEquation = new RowContainer(owner, this);

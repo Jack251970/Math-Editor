@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 
 namespace Editor
 {
@@ -16,7 +16,7 @@ namespace Editor
 
         private EquationContainer? _deleteable = null;
 
-        public EquationRow(MainWindow owner, EquationContainer parent)
+        public EquationRow(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             var textEq = new TextEquation(owner, this);
@@ -269,19 +269,19 @@ namespace Editor
         {
             try
             {
-                if (Owner.ViewModel.IsSelecting)
+                if (Owner.IsSelecting)
                 {
                     var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                     var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
                     var firstRect = childEquations[startIndex].GetSelectionBounds();
-                    if (firstRect == Rect.Empty)
+                    if (firstRect == default)
                     {
                         firstRect = new Rect(childEquations[startIndex].Right, childEquations[startIndex].Top, 0, 0);
                     }
                     if (count > 0)
                     {
                         var lastRect = childEquations[count + startIndex].GetSelectionBounds();
-                        if (lastRect == Rect.Empty)
+                        if (lastRect == default)
                         {
                             lastRect = new Rect(childEquations[count + startIndex].Left, childEquations[count + startIndex].Top, 0, childEquations[count + startIndex].Height);
                         }
@@ -299,7 +299,7 @@ namespace Editor
             {
                 EditorLogger.Fatal(ClassName, "Error in GetSelectionBounds", e);
             }
-            return Rect.Empty;
+            return default;
         }
 
         public override void Paste(XElement xe)
@@ -340,7 +340,7 @@ namespace Editor
                     var index = childEquations.IndexOf(ActiveChild) + 1;
                     newChildren.RemoveAt(0);
                     childEquations.InsertRange(index, newChildren);
-                    ((TextEquation)ActiveChild).ConsumeFormattedText(action.FirstNewText, action.FirstNewFormats, action.FirstNewModes, action.FirstNewDecorations, false);
+                    ((TextEquation)ActiveChild).ConsumeFormattedTextExtended(action.FirstNewText, action.FirstNewFormats, action.FirstNewModes, action.FirstNewDecorations, false);
                     ((TextEquation)newChildren.Last()).Merge((TextEquation)newChild!);
                     ActiveChild = newChildren.Last();
                     UndoManager.AddUndoAction(action);
@@ -378,8 +378,8 @@ namespace Editor
 
                 var firstEquation = new TextEquation(Owner, this);
                 var lastEquation = new TextEquation(Owner, this);
-                firstEquation.ConsumeFormattedText(firstText, firstFormats, firstModes, firstDecorations, false);
-                lastEquation.ConsumeFormattedText(lastText, lastFormats, lastModes, lastDecorations, false);
+                firstEquation.ConsumeFormattedTextExtended(firstText, firstFormats, firstModes, firstDecorations, false);
+                lastEquation.ConsumeFormattedTextExtended(lastText, lastFormats, lastModes, lastDecorations, false);
 
                 var equations = new List<EquationBase>() { firstEquation };
                 for (var i = startIndex + 1; i < startIndex + count; i++)
@@ -412,20 +412,33 @@ namespace Editor
                         width += eb.Width;
                     }
 
-                    bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)),
-                        (int)(Math.Ceiling(maxUpperHalf + maxBottomHalf + 2)), 96, 96, PixelFormats.Default);
-                    var dv = new DrawingVisual();
-                    Owner.ViewModel.IsSelecting = false;
-                    using (var dc = dv.RenderOpen())
+                    var bmpWidth = (int)Math.Ceiling(width + 2);
+                    var bmpHeight = (int)Math.Ceiling(maxUpperHalf + maxBottomHalf + 2);
+
+                    // Create Avalonia RenderTargetBitmap
+                    bitmap = new RenderTargetBitmap(new PixelSize(bmpWidth, bmpHeight), new Vector(96, 96));
+
+                    // Disable selection highlight during printing
+                    var oldSelecting = Owner.IsSelecting;
+                    Owner.IsSelecting = false;
+                    try
                     {
-                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
+                        // Draw directly into the bitmap using Avalonia drawing context
+                        using var dc = bitmap.CreateDrawingContext();
+
+                        // Fill background white
+                        dc.FillRectangle(Brushes.White, new Rect(0, 0, bmpWidth, bmpHeight));
+
+                        // Draw the equation into the bitmap context, forcing black brush for fidelity
                         foreach (var eb in equations)
                         {
                             eb.DrawEquation(dc, true);
                         }
                     }
-                    Owner.ViewModel.IsSelecting = true;
-                    bitmap.Render(dv);
+                    finally
+                    {
+                        Owner.IsSelecting = oldSelecting;
+                    }
                 }
 
                 // Create text if needed
@@ -480,7 +493,7 @@ namespace Editor
             if (childEquations.Count == 1 && childEquations.First() is TextEquation textEquation &&
                 textEquation.TextLength == 0)
             {
-                if (Owner.ViewModel.IsSelecting && ParentEquation.ActiveChild == this)
+                if (Owner.IsSelecting && ParentEquation.ActiveChild == this)
                 {
                     dc.DrawRectangle(PenManager.SelectionBrush, null, new Rect(Left, Top, Width, Height + ThinLineThickness));
                 }
@@ -615,7 +628,7 @@ namespace Editor
                         break;
                     case CommandType.SignComposite:
                         newEquation = SignCompositeFactory.CreateEquation(Owner, this, (Position)(((object[])data!)[0]),
-                            (SignCompositeSymbol)(((object[])data)[1]), Owner.ViewModel.UseItalicIntergalOnNew);
+                            (SignCompositeSymbol)(((object[])data)[1]), Owner.UseItalicIntergalOnNew);
                         break;
                     case CommandType.Decorated:
                         newEquation = new Decorated(Owner, this, (DecorationType)(((object[])data!)[0]), (Position)(((object[])data)[1]));
@@ -1123,7 +1136,7 @@ namespace Editor
             if (action.GetType() == typeof(RowAction))
             {
                 ProcessRowAction(action);
-                Owner.ViewModel.IsSelecting = false;
+                Owner.IsSelecting = false;
             }
             else if (action.GetType() == typeof(EquationRowPasteAction))
             {
@@ -1190,7 +1203,7 @@ namespace Editor
                 }
                 SelectedItems = rowAction.SelectedItems;
                 SelectionStartIndex = rowAction.SelectionStartIndex;
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
             }
             else
             {
@@ -1204,7 +1217,7 @@ namespace Editor
                 }
                 ActiveChild = rowAction.HeadTextEquation;
                 SelectedItems = 0;
-                Owner.ViewModel.IsSelecting = false;
+                Owner.IsSelecting = false;
             }
         }
 
@@ -1230,7 +1243,7 @@ namespace Editor
                 var newChild = ActiveChild.Split(this);
                 var index = childEquations.IndexOf(ActiveChild) + 1;
                 childEquations.InsertRange(index, pasteAction.Equations);
-                ((TextEquation)ActiveChild).ConsumeFormattedText(pasteAction.FirstNewText, pasteAction.FirstNewFormats, pasteAction.FirstNewModes, pasteAction.FirstNewDecorations, false);
+                ((TextEquation)ActiveChild).ConsumeFormattedTextExtended(pasteAction.FirstNewText, pasteAction.FirstNewFormats, pasteAction.FirstNewModes, pasteAction.FirstNewDecorations, false);
                 ((TextEquation)pasteAction.Equations.Last()).Merge((TextEquation)newChild!);
                 ActiveChild = childEquations[index + pasteAction.Equations.Count - 1];
                 foreach (var eb in pasteAction.Equations)
@@ -1267,7 +1280,7 @@ namespace Editor
         {
             if (action is EquationRowFormatAction ecfa)
             {
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
                 SelectedItems = ecfa.SelectedItems;
                 SelectionStartIndex = ecfa.SelectionStartIndex;
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
@@ -1449,7 +1462,7 @@ namespace Editor
 
         public override void ModifySelection(string operation, object argument, bool applied, bool addUndo)
         {
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                 var endIndex = SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex;

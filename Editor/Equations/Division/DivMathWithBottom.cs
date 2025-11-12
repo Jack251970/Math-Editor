@@ -4,7 +4,7 @@ namespace Editor
 {
     public sealed class DivMathWithBottom : DivMathWithOuterBase
     {
-        public DivMathWithBottom(MainWindow owner, EquationContainer parent)
+        public DivMathWithBottom(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             _divMathSign.IsInverted = true;

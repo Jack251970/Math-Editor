@@ -8,7 +8,7 @@ namespace Editor.Localization.SourceGenerators
         public static readonly DiagnosticDescriptor CouldNotFindResourceDictionaries = new DiagnosticDescriptor(
             "FLSG0001",
             "Could not find resource dictionaries",
-            "Could not find resource dictionaries. There must be a `en.xaml` file under `Language` folder.",
+            "Could not find resource dictionaries. There must be a `en.axaml` file under `Language` folder.",
             "Localization",
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true

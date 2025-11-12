@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -17,7 +17,7 @@ namespace Editor
         private double HGap => FontSize * .5;
         private double LeftPadding => FontSize * .1;
 
-        public NRoot(MainWindow owner, EquationContainer parent)
+        public NRoot(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             _radicalSign = new RadicalSign(owner, this);

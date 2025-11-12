@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -7,7 +7,7 @@ namespace Editor
     {
         public bool IsInverted { get; set; }
 
-        public DivMathSign(MainWindow owner, EquationContainer parent)
+        public DivMathSign(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             IsStatic = true;
@@ -32,18 +32,47 @@ namespace Editor
             if (IsInverted)
             {
                 pathFigureStart = new Point(ParentEquation.Right, Bottom - pen.Thickness / 2);
-                line = new LineSegment(new Point(Left, Bottom - pen.Thickness / 2), true);
-                arc = new ArcSegment(Location, new Size(Width * 4.5, Height), 0, false, SweepDirection.Counterclockwise, true);
+                line = new LineSegment()
+                {
+                    Point = new Point(Left, Bottom - pen.Thickness / 2),
+                    IsStroked = true
+                };
+                arc = new ArcSegment()
+                {
+                    Point = Location,
+                    Size = new Size(Width * 4.5, Height),
+                    RotationAngle = 0,
+                    IsLargeArc = false,
+                    SweepDirection = SweepDirection.CounterClockwise,
+                    IsStroked = true
+                };
             }
             else
             {
                 pathFigureStart = new Point(ParentEquation.Right, Top);
-                line = new LineSegment(Location, true);
-                arc = new ArcSegment(new Point(Left, Bottom), new Size(Width * 4.5, Height), 0, false, SweepDirection.Clockwise, true);
+                line = new LineSegment()
+                {
+                    Point = Location,
+                    IsStroked = true
+                };
+                arc = new ArcSegment()
+                {
+                    Point = new Point(Left, Bottom),
+                    Size = new Size(Width * 4.5, Height),
+                    RotationAngle = 0,
+                    IsLargeArc = false,
+                    SweepDirection = SweepDirection.Clockwise,
+                    IsStroked = true
+                };
             }
             var pathGeometry = new PathGeometry();
-            var pathFigure = new PathFigure(pathFigureStart, [line, arc], false);
-            pathGeometry.Figures.Add(pathFigure);
+            var pathFigure = new PathFigure()
+            {
+                StartPoint = pathFigureStart,
+                Segments = [line, arc],
+                IsClosed = false
+            };
+            pathGeometry.Figures!.Add(pathFigure);
             dc.DrawGeometry(null, pen, pathGeometry);
         }
     }

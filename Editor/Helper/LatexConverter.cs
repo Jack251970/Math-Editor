@@ -5,8 +5,6 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Editor;
 
@@ -17,6 +15,27 @@ public class LatexConverter
     #region Initialization
 
     private readonly ConcurrentDictionary<char, char[]> LatexSymbolMapping = new();
+
+    // Predefined Latex to Unicode mapping for known functions
+    private readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
+    {
+        { '{', ToChars("\\{ ") },
+        { '}', ToChars("\\} ") },
+        { '\u2211', ToChars("\\sum") }, // ∑
+        { '\u220F', ToChars("\\prod") }, // ∏
+        { '\u2210', ToChars("\\coprod") }, // ∐
+        { '\u22C2', ToChars("\\bigcap") }, // ⋂
+        { '\u22C3', ToChars("\\bigcup") }, // ⋃
+        { '\u222B', ToChars("\\int") }, // ∫
+        { '\u222C', ToChars("\\iint") }, // ∬
+        { '\u222D', ToChars("\\iiint") }, // ∭
+        { '\u222E', ToChars("\\oint") }, // ∮
+        { '\u222F', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}") }, // ∯
+        { '\u2230', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}") }, // ∰
+        { '\u2232', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}") }, // ∲
+        { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
+        { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
+    };
 
     public void LoadPredefinedLatexUnicodeMapping()
     {
@@ -29,15 +48,16 @@ public class LatexConverter
 
     public void LoadUserUnicodeMapping()
     {
-        // TODO: Add support for user-defined Latex to Unicode mapping
+
     }
 
     private void LoadMapping(string path)
     {
         try
         {
-            var latexMappingJson = File.ReadAllText(path);
-            var latexMapping = JsonSerializer.Deserialize<Dictionary<string, string>>(latexMappingJson);
+            var latexMapping = JsonHelper.Deserialize<Dictionary<string, string>>(path) ??
+                throw new JsonException("Failed to deserialize LaTeX to Unicode mapping.");
+
             Parallel.ForEach(latexMapping!, kvp =>
             {
                 if (kvp.Value.Length == 1)
@@ -46,7 +66,7 @@ public class LatexConverter
                 }
                 else
                 {
-                    // TODO: Add support for multi-character Unicode mappings
+
                 }
             });
         }
@@ -192,25 +212,6 @@ public class LatexConverter
     /// <param name="c"></param>
     /// <param name="convertWrapper"></param>
     /// <returns></returns>
-    private readonly Dictionary<char, char[]> PredefinedLatexSymbolMapping = new()
-    {
-        { '{', ToChars("\\{ ") },
-        { '}', ToChars("\\} ") },
-        { '\u2211', ToChars("\\sum") }, // ∑
-        { '\u220F', ToChars("\\prod") }, // ∏
-        { '\u2210', ToChars("\\coprod") }, // ∐
-        { '\u22C2', ToChars("\\bigcap") }, // ⋂
-        { '\u22C3', ToChars("\\bigcup") }, // ⋃
-        { '\u222B', ToChars("\\int") }, // ∫
-        { '\u222C', ToChars("\\iint") }, // ∬
-        { '\u222D', ToChars("\\iiint") }, // ∭
-        { '\u222E', ToChars("\\oint") }, // ∮
-        { '\u222F', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int}\\mkern-21mu \\bigcirc}") }, // ∯
-        { '\u2230', ToChars("\\mathop{{\\int\\!\\!\\!\\!\\!\\int\\!\\!\\!\\!\\!\\int}\\mkern-31.2mu \\bigodot}") }, // ∰
-        { '\u2232', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowleft}") }, // ∲
-        { '\u2233', ToChars("\\mathop{\\int\\mkern-20.8mu \\circlearrowright}") }, // ∳
-        { '\u002d', ToChars("{\\rm{ \u002d }}") } // -
-    };
     private char[] ConvertToLatexSymbol(char c, bool convertWrapper)
     {
         if (c == '{')
@@ -245,16 +246,6 @@ public class LatexConverter
     /// </summary>
     /// <param name="rows"></param>
     /// <returns></returns>
-    // TODO: Support \begin{gathered} \hfill \\ \hfill \\ \end{gathered}??
-    // \[\begin{gathered}
-    //  1111 \hfill \\
-    //  2222 \hfill \\ 
-    // \end{gathered
-    // } \]
-    // \[\begin{array}{ l}
-    // 1111\\
-    // 2222
-    // \end{array}\]
     public StringBuilder? EscapeRows(List<StringBuilder> rows)
     {
         if (rows.Count == 0) return null;
@@ -488,7 +479,6 @@ public class LatexConverter
                         .Append('}').Append('}'),
                     _ => throw new InvalidOperationException($"Unsupported position for LaTeX conversion: {position}"),
                 };
-            // TODO: Support editting these in the settings.
             case ArrowType.RightSmallLeftArrow:
                 switch (position)
                 {

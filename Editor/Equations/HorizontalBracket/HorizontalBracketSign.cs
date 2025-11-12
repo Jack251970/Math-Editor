@@ -1,16 +1,17 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using System.Collections.Generic;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
     public sealed class HorizontalBracketSign : EquationBase
     {
         public HorizontalBracketSignType SignType { get; private set; }
-        private FormattedText sign = null!;
-        private FormattedText leftCurlyPart = null!;
-        private FormattedText rightCurlyPart = null!;
+        private FormattedTextExtended sign = null!;
+        private FormattedTextExtended leftCurlyPart = null!;
+        private FormattedTextExtended rightCurlyPart = null!;
 
-        public HorizontalBracketSign(MainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
+        public HorizontalBracketSign(IMainWindow owner, EquationContainer parent, HorizontalBracketSignType signType)
             : base(owner, parent)
         {
             SignType = signType;
@@ -38,7 +39,7 @@ namespace Editor
 
         private void DrawTopSquare(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points =
+            List<Point> points =
             [
                 new Point(Left, Top),
                 new Point(Right, Top),
@@ -53,7 +54,7 @@ namespace Editor
 
         private void DrawBottomSquare(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points =
+            List<Point> points =
             [
                 new Point(Left, Top),
                 new Point(Left + ThinLineThickness, Top),
@@ -74,7 +75,7 @@ namespace Editor
             }
             else
             {
-                var line = FontFactory.GetFormattedText("\uE14B", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                var line = FontFactory.GetFormattedTextExtended("\uE14B", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
                 leftCurlyPart.DrawTextTopLeftAligned(dc, Location, forceBlackBrush);
                 sign.DrawTextTopLeftAligned(dc, new Point(MidX - sign.GetFullWidth() * .5, Top + leftCurlyPart.Extent - line.Extent), forceBlackBrush);
                 rightCurlyPart.DrawTextTopLeftAligned(dc, new Point(Right - rightCurlyPart.GetFullWidth(), Top), forceBlackBrush);
@@ -122,7 +123,7 @@ namespace Editor
             }
             else
             {
-                var extension = FontFactory.GetFormattedText("\uE14A", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
+                var extension = FontFactory.GetFormattedTextExtended("\uE14A", FontType.STIXNonUnicode, FontSize * .55, forceBlackBrush);
                 //dc.DrawLine(new Pen(Brushes.Red, 1), Location, new Point(Right, Top));
                 leftCurlyPart.DrawTextTopLeftAligned(dc, new Point(Left, Top + sign.Extent - extension.Extent), forceBlackBrush);
                 sign.DrawTextTopLeftAligned(dc, new Point(MidX - sign.GetFullWidth() * .5, Top), forceBlackBrush);
@@ -206,17 +207,17 @@ namespace Editor
         private void CreateBrokenCurlyTop(bool forceBlackBrush)
         {
             var fontSize = FontSize * .55;
-            leftCurlyPart = FontFactory.GetFormattedText("\uE13B", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top left of overbrace 
-            sign = FontFactory.GetFormattedText("\uE140", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //middle of overbrace
-            rightCurlyPart = FontFactory.GetFormattedText("\uE13C", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top right of overbrace             
+            leftCurlyPart = FontFactory.GetFormattedTextExtended("\uE13B", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top left of overbrace 
+            sign = FontFactory.GetFormattedTextExtended("\uE140", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //middle of overbrace
+            rightCurlyPart = FontFactory.GetFormattedTextExtended("\uE13C", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top right of overbrace             
         }
 
         private void CreateBrokenCurlyBottom(bool forceBlackBrush)
         {
             var fontSize = FontSize * .55;
-            leftCurlyPart = FontFactory.GetFormattedText("\uE13D", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top left of overbrace 
-            sign = FontFactory.GetFormattedText("\uE141", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //middle of overbrace
-            rightCurlyPart = FontFactory.GetFormattedText("\uE13E", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top right of overbrace
+            leftCurlyPart = FontFactory.GetFormattedTextExtended("\uE13D", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top left of overbrace 
+            sign = FontFactory.GetFormattedTextExtended("\uE141", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //middle of overbrace
+            rightCurlyPart = FontFactory.GetFormattedTextExtended("\uE13E", FontType.STIXNonUnicode, fontSize, forceBlackBrush); //Top right of overbrace
         }
 
         private void CreateSingleCharacterCurlySign(bool forceBlackBrush)
@@ -246,7 +247,7 @@ namespace Editor
             double fontSize = 4;
             do
             {
-                sign = FontFactory.GetFormattedText(signStr, fontType, fontSize++, forceBlackBrush);
+                sign = FontFactory.GetFormattedTextExtended(signStr, fontType, fontSize++, forceBlackBrush);
             }
             while (sign.Width < Width);
             Height = sign.Extent * 1.1;

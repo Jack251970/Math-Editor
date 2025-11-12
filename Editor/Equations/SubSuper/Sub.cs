@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using System.Windows;
 using System.Xml.Linq;
+using Avalonia;
 
 namespace Editor
 {
@@ -8,7 +8,7 @@ namespace Editor
     {
         private readonly RowContainer rowContainer;
 
-        public Sub(MainWindow owner, EquationRow parent, Position position)
+        public Sub(IMainWindow owner, EquationRow parent, Position position)
             : base(owner, parent, position)
         {
             ActiveChild = rowContainer = new RowContainer(owner, this);
@@ -63,7 +63,7 @@ namespace Editor
             set
             {
                 base.Left = value;
-                rowContainer.Left = Left + Padding;
+                rowContainer.Left = this.Left + Padding;
             }
         }
 

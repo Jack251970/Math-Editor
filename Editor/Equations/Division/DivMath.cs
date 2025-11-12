@@ -15,7 +15,7 @@ namespace Editor
 
         protected double LeftGap => FontSize * .1;
 
-        public DivMath(MainWindow owner, EquationContainer parent)
+        public DivMath(IMainWindow owner, EquationContainer parent)
             : base(owner, parent)
         {
             _divMathSign = new DivMathSign(owner, this);

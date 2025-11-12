@@ -7,7 +7,7 @@ namespace Editor
     {
         private readonly BracketSign bracketSign2;
 
-        public LeftRightBracket(MainWindow owner, EquationContainer parent,
+        public LeftRightBracket(IMainWindow owner, EquationContainer parent,
             BracketSignType leftBracketType, BracketSignType rightBracketType)
             : base(owner, parent)
         {

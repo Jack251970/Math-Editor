@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Media;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
     public sealed class BracketSign : EquationBase
     {
         public BracketSignType SignType { get; set; }
-        private FormattedText? signText; //used by certain brackets
-        private FormattedText? signText2; //used by certain brackets
-        private FormattedText? midText; //for bigger curly brackets
-        private FormattedText? extension; //for bigger curly brackets
+        private FormattedTextExtended? signText; //used by certain brackets
+        private FormattedTextExtended? signText2; //used by certain brackets
+        private FormattedTextExtended? midText; //for bigger curly brackets
+        private FormattedTextExtended? extension; //for bigger curly brackets
 
         private double BracketBreakLimit => FontSize * 2.8;
 
@@ -22,20 +23,20 @@ namespace Editor
         private double LeftPadding => FontSize * leftPaddingFactor;
         private double RightPadding => FontSize * rightPaddingFactor;
 
-        public BracketSign(MainWindow owner, EquationContainer parent, BracketSignType entityType)
+        public BracketSign(IMainWindow owner, EquationContainer parent, BracketSignType entityType)
             : base(owner, parent)
         {
             SignType = entityType;
             IsStatic = true;
-            if (new[] {BracketSignType.LeftRound, BracketSignType.LeftCurly, BracketSignType.LeftAngle,
-                        BracketSignType.LeftCeiling, BracketSignType.LeftFloor, BracketSignType.LeftSquare,
-                        BracketSignType.LeftSquareBar}.Contains(entityType))
+            if (new[] { BracketSignType.LeftRound, BracketSignType.LeftCurly, BracketSignType.LeftAngle,
+                BracketSignType.LeftCeiling, BracketSignType.LeftFloor, BracketSignType.LeftSquare,
+                BracketSignType.LeftSquareBar }.Contains(entityType))
             {
                 leftPaddingFactor = 0.02;
                 rightPaddingFactor = 0;
             }
             else if (entityType is BracketSignType.LeftBar or BracketSignType.LeftDoubleBar or
-                     BracketSignType.RightBar or BracketSignType.RightDoubleBar)
+                BracketSignType.RightBar or BracketSignType.RightDoubleBar)
             {
                 leftPaddingFactor = 0.06;
                 rightPaddingFactor = 0.06;
@@ -89,9 +90,9 @@ namespace Editor
                 var text1 = SignType == BracketSignType.LeftRound ? "\u239b" : "\u239e";
                 var text2 = SignType == BracketSignType.LeftRound ? "\u239d" : "\u23a0";
                 var ext = SignType == BracketSignType.LeftRound ? "\u239c" : "\u239f";
-                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                extension = FontFactory.GetFormattedText(ext, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText = FontFactory.GetFormattedTextExtended(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText2 = FontFactory.GetFormattedTextExtended(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                extension = FontFactory.GetFormattedTextExtended(ext, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
             }
         }
 
@@ -122,10 +123,10 @@ namespace Editor
                 var text1 = SignType == BracketSignType.LeftCurly ? "\u23a7" : "\u23ab";
                 var midtex = SignType == BracketSignType.LeftCurly ? "\u23a8" : "\u23ac";
                 var text2 = SignType == BracketSignType.LeftCurly ? "\u23a9" : "\u23ad";
-                signText = FontFactory.GetFormattedText(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                midText = FontFactory.GetFormattedText(midtex, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                extension = FontFactory.GetFormattedText("\u23AA", FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
-                signText2 = FontFactory.GetFormattedText(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText = FontFactory.GetFormattedTextExtended(text1, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                midText = FontFactory.GetFormattedTextExtended(midtex, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                extension = FontFactory.GetFormattedTextExtended("\u23AA", FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
+                signText2 = FontFactory.GetFormattedTextExtended(text2, FontType.STIXSizeOneSym, FontSize * .5, forceBlackBrush);
             }
         }
 
@@ -134,7 +135,7 @@ namespace Editor
             var factor = .4;
             do
             {
-                signText = FontFactory.GetFormattedText(unicodeCharText, fontType, FontSize * factor, forceBlackBrush);
+                signText = FontFactory.GetFormattedTextExtended(unicodeCharText, fontType, FontSize * factor, forceBlackBrush);
                 factor += .02;
             }
             while (Height > signText.Extent);
@@ -257,7 +258,7 @@ namespace Editor
 
         private void PaintVerticalBar(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points = [
                 new Point(SignRight, Top),
                 new Point(SignRight, Bottom),
                 new Point(SignLeft, Bottom),
@@ -267,7 +268,8 @@ namespace Editor
 
         private void PaintLeftCeiling(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Top),
                 new Point(SignRight, Top + ThinLineThickness),
                 new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
@@ -279,7 +281,8 @@ namespace Editor
 
         private void PaintRightCeiling(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Top),
                 new Point(SignRight, Bottom),
                 new Point(SignRight - ThinLineThickness, Bottom),
@@ -291,7 +294,8 @@ namespace Editor
 
         private void PaintLeftFloor(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignLeft + ThinLineThickness, Top),
                 new Point(SignLeft + ThinLineThickness, Bottom - ThinLineThickness),
                 new Point(SignRight, Bottom - ThinLineThickness),
@@ -303,7 +307,8 @@ namespace Editor
 
         private void PaintRightFloor(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Bottom),
                 new Point(SignLeft, Bottom),
                 new Point(SignLeft, Bottom - ThinLineThickness),
@@ -316,7 +321,8 @@ namespace Editor
         private void PaintLeftSquareBar(DrawingContext dc, bool forceBlackBrush)
         {
             var pen = forceBlackBrush ? BlackThinPen : ThinPen;
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Top),
                 new Point(SignRight, Top + ThinLineThickness),
                 new Point(SignLeft + ThinLineThickness, Top + ThinLineThickness),
@@ -332,7 +338,8 @@ namespace Editor
         private void PaintRightSquareBar(DrawingContext dc, bool forceBlackBrush)
         {
             var pen = forceBlackBrush ? BlackThinPen : ThinPen;
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Top),
                 new Point(SignRight, Bottom),
                 new Point(SignLeft, Bottom),
@@ -347,7 +354,8 @@ namespace Editor
 
         private void PaintLeftSquare(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Top),
                 new Point(SignRight, Top + ThinLineThickness),
                 new Point(SignLeft + LineThickness, Top + ThinLineThickness),
@@ -361,7 +369,8 @@ namespace Editor
 
         private void PaintRightSquare(DrawingContext dc, bool forceBlackBrush)
         {
-            PointCollection points = [
+            List<Point> points =
+            [
                 new Point(SignRight, Top),
                 new Point(SignRight, Bottom),
                 new Point(SignLeft, Bottom),
@@ -399,8 +408,9 @@ namespace Editor
                     var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = [
-                        new Point(geometry.Bounds.Right, top),
+                    List<Point> points =
+                    [
+                        new Point(geometry!.Bounds.Right, top),
                         new Point(geometry.Bounds.Right, bottom),
                         new Point(geometry.Bounds.Left, bottom),
                     ];
@@ -457,8 +467,9 @@ namespace Editor
                     var bottom = Bottom - signText2!.Extent * .9;
                     var geometry = extension!.BuildGeometry(new Point(SignRight - extension.GetFullWidth() - extension.OverhangLeading, 0));
 
-                    PointCollection points = [
-                        new Point(geometry.Bounds.Right, top),
+                    List<Point> points =
+                    [
+                        new Point(geometry!.Bounds.Right, top),
                         new Point(geometry.Bounds.Right, bottom),
                         new Point(geometry.Bounds.Left, bottom),
                     ];
@@ -507,12 +518,12 @@ namespace Editor
                     var top = Top + signText!.Extent * .9;
                     var bottom = MidY - midText.Extent * .4;
 
-
                     var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = [
-                        new Point(geometry.Bounds.Right, top),
+                    List<Point> points =
+                    [
+                        new Point(geometry!.Bounds.Right, top),
                         new Point(geometry.Bounds.Right, bottom),
                         new Point(geometry.Bounds.Left, bottom),
                     ];
@@ -586,8 +597,9 @@ namespace Editor
                     var padding = extension!.OverhangLeading;
                     var geometry = extension.BuildGeometry(new Point(left - padding, 0));
 
-                    PointCollection points = [
-                        new Point(geometry.Bounds.Right, top),
+                    List<Point> points =
+                    [
+                        new Point(geometry!.Bounds.Right, top),
                         new Point(geometry.Bounds.Right, bottom),
                         new Point(geometry.Bounds.Left, bottom),
                     ];
@@ -645,14 +657,22 @@ namespace Editor
         private void PaintLeftAngle(DrawingContext dc, bool forceBlackBrush)
         {
             var pen = forceBlackBrush ? BlackThinPen : ThinPen;
-            PointCollection points = [new Point(SignLeft, MidY), new Point(SignRight, Bottom)];
+            List<Point> points =
+            [
+                new Point(SignLeft, MidY),
+                new Point(SignRight, Bottom)
+            ];
             dc.DrawPolyline(new Point(SignRight, Top), points, pen);
         }
 
         private void PaintRightAngle(DrawingContext dc, bool forceBlackBrush)
         {
             var pen = forceBlackBrush ? BlackThinPen : ThinPen;
-            PointCollection points = [new Point(SignRight, MidY), new Point(SignLeft, Bottom)];
+            List<Point> points =
+            [
+                new Point(SignRight, MidY),
+                new Point(SignLeft, Bottom)
+            ];
             dc.DrawPolyline(new Point(SignLeft, Top), points, pen);
         }
     }

@@ -19,7 +19,7 @@ namespace Editor
             }
         }
 
-        public StaticSign(MainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useItalic)
+        public StaticSign(IMainWindow owner, EquationContainer parent, SignCompositeSymbol symbol, bool useItalic)
             : base(owner, parent)
         {
             integralSignItalic = useItalic;

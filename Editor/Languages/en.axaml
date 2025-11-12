@@ -1,0 +1,253 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- General -->
+    <x:String x:Key="Error">Error</x:String>
+    <x:String x:Key="Close">Close</x:String>
+    <x:String x:Key="Yes">Yes</x:String>
+    <x:String x:Key="No">No</x:String>
+    <x:String x:Key="Ok">Ok</x:String>
+    <x:String x:Key="Cancel">Cancel</x:String>
+
+    <!-- Editor Mode -->
+    <x:String x:Key="EditorMode_Math">Math</x:String>
+    <x:String x:Key="EditorMode_Text">Text</x:String>
+
+    <!-- Font Type -->
+    <x:String x:Key="FontType_SystemDefault">System Default</x:String>
+
+    <!-- Copy Type -->
+    <x:String x:Key="CopyType_Image">Image</x:String>
+    <x:String x:Key="CopyType_Latex">Latex</x:String>
+
+    <!-- Unicode Format -->
+    <x:String x:Key="UnicodeFormat_Decimal">Decimal</x:String>
+    <x:String x:Key="UnicodeFormat_Octal">Octal</x:String>
+    <x:String x:Key="UnicodeFormat_Hexadecimal">Hexadecimal</x:String>
+
+    <!-- Editor Control -->
+    <x:String x:Key="EditorControl_CannotOpenFile">Cannot open the specified file. Please see log files for more information.</x:String>
+    <x:String x:Key="EditorControl_CannotSaveFile">Cannot save the specified file. Please see log files for more information.</x:String>
+    <x:String x:Key="EditorControl_CannotPrintFile">Cannot print the specified file. Please see log files for more information.</x:String>
+    <x:String x:Key="EditorControl_CannotFindFile">Cannot find the specified file: {0}</x:String>
+
+    <!-- Equation Root -->
+    <x:String x:Key="EquationRoot_FileVersionDifferent">The file was created by a different version (v{0}) of Math Editor and uses a different format.{1}{1}Math Editor will still try to open and convert the file to the current version. The operation may fail.{1}{1}Please create a backup if you want to keep the original file intact.</x:String>
+
+    <!-- Latex Converter -->
+    <x:String x:Key="LatexConverter_InitializationFileNotFound">Latex to Unicode mapping file not found: {0}. Some Unicode characters may not be copied as Latex.</x:String>
+    <x:String x:Key="LatexConverter_InitializationJsonError">Failed to parse Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</x:String>
+    <x:String x:Key="LatexConverter_InitializationIOError">I/O error while loading Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</x:String>
+    <x:String x:Key="LatexConverter_InitializationError">Failed to load Latex to Unicode mapping from {0}. Some Unicode characters may not be copied as Latex.</x:String>
+    <x:String x:Key="LatexConverter_TranslationError">Translation Error</x:String>
+    
+    <!-- Arrow -->
+    <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowTop">
+    No translation available for Large over small arrow with upper text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowBottom">
+    No translation available for Large over small arrow with lower text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftArrowBottomAndTop">
+    No translation available for Large over small arrow with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowTop">
+    No translation available for Small over large arrow with upper text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowBottom">
+    No translation available for Small over large arrow with lower text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftArrowBottomAndTop">
+    No translation available for Small over large arrow with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonTop">
+    No translation available for Harpoons with upper text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonBottom">
+    No translation available for Harpoons with lower text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightLeftHarpoonBottomAndTop">
+    No translation available for Harpoons with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonTop">
+    No translation available for Large over small harpoon with upper text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonBottom">
+    No translation available for Large over small harpoon with lower text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightSmallLeftHarpoonBottomAndTop">
+    No translation available for Large over small harpoon with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonTop">
+    No translation available for Small over large harpoon with upper text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottom">
+    No translation available for Small over large harpoon with lower text slot.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorSmallRightLeftHarpoonBottomAndTop">
+    No translation available for Small over large harpoon with upper and lower text slots.{0}Please add a translation for it in the settings.
+    </x:String>
+
+    <!-- Decorated -->
+    <x:String x:Key="LatexConverter_TranslationErrorParenthesisTop">
+    No translation available for Arc.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorTortoiseTop">
+    No translation available for Joint status.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightHarpoonUpBarbTop">
+    No translation available for Right harpoon over-bar.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorRightHarpoonUpBarbBottom">
+    No translation available for Right harpoon under-bar.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorLeftHarpoonUpBarbTop">
+    No translation available for Left harpoon over-bar.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorLeftHarpoonUpBarbBottom">
+    No translation available for Left harpoon under-bar.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorStrikeThroughMiddle">
+    No translation available for Mid-line strike-through.{0}Please add a translation for it in the settings.
+    </x:String>
+
+    <!-- HorizontalBracket -->
+    <x:String x:Key="LatexConverter_TranslationErrorTopSquare">
+    No translation available for Upper horizontal bracket.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorBottomSquare">
+    No translation available for Lower horizontal bracket.{0}Please add a translation for it in the settings.
+    </x:String>
+
+    <!-- Division -->
+    <x:String x:Key="LatexConverter_TranslationErrorDivDoubleBar">
+    No translation available for Double bar division.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorDivTripleBar">
+    No translation available for Triple bar division.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorDivHorizSmall">
+    No translation available for Horizontal small division.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorDivMathInverted">
+    No translation available for Inverted division.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorDivInvertedWithBottom">
+    No translation available for Inverted division with bottom.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorDivTriangleFixed">
+    No translation available for Triangle fixed division.{0}Please add a translation for it in the settings.
+    </x:String>
+    <x:String x:Key="LatexConverter_TranslationErrorDivTriangleExpanding">
+    No translation available for Triangle expanding division.{0}Please add a translation for it in the settings.
+    </x:String>
+
+    <!-- About Window -->
+    <x:String x:Key="AboutWindow_Title">About Math Editor</x:String>
+    <x:String x:Key="AboutWindow_SourceRepository">Source repository</x:String>
+    <x:String x:Key="AboutWindow_IssueReport">Issue report</x:String>
+    <x:String x:Key="AboutWindow_SponsorAuthor">Sponsor author</x:String>
+
+    <!-- Codepoint Window -->
+    <x:String x:Key="CodepointWindow_Title">Enter Unicode Value</x:String>
+    <x:String x:Key="CodepointWindow_UnicodeValue">Unicode Value:</x:String>
+    <x:String x:Key="CodepointWindow_Insert">Insert</x:String>
+
+    <!-- Custom Zoom Window -->
+    <x:String x:Key="CustomZoomWindow_Title">Zoom Level</x:String>
+
+    <!-- Main Window -->
+    <x:String x:Key="MainWindow_File">File</x:String>
+    <x:String x:Key="MainWindow_New">New</x:String>
+    <x:String x:Key="MainWindow_Open">Open</x:String>
+    <x:String x:Key="MainWindow_Recent">Recent</x:String>
+    <x:String x:Key="MainWindow_NoRecentFiles">No recent files</x:String>
+    <x:String x:Key="MainWindow_ClearList">Clear list</x:String>
+    <x:String x:Key="MainWindow_Save">Save</x:String>
+    <x:String x:Key="MainWindow_SaveAs">Save as</x:String>
+    <x:String x:Key="MainWindow_Export">Export</x:String>
+    <x:String x:Key="MainWindow_Export_PNG">PNG</x:String>
+    <x:String x:Key="MainWindow_Export_JPG">JPG</x:String>
+    <x:String x:Key="MainWindow_Export_GIF">GIF</x:String>
+    <x:String x:Key="MainWindow_Export_BMP">BMP</x:String>
+    <x:String x:Key="MainWindow_Export_TIFF">TIFF</x:String>
+    <x:String x:Key="MainWindow_Export_WMP">WMP</x:String>
+    <x:String x:Key="MainWindow_Print">Print</x:String>
+    <x:String x:Key="MainWindow_Exit">Exit</x:String>
+
+    <x:String x:Key="MainWindow_Edit">Edit</x:String>
+    <x:String x:Key="MainWindow_Cut">Cut</x:String>
+    <x:String x:Key="MainWindow_Copy">Copy</x:String>
+    <x:String x:Key="MainWindow_Paste">Paste</x:String>
+    <x:String x:Key="MainWindow_SelectAll">Select all</x:String>
+    <x:String x:Key="MainWindow_Delete">Delete</x:String>
+
+    <x:String x:Key="MainWindow_Insert">Insert</x:String>
+    <x:String x:Key="MainWindow_Symbol">Symbol</x:String>
+    <x:String x:Key="MainWindow_UnicodeValue">Unicode value</x:String>
+
+    <x:String x:Key="MainWindow_View">View</x:String>
+    <x:String x:Key="MainWindow_FullScreen">Full screen</x:String>
+    <x:String x:Key="MainWindow_NormalScreen">Normal screen</x:String>
+    <x:String x:Key="MainWindow_Zoom">Zoom</x:String>
+    <x:String x:Key="MainWindow_Custom">Custom</x:String>
+    <x:String x:Key="MainWindow_CustomPercentage">Custom ({0}%)</x:String>
+
+    <x:String x:Key="MainWindow_Tools">Tools</x:String>
+    <x:String x:Key="MainWindow_Settings">Settings</x:String>
+
+    <x:String x:Key="MainWindow_Help">Help</x:String>
+    <x:String x:Key="MainWindow_Contents">Contents</x:String>
+    <x:String x:Key="MainWindow_About">About</x:String>
+
+    <x:String x:Key="MainWindow_ExitFullScreen">Exit full screen</x:String>
+    <x:String x:Key="MainWindow_Undo">Undo</x:String>
+    <x:String x:Key="MainWindow_Redo">Redo</x:String>
+    <x:String x:Key="MainWindow_ZoomIn">Zoom in</x:String>
+    <x:String x:Key="MainWindow_ZoomOut">Zoom out</x:String>
+    <x:String x:Key="MainWindow_Bold">Bold</x:String>
+    <x:String x:Key="MainWindow_Italic">Italic</x:String>
+    <x:String x:Key="MainWindow_Underline">Underline</x:String>
+    <x:String x:Key="MainWindow_ShowHideUnderbar">Show/Hide underbar</x:String>
+
+    <x:String x:Key="MainWindow_Untitled">Untitled</x:String>
+
+    <x:String x:Key="MainWindow_ShowNesting">Show nesting</x:String>
+    <x:String x:Key="MainWindow_HideNesting">Hide nesting</x:String>
+
+    <x:String x:Key="MainWindow_StatusBarLeftMessage">ActiveStart {0}, ActiveItems {1}</x:String>
+
+    <x:String x:Key="MainWindow_OpenMathEditorFile">Open Math Editor File</x:String>
+    <x:String x:Key="MainWindow_MedFile">Math Editor File</x:String>
+    <x:String x:Key="MainWindow_AllFile">All File</x:String>
+    <x:String x:Key="MainWindow_ImageFile">Image File</x:String>
+    <x:String x:Key="MainWindow_SaveImageFile">Save Image File</x:String>
+    <x:String x:Key="MainWindow_SaveMathEditorFile">Save Math Editor File</x:String>
+    <x:String x:Key="MainWindow_SaveCurrentDocument">Do you want to save the current document before closing?</x:String>
+
+    <!-- Report Window -->
+    <x:String x:Key="ReportWindow_AppGotError">App got an error</x:String>
+    <x:String x:Key="ReportWindow_PleaseOpenIssue">Please open a new issue in</x:String>
+    <x:String x:Key="ReportWindow_UploadLog">1. Upload this log file: {0}</x:String>
+    <x:String x:Key="ReportWindow_CopyBelow">2. Copy exception messages below</x:String>
+
+    <!-- Matrix Input Window -->
+    <x:String x:Key="MatrixInputWindow_Title">Input Matrix</x:String>
+    <x:String x:Key="MatrixInputWindow_Rows">Rows</x:String>
+    <x:String x:Key="MatrixInputWindow_Columns">Columns</x:String>
+
+    <!-- Settings Window -->
+    <x:String x:Key="SettingsWindow_Title">Math Editor Settings</x:String>
+    <x:String x:Key="SettingsWindow_Language">Language</x:String>
+    <x:String x:Key="SettingsWindow_DefaultMode">Default mode</x:String>
+    <x:String x:Key="SettingsWindow_DefaultFont">Default font</x:String>
+    <x:String x:Key="SettingsWindow_CopyType">Copy type</x:String>
+
+    <!-- Unicode Selector Window -->
+    <x:String x:Key="UnicodeSelectorWindow_Title">Insert Symbol</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_Category">Category:</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_RecentlyUsedSymbols">Recently used symbols:</x:String>
+    <x:String x:Key="UnicodeSelectorWindow_CharacterCode">Character code:</x:String>
+
+</ResourceDictionary>

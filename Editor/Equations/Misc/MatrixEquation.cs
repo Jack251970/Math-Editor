@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
 
 namespace Editor
 {
@@ -16,7 +16,7 @@ namespace Editor
 
         public override Thickness Margin => new(FontSize * .15, 0, FontSize * .15, 0);
 
-        public MatrixEquation(MainWindow owner, EquationContainer parent, int rows, int columns)
+        public MatrixEquation(IMainWindow owner, EquationContainer parent, int rows, int columns)
             : base(owner, parent)
         {
             _rows = rows;
@@ -206,7 +206,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = childEquations[currentIndex - _columns]; ;
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }
@@ -217,7 +217,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = childEquations[currentIndex + _columns]; ;
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     return true;
                 }

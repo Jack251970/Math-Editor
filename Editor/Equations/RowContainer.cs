@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 
 namespace Editor
 {
@@ -149,7 +149,7 @@ namespace Editor
 
         public void DrawVisibleRows(DrawingContext dc, double top, double bottom, bool forceBlackBrush)
         {
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 try
                 {
@@ -172,7 +172,7 @@ namespace Editor
 
         public override void DrawEquation(DrawingContext dc, bool forceBlackBrush)
         {
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 DrawSelectionRegion(dc);
             }
@@ -189,17 +189,17 @@ namespace Editor
             var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - topSelectedRowIndex;
             if (count > 0)
             {
-                rect.Union(new Point(topEquation.Right, rect.Bottom + LineSpace + 1));
+                rect = rect.Union(new Rect(topEquation.Right, rect.Bottom + LineSpace + 1, 0, 0));
                 dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 var bottomEquation = childEquations[topSelectedRowIndex + count];
                 rect = bottomEquation.GetSelectionBounds();
-                rect.Union(new Point(bottomEquation.Left, bottomEquation.Top));
+                rect = rect.Union(new Rect(bottomEquation.Left, bottomEquation.Top, 0, 0));
                 dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 for (var i = topSelectedRowIndex + 1; i < topSelectedRowIndex + count; i++)
                 {
                     var equation = childEquations[i];
                     rect = equation.Bounds;
-                    rect.Union(new Point(rect.Left, rect.Bottom + LineSpace + 1));
+                    rect = rect.Union(new Rect(rect.Left, rect.Bottom + LineSpace + 1, 0, 0));
                     dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 }
             }
@@ -288,11 +288,11 @@ namespace Editor
 
                 var newFirstRow = new EquationRow(Owner, this);
                 var newLastRow = new EquationRow(Owner, this);
-                newFirstRow.GetFirstTextEquation()!.ConsumeFormattedText(firstRowSelectedItems.First().GetSelectedText(),
+                newFirstRow.GetFirstTextEquation()!.ConsumeFormattedTextExtended(firstRowSelectedItems.First().GetSelectedText(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedFormats(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedModes(),
                                                                         ((TextEquation)firstRowSelectedItems.First()).GetSelectedDecorations(), false);
-                newLastRow.GetFirstTextEquation()!.ConsumeFormattedText(lastRowSelectedItems.Last().GetSelectedText(),
+                newLastRow.GetFirstTextEquation()!.ConsumeFormattedTextExtended(lastRowSelectedItems.Last().GetSelectedText(),
                                                                        ((TextEquation)lastRowSelectedItems.Last()).GetSelectedFormats(),
                                                                        ((TextEquation)lastRowSelectedItems.Last()).GetSelectedModes(),
                                                                        ((TextEquation)lastRowSelectedItems.First()).GetSelectedDecorations(),
@@ -314,7 +314,7 @@ namespace Editor
                 }
                 var left = firstRow.GetFirstSelectionText().Right - Left;
                 var firstTextRect = firstRow.GetFirstSelectionText().GetSelectionBounds();
-                if (!firstTextRect.IsEmpty)
+                if (firstTextRect.Width != 0 && firstTextRect.Height != 0)
                 {
                     left = firstTextRect.Left - Left;
                 }
@@ -337,30 +337,33 @@ namespace Editor
                     }
                     height -= LineSpace;
 
-                    bitmap = new RenderTargetBitmap((int)(Math.Ceiling(width + 2)), (int)(Math.Ceiling(height + 2)), 96, 96, PixelFormats.Default);
-                    var dv = new DrawingVisual();
+                    var bmpWidth = (int)Math.Ceiling(width) + 2;
+                    var bmpHeight = (int)Math.Ceiling(height) + 2;
+
+                    // Create Avalonia RenderTargetBitmap
+                    bitmap = new RenderTargetBitmap(new PixelSize(bmpWidth, bmpHeight), new Vector(96, 96));
+
                     // Disable selection highlight during printing
-                    var oldSelecting = Owner.ViewModel.IsSelecting;
-                    Owner.ViewModel.IsSelecting = false;
+                    var oldSelecting = Owner.IsSelecting;
+                    Owner.IsSelecting = false;
                     try
                     {
-#pragma warning disable IDE0063
-                        using (var dc = dv.RenderOpen())
+                        // Draw directly into the bitmap using Avalonia drawing context
+                        using var dc = bitmap.CreateDrawingContext();
+
+                        // Fill background white
+                        dc.FillRectangle(Brushes.White, new Rect(0, 0, bmpWidth, bmpHeight));
+
+                        // Draw the equation into the bitmap context, forcing black brush for fidelity
+                        foreach (var eb in equations)
                         {
-                            dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, bitmap.Width, bitmap.Height));
-                            foreach (var eb in equations)
-                            {
-                                eb.DrawEquation(dc, true);
-                            }
+                            eb.DrawEquation(dc, true);
                         }
-#pragma warning restore IDE0063
                     }
                     finally
                     {
-                        Owner.ViewModel.IsSelecting = oldSelecting;
+                        Owner.IsSelecting = oldSelecting;
                     }
-
-                    bitmap.Render(dv);
                 }
 
                 // Create text if needed
@@ -460,7 +463,7 @@ namespace Editor
             }
             else if (key == Key.Home)
             {
-                if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && SelectionStartIndex > 0)
+                if ((Keyboard.IsKeyDown(Owner, Key.LeftCtrl) || Keyboard.IsKeyDown(Owner, Key.RightCtrl)) && SelectionStartIndex > 0)
                 {
                     ((EquationRow)childEquations[SelectionStartIndex]).SelectToStart();
                     for (var i = SelectionStartIndex - 1; i >= 0; i--)
@@ -480,7 +483,7 @@ namespace Editor
             }
             else if (key == Key.End)
             {
-                if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && SelectionStartIndex < childEquations.Count - 1)
+                if ((Keyboard.IsKeyDown(Owner, Key.LeftCtrl) || Keyboard.IsKeyDown(Owner, Key.RightCtrl)) && SelectionStartIndex < childEquations.Count - 1)
                 {
                     ((EquationRow)childEquations[SelectionStartIndex]).SelectToEnd();
                     for (var i = SelectionStartIndex + 1; i < childEquations.Count; i++)
@@ -509,7 +512,7 @@ namespace Editor
                     childEquations[i].StartSelection();
                     ((EquationRow)childEquations[i]).SelectToStart();
                 }
-                point.Y = ActiveChild.MidY;
+                point = point.WithY(ActiveChild.MidY);
                 ((EquationRow)ActiveChild).MoveToEnd();
                 ActiveChild.StartSelection();
                 ActiveChild.HandleMouseDrag(point);
@@ -527,7 +530,7 @@ namespace Editor
                     childEquations[i].StartSelection();
                     ((EquationRow)childEquations[i]).SelectToEnd();
                 }
-                point.Y = ActiveChild.MidY;
+                point = point.WithY(ActiveChild.MidY);
                 ((EquationRow)ActiveChild).MoveToStart();
                 ActiveChild.StartSelection();
                 ActiveChild.HandleMouseDrag(point);
@@ -537,7 +540,7 @@ namespace Editor
             return false;
         }
 
-        public RowContainer(MainWindow owner, EquationContainer parent, double lineSpaceFactor = 0)
+        public RowContainer(IMainWindow owner, EquationContainer parent, double lineSpaceFactor = 0)
             : base(owner, parent)
         {
             var newLine = new EquationRow(owner, this);
@@ -615,13 +618,40 @@ namespace Editor
 
         public override bool ConsumeMouseClick(Point mousePoint)
         {
-            foreach (var eb in childEquations)
+            if (mousePoint.X < 0 || childEquations.Count == 0) return false;
+            if (childEquations.Count == 1)
             {
-                var rect = new Rect(0, eb.Top, double.MaxValue, eb.Height);
-                if (rect.Contains(mousePoint))
+                ActiveChild = childEquations[0];
+                return childEquations[0].ConsumeMouseClick(mousePoint);
+            }
+            else
+            {
+                foreach (var eb in childEquations)
                 {
-                    ActiveChild = eb;
-                    return eb.ConsumeMouseClick(mousePoint);
+                    if (eb == childEquations.First())
+                    {
+                        if (mousePoint.Y <= eb.Bottom)
+                        {
+                            ActiveChild = childEquations[0];
+                            return childEquations[0].ConsumeMouseClick(mousePoint);
+                        }
+                    }
+                    else if (eb == childEquations.Last())
+                    {
+                        if (mousePoint.Y >= eb.Top)
+                        {
+                            ActiveChild = eb;
+                            return eb.ConsumeMouseClick(mousePoint);
+                        }
+                    }
+                    else
+                    {
+                        if (mousePoint.Y <= eb.Bottom && mousePoint.Y >= eb.Top)
+                        {
+                            ActiveChild = eb;
+                            return eb.ConsumeMouseClick(mousePoint);
+                        }
+                    }
                 }
             }
             return false;
@@ -687,8 +717,8 @@ namespace Editor
                 ActiveChild.HandleMouseDrag(mousePoint);
                 SelectedItems = childEquations.IndexOf(ActiveChild) - SelectionStartIndex;
             }
-            Owner.ViewModel.ActiveChildSelectionStartIndex = ActiveChild.SelectionStartIndex;
-            Owner.ViewModel.ActiveChildSelectedItems = ActiveChild.SelectedItems;
+            Owner.ActiveChildSelectionStartIndex = ActiveChild.SelectionStartIndex;
+            Owner.ActiveChildSelectedItems = ActiveChild.SelectedItems;
         }
 
         public override void HandleMouseDoubleClick(Point mousePoint)
@@ -711,7 +741,7 @@ namespace Editor
                 {
                     ActiveChild = childEquation;
                     SelectionStartIndex = i;
-                    Owner.ViewModel.IsSelecting = true;
+                    Owner.IsSelecting = true;
                     ActiveChild.SelectAll();
                     break;
                 }
@@ -765,7 +795,7 @@ namespace Editor
 
         public override bool ConsumeKey(Key key)
         {
-            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if (Keyboard.IsKeyDown(Owner, Key.LeftCtrl) || Keyboard.IsKeyDown(Owner, Key.RightCtrl))
             {
                 if (key == Key.Home)
                 {
@@ -808,7 +838,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = childEquations[childEquations.IndexOf(ActiveChild) - 1];
-                    point.Y = ActiveChild.Bottom - 1;
+                    point = point.WithY(ActiveChild.Bottom - 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     result = true;
                 }
@@ -816,7 +846,7 @@ namespace Editor
                 {
                     var point = ActiveChild.GetVerticalCaretLocation();
                     ActiveChild = childEquations[childEquations.IndexOf(ActiveChild) + 1];
-                    point.Y = ActiveChild.Top + 1;
+                    point = point.WithY(ActiveChild.Top + 1);
                     ActiveChild.SetCursorOnKeyUpDown(key, point);
                     result = true;
                 }
@@ -918,7 +948,7 @@ namespace Editor
             if (type == typeof(RowContainerAction))
             {
                 ProcessRowContainerAction(action);
-                Owner.ViewModel.IsSelecting = false;
+                Owner.IsSelecting = false;
             }
             else if (type == typeof(RowContainerTextAction))
             {
@@ -966,7 +996,7 @@ namespace Editor
             {
                 activeRow.ResetRowEquation(pasteAction.ActiveTextInChildRow, pasteAction.ActiveEquationSelectionIndex, pasteAction.ActiveEquationSelectedItems);
                 var newRow = (EquationRow)activeRow.Split(this)!;
-                pasteAction.Equations[^2].GetLastTextEquation()!.SetFormattedText(pasteAction.TailTextOfPastedRows, pasteAction.TailFormatsOfPastedRows, pasteAction.TailModesOfPastedRows);
+                pasteAction.Equations[^2].GetLastTextEquation()!.SetFormattedTextExtended(pasteAction.TailTextOfPastedRows, pasteAction.TailFormatsOfPastedRows, pasteAction.TailModesOfPastedRows);
                 activeRow.Merge(pasteAction.Equations.First());
                 var index = childEquations.IndexOf(ActiveChild) + 1;
                 childEquations.InsertRange(index, pasteAction.Equations.Skip(1));
@@ -974,7 +1004,6 @@ namespace Editor
                 pasteAction.Equations[^2].Merge(newRow);
                 ActiveChild = childEquations[index + pasteAction.Equations.Count - 3];
                 ((EquationRow)ActiveChild).MoveToEnd();
-                FontSize = FontSize;
                 SelectedItems = 0;
             }
         }
@@ -989,7 +1018,7 @@ namespace Editor
             {
                 textAction.ActiveTextInRow.ResetTextEquation(textAction.CaretIndexOfActiveText, textAction.SelectionStartIndexOfTextEquation, textAction.SelectedItemsOfTextEquation, textAction.TextEquationContents, textAction.TextEquationFormats, textAction.TextEquationModes, textAction.TextEquationDecoration);
                 UndoManager.DisableAddingActions = true;
-                ActiveChild.ConsumeFormattedText(textAction.FirstLineOfInsertedText, textAction.FirstFormatsOfInsertedText, textAction.FirstModesOfInsertedText, textAction.FirstDecorationsOfInsertedText, false);
+                ActiveChild.ConsumeFormattedTextExtended(textAction.FirstLineOfInsertedText, textAction.FirstFormatsOfInsertedText, textAction.FirstModesOfInsertedText, textAction.FirstDecorationsOfInsertedText, false);
                 UndoManager.DisableAddingActions = false;
                 var splitRow = (EquationRow)ActiveChild.Split(this)!;
                 childEquations.InsertRange(childEquations.IndexOf(ActiveChild) + 1, textAction.Equations);
@@ -1039,7 +1068,7 @@ namespace Editor
                 SelectedItems = rowAction.SelectedItems;
                 SelectionStartIndex = rowAction.SelectionStartIndex;
                 ActiveChild = rowAction.ActiveEquation;
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
             }
             else
             {
@@ -1059,7 +1088,7 @@ namespace Editor
                 }
                 ActiveChild = rowAction.HeadEquationRow;
                 SelectedItems = 0;
-                Owner.ViewModel.IsSelecting = false;
+                Owner.IsSelecting = false;
             }
         }
 
@@ -1086,7 +1115,7 @@ namespace Editor
 
         public override void ModifySelection(string operation, object argument, bool applied, bool addUndo)
         {
-            if (Owner.ViewModel.IsSelecting)
+            if (Owner.IsSelecting)
             {
                 var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                 var endIndex = SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex;
@@ -1134,7 +1163,7 @@ namespace Editor
         {
             if (action is RowContainerFormatAction rcfa)
             {
-                Owner.ViewModel.IsSelecting = true;
+                Owner.IsSelecting = true;
                 ActiveChild = rcfa.ActiveChild;
                 SelectedItems = rcfa.SelectedItems;
                 SelectionStartIndex = rcfa.SelectionStartIndex;

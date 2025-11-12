@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
-using System.Windows;
-using System.Windows.Media;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -12,12 +12,12 @@ namespace Editor
 
         protected int barCount = 1;
 
-        public DivRegular(MainWindow owner, EquationContainer parent)
+        public DivRegular(IMainWindow owner, EquationContainer parent)
             : base(owner, parent, false)
         {
         }
 
-        public DivRegular(MainWindow owner, EquationContainer parent, bool isSmall)
+        public DivRegular(IMainWindow owner, EquationContainer parent, bool isSmall)
             : base(owner, parent, isSmall)
         {
         }

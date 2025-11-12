@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -19,10 +18,7 @@ namespace Editor
 
         public TextManager()
         {
-            var tdc = new TextDecorationCollection
-            {
-                TextDecorations.Underline
-            };
+            var tdc = TextDecorations.Underline;
             decorations.Add(tdc);
         }
 
@@ -112,7 +108,7 @@ namespace Editor
                                x.FontType == tf.FontType &&
                                x.FontStyle == tf.FontStyle &&
                                x.UseUnderline == tf.UseUnderline &&
-                               Color.AreClose(x.TextBrush.Color, tf.TextBrush.Color) &&
+                               ColorsAreClose(x.TextBrush.Color, tf.TextBrush.Color) &&
                                x.FontWeight == tf.FontWeight;
 
                     }).FirstOrDefault();
@@ -163,7 +159,7 @@ namespace Editor
                        x.FontType == fontType &&
                        x.FontStyle == fontStyle &&
                        x.UseUnderline == useUnderline &&
-                       Color.AreClose(x.TextBrush.Color, textBrush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, textBrush.Color) &&
                        x.FontWeight == fontWeight;
 
             }).FirstOrDefault();
@@ -185,7 +181,7 @@ namespace Editor
                        x.FontType == fontType &&
                        x.FontStyle == oldFormat.FontStyle &&
                        x.UseUnderline == oldFormat.UseUnderline &&
-                       Color.AreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
                        x.FontWeight == oldFormat.FontWeight;
 
             }).FirstOrDefault();
@@ -207,7 +203,7 @@ namespace Editor
                        x.FontType == oldFormat.FontType &&
                        x.FontStyle == oldFormat.FontStyle &&
                        x.UseUnderline == oldFormat.UseUnderline &&
-                       Color.AreClose(x.TextBrush.Color, brush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, brush.Color) &&
                        x.FontWeight == oldFormat.FontWeight;
 
             }).FirstOrDefault();
@@ -229,7 +225,7 @@ namespace Editor
                        x.FontType == oldFormat.FontType &&
                        x.FontStyle == oldFormat.FontStyle &&
                        x.UseUnderline == oldFormat.UseUnderline &&
-                       Color.AreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
                        x.FontWeight == oldFormat.FontWeight;
 
             }).FirstOrDefault();
@@ -251,7 +247,7 @@ namespace Editor
                        x.FontType == oldFormat.FontType &&
                        x.FontStyle == newStyle &&
                        x.UseUnderline == oldFormat.UseUnderline &&
-                       Color.AreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
                        x.FontWeight == oldFormat.FontWeight;
 
             }).FirstOrDefault();
@@ -273,7 +269,7 @@ namespace Editor
                        x.FontType == oldFormat.FontType &&
                        x.FontStyle == oldFormat.FontStyle &&
                        x.UseUnderline == oldFormat.UseUnderline &&
-                       Color.AreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
                        x.FontWeight == newWeight;
 
             }).FirstOrDefault();
@@ -295,7 +291,7 @@ namespace Editor
                        x.FontType == oldFormat.FontType &&
                        x.FontStyle == oldFormat.FontStyle &&
                        x.UseUnderline == newUnderline &&
-                       Color.AreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
+                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
                        x.FontWeight == oldFormat.FontWeight;
 
             }).FirstOrDefault();
@@ -307,44 +303,47 @@ namespace Editor
             return tf.Index;
         }
 
-        public FormattedText GetFormattedText(string text, List<int> formats, bool forceBlackBrush = false)
+        private static bool ColorsAreClose(Color a, Color b, byte threshold = 4)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var formattedText = new FormattedText(text,
+            return Math.Abs(a.A - b.A) <= threshold && Math.Abs(a.R - b.R) <= threshold && Math.Abs(a.G - b.G) <= threshold && Math.Abs(a.B - b.B) <= threshold;
+        }
+
+        public FormattedTextExtended GetFormattedTextExtended(string text, List<int> formats, bool forceBlackBrush = false)
+        {
+            var formattedTextExtended = new FormattedTextExtended(text,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 formattingList[formats[0]].TypeFace,
                 formattingList[formats[0]].FontSize,
                 forceBlackBrush ? Brushes.Black : formattingList[formats[0]].TextBrush);
-#pragma warning restore CS0618 // Type or member is obsolete
             for (var i = 0; i < formats.Count; i++)
             {
-                FormatText(formats, formattedText, i, forceBlackBrush);
+                FormatText(formats, formattedTextExtended, i, forceBlackBrush);
             }
-            return formattedText;
+            return formattedTextExtended;
         }
 
-        private void FormatText(List<int> formats, FormattedText formattedText, int i, bool forceBlackBrush = false)
+        private void FormatText(List<int> formats, FormattedTextExtended formattedTextExtended, int i, bool forceBlackBrush = false)
         {
-            formattedText.SetFontFamily(formattingList[formats[i]].FontFamily, i, 1);
-            formattedText.SetFontSize(formattingList[formats[i]].FontSize, i, 1);
-            formattedText.SetFontStyle(formattingList[formats[i]].FontStyle, i, 1);
-            formattedText.SetFontWeight(formattingList[formats[i]].FontWeight, i, 1);
-            formattedText.SetForegroundBrush(forceBlackBrush ? Brushes.Black : formattingList[formats[i]].TextBrush, i, 1);
+            formattedTextExtended.SetFontFamily(formattingList[formats[i]].FontFamily, i, 1);
+            formattedTextExtended.SetFontSize(formattingList[formats[i]].FontSize, i, 1);
+            formattedTextExtended.SetFontStyle(formattingList[formats[i]].FontStyle, i, 1);
+            formattedTextExtended.SetFontWeight(formattingList[formats[i]].FontWeight, i, 1);
+            formattedTextExtended.SetForegroundBrush(forceBlackBrush ? Brushes.Black : formattingList[formats[i]].TextBrush, i, 1);
             if (formattingList[formats[i]].UseUnderline)
             {
-                formattedText.SetTextDecorations(decorations[0], i, 1);
+                formattedTextExtended.SetTextDecorations(decorations[0], i, 1);
             }
         }
 
         public bool IsBold(int formatId)
         {
-            return formattingList[formatId].FontWeight == FontWeights.Bold;
+            return formattingList[formatId].FontWeight == FontWeight.Bold;
         }
 
         public bool IsItalic(int formatId)
         {
-            return formattingList[formatId].FontStyle == FontStyles.Italic;
+            return formattingList[formatId].FontStyle == FontStyle.Italic;
         }
 
         public bool IsUnderline(int formatId)
@@ -357,35 +356,39 @@ namespace Editor
             return formattingList[formatId].FontType;
         }
 
-        public FormattedText GetFormattedText(string text, int format)
+        public FormattedTextExtended GetFormattedTextExtended(string text, int format)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var formattedText = new FormattedText(text,
+            var formattedTextExtended = new FormattedTextExtended(text,
                 CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 formattingList[format].TypeFace,
                 formattingList[format].FontSize,
                 formattingList[format].TextBrush);
-#pragma warning restore CS0618 // Type or member is obsolete
-            formattedText.SetFontStyle(formattingList[format].FontStyle);
-            formattedText.SetFontWeight(formattingList[format].FontWeight);
-            return formattedText;
+            formattedTextExtended.SetFontStyle(formattingList[format].FontStyle);
+            formattedTextExtended.SetFontWeight(formattingList[format].FontWeight);
+            return formattedTextExtended;
         }
 
         public double GetBaseline(int formatId)
         {
-            return formattingList[formatId].FontFamily.Baseline;
+            var tf = formattingList[formatId];
+            var ft = new FormattedTextExtended("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
+            return ft.Baseline;
         }
 
         public double GetLineSpacing(int formatId)
         {
-            return formattingList[formatId].FontFamily.LineSpacing;
+            var tf = formattingList[formatId];
+            var ft = new FormattedTextExtended("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
+            // Return line spacing as ratio (height / font size) which approximates LineSpacing from WPF
+            return ft.Height / tf.FontSize;
         }
 
         public double GetFontHeight(int formatId)
         {
-            double fontDpiSize = 16;
-            return fontDpiSize * formattingList[formatId].FontFamily.LineSpacing;
+            var tf = formattingList[formatId];
+            var ft = new FormattedTextExtended("d", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, tf.TypeFace, tf.FontSize, tf.TextBrush);
+            return ft.Height;
         }
     }
 }

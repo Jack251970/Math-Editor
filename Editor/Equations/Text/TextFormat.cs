@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia.Media;
 
 namespace Editor
 {
@@ -11,7 +10,7 @@ namespace Editor
 
         public double FontSize { get; private set; }
         public FontType FontType { get; private set; }
-        public FontFamily FontFamily { get; private set; }
+        public FontFamily FontFamily { get; private set; } = null!;
         public FontStyle FontStyle { get; private set; }
         public FontWeight FontWeight { get; private set; }
         public SolidColorBrush TextBrush { get; private set; }
@@ -29,8 +28,8 @@ namespace Editor
             UseUnderline = useUnderline;
             FontWeight = fw;
             TextBrush = brush;
-            TypeFace = new Typeface(FontFamily, fs, fw, FontStretches.Normal,
-                FontFactory.GetFontFamily(FontType.STIXGeneral));
+            TypeFace = new Typeface(FontFamily ?? FontFactory.GetFontFamily(FontType.STIXGeneral),
+                fs, fw, FontStretch.Normal);
             var bc = new BrushConverter();
             TextBrushString = bc.ConvertToString(brush) ?? ThemeAwareTextBrushString;
         }
@@ -52,8 +51,8 @@ namespace Editor
         {
             var fontSize = double.Parse(xe.Element("FontSize")!.Value);
             var fontType = Enum.Parse<FontType>(xe.Element("FontType")!.Value);
-            var fontStyle = xe.Element("FontStyle")!.Value == "Italic" ? FontStyles.Italic : FontStyles.Normal;
-            var fontWeight = xe.Element("FontWeight")!.Value == "Bold" ? FontWeights.Bold : FontWeights.Normal;
+            var fontStyle = xe.Element("FontStyle")!.Value == "Italic" ? FontStyle.Italic : FontStyle.Normal;
+            var fontWeight = xe.Element("FontWeight")!.Value == "Bold" ? FontWeight.Bold : FontWeight.Normal;
             var bc = new BrushConverter();
             var brushString = xe.Element("Brush")!.Value;
             SolidColorBrush brush;

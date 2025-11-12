@@ -1,0 +1,41 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Editor">
+    <Design.PreviewWith>
+        <ThemeVariantScope RequestedThemeVariant="Light">
+            <local:EditorToolBarButton Height="100" Width="100" Content="200" />
+        </ThemeVariantScope>
+    </Design.PreviewWith>
+
+    <Style Selector="local|EditorToolBarButton">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="LightGray" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    x:Name="Border"
+                    Padding="{TemplateBinding Padding}"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                    <ContentPresenter
+                        Margin="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Content="{TemplateBinding Content}"
+                        RecognizesAccessKey="True" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Hover state -->
+    <Style Selector="local|EditorToolBarButton:pointerover">
+        <Setter Property="BorderBrush" Value="#FF5479C2" />
+        <Setter Property="Background" Value="#FFC4D5DA" />
+    </Style>
+</Styles>

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml.Linq;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor
@@ -48,9 +48,9 @@ namespace Editor
         protected double SubFontFactor = 0.6;
         protected double SubSubFontFactor = 0.7;
 
-        public MainWindow Owner { get; set; }
+        public IMainWindow Owner { get; set; }
         public EquationContainer ParentEquation { get; set; }
-        private Point location = new();
+        private readonly Point location = new();
         /*private readonly double width;*/
         private const double height = 0;
         private double fontSize = 20;
@@ -58,15 +58,15 @@ namespace Editor
         public int SelectionStartIndex { get; set; }
         public int SelectedItems { get; set; } //this is a directed value (as on a real line!!)
 
-        protected Brush debugBrush;
+        protected IImmutableBrush debugBrush;
         private readonly byte r = 80;
         private readonly byte g = 80;
         private readonly byte b = 80;
 
-        public EquationBase(MainWindow owner, EquationContainer parent)
+        public EquationBase(IMainWindow owner, EquationContainer parent)
         {
             Owner = owner;
-            UndoManager = owner.ViewModel.UndoManager;
+            UndoManager = owner.UndoManager;
             ParentEquation = parent;
             if (parent != null)
             {
@@ -77,8 +77,7 @@ namespace Editor
                 g = (byte)(parent.r + 15);
                 b = (byte)(parent.r + 15);
             }
-            debugBrush = new SolidColorBrush(Color.FromArgb(100, r, g, b));
-            debugBrush.Freeze();
+            debugBrush = new SolidColorBrush(Color.FromArgb(100, r, g, b)).ToImmutable();
         }
 
         public virtual bool ConsumeMouseClick(Point mousePoint) { return false; }
@@ -87,7 +86,7 @@ namespace Editor
 
         public virtual EquationBase? Split(EquationContainer newParent) { return null; }
         public virtual void ConsumeText(string text) { }
-        public virtual void ConsumeFormattedText(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo) { }
+        public virtual void ConsumeFormattedTextExtended(string text, int[] formats, EditorMode[] modes, CharacterDecorationInfo[] decorations, bool addUndo) { }
         public virtual bool ConsumeKey(Key key) { return false; }
         public virtual Point GetVerticalCaretLocation() { return location; }
         public virtual double GetVerticalCaretLength() { return height; }
@@ -100,11 +99,12 @@ namespace Editor
         public virtual bool Select(Key key) { return false; }
         public virtual void DeSelect() { SelectedItems = 0; }
         public virtual void RemoveSelection(bool registerUndo) { }
-        public virtual Rect GetSelectionBounds() { return Rect.Empty; }
+        public virtual Rect GetSelectionBounds() { return default; }
         public virtual CopyDataObject? Copy(bool removeSelection) { return null; } //copy & cut
         public virtual void Paste(XElement xe) { }
         public virtual void SetCursorOnKeyUpDown(Key key, Point point) { }
         public virtual void ModifySelection(string operation, object argument, bool applied, bool addUndo) { }
+        public virtual void ModifySolidBrush() { }
 
         public virtual void CalculateSize()
         {
