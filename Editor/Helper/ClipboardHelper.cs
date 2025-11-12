@@ -65,9 +65,30 @@ public class ClipboardHelper : ObservableObject, IDisposable
         }
     }
 
+    #region IDisposable
+
+    private bool _isDisposed = false;
+
+    ~ClipboardHelper()
+    {
+        Dispose(false);
+    }
+
     public void Dispose()
     {
-        _timer.Elapsed -= Timer_Elapsed;
-        _timer.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_isDisposed)
+        {
+            _isDisposed = true;
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer.Dispose();
+        }
+    }
+
+    #endregion
 }
