@@ -51,6 +51,7 @@ public partial class EditorControl : UserControl, IDisposable
     private void ThemeManager_ActualApplicationThemeChanged(ThemeManager sender, object args)
     {
         equationRoot.ModifySolidBrush();
+        InvalidateVisual();
     }
 
     public void SetTimer(bool enabled)
