@@ -556,7 +556,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         if (!_isDisposed)
         {
-            ThemeManager.Current.ActualApplicationThemeChanged += ThemeManager_ActualApplicationThemeChanged;
+            ThemeManager.Current.ActualApplicationThemeChanged -= ThemeManager_ActualApplicationThemeChanged;
             vCaret.Dispose();
             hCaret.Dispose();
             timer.Dispose();

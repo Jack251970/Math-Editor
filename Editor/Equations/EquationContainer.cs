@@ -21,6 +21,7 @@ namespace Editor
         }
 
         protected List<EquationBase> childEquations = [];
+
         private EquationBase? active = null;
         public EquationBase ActiveChild
         {
@@ -101,6 +102,14 @@ namespace Editor
         {
             ActiveChild.Paste(xe);
             CalculateSize();
+        }
+
+        public override void ModifySolidBrush()
+        {
+            foreach (var eb in childEquations)
+            {
+                eb.ModifySolidBrush();
+            }
         }
 
         public override bool Select(Key key)
