@@ -48,6 +48,13 @@ public partial class EditorControl : UserControl, IDisposable
         };
         timer = new Timer(BlinkPeriod);
         timer.Elapsed += Timer_Elapsed;
+        Application.Current!.ActualThemeVariantChanged += Application_ActualThemeVariantChanged;
+    }
+
+    private void Application_ActualThemeVariantChanged(object? sender, EventArgs e)
+    {
+        // TODO: Fix issue that text is not redrawn when theme changes (We need to select it?)
+        equationRoot.ModifySolidBrush();
     }
 
     public void SetTimer(bool enabled)
@@ -596,6 +603,10 @@ public partial class EditorControl : UserControl, IDisposable
     {
         if (!_isDisposed)
         {
+            if (Application.Current != null)
+            {
+                Application.Current.ActualThemeVariantChanged -= Application_ActualThemeVariantChanged;
+            }
             vCaret.Dispose();
             hCaret.Dispose();
             timer.Dispose();

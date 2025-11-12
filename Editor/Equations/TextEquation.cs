@@ -100,14 +100,6 @@ namespace Editor
             : base(owner, parent)
         {
             CalculateSize();
-            // TODO: Fix issue that text is not redrawn when theme changes (We need to select it?)
-            // TODO: Find correct way to unsubscribe this event?
-            Application.Current!.ActualThemeVariantChanged += Application_ActualThemeVariantChanged;
-        }
-
-        private void Application_ActualThemeVariantChanged(object? sender, EventArgs e)
-        {
-            ModifySolidBrush();
         }
 
         private void SetCaretIndex(int index)
@@ -907,7 +899,7 @@ namespace Editor
             }
         }
 
-        private void ModifySolidBrush()
+        public override void ModifySolidBrush()
         {
             var startIndex = 0;
             var count = formats.Count;
