@@ -146,7 +146,7 @@ public class ClipboardHandleW : IDisposable
     /// </returns>
     private static async Task<bool> RetryActionAsync(Func<bool> action, int retryInterval = 100, int maxAttemptCount = 3)
     {
-        for (int i = 0; i < maxAttemptCount; i++)
+        for (var i = 0; i < maxAttemptCount; i++)
         {
             try
             {

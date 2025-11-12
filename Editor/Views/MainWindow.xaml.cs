@@ -56,8 +56,8 @@ public partial class MainWindow : Window, ICultureInfoChanged, IContentDialogOwn
         switch (WindowState)
         {
             case WindowState.Maximized:
-                double left = SystemParameters.ResizeFrameVerticalBorderWidth + SystemParameters.FixedFrameVerticalBorderWidth + SystemParameters.BorderWidth;
-                double top = SystemParameters.ResizeFrameHorizontalBorderHeight + SystemParameters.FixedFrameHorizontalBorderHeight + SystemParameters.BorderWidth;
+                var left = SystemParameters.ResizeFrameVerticalBorderWidth + SystemParameters.FixedFrameVerticalBorderWidth + SystemParameters.BorderWidth;
+                var top = SystemParameters.ResizeFrameHorizontalBorderHeight + SystemParameters.FixedFrameHorizontalBorderHeight + SystemParameters.BorderWidth;
                 MainDock.Margin = new Thickness(left, top, left, top);
                 break;
             default:

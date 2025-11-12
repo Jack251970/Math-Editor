@@ -227,7 +227,7 @@ namespace Editor
         public bool PasteFromClipBoard()
         {
             // Get data from clipboard with retries
-            object? data = Owner.ViewModel.ClipboardHelper.PasteObject;
+            var data = Owner.ViewModel.ClipboardHelper.PasteObject;
 
             // Parse and paste data
             var success = false;

@@ -13,7 +13,7 @@ public class IntegerNumberFormatter : INumberBoxNumberFormatter
 
     public double? ParseDouble(string text)
     {
-        if (double.TryParse(text, out double result))
+        if (double.TryParse(text, out var result))
         {
             return Math.Round(result);
         }

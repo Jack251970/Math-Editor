@@ -88,7 +88,8 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
             number = 0;
             numberBase = 0;
             return false;
-        };
+        }
+        ;
     }
 
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
