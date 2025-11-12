@@ -53,8 +53,8 @@ public partial class EditorControl : UserControl, IDisposable
 
     private void Application_ActualThemeVariantChanged(object? sender, EventArgs e)
     {
-        // TODO: Fix issue that text is not redrawn when theme changes (We need to select it?)
         equationRoot.ModifySolidBrush();
+        InvalidateVisual();
     }
 
     public void SetTimer(bool enabled)
