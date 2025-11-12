@@ -9,6 +9,10 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/FUNDING.yml" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/publish.yml" />
     <File Path=".gitignore" />
     <File Path="global.json" />
     <File Path="LICENSE" />
