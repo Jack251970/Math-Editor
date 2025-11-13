@@ -377,7 +377,7 @@ namespace Editor
                 {
                     // Use exact selection bounds and translate so (TopLeft) maps to (1,1)
                     var selectionRect = GetSelectionBounds();
-                    if (selectionRect == Rect.Empty)
+                    if (selectionRect.IsEmpty)
                     {
                         // Fallback to selected text width and full height
                         var selWidth = GetWidth(startIndex, count, true);
