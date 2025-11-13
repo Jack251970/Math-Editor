@@ -304,11 +304,6 @@ namespace Editor
                 Owner.IsSelecting = oldSelecting;
             }
 
-            if (extension is not ".png" and not ".jpg" and not ".bmp" and not ".gif" and not ".tif" and not ".wdp")
-            {
-                throw new InvalidOperationException("Unsupported image format.");
-            }
-
             try
             {
                 using Stream s = File.Create(path);
