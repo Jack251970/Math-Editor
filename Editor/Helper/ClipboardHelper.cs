@@ -90,7 +90,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
             }
             else if (handle.ContainsText())
             {
-                var textString = ClipboardAvalonia.GetText();
+                var textString = handle.GetText();
                 if (!string.IsNullOrEmpty(textString))
                 {
                     data = textString;
