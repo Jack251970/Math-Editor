@@ -277,7 +277,7 @@ namespace Editor
             var extension = Path.GetExtension(path).ToLower();
 
             var bmpWidth = (int)Math.Ceiling(Width + Location.X * 2);
-            var bmpHeight = (int)Math.Ceiling(Width + Location.Y * 2);
+            var bmpHeight = (int)Math.Ceiling(Height + Location.Y * 2);
 
             // Create Avalonia RenderTargetBitmap
             var bitmap = new RenderTargetBitmap(new PixelSize(bmpWidth, bmpHeight), new Vector(96, 96));
@@ -302,11 +302,6 @@ namespace Editor
             finally
             {
                 Owner.IsSelecting = oldSelecting;
-            }
-
-            if (extension is not ".png" and not ".jpg" and not ".bmp" and not ".gif" and not ".tif" and not ".wdp")
-            {
-                throw new InvalidOperationException("Unsupported image format.");
             }
 
             try
