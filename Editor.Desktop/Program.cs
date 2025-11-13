@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -34,6 +35,11 @@ internal class Program
         }
         catch (Exception e)
         {
+            // Do not catch critical exceptions that should not be handled
+            if (e is StackOverflowException || e is OutOfMemoryException || e is ThreadAbortException)
+            {
+                throw;
+            }
             EditorLogger.Fatal(ClassName, "Fatal error in Main method", e);
         }
     }
