@@ -293,11 +293,6 @@ public partial class EditorControl : UserControl, IDisposable
         isDragging = false;
     }
 
-    private void EditorControl_PointerEntered(object? sender, PointerEventArgs e)
-    {
-        isDragging = false;
-    }
-
     private Point lastMouseLocation = new();
 
     private void EditorControl_PointerMoved(object? sender, PointerEventArgs e)
