@@ -220,7 +220,7 @@
 
     <x:String x:Key="MainWindow_OpenMathEditorFile">Open Math Editor File</x:String>
     <x:String x:Key="MainWindow_MedFile">Math Editor File</x:String>
-    <x:String x:Key="MainWindow_AllFile">All File</x:String>
+    <x:String x:Key="MainWindow_AllFiles">All Files</x:String>
     <x:String x:Key="MainWindow_ImageFile">Image File</x:String>
     <x:String x:Key="MainWindow_SaveImageFile">Save Image File</x:String>
     <x:String x:Key="MainWindow_SaveMathEditorFile">Save Math Editor File</x:String>

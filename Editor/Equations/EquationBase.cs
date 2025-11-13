@@ -99,7 +99,7 @@ namespace Editor
         public virtual bool Select(Key key) { return false; }
         public virtual void DeSelect() { SelectedItems = 0; }
         public virtual void RemoveSelection(bool registerUndo) { }
-        public virtual Rect GetSelectionBounds() { return default; }
+        public virtual Rect GetSelectionBounds() { return Rect.Empty; }
         public virtual CopyDataObject? Copy(bool removeSelection) { return null; } //copy & cut
         public virtual void Paste(XElement xe) { }
         public virtual void SetCursorOnKeyUpDown(Key key, Point point) { }

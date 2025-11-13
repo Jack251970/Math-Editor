@@ -314,7 +314,7 @@ namespace Editor
                 }
                 var left = firstRow.GetFirstSelectionText().Right - Left;
                 var firstTextRect = firstRow.GetFirstSelectionText().GetSelectionBounds();
-                if (firstTextRect.Width != 0 && firstTextRect.Height != 0)
+                if (!firstTextRect.IsEmpty)
                 {
                     left = firstTextRect.Left - Left;
                 }

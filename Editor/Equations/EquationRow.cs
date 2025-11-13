@@ -274,14 +274,14 @@ namespace Editor
                     var startIndex = SelectedItems > 0 ? SelectionStartIndex : SelectionStartIndex + SelectedItems;
                     var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - startIndex;
                     var firstRect = childEquations[startIndex].GetSelectionBounds();
-                    if (firstRect == default)
+                    if (firstRect.IsEmpty)
                     {
                         firstRect = new Rect(childEquations[startIndex].Right, childEquations[startIndex].Top, 0, 0);
                     }
                     if (count > 0)
                     {
                         var lastRect = childEquations[count + startIndex].GetSelectionBounds();
-                        if (lastRect == default)
+                        if (lastRect.IsEmpty)
                         {
                             lastRect = new Rect(childEquations[count + startIndex].Left, childEquations[count + startIndex].Top, 0, childEquations[count + startIndex].Height);
                         }
@@ -299,7 +299,7 @@ namespace Editor
             {
                 EditorLogger.Fatal(ClassName, "Error in GetSelectionBounds", e);
             }
-            return default;
+            return Rect.Empty;
         }
 
         public override void Paste(XElement xe)
