@@ -178,25 +178,21 @@ namespace Editor
                 throw new InvalidOperationException("Copy failed in EquationRoot.");
 
             // Prepare data object for clipboard
-            _ = Task.Run(async () =>
+            using var handle = ClipboardAvalonia.Open();
+            var rootElement = new XElement(GetType().Name);
+            rootElement.Add(new XElement("SessionId", sessionString));
+            rootElement.Add(TextManager.Serialize(true));
+            rootElement.Add(new XElement("payload", temp.XElement));
+            handle.SetFormat(ClipboardXmlFormat, rootElement.ToString());
+
+            if (temp.Image != null)
             {
-                using var handle = await ClipboardAvalonia.OpenAsync();
-                var rootElement = new XElement(GetType().Name);
-                rootElement.Add(new XElement("SessionId", sessionString));
-                rootElement.Add(TextManager.Serialize(true));
-                rootElement.Add(new XElement("payload", temp.XElement));
-                handle.SetFormat(ClipboardXmlFormat, rootElement.ToString());
-
-                if (temp.Image != null)
-                {
-                    handle.SetImage(temp.Image);
-                }
-                if (temp.Text != null)
-                {
-                    handle.SetText(temp.Text);
-                }
-            });
-
+                handle.SetImage(temp.Image);
+            }
+            if (temp.Text != null)
+            {
+                handle.SetText(temp.Text);
+            }
 
             // Remove selection if needed
             if (removeSelection)
