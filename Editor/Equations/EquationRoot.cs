@@ -299,7 +299,7 @@ namespace Editor
                 {
                     dc.FillRectangle(Brushes.Transparent, new Rect(0, 0, bmpWidth, bmpHeight));
                 }*/
-                // It looks like exported png images without non-transparent background will become blurry
+                // It looks like exported PNG images with a transparent background will become blurry
                 // So I add a white background for all image types
                 // https://github.com/AvaloniaUI/Avalonia/issues/20050
                 dc.FillRectangle(Brushes.White, new Rect(0, 0, bmpWidth, bmpHeight));
