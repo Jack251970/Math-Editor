@@ -444,7 +444,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
                 {
                     Patterns = [$"*{Constants.MedExtension}"]
                 },
-                new FilePickerFileType(Localize.MainWindow_AllFile())
+                new FilePickerFileType(Localize.MainWindow_AllFiles())
                 {
                     Patterns = ["*.*"]
                 }
@@ -677,7 +677,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
                 {
                     Patterns = [$"*{extension}"]
                 },
-                new FilePickerFileType(Localize.MainWindow_AllFile())
+                new FilePickerFileType(Localize.MainWindow_AllFiles())
                 {
                     Patterns = ["*.*"]
                 }

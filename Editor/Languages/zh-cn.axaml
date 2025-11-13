@@ -220,7 +220,7 @@
 
     <x:String x:Key="MainWindow_OpenMathEditorFile">打开 Math Editor 文件</x:String>
     <x:String x:Key="MainWindow_MedFile">Math Editor 文件</x:String>
-    <x:String x:Key="MainWindow_AllFile">所有文件</x:String>
+    <x:String x:Key="MainWindow_AllFiles">所有文件</x:String>
     <x:String x:Key="MainWindow_ImageFile">图像文件</x:String>
     <x:String x:Key="MainWindow_SaveImageFile">保存图像文件</x:String>
     <x:String x:Key="MainWindow_SaveMathEditorFile">保存 Math Editor 文件</x:String>

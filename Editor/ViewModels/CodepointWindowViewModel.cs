@@ -37,12 +37,7 @@ public partial class CodepointWindowViewModel : ObservableObject, ICultureInfoCh
 
         if (TryConvertToNumber(text, out var parsed, out var _))
         {
-            if (parsed < 0)
-            {
-                Number = 0;
-                return true;
-            }
-            else if (parsed > MaxUnicodeValue)
+            if (parsed > MaxUnicodeValue)
             {
                 Number = MaxUnicodeValue;
                 return true;

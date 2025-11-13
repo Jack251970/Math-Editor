@@ -369,6 +369,10 @@ namespace Editor
                 await ContentDialogHelper.ShowAsync(Owner, Localize.EditorControl_CannotSaveFile(),
                     Localize.Error(), MessageBoxButton.OK);
             }
+            finally
+            {
+                bitmap.Dispose();
+            }
         }
 
         /*public async Task PrintAsync(PrintDialog printDialog)
