@@ -291,10 +291,18 @@ namespace Editor
                 using var dc = bitmap.CreateDrawingContext();
 
                 // Fill background white for bmp and jpg
-                if (extension is ".bmp" or ".jpg")
+                /*if (extension is ".bmp" or ".jpg")
                 {
                     dc.FillRectangle(Brushes.White, new Rect(0, 0, bmpWidth, bmpHeight));
                 }
+                else
+                {
+                    dc.FillRectangle(Brushes.Transparent, new Rect(0, 0, bmpWidth, bmpHeight));
+                }*/
+                // It looks like exported png images without non-transparent background will become blurry
+                // So I add a white background for all image types
+                // https://github.com/AvaloniaUI/Avalonia/issues/20050
+                dc.FillRectangle(Brushes.White, new Rect(0, 0, bmpWidth, bmpHeight));
 
                 // Draw the equation into the bitmap context, forcing black brush for fidelity
                 ActiveChild.DrawEquation(dc, true);
