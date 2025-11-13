@@ -36,7 +36,7 @@ internal class Program
         catch (Exception e)
         {
             // Do not catch critical exceptions that should not be handled
-            if (e is StackOverflowException || e is OutOfMemoryException || e is ThreadAbortException)
+            if (e is StackOverflowException or OutOfMemoryException or ThreadAbortException)
             {
                 throw;
             }

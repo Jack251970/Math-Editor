@@ -257,11 +257,8 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
         {
             CustomZoomMenuChecked = true;
             CustomZoomMenuHeader = Localize.MainWindow_CustomPercentage(CustomZoomPercentage);
-            if (_lastZoomPercentageItem != null)
-            {
-                _lastZoomPercentageItem.IsChecked = false;
-                _lastZoomPercentageItem = null;
-            }
+            _lastZoomPercentageItem?.IsChecked = false;
+            _lastZoomPercentageItem = null;
         }
     }
 

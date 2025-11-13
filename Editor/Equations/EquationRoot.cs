@@ -7,8 +7,7 @@ using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Clowd.Clipboard;
-using Clowd.Clipboard.Formats;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Editor
 {
@@ -16,12 +15,9 @@ namespace Editor
     {
         private static readonly string ClassName = nameof(EquationRoot);
 
-        public static readonly ClipboardFormat<string> ClipboardXmlFormat
-            = ClipboardFormat.CreateCustomFormat(
-                $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}",
-                new TextUtf8Converter());
-
         public EditorControl? Editor { get; set; } = null;
+
+        private readonly ClipboardHelper _clipboardHelper = Ioc.Default.GetRequiredService<ClipboardHelper>();
         private readonly Caret _vCaret;
         private readonly Caret _hCaret;
         private readonly string fileVersion = "1.4";
@@ -178,25 +174,11 @@ namespace Editor
                 throw new InvalidOperationException("Copy failed in EquationRoot.");
 
             // Prepare data object for clipboard
-            _ = Task.Run(async () =>
-            {
-                using var handle = await ClipboardAvalonia.OpenAsync();
-                var rootElement = new XElement(GetType().Name);
-                rootElement.Add(new XElement("SessionId", sessionString));
-                rootElement.Add(TextManager.Serialize(true));
-                rootElement.Add(new XElement("payload", temp.XElement));
-                handle.SetFormat(ClipboardXmlFormat, rootElement.ToString());
-
-                if (temp.Image != null)
-                {
-                    handle.SetImage(temp.Image);
-                }
-                if (temp.Text != null)
-                {
-                    handle.SetText(temp.Text);
-                }
-            });
-
+            var rootElement = new XElement(GetType().Name);
+            rootElement.Add(new XElement("SessionId", sessionString));
+            rootElement.Add(TextManager.Serialize(true));
+            rootElement.Add(new XElement("payload", temp.XElement));
+            _clipboardHelper.SetClipboard(rootElement, temp.Image, temp.Text);
 
             // Remove selection if needed
             if (removeSelection)
@@ -257,37 +239,6 @@ namespace Editor
                 EditorLogger.Error(ClassName, $"Failed to parse from {dataType} data", e);
             }
             return success;
-        }
-
-        public static bool CanPasteFromClipboard(out object? data)
-        {
-            data = null;
-            try
-            {
-                using var handle = ClipboardAvalonia.Open();
-                if (handle.ContainsFormat(ClipboardXmlFormat))
-                {
-                    if (handle.GetFormatType(ClipboardXmlFormat) is string xmlString)
-                    {
-                        data = new MathEditorData { XmlString = xmlString };
-                        return true;
-                    }
-                }
-                else if (handle.ContainsText())
-                {
-                    var textString = ClipboardAvalonia.GetText();
-                    if (!string.IsNullOrEmpty(textString))
-                    {
-                        data = textString;
-                        return true;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
-            }
-            return false;
         }
 
         public override void ConsumeText(string text)
