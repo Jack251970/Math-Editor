@@ -10,7 +10,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
 {
     private static readonly string ClassName = nameof(ClipboardHelper);
 
-    private readonly Timer _timer = new(500);
+    private readonly Timer _timer = new(1000);
 
     private bool _canPaste;
     public bool CanPaste
