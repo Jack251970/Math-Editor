@@ -8,7 +8,6 @@
     MinWidth="20"
     MinHeight="200"
     PointerPressed="EditorControl_PointerPressed"
-    PointerEntered="EditorControl_PointerEntered"
     PointerExited="EditorControl_PointerExited"
     PointerMoved="EditorControl_PointerMoved"
     PointerReleased="EditorControl_PointerReleased"
