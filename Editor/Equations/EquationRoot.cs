@@ -319,6 +319,11 @@ namespace Editor
             var extension = Path.GetExtension(path).ToLower();
 
             var dv = new DrawingVisual();
+
+            // Content bounds (same as used for exporting image)
+            var contentWidth = Math.Ceiling(Width + Location.X * 2);
+            var contentHeight = Math.Ceiling(Height + Location.Y * 2);
+
             // Disable selection highlight during printing
             var oldSelecting = Owner.ViewModel.IsSelecting;
             Owner.ViewModel.IsSelecting = false;
@@ -329,7 +334,7 @@ namespace Editor
                 {
                     if (extension is ".bmp" or ".jpg")
                     {
-                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, Math.Ceiling(Width + Location.X * 2), Math.Ceiling(Width + Location.Y * 2)));
+                        dc.DrawRectangle(Brushes.White, null, new Rect(0, 0, contentWidth, contentHeight));
                     }
                     ActiveChild.DrawEquation(dc, true);
                 }
@@ -340,8 +345,7 @@ namespace Editor
                 Owner.ViewModel.IsSelecting = oldSelecting;
             }
 
-            var bitmap = new RenderTargetBitmap((int)(Math.Ceiling(Width + Location.X * 2)),
-                (int)(Math.Ceiling(Height + Location.Y * 2)), 96, 96, PixelFormats.Default);
+            var bitmap = new RenderTargetBitmap((int)contentWidth, (int)contentHeight, 96, 96, PixelFormats.Default);
             bitmap.Render(dv);
 
             BitmapEncoder encoder = extension switch
