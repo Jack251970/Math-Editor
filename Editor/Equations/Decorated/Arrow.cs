@@ -157,19 +157,13 @@ namespace Editor
             {
                 _arrow1.Top = Top;
                 _rowContainer1.Bottom = Bottom;
-                if (_arrow2 != null)
-                {
-                    _arrow2.Top = _arrow1.Bottom + ArrowGap;
-                }
+                _arrow2?.Top = _arrow1.Bottom + ArrowGap;
             }
             else if (_equationPosition == Position.BottomAndTop)
             {
                 _rowContainer1.Top = Top;
                 _arrow1.Top = _rowContainer1.Bottom;
-                if (_arrow2 != null)
-                {
-                    _arrow2.Top = _arrow1.Bottom + ArrowGap;
-                }
+                _arrow2?.Top = _arrow1.Bottom + ArrowGap;
                 _rowContainer2!.Bottom = Bottom;
             }
         }

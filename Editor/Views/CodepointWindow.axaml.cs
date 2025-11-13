@@ -69,7 +69,7 @@ public partial class CodepointWindow : Window, ICultureInfoChanged
                 ViewModel.UnicodeFormat switch
                 {
                     UnicodeFormat.Decimal => char.IsDigit(c),
-                    UnicodeFormat.Octal => c >= '0' && c <= '7',
+                    UnicodeFormat.Octal => c is >= '0' and <= '7',
                     UnicodeFormat.Hexadecimal =>
                         char.IsDigit(c) ||
                         (c >= 'a' && c <= 'f') ||
