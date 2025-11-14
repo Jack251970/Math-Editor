@@ -2,6 +2,7 @@
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
+using Velopack;
 
 namespace Editor.Desktop;
 
@@ -17,6 +18,9 @@ internal class Program
     {
         try
         {
+            // It's important to Run() the VelopackApp as early as possible in app startup.
+            VelopackApp.Build().Run();
+
             // Start the application as a single instance
             if (SingleInstance<App>.InitializeAsFirstInstance())
             {
