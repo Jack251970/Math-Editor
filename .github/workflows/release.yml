@@ -43,6 +43,7 @@ jobs:
 
       - name: Pack with Velopack - Windows
         if: runner.os == 'Windows'
+        shell: pwsh
         run: |
           vpk pack `
             --runtime win-x64 `
@@ -61,6 +62,7 @@ jobs:
 
       - name: Pack with Velopack - Linux
         if: runner.os == 'Linux'
+        shell: pwsh
         run: |
           vpk pack `
             --runtime linux-x64 `
@@ -78,6 +80,7 @@ jobs:
           dotnet publish ${{ env.Project_Path }} -p:PublishProfile=osx-x64.pubxml
 
       - name: Pack with Velopack - macOS
+        shell: pwsh
         if: runner.os == 'macOS'
         run: |
           vpk pack `
