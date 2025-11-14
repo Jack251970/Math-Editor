@@ -69,8 +69,8 @@ namespace Editor
             var rect = new Rect(0, 0, width, Height);
             slantXTop = Math.Sin(Math.PI / 5) * (_topEquation.Height + ExtraHeight / 2);
             slantXBottom = Math.Sin(Math.PI / 5) * (_bottomEquation.Height + ExtraHeight / 2);
-            rect.Union(new Rect(_topEquation.Width + slantXTop + ExtraWidth / 2, Top, 0, 0));
-            rect.Union(new Rect(_bottomEquation.Width + slantXBottom + ExtraWidth / 2, Bottom, 0, 0));
+            rect = rect.Union(new Point(_topEquation.Width + slantXTop + ExtraWidth / 2, Top));
+            rect = rect.Union(new Point(_bottomEquation.Width + slantXBottom + ExtraWidth / 2, Bottom));
             Width = rect.Width;
             centerX = rect.Width - Math.Max(slantXTop, _bottomEquation.Width) - ExtraWidth / 2;
         }

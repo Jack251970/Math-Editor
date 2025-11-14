@@ -9,5 +9,10 @@ public static class RectExtensions
         public static Rect Empty => default;
 
         public bool IsEmpty => rect == default;
+
+        public Rect Union(Point point)
+        {
+            return rect.Union(new Rect(point, point));
+        }
     }
 }
