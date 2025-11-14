@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32;
 
@@ -9,6 +12,10 @@ namespace Editor;
 
 public static class ExceptionFormatter
 {
+    private static readonly string ClassName = nameof(ExceptionFormatter);
+
+    #region Exception Formatting
+
     public static string FormatException(Exception exception)
     {
         return CreateExceptionReport(exception);
@@ -61,12 +68,12 @@ public static class ExceptionFormatter
         sb.AppendLine($"* Command Line: {Environment.CommandLine}");
         sb.AppendLine($"* Timestamp: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
         sb.AppendLine($"* App version: {Constants.Version}");
-        sb.AppendLine($"* OS Version: {GetWindowsFullVersionFromRegistry()}");
+        sb.AppendLine($"* OS Version: {GetFullVersion()}");
         sb.AppendLine($"* IntPtr Length: {nint.Size}");
         sb.AppendLine($"* x64: {Environment.Is64BitOperatingSystem}");
         sb.AppendLine($"* CLR Version: {Environment.Version}");
         sb.AppendLine($"* Installed .NET Framework: ");
-        foreach (var result in GetFrameworkVersionFromRegistry())
+        foreach (var result in GetFrameworkVersion())
         {
             sb.Append("   * ");
             sb.AppendLine(result);
@@ -98,6 +105,56 @@ public static class ExceptionFormatter
         }
 
         return sb.ToString();
+    }
+
+    #endregion
+
+    #region DotNet Framework
+
+    private static List<string> GetFrameworkVersion()
+    {
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return GetFrameworkVersionFromRegistry();
+            }
+
+            // On non-Windows, '.NET Framework' doesn't apply. Report current runtime
+            // and try to enumerate installed .NET runtimes if possible.
+            var result = new List<string>
+            {
+                $"Runtime: {RuntimeInformation.FrameworkDescription}",
+                $"CLR: {Environment.Version}"
+            };
+
+            foreach (var line in TryGetDotnetRuntimesViaCli())
+            {
+                result.Add(line);
+            }
+
+            // If CLI enumeration returned nothing, try to enumerate known install locations.
+            if (result.Count <= 2)
+            {
+                foreach (var line in TryGetDotnetRuntimesFromDisk())
+                {
+                    result.Add(line);
+                }
+            }
+
+            // If still nothing extra, annotate that enumeration was not available
+            if (result.Count <= 2)
+            {
+                result.Add("Installed runtimes: unavailable (dotnet not found)");
+            }
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Error(ClassName, "Failed to get framework/runtime version info", e);
+            return [];
+        }
     }
 
     // http://msdn.microsoft.com/en-us/library/hh925568%28v=vs.110%29.aspx
@@ -181,8 +238,130 @@ public static class ExceptionFormatter
         {
             return [];
         }
-
     }
+
+    // Helpers to discover installed .NET runtimes on non-Windows
+    private static List<string> TryGetDotnetRuntimesViaCli()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "--list-runtimes",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var proc = Process.Start(psi);
+            if (proc == null)
+            {
+                return [];
+            }
+
+            var output = proc.StandardOutput.ReadToEnd();
+            // Best effort timeout
+            if (!proc.WaitForExit(2000))
+            {
+                proc.Kill(entireProcessTree: true);
+                proc.WaitForExit();
+            }
+
+            var lines = output
+                .Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => l.Trim())
+                .Where(l => l.Length > 0)
+                .ToArray();
+
+            if (lines.Length == 0)
+            {
+                return [];
+            }
+
+            // Prefix to make it clear these are runtimes
+            return [.. lines.Select(l => $"runtime: {l}")];
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Error(ClassName, "Failed to list runtimes via dotnet CLI", e);
+            return [];
+        }
+    }
+
+    private static List<string> TryGetDotnetRuntimesFromDisk()
+    {
+        try
+        {
+            var results = new List<string>();
+
+            var candidates = new List<string?>
+            {
+                Environment.GetEnvironmentVariable("DOTNET_ROOT"),
+                "/usr/local/share/dotnet",
+                "/usr/share/dotnet",
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".dotnet")
+            };
+
+            foreach (var root in candidates.Where(p => !string.IsNullOrWhiteSpace(p)))
+            {
+                try
+                {
+                    var shared = Path.Combine(root!, "shared");
+                    results.AddRange(EnumerateFrameworkFolders(Path.Combine(shared, "Microsoft.NETCore.App"), "Microsoft.NETCore.App"));
+                    results.AddRange(EnumerateFrameworkFolders(Path.Combine(shared, "Microsoft.AspNetCore.App"), "Microsoft.AspNetCore.App"));
+                }
+                catch (Exception e)
+                {
+                    EditorLogger.Error(ClassName, "Failed to enumerate dotnet runtimes from disk", e);
+                }
+            }
+
+            return results;
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Error(ClassName, "Failed to enumerate runtimes from disk", e);
+            return [];
+        }
+    }
+
+    private static List<string> EnumerateFrameworkFolders(string path, string name)
+    {
+        if (!Directory.Exists(path))
+        {
+            return [];
+        }
+
+        try
+        {
+            return [.. Directory.GetDirectories(path).Select(d => BuildRuntimeInfoLine(name, Path.GetFileName(d), d))];
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Error(ClassName, $"Failed to enumerate framework folders in {path}", e);
+            return [];
+        }
+    }
+
+    private static string BuildRuntimeInfoLine(string name, string version, string path)
+    {
+        var sb = new StringBuilder();
+        sb.Append("runtime: ");
+        sb.Append(name);
+        sb.Append(' ');
+        sb.Append(version);
+        sb.Append(' ');
+        sb.Append('[');
+        sb.Append(path);
+        sb.Append(']');
+        return sb.ToString();
+    }
+
+    #endregion
+
+    #region Runtime Info
 
     public static string RuntimeInfo()
     {
@@ -190,11 +369,84 @@ public static class ExceptionFormatter
             $"""
 
              App version: {Constants.Version}
-             OS Version: {GetWindowsFullVersionFromRegistry()}
+             OS Version: {GetFullVersion()}
              IntPtr Length: {nint.Size}
              x64: {Environment.Is64BitOperatingSystem}
              """;
         return info;
+    }
+
+    #endregion
+
+    #region OS Version
+
+    private static string GetFullVersion()
+    {
+        // Cross-platform full version/friendly OS string.
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return GetWindowsFullVersionFromRegistry();
+            }
+
+            // For non-Windows platforms, fall back to RuntimeInformation.
+            var osDescription = RuntimeInformation.OSDescription.Trim();
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // Try to read /etc/os-release for a friendlier distro name.
+                try
+                {
+                    const string osReleasePath = "/etc/os-release";
+                    if (File.Exists(osReleasePath))
+                    {
+                        var lines = File.ReadAllLines(osReleasePath);
+                        var dict = lines
+                            .Select(l => l.Split('=', 2))
+                            .Where(p => p.Length == 2)
+                            .ToDictionary(p => p[0], p => p[1].Trim('"'));
+
+                        if (dict.TryGetValue("PRETTY_NAME", out var pretty))
+                        {
+                            return pretty;
+                        }
+
+                        if (dict.TryGetValue("NAME", out var name))
+                        {
+                            if (dict.TryGetValue("VERSION", out var version))
+                            {
+                                return $"{name} {version}";
+                            }
+                            if (dict.TryGetValue("VERSION_ID", out var versionId))
+                            {
+                                return $"{name} {versionId}";
+                            }
+                            return name;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    EditorLogger.Error(ClassName, "Failed to read /etc/os-release for OS version", e);
+                }
+
+                return osDescription;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // OSDescription usually contains Darwin kernel + version. Good enough.
+                return osDescription;
+            }
+
+            throw new PlatformNotSupportedException("Unsupported OS platform");
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Error(ClassName, "Failed to read OS version", e);
+            return Environment.OSVersion.VersionString;
+        }
     }
 
     private static string GetWindowsFullVersionFromRegistry()
@@ -224,4 +476,6 @@ public static class ExceptionFormatter
             return "0";
         }
     }
+
+    #endregion
 }
