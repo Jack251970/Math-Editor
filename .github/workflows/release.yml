@@ -51,7 +51,7 @@ jobs:
             --packTitle "Math Editor" `
             --packVersion ${{ github.ref_name }} `
             --outputDir Output/Publish `
-            --packDir Output/Release `
+            --packDir Output/Release/win-x64 `
             --mainExe "Editor.Desktop.exe" `
             --icon Editor.Desktop/icon.ico
 
@@ -69,7 +69,7 @@ jobs:
             --packTitle "Math Editor" `
             --packVersion ${{ github.ref_name }} `
             --outputDir Output/Publish `
-            --packDir Output/Release `
+            --packDir Output/Release/linux-x64 `
             --mainExe "Editor.Desktop" `
             --icon Editor.Desktop/icon.png
 
@@ -87,7 +87,7 @@ jobs:
             --packTitle "Math Editor" `
             --packVersion ${{ github.ref_name }} `
             --outputDir Output/Publish `
-            --packDir Output/Release `
+            --packDir Output/Release/osx-x64 `
             --mainExe "Editor.Desktop" `
             --icon Editor.Desktop/icon.icns
 
