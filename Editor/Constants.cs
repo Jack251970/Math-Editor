@@ -8,7 +8,6 @@ public static class Constants
 {
     public const string MathEditor = "MathEditor";
     public const string MathEditorFullName = "Math Editor";
-    public const string ApplicationFileName = "Editor.exe";
 
     private static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
     public static readonly string ProgramDirectory = Directory.GetParent(Assembly.Location)!.ToString();
