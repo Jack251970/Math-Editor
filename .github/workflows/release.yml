@@ -95,6 +95,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: Math Editor-${{ matrix.os }}
+          retention-days: 7
           path: |
             Output/Publish/**/*
 
