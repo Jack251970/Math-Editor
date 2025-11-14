@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Avalonia.Media;
 
 namespace Editor;
@@ -58,10 +59,23 @@ public sealed class FontFactory
         {
             return value;
         }
-        else
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return new FontFamily("Segoe UI");
+            return new FontFamily("Helvetica, Arial, sans-serif");
         }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return new FontFamily("Noto Sans, DejaVu Sans, sans-serif");
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return new FontFamily("Segoe UI, Arial, sans-serif");
+        }
+
+        return FontFamily.Default;
     }
 
     private static string BuildAvaresUri(string subfolder, string familyName)
