@@ -42,9 +42,14 @@ internal class Program
             // Do not catch critical exceptions that should not be handled
             if (e is StackOverflowException or OutOfMemoryException or ThreadAbortException)
             {
-                throw;
+                Environment.Exit(-1);
             }
+
+            // Log to file
             EditorLogger.Fatal(ClassName, "Fatal error in Main method", e);
+
+            // Try shutdown the application
+            Environment.Exit(-1);
         }
     }
 
