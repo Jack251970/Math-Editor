@@ -66,6 +66,7 @@ public partial class CharacterToolBar : UserControl
 
     private void SetActivePanel(object sender)
     {
+        if (Design.IsDesignMode) return;
         buttonPanelMapping[sender].IsVisible = true;
         visiblePanel = buttonPanelMapping[sender];
         _mainWindow.TryHideEquationToolBarVisiblePanel();
