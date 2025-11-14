@@ -88,7 +88,6 @@ public sealed class FontFactory
         return ft switch
         {
             // STIX families embedded as Avalonia resources:
-            // Ensure the font files are included in your .csproj as <AvaloniaResource Include="Fonts\**\*" />
             FontType.STIXGeneral => new FontFamily(BuildAvaresUri("STIX", "STIXGeneral")),
             FontType.STIXIntegralsD => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsD")),
             FontType.STIXIntegralsSm => new FontFamily(BuildAvaresUri("STIX", "STIXIntegralsSm")),
@@ -126,7 +125,7 @@ public sealed class FontFactory
             FontType.Wingdings => new FontFamily("Wingdings"),
 
             // Fallback/default
-            _ => new FontFamily("Segoe UI"),
+            _ => FontFamily.Default,
         };
     }
 
