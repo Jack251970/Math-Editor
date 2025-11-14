@@ -123,4 +123,4 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            Editor-*/**/*
+            Math.Editor-*/**/*
