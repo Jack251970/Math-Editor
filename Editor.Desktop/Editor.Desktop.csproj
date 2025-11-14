@@ -35,6 +35,8 @@
   
   <ItemGroup>
     <AvaloniaResource Remove="icon.ico" />
+    <AvaloniaResource Remove="icon.png" />
+    <AvaloniaResource Remove="icon.icns" />
   </ItemGroup>
   
 </Project>
