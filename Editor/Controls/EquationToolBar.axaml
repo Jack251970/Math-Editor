@@ -18,7 +18,6 @@
                 x:Name="bracketsButton"
                 Click="ToolBarButton_Click"
                 Classes="ToolBarButton"
-                Height="34"
                 GotFocus="ToolBarButton_GotFocus"
                 PointerEntered="ToolBarButton_PointerEntered">
                 <Image Source="/Images/MathButtons/brackets.png" />
