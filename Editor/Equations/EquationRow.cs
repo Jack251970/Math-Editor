@@ -288,9 +288,9 @@ namespace Editor
                         for (var i = startIndex + 1; i < startIndex + count; i++)
                         {
                             var equation = childEquations[i];
-                            lastRect.Union(equation.Bounds);
+                            lastRect = lastRect.Union(equation.Bounds);
                         }
-                        firstRect.Union(lastRect);
+                        firstRect = firstRect.Union(lastRect);
                     }
                     return new Rect(firstRect.TopLeft, firstRect.BottomRight);
                 }

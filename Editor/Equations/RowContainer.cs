@@ -189,17 +189,17 @@ namespace Editor
             var count = (SelectedItems > 0 ? SelectionStartIndex + SelectedItems : SelectionStartIndex) - topSelectedRowIndex;
             if (count > 0)
             {
-                rect = rect.Union(new Rect(topEquation.Right, rect.Bottom + LineSpace + 1, 0, 0));
+                rect = rect.Union(new Point(topEquation.Right, rect.Bottom + LineSpace + 1));
                 dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 var bottomEquation = childEquations[topSelectedRowIndex + count];
                 rect = bottomEquation.GetSelectionBounds();
-                rect = rect.Union(new Rect(bottomEquation.Left, bottomEquation.Top, 0, 0));
+                rect = rect.Union(new Point(bottomEquation.Left, bottomEquation.Top));
                 dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 for (var i = topSelectedRowIndex + 1; i < topSelectedRowIndex + count; i++)
                 {
                     var equation = childEquations[i];
                     rect = equation.Bounds;
-                    rect = rect.Union(new Rect(rect.Left, rect.Bottom + LineSpace + 1, 0, 0));
+                    rect = rect.Union(new Point(rect.Left, rect.Bottom + LineSpace + 1));
                     dc.DrawRectangle(PenManager.SelectionBrush, null, rect);
                 }
             }
