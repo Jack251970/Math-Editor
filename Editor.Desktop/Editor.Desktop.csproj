@@ -18,8 +18,8 @@
     <Product>Math Editor</Product>
     <Copyright>Copyright @ 2025 Jack251970</Copyright>
     <Authors>Jack251970</Authors>
-    <Version>1.0.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
   
   <ItemGroup>
