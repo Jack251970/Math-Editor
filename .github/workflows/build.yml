@@ -20,10 +20,14 @@ jobs:
       contents: write
       pull-requests: write
     
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
 
     env:
       Solution_Path: Editor.slnx
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
 
