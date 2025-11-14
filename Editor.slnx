@@ -19,6 +19,11 @@
     <File Path="README.md" />
     <File Path="Settings.XamlStyler" />
   </Folder>
+  <Folder Name="/Solution Items/Workflows/">
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/pr_assignee.yml" />
+    <File Path=".github/workflows/publish.yml" />
+  </Folder>
   <Project Path="Editor.Desktop/Editor.Desktop.csproj" />
   <Project Path="Editor/Editor.csproj" />
   
