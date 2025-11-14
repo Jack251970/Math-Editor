@@ -24,8 +24,8 @@ namespace Editor.Localization.Shared
         public const string EnumLocalizeValueAttributeName = "EnumLocalizeValueAttribute";
         public const string Internationalization = "Internationalization";
         public const string SuppressWarning = "#pragma warning disable FLAN0001 // Old localization API used";
-
-        public static readonly Regex LanguagesAxamlRegex = new Regex(@"\\Languages\\en\.axaml$", RegexOptions.IgnoreCase);
+        // Regex to match file paths ending with /Languages/en.axaml on Linux & MacOS or \Languages\en.axaml on Windows
+        public static readonly Regex LanguagesAxamlRegex = new Regex(@"[\\/]+Languages[\\/]en\.axaml$", RegexOptions.IgnoreCase);
         public static readonly string[] OldLocalizationClasses = { "Internationalization" };
     }
 }
