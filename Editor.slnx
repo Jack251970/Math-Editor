@@ -9,7 +9,6 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
-    <File Path=".github/dependabot.yml" />
     <File Path=".github/FUNDING.yml" />
     <File Path=".gitignore" />
     <File Path="global.json" />
@@ -18,6 +17,7 @@
     <File Path="Settings.XamlStyler" />
   </Folder>
   <Folder Name="/Solution Items/Workflows/">
+    <File Path=".github/dependabot.yml" />
     <File Path=".github/workflows/build.yml" />
     <File Path=".github/workflows/pr_assignee.yml" />
     <File Path=".github/workflows/release.yml" />
