@@ -94,7 +94,7 @@ public static class DataLocation
         }
         catch (Exception e)
         {
-            EditorLogger.Error(ClassName, "Error determining default data home", e);
+            EditorLogger.Fatal(ClassName, "Error determining default data home", e);
             // Fallback to portable data path if all else fails
             return PortableDataPath;
         }
