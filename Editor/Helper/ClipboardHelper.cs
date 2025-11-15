@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
 using Clowd.Clipboard;
 using Clowd.Clipboard.Formats;
@@ -14,9 +19,15 @@ public class ClipboardHelper : ObservableObject, IDisposable
 {
     private static readonly string ClassName = nameof(ClipboardHelper);
 
+    private static readonly string ClipboardXmlFormatType =
+        $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
+
     private static readonly ClipboardFormat<string> ClipboardXmlFormat
         = ClipboardFormat.CreateCustomFormat(
-            $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}", new TextUtf8Converter());
+            ClipboardXmlFormatType, new TextUtf8Converter());
+
+    private static readonly DataFormat<string> ClipboardXmlFormatA
+        = DataFormat.CreateStringPlatformFormat(ClipboardXmlFormatType);
 
     private readonly Timer _timer = new(1000);
 
@@ -36,13 +47,15 @@ public class ClipboardHelper : ObservableObject, IDisposable
 
     public object? PasteObject { get; private set; }
 
+    private TopLevel _topLevel = null!;
     private bool _isMonitoring;
     private readonly SemaphoreSlim _updatingLock = new(1, 1);
 
-    public void StartMonitoring()
+    public void StartMonitoring(TopLevel topLevel)
     {
         if (_isMonitoring) return;
 
+        _topLevel = topLevel ?? throw new ArgumentNullException(nameof(topLevel));
         _isMonitoring = true;
         _timer.Elapsed += Timer_Elapsed;
         _timer.Start();
@@ -59,9 +72,8 @@ public class ClipboardHelper : ObservableObject, IDisposable
         await _updatingLock.WaitAsync();
         try
         {
-            var canPaste = CanPasteFromClipboard(out var data);
-            PasteObject = data;
-            CanPaste = canPaste;
+            PasteObject = await CanPasteFromClipboard();
+            CanPaste = PasteObject != null;
         }
         catch (Exception ex)
         {
@@ -73,28 +85,50 @@ public class ClipboardHelper : ObservableObject, IDisposable
         }
     }
 
-    private static bool CanPasteFromClipboard(out object? data)
+    private async Task<object?> CanPasteFromClipboard()
     {
-        data = null;
+        object? data = null;
         try
         {
-            using var handle = ClipboardAvalonia.Open();
-            if (handle.ContainsFormat(ClipboardXmlFormat))
+            // Windows: ClipboardAvalonia
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var xmlString = handle.GetFormatType(ClipboardXmlFormat);
-                if (!string.IsNullOrEmpty(xmlString))
+                using var handle = await ClipboardAvalonia.OpenAsync();
+                if (handle.ContainsFormat(ClipboardXmlFormat))
                 {
-                    data = new MathEditorData { XmlString = xmlString };
-                    return true;
+                    var xmlString = handle.GetFormatType(ClipboardXmlFormat);
+                    if (!string.IsNullOrEmpty(xmlString))
+                    {
+                        data = new MathEditorData { XmlString = xmlString };
+                    }
                 }
-            }
-            else if (handle.ContainsText())
-            {
+
                 var textString = handle.GetText();
                 if (!string.IsNullOrEmpty(textString))
                 {
                     data = textString;
-                    return true;
+                }
+            }
+            // Others: Fallback to Avalonia IClipboard
+            else
+            {
+                ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
+
+                using var transfer = await _topLevel.Clipboard.TryGetDataAsync() ??
+                    throw new InvalidOperationException("Clipboard data is null");
+                if (transfer.Contains(ClipboardXmlFormatA))
+                {
+                    var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
+                    if (!string.IsNullOrEmpty(xmlString))
+                    {
+                        data = new MathEditorData { XmlString = xmlString };
+                    }
+                }
+
+                var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                if (!string.IsNullOrEmpty(textString))
+                {
+                    data = textString;
                 }
             }
         }
@@ -102,7 +136,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
         {
             EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
         }
-        return false;
+        return data;
     }
 
     public async void SetClipboard(XElement element, Bitmap? image, string? text)
@@ -120,15 +154,41 @@ public class ClipboardHelper : ObservableObject, IDisposable
             CanPaste = true;
 
             // Try to set clipboard contents
-            using var handle = ClipboardAvalonia.Open();
-            handle.SetFormat(ClipboardXmlFormat, xmlString);
-            if (image != null)
+            // Windows: ClipboardAvalonia
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                handle.SetImage(image);
+                using var handle = ClipboardAvalonia.Open();
+                if (image != null)
+                {
+                    handle.SetImage(image);
+                }
+                if (text != null)
+                {
+                    handle.SetText(text);
+                }
+                handle.SetFormat(ClipboardXmlFormat, xmlString);
             }
-            if (text != null)
+            // Others: Fallback to Avalonia IClipboard
+            else
             {
-                handle.SetText(text);
+                ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
+
+                using var transfer = new DataTransfer();
+                var transferItem = new DataTransferItem();
+                // Image clipboard support is currently unavailable on non-Windows platforms
+                // because Avalonia's IClipboard/DataTransferItem does not support image data.
+                // Uncomment and implement when/if cross-platform image clipboard support is added.
+                /*if (image != null)
+                {
+                    transferItem.SetImage(image);
+                }*/
+                if (text != null)
+                {
+                    transferItem.SetText(text);
+                }
+                transferItem.Set(ClipboardXmlFormatA, xmlString);
+                transfer.Add(transferItem);
+                await _topLevel.Clipboard.SetDataAsync(transfer);
             }
         }
         catch (Exception ex)

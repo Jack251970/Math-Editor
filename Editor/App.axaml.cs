@@ -116,6 +116,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
 
             Ioc.Default.GetRequiredService<LatexConverter>().LoadPredefinedLatexUnicodeMapping();
 
+            TopLevel? topLevel = null;
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var strings = desktop.Args;
@@ -138,7 +139,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                 throw new NotSupportedException("Unsupported application lifetime");
             }
 
-            Ioc.Default.GetRequiredService<ClipboardHelper>().StartMonitoring();
+            Ioc.Default.GetRequiredService<ClipboardHelper>().StartMonitoring(topLevel!);
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
