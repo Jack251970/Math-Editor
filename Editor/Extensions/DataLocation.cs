@@ -65,30 +65,39 @@ public static class DataLocation
 
     private static string GetDefaultDataHome()
     {
-        // Windows: %AppData%\MathEditor
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        try
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.MathEditor);
-        }
+            // Windows: %AppData%\MathEditor
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.MathEditor);
+            }
 
-        // macOS: ~/Library/Application Support/MathEditor
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            return Path.Combine(appData, Constants.MathEditor);
-        }
+            // macOS: ~/Library/Application Support/MathEditor
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                return Path.Combine(appData, Constants.MathEditor);
+            }
 
-        // Linux and other Unix-like: XDG_CONFIG_HOME or ~/.config/MathEditor
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            var xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
-            var baseConfig = !string.IsNullOrWhiteSpace(xdgConfigHome)
-                ? xdgConfigHome
-                : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config");
-            return Path.Combine(baseConfig, Constants.MathEditor);
+            // Linux and other Unix-like: XDG_CONFIG_HOME or ~/.config/MathEditor
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+                var baseConfig = !string.IsNullOrWhiteSpace(xdgConfigHome)
+                    ? xdgConfigHome
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config");
+                return Path.Combine(baseConfig, Constants.MathEditor);
+            }
+
+            throw new PlatformNotSupportedException("Unsupported operating system for determining data directory.");
         }
-        
-        throw new PlatformNotSupportedException("Unsupported operating system for determining data directory.");
+        catch (Exception e)
+        {
+            EditorLogger.Fatal(ClassName, "Error determining default data home", e);
+            // Fallback to portable data path if all else fails
+            return PortableDataPath;
+        }
     }
 
     private static bool IsDirectoryWritable(string path)

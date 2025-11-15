@@ -54,6 +54,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
     public void StartMonitoring(TopLevel topLevel)
     {
         if (_isMonitoring) return;
+        if (Design.IsDesignMode) return;
 
         _topLevel = topLevel ?? throw new ArgumentNullException(nameof(topLevel));
         _isMonitoring = true;
@@ -102,11 +103,13 @@ public class ClipboardHelper : ObservableObject, IDisposable
                         data = new MathEditorData { XmlString = xmlString };
                     }
                 }
-
-                var textString = handle.GetText();
-                if (!string.IsNullOrEmpty(textString))
+                else
                 {
-                    data = textString;
+                    var textString = handle.GetText();
+                    if (!string.IsNullOrEmpty(textString))
+                    {
+                        data = textString;
+                    }
                 }
             }
             // Others: Fallback to Avalonia IClipboard
@@ -124,11 +127,13 @@ public class ClipboardHelper : ObservableObject, IDisposable
                         data = new MathEditorData { XmlString = xmlString };
                     }
                 }
-
-                var textString = await _topLevel.Clipboard.TryGetTextAsync();
-                if (!string.IsNullOrEmpty(textString))
+                else
                 {
-                    data = textString;
+                    var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                    if (!string.IsNullOrEmpty(textString))
+                    {
+                        data = textString;
+                    }
                 }
             }
         }
