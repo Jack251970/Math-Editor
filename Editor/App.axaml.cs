@@ -124,6 +124,8 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                 var mainWindow = new MainWindow(fileName);
                 mainWindow.Show();
 
+                topLevel = mainWindow.TopLevel;
+
                 RegisterExitEvents(desktop);
             }
             /*else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)

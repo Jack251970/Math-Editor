@@ -54,6 +54,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
     public void StartMonitoring(TopLevel topLevel)
     {
         if (_isMonitoring) return;
+        if (Design.IsDesignMode) return;
 
         _topLevel = topLevel ?? throw new ArgumentNullException(nameof(topLevel));
         _isMonitoring = true;
