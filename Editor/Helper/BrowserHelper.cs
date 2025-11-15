@@ -39,11 +39,11 @@ public static class BrowserHelper
                 return;
             }
 
-            throw new PlatformNotSupportedException("Cannot open link in browser.");
+            throw new PlatformNotSupportedException("Cannot open link in browser");
         }
         catch (Exception e)
         {
-            EditorLogger.Error(ClassName, "Failed to open link in browser: ", e);
+            EditorLogger.Error(ClassName, "Failed to open link in browser", e);
         }
     }
 }
