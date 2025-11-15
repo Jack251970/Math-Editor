@@ -102,11 +102,13 @@ public class ClipboardHelper : ObservableObject, IDisposable
                         data = new MathEditorData { XmlString = xmlString };
                     }
                 }
-
-                var textString = handle.GetText();
-                if (!string.IsNullOrEmpty(textString))
+                else
                 {
-                    data = textString;
+                    var textString = handle.GetText();
+                    if (!string.IsNullOrEmpty(textString))
+                    {
+                        data = textString;
+                    }
                 }
             }
             // Others: Fallback to Avalonia IClipboard
@@ -124,11 +126,13 @@ public class ClipboardHelper : ObservableObject, IDisposable
                         data = new MathEditorData { XmlString = xmlString };
                     }
                 }
-
-                var textString = await _topLevel.Clipboard.TryGetTextAsync();
-                if (!string.IsNullOrEmpty(textString))
+                else
                 {
-                    data = textString;
+                    var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                    if (!string.IsNullOrEmpty(textString))
+                    {
+                        data = textString;
+                    }
                 }
             }
         }
