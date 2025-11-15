@@ -6,35 +6,44 @@ namespace Editor;
 
 public static class BrowserHelper
 {
+    private static readonly string ClassName = nameof(BrowserHelper);
+
     /// <summary>
     /// Opens an URL in the system default browser.
     /// </summary>
     /// <param name="url">The URL to open.</param>
     public static void Open(string url)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        try
         {
-            var psi = new ProcessStartInfo
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                FileName = url,
-                UseShellExecute = true
-            };
-            Process.Start(psi);
-            return;
-        }
+                var psi = new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+                return;
+            }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+                return;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+                return;
+            }
+
+            throw new PlatformNotSupportedException("Cannot open link in browser.");
+        }
+        catch (Exception e)
         {
-            Process.Start("xdg-open", url);
-            return;
+            EditorLogger.Error(ClassName, "Failed to open link in browser: ", e);
         }
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            Process.Start("open", url);
-            return;
-        }
-
-        throw new PlatformNotSupportedException("Cannot open link in browser.");
     }
 }
