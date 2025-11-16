@@ -34,15 +34,14 @@ public class ClipboardHelper : ObservableObject, IDisposable
 
     private readonly Timer _timer = new(1000);
 
-    private bool _canPaste;
     public bool CanPaste
     {
-        get => _canPaste;
+        get;
         set
         {
-            if (_canPaste != value)
+            if (field != value)
             {
-                _canPaste = value;
+                field = value;
                 OnPropertyChanged(nameof(CanPaste));
             }
         }
