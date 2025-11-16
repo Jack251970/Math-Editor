@@ -70,7 +70,8 @@ public static class DataLocation
             // Windows: %AppData%\MathEditor
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Constants.MathEditor);
+                var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                return Path.Combine(appData, Constants.MathEditor);
             }
 
             // macOS: ~/Library/Application Support/MathEditor
