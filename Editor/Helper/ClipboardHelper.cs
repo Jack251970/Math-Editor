@@ -97,20 +97,27 @@ public class ClipboardHelper : ObservableObject, IDisposable
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 using var handle = await ClipboardAvalonia.OpenAsync();
-                if (handle.ContainsFormat(ClipboardXmlFormat))
+                if (handle == null)
                 {
-                    var xmlString = handle.GetFormatType(ClipboardXmlFormat);
-                    if (!string.IsNullOrEmpty(xmlString))
-                    {
-                        data = new MathEditorData { XmlString = xmlString };
-                    }
+                    data = null;
                 }
                 else
                 {
-                    var textString = handle.GetText();
-                    if (!string.IsNullOrEmpty(textString))
+                    if (handle.ContainsFormat(ClipboardXmlFormat))
                     {
-                        data = textString;
+                        var xmlString = handle.GetFormatType(ClipboardXmlFormat);
+                        if (!string.IsNullOrEmpty(xmlString))
+                        {
+                            data = new MathEditorData { XmlString = xmlString };
+                        }
+                    }
+                    else
+                    {
+                        var textString = handle.GetText();
+                        if (!string.IsNullOrEmpty(textString))
+                        {
+                            data = textString;
+                        }
                     }
                 }
             }
@@ -119,22 +126,28 @@ public class ClipboardHelper : ObservableObject, IDisposable
             {
                 ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
 
-                using var transfer = await _topLevel.Clipboard.TryGetDataAsync() ??
-                    throw new InvalidOperationException("Clipboard data is null");
-                if (transfer.Contains(ClipboardXmlFormatA))
+                using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
+                if (transfer == null)
                 {
-                    var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
-                    if (!string.IsNullOrEmpty(xmlString))
-                    {
-                        data = new MathEditorData { XmlString = xmlString };
-                    }
+                    data = null;
                 }
                 else
                 {
-                    var textString = await _topLevel.Clipboard.TryGetTextAsync();
-                    if (!string.IsNullOrEmpty(textString))
+                    if (transfer.Contains(ClipboardXmlFormatA))
                     {
-                        data = textString;
+                        var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
+                        if (!string.IsNullOrEmpty(xmlString))
+                        {
+                            data = new MathEditorData { XmlString = xmlString };
+                        }
+                    }
+                    else
+                    {
+                        var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                        if (!string.IsNullOrEmpty(textString))
+                        {
+                            data = textString;
+                        }
                     }
                 }
             }
@@ -164,7 +177,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
             // Windows: ClipboardAvalonia
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                using var handle = ClipboardAvalonia.Open();
+                using var handle = await ClipboardAvalonia.OpenAsync();
                 if (image != null)
                 {
                     handle.SetImage(image);
