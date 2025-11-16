@@ -568,8 +568,9 @@ public static class ExceptionFormatter
 
             return "macOS";
         }
-        catch
+        catch (Exception e)
         {
+            EditorLogger.Error(ClassName, "Failed to get macOS marketing name", e);
             return "macOS";
         }
     }
