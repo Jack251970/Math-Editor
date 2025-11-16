@@ -436,8 +436,9 @@ public static class ExceptionFormatter
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                // OSDescription usually contains Darwin kernel + version. Good enough.
-                return osDescription;
+                // Prefer "MarketingName Version", e.g., "Ventura 13.0.1"
+                var pretty = GetMacOsFullVersion();
+                return string.IsNullOrWhiteSpace(pretty) ? osDescription : pretty;
             }
 
             throw new PlatformNotSupportedException("Unsupported OS platform");
@@ -474,6 +475,102 @@ public static class ExceptionFormatter
         catch
         {
             return "0";
+        }
+    }
+
+    private static string GetMacOsFullVersion()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "sw_vers",
+                Arguments = "-productVersion",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var proc = Process.Start(psi);
+            if (proc == null)
+            {
+                return RuntimeInformation.OSDescription.Trim();
+            }
+
+            var output = proc.StandardOutput.ReadToEnd();
+            if (!proc.WaitForExit(2000))
+            {
+                try { proc.Kill(entireProcessTree: true); } catch { /* ignore */ }
+                proc.WaitForExit();
+            }
+
+            var version = output.Trim();
+            if (string.IsNullOrWhiteSpace(version))
+            {
+                return RuntimeInformation.OSDescription.Trim();
+            }
+
+            var name = GetMacOsMarketingName(version);
+            return $"{name} {version}";
+        }
+        catch (Exception e)
+        {
+            EditorLogger.Error(ClassName, "Failed to get macOS pretty version via sw_vers", e);
+            return RuntimeInformation.OSDescription.Trim();
+        }
+    }
+
+    private static string GetMacOsMarketingName(string version)
+    {
+        try
+        {
+            var parts = version.Split('.', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 0) return "macOS";
+
+            var major = int.Parse(parts[0], CultureInfo.InvariantCulture);
+            var minor = parts.Length > 1 ? int.Parse(parts[1], CultureInfo.InvariantCulture) : 0;
+
+            // macOS 11+ use major version number (11 = Big Sur, 12 = Monterey, 13 = Ventura, 14 = Sonoma, 15 = Sequoia)
+            if (major >= 11)
+            {
+                return major switch
+                {
+                    11 => "Big Sur",
+                    12 => "Monterey",
+                    13 => "Ventura",
+                    14 => "Sonoma",
+                    15 => "Sequoia",
+                    _ => "macOS"
+                };
+            }
+
+            // macOS 10.x
+            if (major == 10)
+            {
+                return minor switch
+                {
+                    15 => "Catalina",
+                    14 => "Mojave",
+                    13 => "High Sierra",
+                    12 => "Sierra",
+                    11 => "El Capitan",
+                    10 => "Yosemite",
+                    9  => "Mavericks",
+                    8  => "Mountain Lion",
+                    7  => "Lion",
+                    6  => "Snow Leopard",
+                    5  => "Leopard",
+                    4  => "Tiger",
+                    _  => "macOS"
+                };
+            }
+
+            return "macOS";
+        }
+        catch
+        {
+            return "macOS";
         }
     }
 
