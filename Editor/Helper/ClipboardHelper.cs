@@ -182,7 +182,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
 
                 using var transfer = new DataTransfer();
                 var transferItem = new DataTransferItem();
-                // Image clipboard support is currently unavailable on non-Windows platforms
+                // Image clipboard support is currently unavailable in offical Avalonia APIs
                 // because Avalonia's IClipboard/DataTransferItem does not support image data.
                 // Uncomment and implement when/if cross-platform image clipboard support is added.
                 /*if (image != null)
