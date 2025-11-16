@@ -22,24 +22,26 @@ public class ClipboardHelper : ObservableObject, IDisposable
     private static readonly string ClipboardXmlFormatType =
         $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
 
-    private static readonly ClipboardFormat<string> ClipboardXmlFormat
-        = ClipboardFormat.CreateCustomFormat(
-            ClipboardXmlFormatType, new TextUtf8Converter());
+    private static ClipboardFormat<string> ClipboardXmlFormat
+    {
+        get => field ??= ClipboardFormat.CreateCustomFormat(ClipboardXmlFormatType, new TextUtf8Converter());
+    }
 
-    private static readonly DataFormat<string> ClipboardXmlFormatA
-        = DataFormat.CreateStringPlatformFormat(ClipboardXmlFormatType);
+    private static DataFormat<string> ClipboardXmlFormatA
+    {
+        get => field ??= DataFormat.CreateStringPlatformFormat(ClipboardXmlFormatType);
+    }
 
     private readonly Timer _timer = new(1000);
 
-    private bool _canPaste;
     public bool CanPaste
     {
-        get => _canPaste;
+        get;
         set
         {
-            if (_canPaste != value)
+            if (field != value)
             {
-                _canPaste = value;
+                field = value;
                 OnPropertyChanged(nameof(CanPaste));
             }
         }
@@ -180,7 +182,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
 
                 using var transfer = new DataTransfer();
                 var transferItem = new DataTransferItem();
-                // Image clipboard support is currently unavailable on non-Windows platforms
+                // Image clipboard support is currently unavailable in offical Avalonia APIs
                 // because Avalonia's IClipboard/DataTransferItem does not support image data.
                 // Uncomment and implement when/if cross-platform image clipboard support is added.
                 /*if (image != null)
