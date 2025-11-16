@@ -22,6 +22,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
+          generate_release_notes: true
 
   publish:
     name: Publish for ${{ matrix.os }}
