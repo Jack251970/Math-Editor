@@ -6,8 +6,27 @@ on:
       - '*.*.*'
 
 jobs:
+  release:
+    name: GitHub Release
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Math Editor v${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
   publish:
     name: Publish for ${{ matrix.os }}
+
+    needs: release
 
     permissions:
       contents: write
@@ -93,36 +112,8 @@ jobs:
             --mainExe "Editor.Desktop" `
             --icon Editor.Desktop/icon.icns
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v5
-        with:
-          name: Math Editor-${{ matrix.os }}
-          retention-days: 7
-          path: |
-            Output/Publish/**/*
-
-  release:
-    name: GitHub Release
-
-    needs: publish
-
-    runs-on: ubuntu-latest
-
-    if: github.ref_type == 'tag'
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v5
-
-      - name: Create GitHub Release
+      - name: Upload installers to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Math Editor ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          files: |
-            Math.Editor-*/**/*
+          files: Output/Publish/Math.Editor*
