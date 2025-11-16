@@ -22,12 +22,15 @@ public class ClipboardHelper : ObservableObject, IDisposable
     private static readonly string ClipboardXmlFormatType =
         $"{typeof(MathEditorData).FullName}.{nameof(MathEditorData.XmlString)}";
 
-    private static readonly ClipboardFormat<string> ClipboardXmlFormat
-        = ClipboardFormat.CreateCustomFormat(
-            ClipboardXmlFormatType, new TextUtf8Converter());
+    private static ClipboardFormat<string> ClipboardXmlFormat
+    {
+        get => field ??= ClipboardFormat.CreateCustomFormat(ClipboardXmlFormatType, new TextUtf8Converter());
+    }
 
-    private static readonly DataFormat<string> ClipboardXmlFormatA
-        = DataFormat.CreateStringPlatformFormat(ClipboardXmlFormatType);
+    private static DataFormat<string> ClipboardXmlFormatA
+    {
+        get => field ??= DataFormat.CreateStringPlatformFormat(ClipboardXmlFormatType);
+    }
 
     private readonly Timer _timer = new(1000);
 
