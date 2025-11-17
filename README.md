@@ -3,7 +3,7 @@
 <p>
   <img src="https://img.shields.io/maintenance/yes/3000">
   <img src="https://img.shields.io/github/release-date/Jack251970/Math-Editor">
-  <a href="https://github.com/Jack251970/Math-Editor/releases/latest"><img src="https://img.shields.io/github/v/release/Jack251970/Flow.Launcher.Plugin.ClipboardPlus"></a>
+  <a href="https://github.com/Jack251970/Math-Editor/releases/latest"><img src="https://img.shields.io/github/v/release/Jack251970/Math-Editor"></a>
   <img src="https://img.shields.io/github/license/Jack251970/Math-Editor">
 </p>
 
