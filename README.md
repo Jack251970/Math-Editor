@@ -22,7 +22,7 @@ Open-source, cross-platform equation editor built with Avalonia. A modern, free 
 ![Math Editor Screenshot](Images/win_light.png)
 ![Math Editor Screenshot](Images/win_dark.png)
 
-### MacOS
+### macOS
 
 ![Math Editor Screenshot](Images/mac_light.png)
 ![Math Editor Screenshot](Images/mac_dark.png)
