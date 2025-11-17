@@ -387,7 +387,7 @@ public static class ExceptionFormatter
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return GetWindowsFullVersionFromRegistry();
+                return $"Windows {GetWindowsFullVersionFromRegistry()}";
             }
 
             // For non-Windows platforms, fall back to RuntimeInformation.
