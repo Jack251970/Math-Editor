@@ -7,7 +7,7 @@ namespace Editor;
 
 public class AboutWindowViewModel : ObservableObject
 {
-    private UpdateManager? _updateManager { get; }
+    private readonly UpdateManager? _updateManager;
 
     public string RepositoryUrl { get; } = Constants.RepositoryUrl;
     public string IssuesUrl { get; } = Constants.IssuesUrl;
