@@ -12,7 +12,12 @@ public static class EditorLogger
 {
     private const string SourceContext = "SourceContext";
 
-    public static bool IsInitialized { get; private set; }
+    private static volatile bool _isInitialized;
+    public static bool IsInitialized
+    {
+        get => _isInitialized;
+        private set => _isInitialized = value;
+    }
 
     public static void Initialize()
     {
