@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Velopack.Logging;
 
 namespace Editor;
@@ -9,29 +10,36 @@ public class VelopackLogger : IVelopackLogger
     private static readonly string ClassName = nameof(VelopackLogger);
 
     private readonly List<LogEntry> _logEntries = [];
+    private readonly Lock _logEntriesLock = new();
 
     public void Log(VelopackLogLevel logLevel, string? message, Exception? exception)
     {
         // Since we need to build Velopack before EditorLogger is initialized, we cache log entries here
         if (!EditorLogger.IsInitialized)
         {
-            _logEntries.Add(new LogEntry
+            lock (_logEntriesLock)
             {
-                LogLevel = logLevel,
-                Message = message,
-                Exception = exception
-            });
+                _logEntries.Add(new LogEntry
+                {
+                    LogLevel = logLevel,
+                    Message = message,
+                    Exception = exception
+                });
+            }
             return;
         }
 
         // Log cached entries
-        if (_logEntries.Count > 0)
+        lock (_logEntriesLock)
         {
-            foreach (LogEntry logEntry in _logEntries)
+            if (_logEntries.Count > 0)
             {
-                LogToEditorLogger(logEntry.LogLevel, logEntry.Message, logEntry.Exception);
+                foreach (LogEntry logEntry in _logEntries)
+                {
+                    LogToEditorLogger(logEntry.LogLevel, logEntry.Message, logEntry.Exception);
+                }
+                _logEntries.Clear();
             }
-            _logEntries.Clear();
         }
 
         // Log current entry
