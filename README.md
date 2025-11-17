@@ -152,6 +152,6 @@ Credits:
 ## ❤️ Thank You
 
 If you are enjoying this app, then please support my work and enthusiasm by buying me a coffee on
-[https://ko-fi/jackye](https://ko-fi.com/jackye).
+[https://ko-fi.com/jackye](https://ko-fi.com/jackye).
 
 [<img style="float:left" src="https://user-images.githubusercontent.com/14358394/115450238-f39e8100-a21b-11eb-89d0-fa4b82cdbce8.png" width="200">](https://ko-fi.com/jackye)
