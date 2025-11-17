@@ -24,7 +24,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
     public static UpdateManager UpdateManager
     {
         get => field ??= new UpdateManager(new GithubSource(Constants.RepositoryUrl, null, false, null));
-        set => field = value;
+        private set => field = value;
     }
 
     private static bool _disposed;
