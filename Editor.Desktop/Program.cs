@@ -17,7 +17,9 @@ internal class Program
     public static void Main(string[] args)
     {
         // It's important to Run() the VelopackApp as early as possible in app startup.
-        VelopackApp.Build().Run();
+        VelopackApp.Build()
+            .SetLogger(new VelopackLogger())
+            .Run();
 
         // Setup logging
         EditorLogger.Initialize();
