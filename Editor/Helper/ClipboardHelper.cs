@@ -94,7 +94,7 @@ public class ClipboardHelper : ObservableObject, IDisposable
         try
         {
             // Windows: ClipboardAvalonia
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 using var handle = await ClipboardAvalonia.OpenAsync();
                 if (handle == null)
@@ -167,15 +167,12 @@ public class ClipboardHelper : ObservableObject, IDisposable
             var xmlString = element.ToString();
 
             // Update paste object directly
-            PasteObject = new MathEditorData
-            {
-                XmlString = xmlString
-            };
+            PasteObject = new MathEditorData { XmlString = xmlString };
             CanPaste = true;
 
             // Try to set clipboard contents
             // Windows: ClipboardAvalonia
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 using var handle = await ClipboardAvalonia.OpenAsync();
                 if (image != null)
