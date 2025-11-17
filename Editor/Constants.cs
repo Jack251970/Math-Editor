@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+﻿using Avalonia.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Velopack;
 
 namespace Editor;
 
@@ -9,10 +9,12 @@ public static class Constants
     public const string MathEditor = "MathEditor";
     public const string MathEditorFullName = "Math Editor";
 
-    private static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    public static readonly string ProgramDirectory = Directory.GetParent(Assembly.Location)!.ToString();
-
-    public static readonly string Version = FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion!;
+    public static string Version
+    {
+        get => field ??= Design.IsDesignMode ?
+            "1.0.0" :
+            Ioc.Default.GetRequiredService<UpdateManager>().CurrentVersion?.ToString() ?? "1.0.0";
+    }
     public static readonly string Dev = "Dev";
 
     public const string Settings = "Settings";

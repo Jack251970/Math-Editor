@@ -24,17 +24,11 @@ internal class Program
             // Start the application as a single instance
             if (SingleInstance<App>.InitializeAsFirstInstance())
             {
-                // Set up Logging
-                EditorLogger.Initialize();
-
                 BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
                 if (Application.Current is IDisposable disposable)
                 {
                     disposable.Dispose();
                 }
-
-                // Close and flush the logger
-                EditorLogger.Close();
             }
         }
         catch (Exception e)
@@ -50,6 +44,11 @@ internal class Program
 
             // Try shutdown the application
             Environment.Exit(-1);
+        }
+        finally
+        {
+            // Close and flush the logger
+            EditorLogger.Close();
         }
     }
 
