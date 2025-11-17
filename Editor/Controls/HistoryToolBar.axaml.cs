@@ -27,12 +27,13 @@ public partial class HistoryToolBar : UserControl
             _mainWindow.HandleToolBarCommand(commandDetails);
             _mainWindow.TryHideCharacterToolBarVisiblePanel();
             _mainWindow.TryHideEquationToolBarVisiblePanel();
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                RecentListBox.SelectionChanged -= RecentListBox_SelectionChanged;
+                RecentListBox.SelectedItem = null;
+                RecentListBox.SelectionChanged += RecentListBox_SelectionChanged;
+            });
         }
-        Dispatcher.UIThread.Post(() =>
-        {
-            RecentListBox.SelectionChanged -= RecentListBox_SelectionChanged;
-            RecentListBox.SelectedItem = null;
-            RecentListBox.SelectionChanged += RecentListBox_SelectionChanged;
-        });
     }
 }
