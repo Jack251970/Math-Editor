@@ -30,4 +30,6 @@ public static class Constants
     public const int MaxSymbols = 30;
 
     public const string Latex2UnicodePath = "avares://Editor/Resources/unicode2latex.json";
+
+    public const string UpdateUrl = "https://github.com/Jack251970/Math-Editor";
 }

@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Velopack;
 
 namespace Editor;
 
@@ -83,6 +84,7 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
                     .AddSingleton<Internationalization>()
                     .AddSingleton<LatexConverter>()
                     .AddSingleton<TextManager>()
+                    .AddSingleton(sp => new UpdateManager(Constants.UpdateUrl))
                     .AddTransient<UndoManager>()
                     .AddSingleton<ClipboardHelper>()
                     .AddTransient<AboutWindowViewModel>()

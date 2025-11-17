@@ -33,12 +33,19 @@
                 VerticalAlignment="Center"
                 Source="avares://Editor/Images/icon.png" />
         </Grid>
-        <TextBlock
-            Name="VersionLabel"
+        <StackPanel
+            Orientation="Horizontal"
             Grid.Row="0"
-            Grid.Column="1"
-            VerticalAlignment="Center"
-            Text="Math Editor v1.0.0" />
+            Grid.Column="1">
+            <TextBlock
+                Name="VersionPrefixLabel"
+                VerticalAlignment="Center"
+                Text="Math Editor v" />
+            <TextBlock
+                Name="VersionLabel"
+                VerticalAlignment="Center"
+                Text="{Binding Version, Mode=OneTime}" />
+        </StackPanel>
         <Grid
             Grid.Row="1"
             Grid.Column="0"
