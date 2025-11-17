@@ -1,6 +1,4 @@
 ﻿using Avalonia.Controls;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Velopack;
 
 namespace Editor;
 
@@ -13,7 +11,7 @@ public static class Constants
     {
         get => field ??= Design.IsDesignMode ?
             "1.0.0" :
-            Ioc.Default.GetRequiredService<UpdateManager>().CurrentVersion?.ToString() ?? "1.0.0";
+            App.UpdateManager.CurrentVersion?.ToString() ?? "1.0.0";
     }
     public static readonly string Dev = "Dev";
 

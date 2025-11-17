@@ -21,6 +21,11 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
     private static readonly string ClassName = nameof(App);
 
     public static Settings Settings { get; private set; } = new();
+    public static UpdateManager UpdateManager
+    {
+        get => field ??= new UpdateManager(new GithubSource(Constants.RepositoryUrl, null, false, null));
+        set => field = value;
+    }
 
     private static bool _disposed;
 
@@ -41,10 +46,10 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             })
             .ConfigureServices(services => services
                 .AddSingleton(_ => Settings)
+                .AddSingleton(_ => UpdateManager)
                 .AddSingleton<Internationalization>()
                 .AddSingleton<LatexConverter>()
                 .AddSingleton<TextManager>()
-                .AddSingleton(sp => new UpdateManager(new GithubSource(Constants.RepositoryUrl, null, false, null)))
                 .AddTransient<UndoManager>()
                 .AddSingleton<ClipboardHelper>()
                 .AddTransient<AboutWindowViewModel>()
@@ -62,12 +67,6 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
         if (Design.IsDesignMode)
         {
             RequestedThemeVariant = ThemeVariant.Dark;
-        }
-
-        // Set up Logging
-        if (!Design.IsDesignMode)
-        {
-            EditorLogger.Initialize();
         }
     }
 
@@ -101,7 +100,6 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             await ShowErrorMsgBoxAndExitAsync("Cannot initialize system language or change culture info", e);
             return;
         }
-
 
         // Startup the application
         await Stopwatch.InfoAsync(ClassName, "Startup cost", async () =>
