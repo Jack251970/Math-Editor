@@ -12,7 +12,7 @@ public static class DataLocation
     public const string DeletionIndicatorFile = ".dead";
 
     // Portable data lives next to the executable in a "UserData" folder (if writable and not deleted)
-    public static readonly string PortableDataPath = Path.Combine(Constants.ProgramDirectory, PortableFolderName);
+    public static readonly string PortableDataPath = Path.Combine(AppContext.BaseDirectory, PortableFolderName);
 
     // Default roaming/config data path depending on OS
     public static readonly string RoamingDataPath = GetDefaultDataHome();

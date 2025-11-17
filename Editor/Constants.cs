@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Velopack;
 
@@ -10,9 +8,6 @@ public static class Constants
 {
     public const string MathEditor = "MathEditor";
     public const string MathEditorFullName = "Math Editor";
-
-    private static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    public static readonly string ProgramDirectory = Directory.GetParent(Assembly.Location)!.ToString();
 
     public static string Version
     {
