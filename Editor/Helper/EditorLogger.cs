@@ -11,7 +11,9 @@ namespace Editor;
 public static class EditorLogger
 {
     private const string SourceContext = "SourceContext";
-    private static volatile bool _initialized = false;
+
+    private static volatile bool _isInitialized;
+    public static bool IsInitialized => _isInitialized;
 
     public static void Initialize()
     {
@@ -43,7 +45,7 @@ public static class EditorLogger
             .Enrich.WithProperty(SourceContext, Constants.MathEditor)
             .CreateLogger();
 
-        _initialized = true;
+        _isInitialized = true;
     }
 
     public static IHostBuilder ConfigureLogger(this IHostBuilder builder)
@@ -125,8 +127,7 @@ public static class EditorLogger
 
     public static void Close()
     {
-        if (!_initialized) return;
-
+        if (!_isInitialized) return;
         Log.CloseAndFlush();
     }
 }
