@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Clowd.Clipboard;
 using Clowd.Clipboard.Formats;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -126,30 +127,40 @@ public class ClipboardHelper : ObservableObject, IDisposable
             {
                 ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
 
-                using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
-                if (transfer == null)
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    data = null;
-                }
-                else
-                {
-                    if (transfer.Contains(ClipboardXmlFormatA))
+                    try
                     {
-                        var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
-                        if (!string.IsNullOrEmpty(xmlString))
+                        using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
+                        if (transfer == null)
                         {
-                            data = new MathEditorData { XmlString = xmlString };
+                            data = null;
+                        }
+                        else
+                        {
+                            if (transfer.Contains(ClipboardXmlFormatA))
+                            {
+                                var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
+                                if (!string.IsNullOrEmpty(xmlString))
+                                {
+                                    data = new MathEditorData { XmlString = xmlString };
+                                }
+                            }
+                            else
+                            {
+                                var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                                if (!string.IsNullOrEmpty(textString))
+                                {
+                                    data = textString;
+                                }
+                            }
                         }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        var textString = await _topLevel.Clipboard.TryGetTextAsync();
-                        if (!string.IsNullOrEmpty(textString))
-                        {
-                            data = textString;
-                        }
+                        EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
                     }
-                }
+                });
             }
         }
         catch (Exception e)
