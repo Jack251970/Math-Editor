@@ -213,7 +213,7 @@ public partial class MainWindow : Window, IMainWindow, ICultureInfoChanged, ICon
 
         // Mark as confirmable and close again after this handler returns
         _canClose = true;
-        _ = Dispatcher.UIThread.InvokeAsync(Close);
+        Dispatcher.UIThread.Post(Close);
     }
 
     private void Editor_ZoomChanged(object? sender, int number)
