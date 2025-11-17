@@ -13,11 +13,7 @@ public static class EditorLogger
     private const string SourceContext = "SourceContext";
 
     private static volatile bool _isInitialized;
-    public static bool IsInitialized
-    {
-        get => _isInitialized;
-        private set => _isInitialized = value;
-    }
+    public static bool IsInitialized => _isInitialized;
 
     public static void Initialize()
     {
@@ -49,7 +45,7 @@ public static class EditorLogger
             .Enrich.WithProperty(SourceContext, Constants.MathEditor)
             .CreateLogger();
 
-        IsInitialized = true;
+        _isInitialized = true;
     }
 
     public static IHostBuilder ConfigureLogger(this IHostBuilder builder)
@@ -131,7 +127,7 @@ public static class EditorLogger
 
     public static void Close()
     {
-        if (!IsInitialized) return;
+        if (!_isInitialized) return;
         Log.CloseAndFlush();
     }
 }
