@@ -31,11 +31,43 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
     {
         AvaloniaXamlLoader.Load(this);
 
+        // Configure the dependency injection container
+        var host = Host.CreateDefaultBuilder()
+            .UseContentRoot(AppContext.BaseDirectory)
+            .ConfigureLogger()
+            .UseDefaultServiceProvider((context, options) =>
+            {
+                options.ValidateOnBuild = true;
+            })
+            .ConfigureServices(services => services
+                .AddSingleton(_ => Settings)
+                .AddSingleton<Internationalization>()
+                .AddSingleton<LatexConverter>()
+                .AddSingleton<TextManager>()
+                .AddSingleton(sp => new UpdateManager(new GithubSource(Constants.RepositoryUrl, null, false, null)))
+                .AddTransient<UndoManager>()
+                .AddSingleton<ClipboardHelper>()
+                .AddTransient<AboutWindowViewModel>()
+                .AddTransient<CodepointWindowViewModel>()
+                .AddTransient<CustomZoomWindowViewModel>()
+                .AddTransient<MainWindowViewModel>()
+                .AddTransient<MatrixInputWindowViewModel>()
+                .AddTransient<SettingsWindowViewModel>()
+                .AddTransient<UnicodeSelectorWindowViewModel>()
+        ).Build();
+        Ioc.Default.ConfigureServices(host.Services);
+
         // Default logic doesn't auto detect windows theme anymore in designer
         // to stop light mode, force here
         if (Design.IsDesignMode)
         {
             RequestedThemeVariant = ThemeVariant.Dark;
+        }
+
+        // Set up Logging
+        if (!Design.IsDesignMode)
+        {
+            EditorLogger.Initialize();
         }
     }
 
@@ -70,39 +102,6 @@ public partial class App : Application, ISingleInstanceApp, IDisposable
             return;
         }
 
-        // Configure the dependency injection container
-        try
-        {
-            var host = Host.CreateDefaultBuilder()
-                .UseContentRoot(AppContext.BaseDirectory)
-                .ConfigureLogger()
-                .UseDefaultServiceProvider((context, options) =>
-                {
-                    options.ValidateOnBuild = true;
-                })
-                .ConfigureServices(services => services
-                    .AddSingleton(_ => Settings)
-                    .AddSingleton<Internationalization>()
-                    .AddSingleton<LatexConverter>()
-                    .AddSingleton<TextManager>()
-                    .AddSingleton(sp => new UpdateManager(new GithubSource(Constants.RepositoryUrl, null, false, null)))
-                    .AddTransient<UndoManager>()
-                    .AddSingleton<ClipboardHelper>()
-                    .AddTransient<AboutWindowViewModel>()
-                    .AddTransient<CodepointWindowViewModel>()
-                    .AddTransient<CustomZoomWindowViewModel>()
-                    .AddTransient<MainWindowViewModel>()
-                    .AddTransient<MatrixInputWindowViewModel>()
-                    .AddTransient<SettingsWindowViewModel>()
-                    .AddTransient<UnicodeSelectorWindowViewModel>()
-            ).Build();
-            Ioc.Default.ConfigureServices(host.Services);
-        }
-        catch (Exception e)
-        {
-            await ShowErrorMsgBoxAndExitAsync("Cannot configure dependency injection container", e);
-            return;
-        }
 
         // Startup the application
         await Stopwatch.InfoAsync(ClassName, "Startup cost", async () =>
