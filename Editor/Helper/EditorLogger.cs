@@ -11,7 +11,7 @@ namespace Editor;
 public static class EditorLogger
 {
     private const string SourceContext = "SourceContext";
-    private static bool _initialized = false;
+    private static volatile bool _initialized = false;
 
     public static void Initialize()
     {
