@@ -556,13 +556,13 @@ public static class ExceptionFormatter
                     12 => "Sierra",
                     11 => "El Capitan",
                     10 => "Yosemite",
-                    9  => "Mavericks",
-                    8  => "Mountain Lion",
-                    7  => "Lion",
-                    6  => "Snow Leopard",
-                    5  => "Leopard",
-                    4  => "Tiger",
-                    _  => "macOS"
+                    9 => "Mavericks",
+                    8 => "Mountain Lion",
+                    7 => "Lion",
+                    6 => "Snow Leopard",
+                    5 => "Leopard",
+                    4 => "Tiger",
+                    _ => "macOS"
                 };
             }
 

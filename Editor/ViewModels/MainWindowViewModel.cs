@@ -59,7 +59,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
 
     [ObservableProperty]
     public partial EditorMode TextEditorMode { get; set; }
-    
+
     public List<FontTypeLocalized> AllFontTypes { get; } = FontTypeLocalized.GetValues();
 
     [ObservableProperty]
@@ -112,7 +112,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
 
     [ObservableProperty]
     public partial string CustomZoomMenuHeader { get; set; } = null!;
-    
+
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
     public bool IgnoreInputBoldChange { get; set; } = false;

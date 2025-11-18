@@ -14,7 +14,7 @@ public partial class UnicodeSelectorWindowViewModel : ObservableObject, ICulture
 
     [ObservableProperty]
     public partial string SelectedCategory { get; set; } = string.Empty;
-    
+
     public FontFamily SymbolFontFamily { get; } = FontFactory.GetFontFamily(FontType.STIXGeneral);
 
     [ObservableProperty]
@@ -22,7 +22,7 @@ public partial class UnicodeSelectorWindowViewModel : ObservableObject, ICulture
 
     [ObservableProperty]
     public partial UnicodeItem? SelectedSymbolItem { get; set; } = null;
-    
+
     public Settings Settings { get; } = App.Settings;
 
     [ObservableProperty]
@@ -33,7 +33,7 @@ public partial class UnicodeSelectorWindowViewModel : ObservableObject, ICulture
 
     [ObservableProperty]
     public partial string CharacterCodeText { get; set; } = string.Empty;
-    
+
     public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
 
     [ObservableProperty]

@@ -19,7 +19,7 @@ public partial class CodepointWindowViewModel : ObservableObject, ICultureInfoCh
 
     [ObservableProperty]
     public partial string? NumberText { get; set; } = null;
-    
+
     public uint? Number { get; private set; } = null;
 
     partial void OnUnicodeFormatChanged(UnicodeFormat value)
