@@ -232,6 +232,7 @@
     <x:String x:Key="MainWindow_NewVersionAvailable">New version {0} is available. Do you want to update it now?</x:String>
     <x:String x:Key="MainWindow_FailToDownloadUpdates">Failed to download updates</x:String>
     <x:String x:Key="MainWindow_UpdateDownloaded">The update has been downloaded. Do you want to restart the app now to apply the update?</x:String>
+    <x:String x:Key="MainWindow_Unknown">Unknown</x:String>
 
     <!-- Report Window -->
     <x:String x:Key="ReportWindow_AppGotError">App got an error</x:String>

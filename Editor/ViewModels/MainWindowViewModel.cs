@@ -450,7 +450,8 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             return;
         }
 
-        var updateResult = await MessageBox.ShowAsync(Localize.MainWindow_NewVersionAvailable(newVersion.BaseRelease?.Version),
+        var updateResult = await MessageBox.ShowAsync(
+            Localize.MainWindow_NewVersionAvailable(newVersion.BaseRelease?.Version.ToString() ?? Localize.MainWindow_Unknown()),
             Localize.MainWindow_CheckForUpdates(), MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (updateResult == MessageBoxResult.Yes)
         {
