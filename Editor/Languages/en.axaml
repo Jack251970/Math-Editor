@@ -200,6 +200,7 @@
     <x:String x:Key="MainWindow_Help">Help</x:String>
     <x:String x:Key="MainWindow_Contents">Contents</x:String>
     <x:String x:Key="MainWindow_About">About</x:String>
+    <x:String x:Key="MainWindow_CheckForUpdates">Check for updates</x:String>
 
     <x:String x:Key="MainWindow_ExitFullScreen">Exit full screen</x:String>
     <x:String x:Key="MainWindow_Undo">Undo</x:String>
@@ -225,6 +226,12 @@
     <x:String x:Key="MainWindow_SaveImageFile">Save Image File</x:String>
     <x:String x:Key="MainWindow_SaveMathEditorFile">Save Math Editor File</x:String>
     <x:String x:Key="MainWindow_SaveCurrentDocument">Do you want to save the current document before closing?</x:String>
+    <x:String x:Key="MainWindow_DownloadUpdatesManually">Math Editor is not installed. Please update it manually.</x:String>
+    <x:String x:Key="MainWindow_FailToCheckForUpdates">Failed to check for updates</x:String>
+    <x:String x:Key="MainWindow_UpToDate">You are up to date</x:String>
+    <x:String x:Key="MainWindow_NewVersionAvailable">New version {0} is available. Do you want to update it now?</x:String>
+    <x:String x:Key="MainWindow_FailToDownloadUpdates">Failed to download updates</x:String>
+    <x:String x:Key="MainWindow_UpdateDownloaded">The update has been downloaded. Do you want to restart the app now to apply the update?</x:String>
 
     <!-- Report Window -->
     <x:String x:Key="ReportWindow_AppGotError">App got an error</x:String>

@@ -258,6 +258,7 @@
                 <MenuItem Header="{DynamicResource MainWindow_Help}">
                     <MenuItem Command="{Binding OpenContentsCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_Contents}" />
                     <Separator />
+                    <MenuItem Command="{Binding CheckForUpdatesCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_CheckForUpdates}" />
                     <MenuItem Command="{Binding OpenAboutWindowCommand, Mode=OneTime}" Header="{DynamicResource MainWindow_About}" />
                 </MenuItem>
             </Menu>
