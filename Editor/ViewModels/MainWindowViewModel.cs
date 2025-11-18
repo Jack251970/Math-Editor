@@ -31,13 +31,13 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     private readonly Lock _fullScreenModeLock = new();
 
     [ObservableProperty]
-    private string _mainWindowTitle = null!;
+    public partial string MainWindowTitle { get; set; } = null!;
 
     [ObservableProperty]
-    private string _currentLocalFile = null!;
+    public partial string CurrentLocalFile { get; set; } = null!;
 
     [ObservableProperty]
-    private string _showNestingMenuItemHeader = null!;
+    public partial string ShowNestingMenuItemHeader { get; set; } = null!;
 
     public MainWindowViewModel(Settings settings, UndoManager undoManager, ClipboardHelper clipboardHelper,
         UpdateManager updateManager)
@@ -58,61 +58,61 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     public List<EditorModeLocalized> AllEditModes { get; } = EditorModeLocalized.GetValues();
 
     [ObservableProperty]
-    private EditorMode _textEditorMode;
-
+    public partial EditorMode TextEditorMode { get; set; }
+    
     public List<FontTypeLocalized> AllFontTypes { get; } = FontTypeLocalized.GetValues();
 
     [ObservableProperty]
-    private FontType _textFontType;
+    public partial FontType TextFontType { get; set; }
 
     [ObservableProperty]
-    private bool _inputBold;
+    public partial bool InputBold { get; set; }
 
     [ObservableProperty]
-    private bool _inputItalic;
+    public partial bool InputItalic { get; set; }
 
     [ObservableProperty]
-    private bool _inputUnderline;
+    public partial bool InputUnderline { get; set; }
 
     [ObservableProperty]
-    private bool _isSelecting;
+    public partial bool IsSelecting { get; set; }
 
     [ObservableProperty]
-    private bool _useItalicIntergalOnNew;
+    public partial bool UseItalicIntergalOnNew { get; set; }
 
     [ObservableProperty]
-    private bool _showUnderbar = true;
+    public partial bool ShowUnderbar { get; set; } = true;
 
     [ObservableProperty]
-    private string _statusBarLeftMessage = string.Empty;
+    public partial string StatusBarLeftMessage { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _statusBarRightMessage = string.Empty;
+    public partial string StatusBarRightMessage { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private int _activeChildSelectionStartIndex = 0;
+    public partial int ActiveChildSelectionStartIndex { get; set; } = 0;
 
     [ObservableProperty]
-    private int _activeChildSelectedItems = 0;
+    public partial int ActiveChildSelectedItems { get; set; } = 0;
 
     [ObservableProperty]
-    private bool _fullScreenMode = false;
+    public partial bool FullScreenMode { get; set; } = false;
 
     [ObservableProperty]
-    private string _fullScreenMenuItemHeader = null!;
+    public partial string FullScreenMenuItemHeader { get; set; } = null!;
 
     [ObservableProperty]
-    private bool _fullScreenButtonVisible = false;
+    public partial bool FullScreenButtonVisible { get; set; } = false;
 
     [ObservableProperty]
-    private int _customZoomPercentage = 0;
+    public partial int CustomZoomPercentage { get; set; } = 0;
 
     [ObservableProperty]
-    private bool _customZoomMenuChecked = false;
+    public partial bool CustomZoomMenuChecked { get; set; } = false;
 
     [ObservableProperty]
-    private string _customZoomMenuHeader = null!;
-
+    public partial string CustomZoomMenuHeader { get; set; } = null!;
+    
     public bool IgnoreTextEditorModeChange { get; set; } = false;
     public bool IgnoreTextFontTypeChange { get; set; } = false;
     public bool IgnoreInputBoldChange { get; set; } = false;

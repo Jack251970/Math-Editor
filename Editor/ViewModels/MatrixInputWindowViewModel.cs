@@ -5,8 +5,8 @@ namespace Editor;
 public partial class MatrixInputWindowViewModel : ObservableObject
 {
     [ObservableProperty]
-    private int? _rows = 1;
+    public partial int? Rows { get; set; } = 1;
 
     [ObservableProperty]
-    private int? _columns = 1;
+    public partial int? Columns { get; set; } = 1;
 }

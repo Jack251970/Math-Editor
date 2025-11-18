@@ -15,11 +15,11 @@ public partial class CodepointWindowViewModel : ObservableObject, ICultureInfoCh
     public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
 
     [ObservableProperty]
-    private UnicodeFormat _unicodeFormat = UnicodeFormat.Decimal;
+    public partial UnicodeFormat UnicodeFormat { get; set; } = UnicodeFormat.Decimal;
 
     [ObservableProperty]
-    private string? _numberText = null;
-
+    public partial string? NumberText { get; set; } = null;
+    
     public uint? Number { get; private set; } = null;
 
     partial void OnUnicodeFormatChanged(UnicodeFormat value)

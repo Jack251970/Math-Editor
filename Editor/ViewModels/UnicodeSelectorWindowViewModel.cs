@@ -13,31 +13,31 @@ public partial class UnicodeSelectorWindowViewModel : ObservableObject, ICulture
     public List<string> Categories { get; }
 
     [ObservableProperty]
-    private string _selectedCategory = string.Empty;
-
+    public partial string SelectedCategory { get; set; } = string.Empty;
+    
     public FontFamily SymbolFontFamily { get; } = FontFactory.GetFontFamily(FontType.STIXGeneral);
 
     [ObservableProperty]
-    private List<UnicodeItem> _categorySource = [];
+    public partial List<UnicodeItem> CategorySource { get; set; } = [];
 
     [ObservableProperty]
-    private UnicodeItem? _selectedSymbolItem = null;
-
+    public partial UnicodeItem? SelectedSymbolItem { get; set; } = null;
+    
     public Settings Settings { get; } = App.Settings;
 
     [ObservableProperty]
-    private UnicodeItem? _selectedRecentSymbolItem = null;
+    public partial UnicodeItem? SelectedRecentSymbolItem { get; set; } = null;
 
     [ObservableProperty]
-    private bool? _selectRecentList = null;
+    public partial bool? SelectRecentList { get; set; } = null;
 
     [ObservableProperty]
-    private string _characterCodeText = string.Empty;
-
+    public partial string CharacterCodeText { get; set; } = string.Empty;
+    
     public List<UnicodeFormatLocalized> AllUnicodeFormats { get; } = UnicodeFormatLocalized.GetValues();
 
     [ObservableProperty]
-    private UnicodeFormat _unicodeFormat = UnicodeFormat.Decimal;
+    public partial UnicodeFormat UnicodeFormat { get; set; } = UnicodeFormat.Decimal;
 
     private static bool _isCategoriesSetup = false;
     private static readonly Dictionary<string, List<UnicodeItem>> _categories = [];
