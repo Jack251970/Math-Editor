@@ -9,6 +9,7 @@ using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Velopack;
 
 namespace Editor;
 
@@ -19,6 +20,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     public Settings Settings { get; init; }
     public UndoManager UndoManager { get; init; }
     public ClipboardHelper ClipboardHelper { get; init; }
+    public UpdateManager UpdateManager { get; init; }
     public IMainWindow MainWindow { get; set; } = null!;
     public EditorControl? Editor { get; set; } = null;
     private MenuItem _recentFileItem = null!;
@@ -37,11 +39,13 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     [ObservableProperty]
     private string _showNestingMenuItemHeader = null!;
 
-    public MainWindowViewModel(Settings settings, UndoManager undoManager, ClipboardHelper clipboardHelper)
+    public MainWindowViewModel(Settings settings, UndoManager undoManager, ClipboardHelper clipboardHelper,
+        UpdateManager updateManager)
     {
         Settings = settings;
         UndoManager = undoManager;
         ClipboardHelper = clipboardHelper;
+        UpdateManager = updateManager;
         TextEditorMode = settings.DefaultMode;
         TextFontType = settings.DefaultFont;
         UpdateMainWindowTitle();
@@ -414,6 +418,65 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     private void OpenContents()
     {
         BrowserHelper.Open(Constants.WikiUrl);
+    }
+
+    [RelayCommand]
+    private async Task CheckForUpdatesAsync()
+    {
+        if (!UpdateManager.IsInstalled)
+        {
+            await MessageBox.ShowAsync(Localize.MainWindow_DownloadUpdatesManually(), Localize.MainWindow_CheckForUpdates(),
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        UpdateInfo? newVersion = null;
+        try
+        {
+            newVersion = await Task.Run(() => UpdateManager.CheckForUpdates());
+        }
+        catch (Exception ex)
+        {
+            EditorLogger.Error(ClassName, "Failed to check for updates", ex);
+            await MessageBox.ShowAsync(Localize.MainWindow_FailToCheckForUpdates(), Localize.MainWindow_CheckForUpdates(),
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (newVersion == null)
+        {
+            await MessageBox.ShowAsync(Localize.MainWindow_UpToDate(), Localize.MainWindow_CheckForUpdates(),
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var updateResult = await MessageBox.ShowAsync(Localize.MainWindow_NewVersionAvailable(newVersion.BaseRelease?.Version),
+            Localize.MainWindow_CheckForUpdates(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (updateResult == MessageBoxResult.Yes)
+        {
+            try
+            {
+                await Task.Run(() => UpdateManager.DownloadUpdates(newVersion));
+            }
+            catch (Exception ex)
+            {
+                EditorLogger.Error(ClassName, "Failed to download updates", ex);
+                await MessageBox.ShowAsync(Localize.MainWindow_FailToDownloadUpdates(), Localize.MainWindow_CheckForUpdates(),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var restartResult = await MessageBox.ShowAsync(Localize.MainWindow_UpdateDownloaded(),
+                Localize.MainWindow_CheckForUpdates(), MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (restartResult == MessageBoxResult.Yes)
+            {
+                UpdateManager.ApplyUpdatesAndRestart(newVersion);
+            }
+            else
+            {
+                UpdateManager.WaitExitThenApplyUpdates(newVersion);
+            }
+        }
     }
 
     [RelayCommand]
