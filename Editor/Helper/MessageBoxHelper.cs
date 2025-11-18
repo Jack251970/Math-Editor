@@ -39,7 +39,7 @@ public static class MessageBox
         await _messageBoxSlim.WaitAsync();
         try
         {
-            var box = GetEditorMessageBox(messageBoxText, string.Empty, ButtonEnum.Ok);
+            var box = GetEditorMessageBox(string.Empty, messageBoxText, ButtonEnum.Ok);
             return await GetResultAsync(box);
         }
         finally
@@ -53,7 +53,7 @@ public static class MessageBox
         await _messageBoxSlim.WaitAsync();
         try
         {
-            var box = GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok);
+            var box = GetEditorMessageBox(caption, messageBoxText, ButtonEnum.Ok);
             return await GetResultAsync(box);
         }
         finally
@@ -69,11 +69,11 @@ public static class MessageBox
         {
             var box = button switch
             {
-                MessageBoxButton.OK => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok),
-                MessageBoxButton.OKCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.OkCancel),
-                MessageBoxButton.YesNo => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNo),
-                MessageBoxButton.YesNoCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNoCancel),
-                _ => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok),
+                MessageBoxButton.OK => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.Ok),
+                MessageBoxButton.OKCancel => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.OkCancel),
+                MessageBoxButton.YesNo => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.YesNo),
+                MessageBoxButton.YesNoCancel => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.YesNoCancel),
+                _ => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.Ok),
             };
             return await GetResultAsync(box);
         }
@@ -90,11 +90,11 @@ public static class MessageBox
         {
             var box = button switch
             {
-                MessageBoxButton.OK => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok, GetIcon(icon)),
-                MessageBoxButton.OKCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.OkCancel, GetIcon(icon)),
-                MessageBoxButton.YesNo => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNo, GetIcon(icon)),
-                MessageBoxButton.YesNoCancel => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.YesNoCancel, GetIcon(icon)),
-                _ => GetEditorMessageBox(messageBoxText, caption, ButtonEnum.Ok, GetIcon(icon)),
+                MessageBoxButton.OK => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.Ok, GetIcon(icon)),
+                MessageBoxButton.OKCancel => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.OkCancel, GetIcon(icon)),
+                MessageBoxButton.YesNo => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.YesNo, GetIcon(icon)),
+                MessageBoxButton.YesNoCancel => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.YesNoCancel, GetIcon(icon)),
+                _ => GetEditorMessageBox(caption, messageBoxText, ButtonEnum.Ok, GetIcon(icon)),
             };
             return await GetResultAsync(box);
         }
