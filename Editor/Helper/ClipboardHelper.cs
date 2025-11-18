@@ -90,74 +90,42 @@ public class ClipboardHelper : ObservableObject, IDisposable
         object? data = null;
         try
         {
-            // Windows: ClipboardAvalonia
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
+
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                using var handle = await ClipboardAvalonia.OpenAsync();
-                if (handle == null)
+                try
                 {
-                    data = null;
-                }
-                else
-                {
-                    if (handle.ContainsFormat(ClipboardXmlFormat))
+                    using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
+                    if (transfer == null)
                     {
-                        var xmlString = handle.GetFormatType(ClipboardXmlFormat);
-                        if (!string.IsNullOrEmpty(xmlString))
-                        {
-                            data = new MathEditorData { XmlString = xmlString };
-                        }
+                        data = null;
                     }
                     else
                     {
-                        var textString = handle.GetText();
-                        if (!string.IsNullOrEmpty(textString))
+                        if (transfer.Contains(ClipboardXmlFormatA))
                         {
-                            data = textString;
-                        }
-                    }
-                }
-            }
-            // Others: Fallback to Avalonia IClipboard
-            else
-            {
-                ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
-
-                await Dispatcher.UIThread.InvokeAsync(async () =>
-                {
-                    try
-                    {
-                        using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
-                        if (transfer == null)
-                        {
-                            data = null;
+                            var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
+                            if (!string.IsNullOrEmpty(xmlString))
+                            {
+                                data = new MathEditorData { XmlString = xmlString };
+                            }
                         }
                         else
                         {
-                            if (transfer.Contains(ClipboardXmlFormatA))
+                            var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                            if (!string.IsNullOrEmpty(textString))
                             {
-                                var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
-                                if (!string.IsNullOrEmpty(xmlString))
-                                {
-                                    data = new MathEditorData { XmlString = xmlString };
-                                }
-                            }
-                            else
-                            {
-                                var textString = await _topLevel.Clipboard.TryGetTextAsync();
-                                if (!string.IsNullOrEmpty(textString))
-                                {
-                                    data = textString;
-                                }
+                                data = textString;
                             }
                         }
                     }
-                    catch (Exception e)
-                    {
-                        EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
-                    }
-                });
-            }
+                }
+                catch (Exception e)
+                {
+                    EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
+                }
+            });
         }
         catch (Exception e)
         {
