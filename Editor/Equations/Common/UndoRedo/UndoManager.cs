@@ -11,10 +11,10 @@ namespace Editor
         private readonly Stack<EquationAction> redoStack = new();
 
         [ObservableProperty]
-        private bool _canUndo;
+        public partial bool CanUndo { get; set; }
 
         [ObservableProperty]
-        private bool _canRedo;
+        public partial bool CanRedo { get; set; }
 
         public void AddUndoAction(EquationAction equationAction)
         {

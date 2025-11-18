@@ -7,12 +7,10 @@ public static class Constants
     public const string MathEditor = "MathEditor";
     public const string MathEditorFullName = "Math Editor";
 
-    public static string Version
-    {
-        get => field ??= Design.IsDesignMode ?
+    public static string Version =>
+        field ??= Design.IsDesignMode ?
             "1.0.0" :
             App.UpdateManager.CurrentVersion?.ToString() ?? "1.0.0";
-    }
     public static readonly string Dev = "Dev";
 
     public const string Settings = "Settings";

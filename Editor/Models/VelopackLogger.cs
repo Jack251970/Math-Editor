@@ -34,7 +34,7 @@ public class VelopackLogger : IVelopackLogger
         {
             if (_logEntries.Count > 0)
             {
-                foreach (LogEntry logEntry in _logEntries)
+                foreach (var logEntry in _logEntries)
                 {
                     LogToEditorLogger(logEntry.LogLevel, logEntry.Message, logEntry.Exception);
                 }
