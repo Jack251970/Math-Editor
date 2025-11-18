@@ -27,6 +27,11 @@ namespace Editor
             _formattedTextExtended.DrawTextTopLeftAligned(dc, new Point(Left + LeftMarginFactor * FontSize, Top + TopOffestFactor * Height), forceBlackBrush);
         }
 
+        public override void ModifySolidBrush()
+        {
+            _formattedTextExtended = FontFactory.GetFormattedTextExtended(Text, FontType, FontSize * FontSizeFactor, FontWeight, false);
+        }
+
         public override double FontSize
         {
             get => base.FontSize;
