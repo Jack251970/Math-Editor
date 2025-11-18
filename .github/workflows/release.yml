@@ -118,5 +118,4 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: |
-            Output/Publish/Math.Editor*
-            Output/Publish/releases.*.json
+            Output/Publish/**
