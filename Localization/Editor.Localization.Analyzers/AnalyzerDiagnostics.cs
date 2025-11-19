@@ -6,8 +6,8 @@ namespace Editor.Localization.Analyzers
     public static class AnalyzerDiagnostics
     {
         public static readonly DiagnosticDescriptor OldLocalizationApiUsed = new DiagnosticDescriptor(
-            "FLAN0001",
-            "Old localization API used",
+            Constants.OldLocalizationApiUsedId,
+            Constants.OldLocalizationApiUsedTitle,
             $"Use `{Constants.ClassName}.{{0}}({{1}})` instead",
             "Localization",
             DiagnosticSeverity.Warning,

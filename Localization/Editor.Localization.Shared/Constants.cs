@@ -4,6 +4,12 @@ namespace Editor.Localization.Shared
 {
     public static class Constants
     {
+        public const string OldLocalizationApiUsedId = "FLAN0001";
+        public const string OldLocalizationApiUsedTitle = "Old localization API used";
+        public const string CouldNotFindResourceDictionariesId = "FLSG0001";
+        public const string LocalizationKeyUnusedId = "FLSG0002";
+        public const string EnumFieldLocalizationKeyValueInvalidId = "FLSG0003";
+
         public const string DefaultNamespace = "Editor";
         public const string ClassName = "Localize";
         public const string SystemPrefixUri = "http://schemas.microsoft.com/winfx/2006/xaml";
@@ -23,7 +29,7 @@ namespace Editor.Localization.Shared
         public const string EnumLocalizeKeyAttributeName = "EnumLocalizeKeyAttribute";
         public const string EnumLocalizeValueAttributeName = "EnumLocalizeValueAttribute";
         public const string Internationalization = "Internationalization";
-        public const string SuppressWarning = "#pragma warning disable FLAN0001 // Old localization API used";
+        public static readonly string SuppressWarning = $"#pragma warning disable {OldLocalizationApiUsedId} // {OldLocalizationApiUsedTitle}";
         // Regex to match file paths ending with /Languages/en.axaml on Linux & MacOS or \Languages\en.axaml on Windows
         public static readonly Regex LanguagesAxamlRegex = new Regex(@"[\\/]+Languages[\\/]en\.axaml$", RegexOptions.IgnoreCase);
         public static readonly string[] OldLocalizationClasses = { "Internationalization" };

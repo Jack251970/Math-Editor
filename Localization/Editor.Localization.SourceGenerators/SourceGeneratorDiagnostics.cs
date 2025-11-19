@@ -6,7 +6,7 @@ namespace Editor.Localization.SourceGenerators
     public static class SourceGeneratorDiagnostics
     {
         public static readonly DiagnosticDescriptor CouldNotFindResourceDictionaries = new DiagnosticDescriptor(
-            "FLSG0001",
+            Constants.CouldNotFindResourceDictionariesId,
             "Could not find resource dictionaries",
             "Could not find resource dictionaries. There must be a `en.axaml` file under `Language` folder.",
             "Localization",
@@ -15,7 +15,7 @@ namespace Editor.Localization.SourceGenerators
         );
 
         public static readonly DiagnosticDescriptor LocalizationKeyUnused = new DiagnosticDescriptor(
-            "FLSG0002",
+            Constants.LocalizationKeyUnusedId,
             "Localization key is unused",
             $"Method `{Constants.ClassName}.{{0}}` is never used",
             "Localization",
@@ -24,7 +24,7 @@ namespace Editor.Localization.SourceGenerators
         );
 
         public static readonly DiagnosticDescriptor EnumFieldLocalizationKeyValueInvalid = new DiagnosticDescriptor(
-            "FLSG0003",
+            Constants.EnumFieldLocalizationKeyValueInvalidId,
             "Enum field localization key and value invalid",
             $"Enum field `{{0}}` does not have a valid localization key or value",
             "Localization",
