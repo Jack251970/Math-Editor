@@ -45,6 +45,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Localization\Editor.Localization.Analyzers\Editor.Localization.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Localization\Editor.Localization.Attributes\Editor.Localization.Attributes.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Localization\Editor.Localization.CodeFixProvider\Editor.Localization.CodeFixProvider.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Localization\Editor.Localization.Shared\Editor.Localization.Shared.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Localization\Editor.Localization.SourceGenerators\Editor.Localization.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
