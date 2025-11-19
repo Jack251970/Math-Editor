@@ -6,8 +6,4 @@
     <RootNamespace>Editor.Localization.Shared</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-  </ItemGroup>
-
 </Project>
