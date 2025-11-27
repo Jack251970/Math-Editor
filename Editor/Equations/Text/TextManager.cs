@@ -16,6 +16,34 @@ namespace Editor
         private readonly Dictionary<int, int> mapping = [];
         private List<TextFormat>? formattingListBeforeSave = null;
 
+        // Cache for fast format lookup - uses a composite key to avoid O(n) searches
+        private Dictionary<TextFormatKey, int> formatCache = [];
+
+        /// <summary>
+        /// Composite key for efficient format lookup
+        /// </summary>
+        private readonly record struct TextFormatKey(
+            double FontSize,
+            FontType FontType,
+            FontStyle FontStyle,
+            FontWeight FontWeight,
+            uint BrushColorArgb,
+            bool UseUnderline
+        )
+        {
+            public static TextFormatKey FromTextFormat(TextFormat tf) =>
+                new(tf.FontSize, tf.FontType, tf.FontStyle, tf.FontWeight,
+                    ColorToArgb(tf.TextBrush.Color), tf.UseUnderline);
+
+            public static TextFormatKey Create(double fontSize, FontType fontType, FontStyle fontStyle,
+                FontWeight fontWeight, Color brushColor, bool useUnderline) =>
+                new(Math.Round(fontSize, 1), fontType, fontStyle, fontWeight,
+                    ColorToArgb(brushColor), useUnderline);
+
+            private static uint ColorToArgb(Color c) =>
+                ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
+        }
+
         public TextManager()
         {
             var tdc = TextDecorations.Underline;
@@ -68,11 +96,14 @@ namespace Editor
         {
             tf.Index = formattingList.Count;
             formattingList.Add(tf);
+            // Add to cache for O(1) lookups
+            formatCache[TextFormatKey.FromTextFormat(tf)] = tf.Index;
         }
 
         public void DeSerialize(XElement xElement)
         {
             formattingList.Clear();
+            formatCache.Clear(); // Clear cache when deserializing
             var children = xElement.Element("Formats");
             foreach (var xe in children!.Elements())
             {
@@ -102,26 +133,17 @@ namespace Editor
             {
                 var key = allFormatIds.ElementAt(i).Key;
                 var tf = TextFormat.DeSerialize(formatElements[key]);
-                var match = formattingList.Where(x =>
-                    {
-                        return x.FontSize == Math.Round(tf.FontSize, 1) &&
-                               x.FontType == tf.FontType &&
-                               x.FontStyle == tf.FontStyle &&
-                               x.UseUnderline == tf.UseUnderline &&
-                               ColorsAreClose(x.TextBrush.Color, tf.TextBrush.Color) &&
-                               x.FontWeight == tf.FontWeight;
+                var cacheKey = TextFormatKey.FromTextFormat(tf);
 
-                    }).FirstOrDefault();
-
-                var newValue = 0;
-                if (match == null)
+                int newValue;
+                if (formatCache.TryGetValue(cacheKey, out var cachedIndex))
                 {
-                    AddToList(tf);
-                    newValue = tf.Index;
+                    newValue = cachedIndex;
                 }
                 else
                 {
-                    newValue = match.Index;
+                    AddToList(tf);
+                    newValue = tf.Index;
                 }
                 allFormatIds[key] = newValue;
             }
@@ -152,160 +174,111 @@ namespace Editor
 
         public int GetFormatId(double fontSize, FontType fontType, FontStyle fontStyle, FontWeight fontWeight, SolidColorBrush textBrush, bool useUnderline)
         {
-            var num = Math.Round(fontSize, 1);
-            var tf = formattingList.Where(x =>
+            var key = TextFormatKey.Create(fontSize, fontType, fontStyle, fontWeight, textBrush.Color, useUnderline);
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == Math.Round(fontSize, 1) &&
-                       x.FontType == fontType &&
-                       x.FontStyle == fontStyle &&
-                       x.UseUnderline == useUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, textBrush.Color) &&
-                       x.FontWeight == fontWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(fontSize, fontType, fontStyle, fontWeight, textBrush, useUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
+
+            var tf = new TextFormat(fontSize, fontType, fontStyle, fontWeight, textBrush, useUnderline);
+            AddToList(tf);
             return tf.Index;
         }
 
         public int GetFormatIdForNewFont(int oldId, FontType fontType)
         {
             var oldFormat = formattingList[oldId];
+            var key = TextFormatKey.Create(oldFormat.FontSize, fontType, oldFormat.FontStyle,
+                oldFormat.FontWeight, oldFormat.TextBrush.Color, oldFormat.UseUnderline);
 
-            var tf = formattingList.Where(x =>
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == oldFormat.FontSize &&
-                       x.FontType == fontType &&
-                       x.FontStyle == oldFormat.FontStyle &&
-                       x.UseUnderline == oldFormat.UseUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
-                       x.FontWeight == oldFormat.FontWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(oldFormat.FontSize, fontType, oldFormat.FontStyle, oldFormat.FontWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
+
+            var tf = new TextFormat(oldFormat.FontSize, fontType, oldFormat.FontStyle, oldFormat.FontWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
+            AddToList(tf);
             return tf.Index;
         }
 
         public int GetFormatIdForNewSolidBrush(int oldId, SolidColorBrush brush)
         {
             var oldFormat = formattingList[oldId];
+            var key = TextFormatKey.Create(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle,
+                oldFormat.FontWeight, brush.Color, oldFormat.UseUnderline);
 
-            var tf = formattingList.Where(x =>
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == oldFormat.FontSize &&
-                       x.FontType == oldFormat.FontType &&
-                       x.FontStyle == oldFormat.FontStyle &&
-                       x.UseUnderline == oldFormat.UseUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, brush.Color) &&
-                       x.FontWeight == oldFormat.FontWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, brush, oldFormat.UseUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
+
+            var tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, brush, oldFormat.UseUnderline);
+            AddToList(tf);
             return tf.Index;
         }
 
         public int GetFormatIdForNewSize(int oldId, double newSize)
         {
             var oldFormat = formattingList[oldId];
+            var key = TextFormatKey.Create(newSize, oldFormat.FontType, oldFormat.FontStyle,
+                oldFormat.FontWeight, oldFormat.TextBrush.Color, oldFormat.UseUnderline);
 
-            var tf = formattingList.Where(x =>
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == Math.Round(newSize, 1) &&
-                       x.FontType == oldFormat.FontType &&
-                       x.FontStyle == oldFormat.FontStyle &&
-                       x.UseUnderline == oldFormat.UseUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
-                       x.FontWeight == oldFormat.FontWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(newSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
+
+            var tf = new TextFormat(newSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
+            AddToList(tf);
             return tf.Index;
         }
 
         public int GetFormatIdForNewStyle(int oldId, FontStyle newStyle)
         {
             var oldFormat = formattingList[oldId];
+            var key = TextFormatKey.Create(oldFormat.FontSize, oldFormat.FontType, newStyle,
+                oldFormat.FontWeight, oldFormat.TextBrush.Color, oldFormat.UseUnderline);
 
-            var tf = formattingList.Where(x =>
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == oldFormat.FontSize &&
-                       x.FontType == oldFormat.FontType &&
-                       x.FontStyle == newStyle &&
-                       x.UseUnderline == oldFormat.UseUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
-                       x.FontWeight == oldFormat.FontWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, newStyle, oldFormat.FontWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
+
+            var tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, newStyle, oldFormat.FontWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
+            AddToList(tf);
             return tf.Index;
         }
 
         public int GetFormatIdForNewWeight(int oldId, FontWeight newWeight)
         {
             var oldFormat = formattingList[oldId];
+            var key = TextFormatKey.Create(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle,
+                newWeight, oldFormat.TextBrush.Color, oldFormat.UseUnderline);
 
-            var tf = formattingList.Where(x =>
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == oldFormat.FontSize &&
-                       x.FontType == oldFormat.FontType &&
-                       x.FontStyle == oldFormat.FontStyle &&
-                       x.UseUnderline == oldFormat.UseUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
-                       x.FontWeight == newWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, newWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
+
+            var tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, newWeight, oldFormat.TextBrush, oldFormat.UseUnderline);
+            AddToList(tf);
             return tf.Index;
         }
 
         public int GetFormatIdForNewUnderline(int oldId, bool newUnderline)
         {
             var oldFormat = formattingList[oldId];
+            var key = TextFormatKey.Create(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle,
+                oldFormat.FontWeight, oldFormat.TextBrush.Color, newUnderline);
 
-            var tf = formattingList.Where(x =>
+            if (formatCache.TryGetValue(key, out var cachedIndex))
             {
-                return x.FontSize == oldFormat.FontSize &&
-                       x.FontType == oldFormat.FontType &&
-                       x.FontStyle == oldFormat.FontStyle &&
-                       x.UseUnderline == newUnderline &&
-                       ColorsAreClose(x.TextBrush.Color, oldFormat.TextBrush.Color) &&
-                       x.FontWeight == oldFormat.FontWeight;
-
-            }).FirstOrDefault();
-            if (tf == null)
-            {
-                tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, oldFormat.TextBrush, newUnderline);
-                AddToList(tf);
+                return cachedIndex;
             }
-            return tf.Index;
-        }
 
-        private static bool ColorsAreClose(Color a, Color b, byte threshold = 4)
-        {
-            return Math.Abs(a.A - b.A) <= threshold && Math.Abs(a.R - b.R) <= threshold && Math.Abs(a.G - b.G) <= threshold && Math.Abs(a.B - b.B) <= threshold;
+            var tf = new TextFormat(oldFormat.FontSize, oldFormat.FontType, oldFormat.FontStyle, oldFormat.FontWeight, oldFormat.TextBrush, newUnderline);
+            AddToList(tf);
+            return tf.Index;
         }
 
         public FormattedTextExtended GetFormattedTextExtended(string text, List<int> formats, bool forceBlackBrush = false)
