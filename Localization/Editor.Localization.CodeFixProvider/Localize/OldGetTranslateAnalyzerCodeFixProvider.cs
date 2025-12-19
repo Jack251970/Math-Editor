@@ -17,7 +17,7 @@ namespace Editor.Localization.Analyzers.Localize
         #region CodeFixProvider
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
-            AnalyzerDiagnostics.OldLocalizationApiUsed.Id
+            Constants.OldLocalizationApiUsedId
         );
 
         public sealed override FixAllProvider GetFixAllProvider()
@@ -35,7 +35,7 @@ namespace Editor.Localization.Analyzers.Localize
                 CodeAction.Create(
                     title: $"Replace with '{Constants.ClassName}.localization_key(...args)'",
                     createChangedDocument: _ => FixOldTranslationAsync(context, root, diagnostic),
-                    equivalenceKey: AnalyzerDiagnostics.OldLocalizationApiUsed.Id
+                    equivalenceKey: Constants.OldLocalizationApiUsedId
                 ),
                 diagnostic
             );

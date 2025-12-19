@@ -90,34 +90,27 @@ public class ClipboardHelper : ObservableObject, IDisposable
         object? data = null;
         try
         {
-            ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
-
-            await Dispatcher.UIThread.InvokeAsync(async () =>
+            // Try to get clipboard contents
+            // Windows: ClipboardAvalonia
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 try
                 {
-                    using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
-                    if (transfer == null)
+                    using var handle = await ClipboardAvalonia.OpenAsync();
+                    if (handle.ContainsFormat(ClipboardXmlFormat))
                     {
-                        data = null;
+                        var xmlString = handle.GetFormatType(ClipboardXmlFormat);
+                        if (!string.IsNullOrEmpty(xmlString))
+                        {
+                            data = new MathEditorData { XmlString = xmlString };
+                        }
                     }
                     else
                     {
-                        if (transfer.Contains(ClipboardXmlFormatA))
+                        var textString = handle.GetText();
+                        if (!string.IsNullOrEmpty(textString))
                         {
-                            var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
-                            if (!string.IsNullOrEmpty(xmlString))
-                            {
-                                data = new MathEditorData { XmlString = xmlString };
-                            }
-                        }
-                        else
-                        {
-                            var textString = await _topLevel.Clipboard.TryGetTextAsync();
-                            if (!string.IsNullOrEmpty(textString))
-                            {
-                                data = textString;
-                            }
+                            data = textString;
                         }
                     }
                 }
@@ -125,7 +118,47 @@ public class ClipboardHelper : ObservableObject, IDisposable
                 {
                     EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
                 }
-            });
+            }
+            // Others: Fallback to Avalonia IClipboard
+            else
+            {
+                ArgumentNullException.ThrowIfNull(_topLevel.Clipboard, nameof(_topLevel.Clipboard));
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    try
+                    {
+                        using var transfer = await _topLevel.Clipboard.TryGetDataAsync();
+                        if (transfer == null)
+                        {
+                            data = null;
+                        }
+                        else
+                        {
+                            if (transfer.Contains(ClipboardXmlFormatA))
+                            {
+                                var xmlString = await transfer.TryGetValueAsync(ClipboardXmlFormatA);
+                                if (!string.IsNullOrEmpty(xmlString))
+                                {
+                                    data = new MathEditorData { XmlString = xmlString };
+                                }
+                            }
+                            else
+                            {
+                                var textString = await _topLevel.Clipboard.TryGetTextAsync();
+                                if (!string.IsNullOrEmpty(textString))
+                                {
+                                    data = textString;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        EditorLogger.Error(ClassName, "Failed to check clipboard data", e);
+                    }
+                });
+            }
         }
         catch (Exception e)
         {

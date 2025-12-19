@@ -4,6 +4,7 @@
     <File Path="Localization/README.md" />
     <Project Path="Localization/Editor.Localization.Analyzers/Editor.Localization.Analyzers.csproj" />
     <Project Path="Localization/Editor.Localization.Attributes/Editor.Localization.Attributes.csproj" />
+    <Project Path="Localization/Editor.Localization.CodeFixProvider/Editor.Localization.CodeFixProvider.csproj" Id="77d44011-a18d-4968-ab54-fbe7db91a189" />
     <Project Path="Localization/Editor.Localization.Shared/Editor.Localization.Shared.csproj" />
     <Project Path="Localization/Editor.Localization.SourceGenerators/Editor.Localization.SourceGenerators.csproj" />
   </Folder>
