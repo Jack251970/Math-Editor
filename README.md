@@ -11,7 +11,7 @@ Open-source, cross-platform equation editor built with Avalonia. A modern, free 
 
 - Cross-platform: Windows, macOS, and Linux
 - Fast desktop UI: Avalonia 11
-- Modern .NET: .NET 9
+- Modern .NET: .NET 10
 - Open source: MIT licensed
 
 
