@@ -89,7 +89,7 @@ Examples for common RIDs; adjust as needed:
  dotnet publish Editor.Desktop -c Release -r linux-x64 --self-contained true
 ```
 
-The output will be under `Editor.Desktop/bin/Release/net9.0/<rid>/publish`.
+The output will be under `Editor.Desktop/bin/Release/net10.0/<rid>/publish`.
 
 
 ## 📝 Usage notes
@@ -117,7 +117,7 @@ See `Localization/README.md` for details.
 
 Target frameworks:
 
-- `Editor` and `Editor.Desktop`: `net9.0`
+- `Editor` and `Editor.Desktop`: `net10.0`
 - Shared components may target `netstandard2.0` where applicable
 
 > See https://www.codeproject.com/articles/OOP-in-the-Real-World-Creating-an-Equation-Editor#comments-section for more information
