@@ -80,4 +80,19 @@ public class Settings : ObservableObject
             }
         }
     }
+
+    private LatexCopyStyle _latexCopyStyle = LatexCopyStyle.Raw;
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public LatexCopyStyle LatexCopyStyle
+    {
+        get => _latexCopyStyle;
+        set
+        {
+            if (_latexCopyStyle != value)
+            {
+                _latexCopyStyle = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 }
