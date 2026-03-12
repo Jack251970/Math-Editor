@@ -75,6 +75,10 @@ public class ClipboardHelper : ObservableObject, IDisposable
             PasteObject = await CanPasteFromClipboard();
             CanPaste = PasteObject != null;
         }
+        catch (ClipboardBusyException)
+        {
+            // Clipboard is temporarily busy (locked by another process), preserve existing state and retry next tick
+        }
         catch (Exception ex)
         {
             EditorLogger.Error(ClassName, "Error checking clipboard contents", ex);
@@ -113,6 +117,10 @@ public class ClipboardHelper : ObservableObject, IDisposable
                             data = textString;
                         }
                     }
+                }
+                catch (ClipboardBusyException)
+                {
+                    throw;
                 }
                 catch (Exception e)
                 {
@@ -159,6 +167,10 @@ public class ClipboardHelper : ObservableObject, IDisposable
                     }
                 });
             }
+        }
+        catch (ClipboardBusyException)
+        {
+            throw;
         }
         catch (Exception e)
         {
