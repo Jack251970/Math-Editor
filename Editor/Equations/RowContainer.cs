@@ -385,7 +385,7 @@ namespace Editor
                         {
                             LatexCopyStyle.Inline => $"${latex}$",
                             LatexCopyStyle.Display => $"\\[{latex}\\]",
-                            LatexCopyStyle.Numbered => $"\\begin{{equation}}{Environment.NewLine}{latex}{Environment.NewLine}\\end{{equation}}",
+                            LatexCopyStyle.Numbered => $"\\begin{{equation}}\n{latex}\n\\end{{equation}}",
                             _ => latex,
                         };
                     }
