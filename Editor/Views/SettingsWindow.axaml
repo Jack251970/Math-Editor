@@ -8,7 +8,7 @@
     x:DataType="local:SettingsWindowViewModel"
     Title="{DynamicResource SettingsWindow_Title}"
     Width="485"
-    SizeToContent="Height"
+    Height="300"
     Closed="Window_Closed"
     CanResize="False"
     WindowStartupLocation="CenterOwner"
