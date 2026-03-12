@@ -24,10 +24,13 @@ public partial class SettingsWindowViewModel(Settings settings, Internationaliza
 
     public List<CopyTypeLocalized> AllCopyTypes { get; } = CopyTypeLocalized.GetValues();
 
+    public List<LatexCopyStyleLocalized> AllLatexCopyStyles { get; } = LatexCopyStyleLocalized.GetValues();
+
     public void OnCultureInfoChanged(CultureInfo newCultureInfo)
     {
         EditorModeLocalized.UpdateLabels(AllEditModes);
         FontTypeLocalized.UpdateLabels(AllFontTypes);
         CopyTypeLocalized.UpdateLabels(AllCopyTypes);
+        LatexCopyStyleLocalized.UpdateLabels(AllLatexCopyStyles);
     }
 }

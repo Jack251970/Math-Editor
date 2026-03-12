@@ -21,6 +21,12 @@
     <x:String x:Key="CopyType_Image">Image</x:String>
     <x:String x:Key="CopyType_Latex">Latex</x:String>
 
+    <!-- Latex Copy Style -->
+    <x:String x:Key="LatexCopyStyle_Inline">Inline: $equation$</x:String>
+    <x:String x:Key="LatexCopyStyle_Display">Display: \[equation\]</x:String>
+    <x:String x:Key="LatexCopyStyle_Numbered">Numbered: \begin{equation}</x:String>
+    <x:String x:Key="LatexCopyStyle_Raw">Raw: equation</x:String>
+
     <!-- Unicode Format -->
     <x:String x:Key="UnicodeFormat_Decimal">Decimal</x:String>
     <x:String x:Key="UnicodeFormat_Octal">Octal</x:String>
@@ -251,6 +257,7 @@
     <x:String x:Key="SettingsWindow_DefaultMode">Default mode</x:String>
     <x:String x:Key="SettingsWindow_DefaultFont">Default font</x:String>
     <x:String x:Key="SettingsWindow_CopyType">Copy type</x:String>
+    <x:String x:Key="SettingsWindow_LatexCopyStyle">Latex style</x:String>
 
     <!-- Unicode Selector Window -->
     <x:String x:Key="UnicodeSelectorWindow_Title">Insert Symbol</x:String>
