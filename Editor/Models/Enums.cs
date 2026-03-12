@@ -267,6 +267,9 @@ public enum CopyType
 [EnumLocalize]
 public enum LatexCopyStyle
 {
+    [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Raw))]
+    Raw,
+
     [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Inline))]
     Inline,
 
@@ -275,9 +278,6 @@ public enum LatexCopyStyle
 
     [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Numbered))]
     Numbered,
-
-    [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Raw))]
-    Raw,
 }
 
 [EnumLocalize]
