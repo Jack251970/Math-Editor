@@ -22,10 +22,10 @@
     <x:String x:Key="CopyType_Latex">Latex</x:String>
 
     <!-- Latex Copy Style -->
-    <x:String x:Key="LatexCopyStyle_Inline">行内公式：$公式$</x:String>
-    <x:String x:Key="LatexCopyStyle_Display">不编号行间公式：\[公式\]</x:String>
-    <x:String x:Key="LatexCopyStyle_Numbered">编号行间公式：\begin{equation}</x:String>
-    <x:String x:Key="LatexCopyStyle_Raw">原始公式：公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Inline">行内公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Display">无编号行间公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Numbered">有编号行间公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Raw">原始公式</x:String>
 
     <!-- Unicode Format -->
     <x:String x:Key="UnicodeFormat_Decimal">十进制</x:String>

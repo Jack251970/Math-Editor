@@ -22,10 +22,10 @@
     <x:String x:Key="CopyType_Latex">Latex</x:String>
 
     <!-- Latex Copy Style -->
-    <x:String x:Key="LatexCopyStyle_Inline">Inline: $equation$</x:String>
-    <x:String x:Key="LatexCopyStyle_Display">Display: \[equation\]</x:String>
-    <x:String x:Key="LatexCopyStyle_Numbered">Numbered: \begin{equation}</x:String>
-    <x:String x:Key="LatexCopyStyle_Raw">Raw: equation</x:String>
+    <x:String x:Key="LatexCopyStyle_Inline">Inline equation</x:String>
+    <x:String x:Key="LatexCopyStyle_Display">Display equation</x:String>
+    <x:String x:Key="LatexCopyStyle_Numbered">Numbered display equation</x:String>
+    <x:String x:Key="LatexCopyStyle_Raw">Raw equation</x:String>
 
     <!-- Unicode Format -->
     <x:String x:Key="UnicodeFormat_Decimal">Decimal</x:String>
