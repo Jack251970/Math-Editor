@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Xml.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -12,7 +11,6 @@ using Avalonia.Threading;
 using Clowd.Clipboard;
 using Clowd.Clipboard.Formats;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Timer = System.Timers.Timer;
 
 namespace Editor;
 
@@ -29,7 +27,10 @@ public class ClipboardHelper : ObservableObject, IDisposable
     private static DataFormat<string> ClipboardXmlFormatA =>
         field ??= DataFormat.CreateStringPlatformFormat(ClipboardXmlFormatType);
 
-    private readonly Timer _timer = new(1000);
+    private readonly DispatcherTimer _timer = new()
+    {
+        Interval = TimeSpan.FromSeconds(1)
+    };
 
     public bool CanPaste
     {
@@ -57,11 +58,11 @@ public class ClipboardHelper : ObservableObject, IDisposable
 
         _topLevel = topLevel ?? throw new ArgumentNullException(nameof(topLevel));
         _isMonitoring = true;
-        _timer.Elapsed += Timer_Elapsed;
+        _timer.Tick += Timer_Tick;
         _timer.Start();
     }
 
-    private async void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+    private async void Timer_Tick(object? sender, EventArgs e)
     {
         // If another update is in progress, skip this tick
         if (_updatingLock.CurrentCount == 0)
@@ -245,8 +246,8 @@ public class ClipboardHelper : ObservableObject, IDisposable
     {
         if (!_isDisposed)
         {
-            _timer.Elapsed -= Timer_Elapsed;
-            _timer.Dispose();
+            _timer.Stop();
+            _timer.Tick -= Timer_Tick;
             _isDisposed = true;
         }
     }
