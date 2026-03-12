@@ -265,6 +265,22 @@ public enum CopyType
 }
 
 [EnumLocalize]
+public enum LatexCopyStyle
+{
+    [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Raw))]
+    Raw,
+
+    [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Inline))]
+    Inline,
+
+    [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Display))]
+    Display,
+
+    [EnumLocalizeKey(nameof(Localize.LatexCopyStyle_Numbered))]
+    Numbered,
+}
+
+[EnumLocalize]
 public enum UnicodeFormat
 {
     [EnumLocalizeKey(nameof(Localize.UnicodeFormat_Decimal))]

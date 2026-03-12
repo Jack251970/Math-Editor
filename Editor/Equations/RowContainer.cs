@@ -378,7 +378,17 @@ namespace Editor
                             latexList.Add(sb);
                         }
                     }
-                    copyText = LatexConverter.EscapeRows(latexList)?.ToString();
+                    var latex = LatexConverter.EscapeRows(latexList)?.ToString();
+                    if (latex != null)
+                    {
+                        copyText = App.Settings.LatexCopyStyle switch
+                        {
+                            LatexCopyStyle.Inline => $"${latex}$",
+                            LatexCopyStyle.Display => $"\\[{latex}\\]",
+                            LatexCopyStyle.Numbered => $"\\begin{{equation}}\n{latex}\n\\end{{equation}}",
+                            _ => latex,
+                        };
+                    }
                 }
 
                 // Create XML element

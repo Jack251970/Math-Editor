@@ -21,6 +21,12 @@
     <x:String x:Key="CopyType_Image">图像</x:String>
     <x:String x:Key="CopyType_Latex">Latex</x:String>
 
+    <!-- Latex Copy Style -->
+    <x:String x:Key="LatexCopyStyle_Raw">原始公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Inline">行内公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Display">无编号行间公式</x:String>
+    <x:String x:Key="LatexCopyStyle_Numbered">有编号行间公式</x:String>
+
     <!-- Unicode Format -->
     <x:String x:Key="UnicodeFormat_Decimal">十进制</x:String>
     <x:String x:Key="UnicodeFormat_Octal">八进制</x:String>
@@ -243,6 +249,7 @@
     <x:String x:Key="SettingsWindow_DefaultMode">默认模式</x:String>
     <x:String x:Key="SettingsWindow_DefaultFont">默认字体</x:String>
     <x:String x:Key="SettingsWindow_CopyType">复制类型</x:String>
+    <x:String x:Key="SettingsWindow_LatexCopyStyle">Latex 样式</x:String>
 
     <!-- Unicode Selector Window -->
     <x:String x:Key="UnicodeSelectorWindow_Title">插入符号</x:String>
