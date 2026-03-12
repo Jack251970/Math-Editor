@@ -81,7 +81,7 @@
                 <Grid
                     Margin="0 12 0 0"
                     HorizontalAlignment="Stretch"
-                    IsVisible="{Binding Settings.CopyType, Converter={StaticResource CopyTypeToLatexVisibleConverter}}">
+                    IsEnabled="{Binding Settings.CopyType, Converter={StaticResource CopyTypeToLatexVisibleConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="Auto" />
