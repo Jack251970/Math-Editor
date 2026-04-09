@@ -37,7 +37,7 @@ public partial class CharacterToolBar : UserControl
         }
     }
 
-    private void ToolBarButton_GotFocus(object? sender, FocusChangingEventArgs e)
+    private void ToolBarButton_GotFocus(object? sender, FocusChangedEventArgs e)
     {
         if (sender is Button)
         {
