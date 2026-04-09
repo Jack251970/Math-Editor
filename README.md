@@ -10,7 +10,7 @@
 Open-source, cross-platform equation editor built with Avalonia. A modern, free alternative to MathType for creating mathematical and scientific documents.
 
 - Cross-platform: Windows, macOS, and Linux
-- Fast desktop UI: Avalonia 11
+- Fast desktop UI: Avalonia 12
 - Modern .NET: .NET 10
 - Open source: MIT licensed
 
