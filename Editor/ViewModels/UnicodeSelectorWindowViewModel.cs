@@ -130,8 +130,12 @@ public partial class UnicodeSelectorWindowViewModel : ObservableObject, ICulture
         try
         {
             var glyphTypeface = typeface.GlyphTypeface;
-            uint codepoint = characterToCheck;
-            return glyphTypeface.TryGetGlyph(codepoint, out _);
+            int codepoint = characterToCheck;
+            if (glyphTypeface.CharacterToGlyphMap.TryGetGlyph(codepoint, out ushort glyphIndex))
+            {
+                return glyphIndex > 0;
+            }
+            return false;
         }
         catch (Exception e)
         {
