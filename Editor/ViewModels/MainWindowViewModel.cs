@@ -26,7 +26,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
     private MenuItem _recentFileItem = null!;
 
     private WindowState _windowState;
-    private SystemDecorations _systemDecorations;
+    private WindowDecorations _windowDecorations;
     private bool _fullScreenModeEntered;
     private readonly Lock _fullScreenModeLock = new();
 
@@ -353,9 +353,9 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             if (_fullScreenModeEntered) return;
 
             _windowState = MainWindow.WindowState;
-            _systemDecorations = MainWindow.SystemDecorations;
+            _windowDecorations = MainWindow.WindowDecorations;
             MainWindow.WindowState = WindowState.FullScreen;
-            MainWindow.SystemDecorations = SystemDecorations.None;
+            MainWindow.WindowDecorations = WindowDecorations.None;
 
             _fullScreenModeEntered = true;
         }
@@ -373,7 +373,7 @@ public partial class MainWindowViewModel : ObservableObject, ICultureInfoChanged
             if (!_fullScreenModeEntered) return;
 
             MainWindow.WindowState = windowState;
-            MainWindow.SystemDecorations = _systemDecorations;
+            MainWindow.WindowDecorations = _windowDecorations;
 
             _fullScreenModeEntered = false;
         }
