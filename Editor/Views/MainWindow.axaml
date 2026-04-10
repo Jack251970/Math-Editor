@@ -66,7 +66,7 @@
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
                         Text="&#xE73F;" />
                 </Button>
                 <Button
@@ -80,7 +80,7 @@
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
                         Text="&#xE711;" />
                 </Button>
             </StackPanel>
