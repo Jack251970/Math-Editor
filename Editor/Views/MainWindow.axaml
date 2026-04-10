@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Editor"
-    xmlns:ui="using:FluentAvalonia.UI.Controls"
+
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:trace="clr-namespace:System.Diagnostics;assembly=WindowsBase"
     xmlns:toolbar="clr-namespace:Avalonia.Controls.ToolBar.Controls;assembly=Avalonia.Controls.ToolBar"
@@ -63,11 +63,11 @@
                     Command="{Binding ToggleFullScreenModeCommand, Mode=OneTime}"
                     ToolTip.Tip="{DynamicResource MainWindow_ExitFullScreen}"
                     IsVisible="{Binding FullScreenButtonVisible, Mode=OneWay}">
-                    <ui:FontIcon
+                    <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                        Glyph="&#xE73F;" />
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Text="&#xE73F;" />
                 </Button>
                 <Button
                     Width="44"
@@ -77,11 +77,11 @@
                     Command="{Binding CloseCommand, Mode=OneTime}"
                     ToolTip.Tip="{DynamicResource Close}"
                     IsVisible="{Binding FullScreenButtonVisible, Mode=OneWay}">
-                    <ui:FontIcon
+                    <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                        Glyph="&#xE711;" />
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Text="&#xE711;" />
                 </Button>
             </StackPanel>
 
