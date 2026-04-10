@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using FluentAvalonia.UI.Controls;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using ElapsedEventArgs = System.Timers.ElapsedEventArgs;
@@ -206,7 +205,7 @@ public partial class EditorControl : UserControl, IDisposable
     {
         Focus();
 
-        // Build context menu using FluentAvalonia MenuFlyout to reliably show at pointer
+        // Build context menu using native Avalonia MenuFlyout to reliably show at pointer
         var menu = new MenuFlyout();
 
         var hasSelection = _mainWindow.IsSelecting == true;
@@ -217,9 +216,9 @@ public partial class EditorControl : UserControl, IDisposable
             var mi = new MenuItem
             {
                 Header = header,
-                Icon = new FontIcon
+                Icon = new TextBlock
                 {
-                    Glyph = glyph,
+                    Text = glyph,
                     FontFamily = (FontFamily)Application.Current!.FindResource("SymbolThemeFontFamily")!
                 },
                 IsEnabled = isEnabled

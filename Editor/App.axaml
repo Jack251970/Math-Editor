@@ -1,8 +1,7 @@
 <Application
     x:Class="Editor.App"
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:sty="using:FluentAvalonia.Styling">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,11 +11,13 @@
             <!-- These are not part of MergedDictionaries so we can add or remove them easier -->
             <!-- So we put language resources here so that we can switch them at runtime -->
             <ResourceInclude x:Key="zh-cn" Source="/Languages/zh-cn.axaml" />
+
+            <!-- Symbol icon font family (was previously provided by FluentAvaloniaUI) -->
+            <FontFamily x:Key="SymbolThemeFontFamily">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>
-        <!--  FluentAvalonia Settings  -->
-        <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+        <FluentTheme />
     </Application.Styles>
 </Application>
